@@ -1,0 +1,5 @@
+include pylxca_api/lxca_logger.conf
+include pylxca_cmd/lxca_filters.xml
+include pylxca_cmd/lxca_cmd_data.json
+include README
+include __init__.py

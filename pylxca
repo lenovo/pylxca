@@ -1,0 +1,45 @@
+#!/usr/bin/env python 
+'''
+Created on 15 Sep 2015
+
+@author: root
+'''
+
+import os
+import time
+import signal, time, sys
+import code
+
+from pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
+from pylxca_cmd.lxca_ishell import PYTHON_SHELL
+from pylxca_cmd.lxca_pyshell import pyshell
+
+class Application(object):
+    def __init__(self): 
+        self.client = None
+
+    def run(self):
+        global shell
+        shell = lxca_ishell.InteractiveShell(banner="Welcome to PyLXCA Shell v1.0", prompt="PyLXCA >> ")
+        if shell.run() == PYTHON_SHELL:
+            pyshell(shell) 
+
+def handle_ctrl_c(signum, frame):
+    # restore the original signal handler as otherwise evil things will happen
+    # in raw_input when CTRL+C is pressed, and our signal handler is not re-entrant
+    signal.signal(signal.SIGINT, original_sigint)
+    print '\nKeyboardInterrupt: Press ctrl+D to exit'
+    
+    # restore the exit gracefully handler here
+    signal.signal(signal.SIGINT, handle_ctrl_c)
+
+
+def main():
+    app = Application()
+    app.run()
+
+
+if __name__ == "__main__":
+    original_sigint = signal.getsignal(signal.SIGINT)
+    signal.signal(signal.SIGINT, handle_ctrl_c)
+    main()

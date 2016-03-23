@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML file for Chassis Filter -->
+<filters>
+	<chassis name="default">
+		<Name>name</Name>
+		<Chassis_Location name="location" type="object">
+			<Location>location</Location>
+			<Rack>rack</Rack>
+			<Room>room</Room>
+		</Chassis_Location>
+		<Contact>contact</Contact>
+		<Type>type</Type>
+		<HealthState>overallHealthState</HealthState>
+		<AccessState>accessState</AccessState>
+		<MachineType>machineType</MachineType>
+		<Model>model</Model>
+		<SerialNumber>serialNumber</SerialNumber>
+		<Description>description</Description>
+		<CMMs name="cmms" type="object">
+			<CMM_Name>name</CMM_Name>
+		</CMMs>		
+		<URI>uri</URI>
+		<UUID>uuid</UUID>
+		<ManagerName>managerName</ManagerName>
+		<ManagerUUID>managerUuid</ManagerUUID>
+		<ipAddresses>ipAddresses</ipAddresses>
+		<hostname>hostname</hostname>
+		<productId>productId</productId>
+		<productName>productName</productName>
+		<bladeSlots>bladeSlots</bladeSlots>
+		<manufacturer>manufacturer</manufacturer>
+		<activationKeys>activationKeys</activationKeys>
+	</chassis>
+	<chassis name="compute">
+		<Name>name</Name>
+		<Contact>contact</Contact>
+		<Type>type</Type>
+		<HealthState>overallHealthState</HealthState>
+		<AccessState>accessState</AccessState>
+		<MachineType>machineType</MachineType>
+		<Model>model</Model>
+		<SerialNumber>serialNumber</SerialNumber>
+		<Description>description</Description>
+	</chassis>
+	<nodes name="default">
+		<Name>name</Name>
+		<location type="object">
+			<Location>location</Location>
+			<Rack>rack</Rack>
+			<Room>room</Room>
+		</location>
+		<Contact>contact</Contact>
+		<Type>type</Type>
+		<HealthState>overallHealthState</HealthState>
+		<AccessState>accessState</AccessState>
+		<MachineType>machineType</MachineType>
+		<Model>model</Model>
+	</nodes>
+	<switches name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </switches>
+    <fans name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </fans>
+    <powersupplies name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </powersupplies>
+    <fanmuxes name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </fanmuxes>
+    <cmms name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </cmms>
+    <scalablesystem name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </scalablesystem>
+</filters>
