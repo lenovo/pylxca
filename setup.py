@@ -1,28 +1,15 @@
 import os, sys
+
+__version__ = '1.0'
+
 try:
         from setuptools import setup, find_packages
-        from setuptools.command.install import install as _install
 
 except ImportError:
         from distutils.core import setup
 
-version_py = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]),'__init__.py'))
-execfile(version_py) # defines __version__
-
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-
-def _post_install(dir):
-#    from subprocess import call
-#    call([sys.executable, 'scriptname.py'],
-#         cwd=os.path.join(dir, ''))
-    print "I'm in _post_Install script", os.path.join(dir, '')
-
-class install(_install):
-    def run(self):
-        _install.run(self)
-        #self.execute(_post_install, (self.install_lib,),msg="Running post install task")
 
 setup(
     name                = "pylxca",
@@ -44,5 +31,4 @@ setup(
         "Topic :: Utilities",
         "License :: Lenovo License",
     ],
-    cmdclass={'install': install},
 )
