@@ -15,19 +15,16 @@ from pylxca_cmd.lxca_ishell import PYTHON_SHELL
 #shell is a global variable
 pyshell = None
 
-def pyshell(shell):
+def pyshell(shell,interactive=True):
     """ Begin user interaction """
     global pyshell
     pyshell = shell
-    completion = True
-    if completion:
+    if interactive:
         ns = {'connect': connect,"chassis":chassis, 'help': help}
         ns.update()
-
-    sys.ps1 = "PYLXCA >> "
-    sys.ps2 = " ... "
-    code.interact('You are in Interactive Python Shell for LXCA.', local = ns)
-
+        sys.ps1 = "PYLXCA >> "
+        sys.ps2 = " ... "
+        code.interact('You are in Interactive Python Shell for LXCA.', local = ns)
 
 def connect(*args, **kwargs):
     '''
@@ -57,7 +54,7 @@ def chassis(*args, **kwargs):
     -------
     use this function to connect to LXCA
     run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    connect( url, user, pw, noverify )
+    chassis( con, uuid, status )
 
     -------
     '''
