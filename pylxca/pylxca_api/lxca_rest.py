@@ -1,7 +1,10 @@
 import logging, os
 import logging.config
 from requests.exceptions import HTTPError
-logging.captureWarnings(True)
+try:
+    logging.captureWarnings(True)
+except:
+    pass
 logger          = logging.getLogger(__name__)
 logger_conf_file   = "lxca_logger.conf"
 pylxca_logger   = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
