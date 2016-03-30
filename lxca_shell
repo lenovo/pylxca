@@ -10,9 +10,9 @@ import time
 import signal, time, sys
 import code
 
-from pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
-from pylxca_cmd.lxca_ishell import PYTHON_SHELL
-from pylxca_cmd.lxca_pyshell import pyshell
+from pylxca.pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
+from pylxca.pylxca_cmd.lxca_ishell import PYTHON_SHELL
+from pylxca.pylxca_cmd.lxca_pyshell import pyshell
 
 class Application(object):
     def __init__(self): 

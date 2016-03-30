@@ -10,12 +10,11 @@ import sys
 from pprint import pprint
 import xml.etree.cElementTree as ElementTree
 from types import DictionaryType
-import pylxca_cmd
+import pylxca.pylxca_cmd
 
 filter_file = "lxca_filters.xml"
 output_file = "lxca_console.out"
-pylxca_cmd_path = os.path.dirname(pylxca_cmd.__file__)
-os.environ['PYLXCA_CMD_PATH'] = pylxca_cmd_path
+
 pylxca_filter = os.path.join(os.getenv('PYLXCA_CMD_PATH'), filter_file)
 pylxca_outfile = os.path.join(os.getenv('PYLXCA_CMD_PATH'), output_file)
 

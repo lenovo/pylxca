@@ -9,8 +9,8 @@ import time
 import signal, time, sys
 import code
 
-from pylxca_cmd import lxca_ishell
-from pylxca_cmd.lxca_ishell import PYTHON_SHELL
+from pylxca.pylxca_cmd import lxca_ishell
+from lxca_ishell import PYTHON_SHELL
 
 #shell is a global variable
 pyshell = None

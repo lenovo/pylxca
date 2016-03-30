@@ -1,16 +1,14 @@
-import re
-import sys
-import os
-import traceback
-from pylxca_cmd import lxca_cmd
-from pylxca_cmd.lxca_icommands import InteractiveCommand
-from lxca_view import lxca_ostream
-#from rlcompleter import readline
+import re,sys,os,traceback
 import itertools
+
+from pylxca.pylxca_cmd import lxca_cmd
+from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
+from lxca_view import lxca_ostream
+from pylxca.pylxca_cmd import lxca_icommands
+#from rlcompleter import readline
 
 PYTHON_SHELL = 99
 
-from pylxca_cmd import lxca_icommands
 
 class InteractiveShell(object):
 

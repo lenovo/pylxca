@@ -1,12 +1,12 @@
-from pylxca_cmd.lxca_icommands import InteractiveCommand
+from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
 import sys, getopt
-import pylxca_api
+import pylxca.pylxca_api
 import lxca_view
 import logging
 import traceback
 from getpass import getpass
-from pylxca_api.lxca_rest import HTTPError
-from pylxca_api.lxca_connection import ConnectionError
+from pylxca.pylxca_api.lxca_rest import HTTPError
+from pylxca.pylxca_api.lxca_connection import ConnectionError
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ class disconnect(InteractiveCommand):
     Diconnects to the LXCA Interface 
     """
     def handle_no_input(self):
-        api = pylxca_api.lxca_api()
+        api = pylxca.pylxca_api.lxca_api()
         if api.disconnect() == True:
             print("Connection with LXCA closed successfully " )
         else:
@@ -90,7 +90,7 @@ class log(InteractiveCommand):
     log -l <level>  
     """
     def handle_no_input(self):
-        api = pylxca_api.lxca_api()
+        api = pylxca.pylxca_api.lxca_api()
         print("Current Log Level is set to " + str(logging.getLevelName(api.get_log_level())))
         message = """
 Possible Log Levels, Please use following values to set desired log level. 
@@ -106,7 +106,7 @@ Possible Log Levels, Please use following values to set desired log level.
     
     ## custom def for inline activites
     def handle_output(self, out_obj):
-        api = pylxca_api.lxca_api()
+        api = pylxca.pylxca_api.lxca_api()
         if out_obj == True:
             print("Current Log Level is set to " + logging.getLevelName(api.get_log_level()))
         else:

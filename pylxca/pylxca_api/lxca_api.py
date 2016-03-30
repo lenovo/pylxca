@@ -1,10 +1,11 @@
-from pylxca_api.lxca_connection import lxca_connection
-from pylxca_api.lxca_connection import ConnectionError
-from  pylxca_api.lxca_rest import lxca_rest
-from  pylxca_api.lxca_rest import HTTPError
+from pylxca.pylxca_api.lxca_connection import lxca_connection
+from pylxca.pylxca_api.lxca_connection import ConnectionError
+from  pylxca.pylxca_api.lxca_rest import lxca_rest
+from  pylxca.pylxca_api.lxca_rest import HTTPError
 import logging.config
 import json
 from pprint import pprint
+from pylxca.pylxca_api import pylxca_api_path
 logger = logging.getLogger(__name__)
 
 class Singleton(type):

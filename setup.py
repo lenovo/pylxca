@@ -3,10 +3,9 @@ import os, sys
 __version__ = '1.0'
 
 try:
-        from setuptools import setup, find_packages
-
+    from setuptools import setup, find_packages
 except ImportError:
-        from distutils.core import setup
+    from distutils.core import setup
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -20,12 +19,13 @@ setup(
     license             = "LENOVO",
     keywords            = "PYLXCA",
     url                 = "http://packages.python.org/an_example_pypi_project",
-    packages            = ['pylxca_api',  'pylxca_cmd'],
-    long_description    = read('README'),
+    packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
+    long_description    = read('pylxca/README'),
     install_requires    = ['logging', 'requests'],
     include_package_data= True,
-    scripts             = ['pylxca'],
-#    data_files          = [('', ['pylxca_api/pylxca_logger.conf'])],
+    scripts             = ['lxca_shell'],
+#    data_files          = [('pylxca_api', ['pylxca/pylxca_api/lxca_logger.conf'])],
+    
     classifiers         = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",

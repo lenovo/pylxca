@@ -1,12 +1,9 @@
-import sys, getopt
-import json
-import os
-import pylxca_api
+import sys,getopt,os,json,logging, traceback
+
+from pylxca.pylxca_api import lxca_api
+from pylxca.pylxca_api.lxca_rest import HTTPError
+from pylxca.pylxca_api.lxca_connection import ConnectionError
 import lxca_view
-import traceback
-import logging
-from pylxca_api.lxca_rest import HTTPError
-from pylxca_api.lxca_connection import ConnectionError
 
 cmd_data_json_file   = "lxca_cmd_data.json"
 pylxca_cmd_data   = os.path.join(os.getenv('PYLXCA_CMD_PATH'), cmd_data_json_file)
@@ -62,9 +59,9 @@ class InteractiveCommand(object):
         #no_opt action can differ command to command so override this function if required
         obj = None
         try:
-            api = pylxca_api.lxca_api()
+            api = lxca_api.lxca_api()()
             obj = api.api(self.get_name(), None,con_obj)
-        except pylxca_api.ConnectionError:
+        except lxca_api.ConnectionError:
             print "Connection is not Initialized, Try connect"
         except RuntimeError:
             print "Session Error to LXCA, Try connect"
@@ -75,7 +72,7 @@ class InteractiveCommand(object):
     
     def handle_input(self, dict_handler,con_obj = None):
         obj = None
-        api = pylxca_api.lxca_api()
+        api = lxca_api.lxca_api()
         obj = api.api(self.get_name(),dict_handler,con_obj)
         return obj
     
@@ -84,7 +81,7 @@ class InteractiveCommand(object):
         ostream = sys.__stdout__
         if self.shell:
             ostream = self.shell.ostream
-        view = lxca_view.lxca_view(ostream)
+        view = lxca_view(ostream)
         view.show_output(py_obj,self.get_name(),view_filter)
         return
     
@@ -139,6 +136,6 @@ class InteractiveCommand(object):
             print "Session Error to LXCA, Try connect"
         except Exception as err:
             print "Exception occurred: %s" %(err) 
-            traceback.print_exc( )
+            traceback.print_exc()
 
         return out_obj
