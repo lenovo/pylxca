@@ -65,6 +65,7 @@ class lxca_connection():
         connection function
         '''
         try:
+            logger.debug("Establishing Connection")
             self.session = requests.session()
             self.session.verify = self.verify_callback
             self.session.headers.update({'content-type': 'application/json; charset=utf-8'})

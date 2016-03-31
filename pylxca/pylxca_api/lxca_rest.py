@@ -1,13 +1,23 @@
+'''
+Created on 4 Sep 2015
+
+@author: Author: Prashant Bhosale <pbhosale@lenovo.com>
+
+This module is for creating a connection session object for given xHMC 
+'''
+
 import logging, os
 import logging.config
 from requests.exceptions import HTTPError
+
 try:
     logging.captureWarnings(True)
 except:
     pass
-logger          = logging.getLogger(__name__)
-logger_conf_file   = "lxca_logger.conf"
-pylxca_logger   = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
+
+logger = logging.getLogger(__name__)
+logger_conf_file = "lxca_logger.conf"
+pylxca_logger = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
 
 class lxca_rest:
     '''
@@ -141,6 +151,7 @@ class lxca_rest:
         except HTTPError as re:
             raise re
         return r    
+    
     def set_log_config(self):        
         logging.config.fileConfig(pylxca_logger, disable_existing_loggers=False)
         return

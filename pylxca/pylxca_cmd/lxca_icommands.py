@@ -59,7 +59,7 @@ class InteractiveCommand(object):
         #no_opt action can differ command to command so override this function if required
         obj = None
         try:
-            api = lxca_api.lxca_api()()
+            api = lxca_api()
             obj = api.api(self.get_name(), None,con_obj)
         except lxca_api.ConnectionError:
             print "Connection is not Initialized, Try connect"
@@ -72,7 +72,7 @@ class InteractiveCommand(object):
     
     def handle_input(self, dict_handler,con_obj = None):
         obj = None
-        api = lxca_api.lxca_api()
+        api = lxca_api()
         obj = api.api(self.get_name(),dict_handler,con_obj)
         return obj
     
