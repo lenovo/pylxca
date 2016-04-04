@@ -64,12 +64,6 @@ class lxca_api ():
         self.con = lxca_connection(url,user,passwd,verify)
         logger.debug("Connection Object " + str(self.con) )
         if self.con.connect() == True:
-            try:
-                self.con.test_Connection()
-            except ConnectionError:
-                logger.debug("Test_Connection to LXCA Failed")
-                self.con = None
-                return self.con
             logger.debug("Connection to LXCA Success")
             return self.con    
         else:
