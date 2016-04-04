@@ -3,7 +3,7 @@ import sys,getopt,os,json,logging, traceback
 from pylxca.pylxca_api import lxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
-import lxca_view
+from pylxca.pylxca_cmd import lxca_view
 
 cmd_data_json_file   = "lxca_cmd_data.json"
 pylxca_cmd_data   = os.path.join(os.getenv('PYLXCA_CMD_PATH'), cmd_data_json_file)
@@ -81,7 +81,7 @@ class InteractiveCommand(object):
         ostream = sys.__stdout__
         if self.shell:
             ostream = self.shell.ostream
-        view = lxca_view(ostream)
+        view = lxca_view.lxca_view(ostream)
         view.show_output(py_obj,self.get_name(),view_filter)
         return
     

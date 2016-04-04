@@ -252,3 +252,7 @@ class InteractiveShell(object):
                 return PYTHON_SHELL
             else:
                 continue
+            
+    def set_ostream_to_null(self):
+        self.ostream = open(os.devnull, 'w')
+        
