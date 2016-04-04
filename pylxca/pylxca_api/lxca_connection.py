@@ -73,11 +73,15 @@ class lxca_connection():
             pURL = self.url + '/sessions'
             self.session.mount(self.url, lxcaAdapter(max_retries=self.retires))
             r = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback)
+            r.raise_for_status()
         except ConnectionError as e:
             logger.debug("Connection Exception: Exception = %s", e)
             return False
         except Exception as e:
             logger.debug("Connection Exception: Exception = %s", e)
+            return False
+        except requests.exceptions.HTTPError as e:
+            logger.debug("Connection Exception: Exception = %s", e.response.text)
             return False
         return  True
 

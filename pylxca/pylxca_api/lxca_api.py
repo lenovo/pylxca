@@ -4,8 +4,7 @@ from  pylxca.pylxca_api.lxca_rest import lxca_rest
 from  pylxca.pylxca_api.lxca_rest import HTTPError
 import logging.config
 import json
-from pprint import pprint
-from pylxca.pylxca_api import pylxca_api_path
+
 logger = logging.getLogger(__name__)
 
 class Singleton(type):
@@ -49,7 +48,9 @@ class lxca_api ():
         except HTTPError as re:
             logger.error("Exception %s Occurred while calling REST API for object %s" %(re.response.status_code, object_name))
             raise re
-        return 
+        except Exception as re:
+            logger.error("Exception %s Occurred while calling REST API for object %s" %(re.response.status_code, object_name))
+        return None
     
     def connect( self, dict_handler = None ):
         url = user = passwd = None
@@ -211,7 +212,6 @@ class lxca_api ():
         else:
             resp = lxca_rest().get_fanmux(self.con.get_url(),self.con.get_session(),uuid)
             py_obj = json.loads(resp.text)
-            pprint(py_obj)
         return py_obj
 
     def get_cmm( self, dict_handler = None ):
