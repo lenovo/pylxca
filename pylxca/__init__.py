@@ -10,3 +10,6 @@ __version__ = '1.0'
 from pylxca_api import *
 from pylxca_cmd import *
 
+#Configure Logger
+import logging.config
+pylxca.pylxca_api.lxca_rest().set_log_config()

@@ -1,11 +1,14 @@
 import re,sys,os,traceback
 import itertools
+import logging
 
 from pylxca.pylxca_cmd import lxca_cmd
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
 from lxca_view import lxca_ostream
 from pylxca.pylxca_cmd import lxca_icommands
 #from rlcompleter import readline
+
+logger = logging.getLogger(__name__)
 
 PYTHON_SHELL = 99
 
@@ -235,7 +238,7 @@ class InteractiveShell(object):
         print 'Type "pyshell" at any time to get interactive python shell'
         print '-'*50
         print
-
+            
         while True:
             try:
 #                readline.set_completer_delims(' \t\n;')

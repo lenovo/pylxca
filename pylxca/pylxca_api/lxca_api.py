@@ -27,7 +27,7 @@ class lxca_api ():
         '''
         Constructor
         '''
-        lxca_rest().set_log_config()
+        
         self.con = None
         self.func_dict = {'connect':self.connect,
                           'chassis':self.get_chassis,
