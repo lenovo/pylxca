@@ -67,7 +67,8 @@ class lxca_api ():
             return self.con    
         else:
             logger.debug("Connection to LXCA Failed")
-            return None
+            self.con = None
+            return self.con
     
     def disconnect( self ):
         if not self.con:
