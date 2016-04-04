@@ -91,7 +91,7 @@ class lxca_connection():
         '''
         try:
             r = self.session.get(self.url + '/chassis',self.session.auth, verify=self.session.verify, timeout=3)
-            print r.headers
+#            print r.headers
         except Exception as e:
             raise ConnectionError(e)
         return

@@ -61,7 +61,7 @@ class InteractiveCommand(object):
         try:
             api = lxca_api()
             obj = api.api(self.get_name(), None,con_obj)
-        except lxca_api.ConnectionError:
+        except ConnectionError:
             print "Connection is not Initialized, Try connect"
         except RuntimeError:
             print "Session Error to LXCA, Try connect"
