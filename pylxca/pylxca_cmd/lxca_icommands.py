@@ -46,10 +46,13 @@ class InteractiveCommand(object):
         return self.command_data[self.__class__.__name__][4]
     
     def invalid_input_err(self):
-        print "Invalid Input "
-        print "for help type command -h"
+        self.sprint("Invalid Input ")
+        self.sprint("for help type command -h")
         return
     
+    def sprint(self,str):
+        if self.shell: self.shell.sprint(str)
+        
     def is_mand_opt_passed(self,opts):
         for mand_opt_tup in self.get_mand_opts():
             if (([item for item in opts if mand_opt_tup[0] in item] == []) and  
@@ -72,12 +75,11 @@ class InteractiveCommand(object):
             api = lxca_api()
             obj = api.api(self.get_name(), None,con_obj)
         except ConnectionError:
-            print "Connection is not Initialized, Try connect"
+            self.sprint("Connection is not Initialized, Try connect")
         except RuntimeError:
-            print "Session Error to LXCA, Try connect"
+            self.sprint("Session Error to LXCA, Try connect")
         except Exception as err:
-            print "Exception occurred: %s" %(err) 
-            traceback.print_exc( )
+            self.sprint("Exception occurred: %s" %(err)) 
         return obj
     
     def handle_input(self, dict_handler,con_obj = None):
@@ -110,7 +112,7 @@ class InteractiveCommand(object):
         
         for opt, arg in opts:
             if '-h' in opt:
-                print (self.get_help_message())
+                self.sprint(self.get_help_message())
                 return
             if 'con' in opt:
                 con_obj = arg
@@ -139,13 +141,12 @@ class InteractiveCommand(object):
                 self.handle_output(out_obj)
                 
         except HTTPError as re:
-            print("Exception %s occurred while executing command."%(re))
+            self.sprint("Exception %s occurred while executing command."%(re))
         except ConnectionError as re:
-            print("Exception %s occurred while executing command."%(re))
+            self.sprint("Exception %s occurred while executing command."%(re))
         except RuntimeError:
-            print "Session Error to LXCA, Try connect"
+            self.sprint("Session Error to LXCA, Try connect")
         except Exception as err:
-            print "Exception occurred: %s" %(err) 
-            traceback.print_exc()
-
+            self.sprint("Exception occurred: %s" %(err)) 
+            
         return out_obj

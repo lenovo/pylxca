@@ -18,7 +18,7 @@ from pylxca.pylxca_cmd.lxca_cmd import fanmuxes
 pyshell = None
 logger = logging.getLogger(__name__)
 
-def pyshell(shell,interactive=True):
+def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
     '''
     @summary: this method provides scriptable interactive python shell 
     '''
@@ -62,7 +62,6 @@ def connect(*args, **kwargs):
         return
     
     for i in range(len(args)):
-        #print args[i]
         kwargs[keylist[i]]= args[i]
     
     con = pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)

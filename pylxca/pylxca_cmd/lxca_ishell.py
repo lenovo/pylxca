@@ -33,7 +33,7 @@ class InteractiveShell(object):
         @ivar commands: A dictionary of available commands, bound to L{InteractiveShell.commands}
         @type commands: C{dict}
         """
-        def __init__(self, commands):
+        def __init__(self, commands, shell=None):
             """
             Constructor function for L{_HelpCommand}.
             
@@ -41,6 +41,7 @@ class InteractiveShell(object):
             @type commands: C{dict}
             """
             self.commands = commands
+            self.shell = shell
 
         def handle_command(self, opts, args):
             """
@@ -63,10 +64,10 @@ class InteractiveShell(object):
                 return
 
             if args[0] not in self.commands:
-                print 'No help available for unknown command "%s"' % args[0]
+                self.sprint('No help available for unknown command "%s"' % args[0])
                 return
             
-            print self.commands[args[0]].get_help_message( )
+            self.sprint(self.commands[args[0]].get_help_message( ))
             
 
         def do_command_summary(self):
@@ -79,7 +80,7 @@ class InteractiveShell(object):
             @return: Returns nothing, sends messages to stdout
             @rtype: C{None}
             """
-            print 'The following commands are available:\n'
+            self.sprint('The following commands are available:\n')
 
             cmdwidth = 0
             for name in self.commands.keys( ):
@@ -93,8 +94,8 @@ class InteractiveShell(object):
                 if name == 'help':
                     continue
                 
-                print '  %s   %s' % (name.ljust(cmdwidth),
-                                     command.get_short_desc( ))
+                self.sprint('  %s   %s' % (name.ljust(cmdwidth),
+                                     command.get_short_desc( )))
                 
 
         def get_short_desc(self):
@@ -125,7 +126,7 @@ class InteractiveShell(object):
         self.prompt = prompt
         self.commands = { }
         self.ostream = lxca_ostream()
-        self.add_command(self.help(self.commands))
+        self.add_command(self.help(self.commands,self))
         self.add_command(self.exit())
         
         self.add_command(lxca_cmd.connect(self))
@@ -142,8 +143,12 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.ostream(self))
         self.add_command(lxca_cmd.jobs(self))
 
+    def sprint(self,str):
+        if self.ostream:
+            self.ostream.write(str)
+    
     def print_Hello(self):
-        print "Hello"
+        self.sprint("Hello")
         
     def add_command(self, command):
         if command.get_name( ) in self.commands:
@@ -157,7 +162,7 @@ class InteractiveShell(object):
             return
 
         if not command_name in self.commands:
-            print 'Unknown command: "%s". Type "help" for a list of commands.' % command_name
+            self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
             return
 
         command = self.commands[command_name]
@@ -171,8 +176,8 @@ class InteractiveShell(object):
         try:
             return command.handle_command(opts=opts, args=list(itertools.chain(*args.items())))
         except Exception as err:
-            print "Exception occurred while processing command."
-            traceback.print_exc( )
+            self.sprint("Exception occurred while processing command.")
+            raise err
             
     def handle_input(self, command_line):
 
@@ -194,7 +199,7 @@ class InteractiveShell(object):
         if not command_name in self.commands:
             if (command_name == "pyshell"):
                 return PYTHON_SHELL
-            print 'Unknown command: "%s". Type "help" for a list of commands.' % command_name
+            self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
             return
         
 
@@ -211,9 +216,8 @@ class InteractiveShell(object):
         try:
             return command.handle_command(opts=opts, args=args)
         except Exception as err:
-            print "Exception occurred while processing command."
-            traceback.print_exc( )
-            
+            logger.error("Exception occurred while processing command.")
+        return
     """
     def auto_complete(self, text, state):
         command_list = self.commands.keys()
@@ -240,13 +244,13 @@ class InteractiveShell(object):
     """
     
     def run(self):
-        print
-        print '-'*50
-        print self.banner
-        print 'Type "help" at any time for a list of commands.'
-        print 'Type "pyshell" at any time to get interactive python shell'
-        print '-'*50
-        print
+        self.sprint('')
+        self.sprint('-'*50)
+        self.sprint(self.banner)
+        self.sprint('Type "help" at any time for a list of commands.')
+        self.sprint('Type "pyshell" at any time to get interactive python shell')
+        self.sprint('-'*50)
+        self.sprint('')
             
         while True:
             try:

@@ -24,7 +24,7 @@ class Application(object):
         global shell
         shell = lxca_ishell.InteractiveShell(banner="Welcome to PyLXCA Shell v1.0", prompt="PyLXCA >> ")
         if shell.run() == PYTHON_SHELL:
-            pyshell(shell) 
+            pyshell(shell=shell, interactive=True) 
 
 def handle_ctrl_c(signum, frame):
     # restore the original signal handler as otherwise evil things will happen

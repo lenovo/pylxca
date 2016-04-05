@@ -32,7 +32,7 @@ class connect(InteractiveCommand):
         
         for opt, arg in opts:
             if '-h' in opt:
-                print (self.get_help_message())
+                self.sprint (self.get_help_message())
                 return                
         
         if not self.is_mand_opt_passed(opts):
@@ -53,15 +53,14 @@ class connect(InteractiveCommand):
             out_obj = self.handle_input(opt_dict)
             self.handle_output(out_obj)
         except HTTPError as re:
-            print("Exception %s occurred while executing command."%(re))
+            self.sprint("Exception %s occurred while executing command."%(re))
         except ConnectionError as re:
-            print("Exception %s occurred while executing command."%(re))
+            self.sprint("Exception %s occurred while executing command."%(re))
         except RuntimeError:
-            print "Session Error to LXCA, Try connect"
+            self.sprint("Session Error to LXCA, Try connect")
         except Exception as err:
-            print "Exception occurred: %s" %(err) 
-            traceback.print_exc( )
-
+            self.sprint("Exception occurred: %s" %(err)) 
+    
         return out_obj
     
     def handle_no_input(self,con_obj):
@@ -71,9 +70,9 @@ class connect(InteractiveCommand):
     
     def handle_output(self, out_obj):
         if out_obj == None:
-            print("Failed to connect given LXCA " )
+            self.sprint("Failed to connect given LXCA " )
         else:
-            print("Connection to LXCA successful")
+            self.sprint("Connection to LXCA successful")
         return
     
 ###############################################################################
@@ -85,9 +84,9 @@ class disconnect(InteractiveCommand):
     def handle_no_input(self):
         api = pylxca.pylxca_api.lxca_api()
         if api.disconnect() == True:
-            print("Connection with LXCA closed successfully " )
+            self.sprint("Connection with LXCA closed successfully " )
         else:
-            print("Failed to close connection with LXCA " )
+            self.sprint("Failed to close connection with LXCA " )
         return 
 
 ###############################################################################
@@ -99,7 +98,7 @@ class log(InteractiveCommand):
     """
     def handle_no_input(self):
         api = pylxca.pylxca_api.lxca_api()
-        print("Current Log Level is set to " + str(logging.getLevelName(api.get_log_level())))
+        self.sprint("Current Log Level is set to " + str(logging.getLevelName(api.get_log_level())))
         message = """
 Possible Log Levels, Please use following values to set desired log level. 
 
@@ -109,16 +108,16 @@ Possible Log Levels, Please use following values to set desired log level.
 \tERROR:        Due to a more serious problem, the software has not been able to perform some function.
 \tCRITICAL:    A serious error, indicating that the program itself may be unable to continue running.
 """
-        print message
+        self.sprint(message)
         return    
     
     ## custom def for inline activites
     def handle_output(self, out_obj):
         api = pylxca.pylxca_api.lxca_api()
         if out_obj == True:
-            print("Current Log Level is set to " + logging.getLevelName(api.get_log_level()))
+            self.sprint("Current Log Level is set to " + logging.getLevelName(api.get_log_level()))
         else:
-            print("Fail to set Log Level")
+            self.sprint("Fail to set Log Level")
         message = """
 Possible Log Levels, Please use following values to set desired log level. 
 
@@ -128,7 +127,7 @@ Possible Log Levels, Please use following values to set desired log level.
 \tERROR:        Due to a more serious problem, the software has not been able to perform some function.
 \tCRITICAL:    A serious error, indicating that the program itself may be unable to continue running.
 """
-        print message
+        self.sprint(message)
         return
     
 ###############################################################################
@@ -136,7 +135,7 @@ Possible Log Levels, Please use following values to set desired log level.
 class ostream(InteractiveCommand):
 
     def handle_no_input(self):
-        print("Current ostream level is set to %s" %(self.shell.ostream.get_lvl()))
+        self.sprint("Current ostream level is set to %s" %(self.shell.ostream.get_lvl()))
         message = """
 Possible ostream levels, Please use following values to set desired stdout level. 
 
@@ -145,7 +144,7 @@ Possible ostream levels, Please use following values to set desired stdout level
 \t2:File. 
 \t3:Console and File.
 """
-        print message
+        self.sprint(message)
         return 
        
     def handle_input(self, dict_handler):
@@ -158,9 +157,9 @@ Possible ostream levels, Please use following values to set desired stdout level
     ## custom def for inline activites
     def handle_output(self, out_obj):
         if out_obj == True:
-            print("Current ostream level is set to %s" %(self.shell.ostream.get_lvl()))
+            self.sprint("Current ostream level is set to %s" %(self.shell.ostream.get_lvl()))
         else:
-            print("Fail to set ostream Level")
+            self.sprint("Fail to set ostream Level")
             message = """
 Possible ostream levels, Please use following values to set desired ostream level. 
 
@@ -169,7 +168,7 @@ Possible ostream levels, Please use following values to set desired ostream leve
 \t2:File. 
 \t3:Console and File.
 """
-            print message
+            self.sprint(message)
         return
 
 ###############################################################################
