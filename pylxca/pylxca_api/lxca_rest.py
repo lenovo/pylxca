@@ -43,6 +43,7 @@ class lxca_rest:
             r = session.get(url,verify=False,timeout=3)
             r.raise_for_status()
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return r
     
@@ -62,6 +63,7 @@ class lxca_rest:
             r = session.get(url, verify=False, timeout=3)
             r.raise_for_status()
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return r
         
@@ -75,6 +77,7 @@ class lxca_rest:
             r = session.get(url, verify=False, timeout=3)
             r.raise_for_status()
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return r
 
@@ -88,6 +91,7 @@ class lxca_rest:
             r = session.get(url, verify=False, timeout=3)
             r.raise_for_status()
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return r
 
@@ -101,6 +105,7 @@ class lxca_rest:
             r = session.get(url, verify=False, timeout=3)
             r.raise_for_status()
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return r
 
@@ -114,6 +119,7 @@ class lxca_rest:
             r = session.get(url, verify=False, timeout=3)
             r.raise_for_status()
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return r
 
@@ -151,6 +157,7 @@ class lxca_rest:
             r = session.get(url, verify=False, timeout=3)
             r.raise_for_status()
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return r    
     

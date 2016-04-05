@@ -85,16 +85,18 @@ class lxca_connection():
             return False
         return  True
 
-    def test_Connection(self):
+    def test_connection(self):
         '''
         Test Connection from requests module
         '''
         try:
-            r = self.session.get(self.url + '/chassis',self.session.auth, verify=self.session.verify, timeout=3)
-#            print r.headers
+            test_url = self.url + '/aicc'
+            resp = self.session.get(test_url,verify=self.session.verify, timeout=3)
+            #If valid JSON object is parsed then the connection is successfull
+            py_obj = json.loads(resp.text)
         except Exception as e:
             raise ConnectionError(e)
-        return
+        return 
 
     def get_url(self):
         return self.url
@@ -106,14 +108,12 @@ class lxca_connection():
         '''
         session Disconnection
         '''
-        self.session.close()
         self.url = None
         self.user = None
         self.passwd = None
         self.debug = False
+        self.session.close()
         self.session = None
-        self.session.verify = False
-        self.session.cookies = None
 
     def ping(self, host):
         """

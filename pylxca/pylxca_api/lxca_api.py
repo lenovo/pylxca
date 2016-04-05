@@ -56,11 +56,18 @@ class lxca_api ():
 
         try:
             return self.func_dict[object_name](dict_handler)
+        except ConnectionError as re:
+            logger.error("Connection Exception: Exception = %s", re)
+            if self.con: self.con.disconnect()
         except HTTPError as re:
-            logger.error("Exception %s Occurred while calling REST API for object %s" %(re.response.status_code, object_name))
+            logger.error("Exception %s Occurred while calling REST API for object %s" %(re, object_name))
             raise re
+        except ValueError as re:
+            logger.error("Exception ValueError %s Occurred while calling REST API for object %s" %(re, object_name))
+        except AttributeError as re:
+            logger.error("Exception AttributeError %s Occurred while calling REST API for object %s" %(re, object_name))
         except Exception as re:
-            logger.error("Exception %s Occurred while calling REST API for object %s" %(re.response.status_code, object_name))
+            logger.error("Exception %s Occurred while calling REST API for object %s" %(re, object_name))
         return None
     
     def connect( self, dict_handler = None ):
@@ -73,12 +80,12 @@ class lxca_api ():
             if "noverify" in dict_handler: verify = False
                  
         self.con = lxca_connection(url,user,passwd,verify)
-        logger.debug("Connection Object " + str(self.con) )
         if self.con.connect() == True:
+            self.con.test_connection()
             logger.debug("Connection to LXCA Success")
             return self.con    
         else:
-            logger.debug("Connection to LXCA Failed")
+            logger.error("Connection to LXCA Failed")
             self.con = None
             return self.con
     
@@ -100,12 +107,11 @@ class lxca_api ():
         return lvl
     
     def set_log_level(self, log_value):
-        logger.debug(log_value)
         try:
             lxca_rest().set_log_level(log_value)
             logger.debug("Current Log Level is now set to " + str(logger.getEffectiveLevel()))
         except Exception as e:
-            logger.debug("Fail to set Log Level")
+            logger.error("Fail to set Log Level")
             return False
         return True
 
