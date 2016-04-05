@@ -1,19 +1,21 @@
 '''
-Created on 15 Sep 2015
-
-@author: root
+@since: 5 Feb 2016
+@author: Prashant Bhosale <pbhosale@lenovo.com>, Girish Kumar <gkumar1@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: This module provides scriptable interfaces and scriptable python shell.
 '''
 
-import os
-import time
-import signal, time, sys
-import code
+import os, time,code
+import signal, logging, sys
 
 from pylxca.pylxca_cmd import lxca_ishell
 from lxca_ishell import PYTHON_SHELL
 
 #shell is a global variable
 pyshell = None
+logger = logging.getLogger(__name__)
 
 def pyshell(shell,interactive=True):
     """ Begin user interaction """

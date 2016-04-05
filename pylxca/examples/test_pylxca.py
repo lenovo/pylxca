@@ -1,11 +1,10 @@
 '''
-Created on 31 March 2016 
-
-@author: Author: Prashant Bhosale <pbhosale@lenovo.com>
-
-Test program for calling pylxca module
+@since: 31 March 2016 
+@author: Prashant Bhosale <pbhosale@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: Test Script for PyLXCA
 '''
 
 import pylxca
-
-

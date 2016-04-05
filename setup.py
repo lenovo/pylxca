@@ -1,3 +1,11 @@
+'''
+@since: 15 Jan 2016
+@author: Girish Kumar <gkumar1@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: Setup Script for PYLXCA
+'''
 import os, sys, re
 from codecs import open
 

@@ -1,12 +1,20 @@
-from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
+'''
+@since: 15 Sep 2015
+@author: Prashant Bhosale <pbhosale@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: This module provides command class implementation for PyLXCA 
+'''
+
 import sys, getopt
-import pylxca.pylxca_api
-import lxca_view
-import logging
-import traceback
+import logging, traceback
 from getpass import getpass
+
+import pylxca.pylxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
+from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
 
 logger = logging.getLogger(__name__)
 

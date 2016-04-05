@@ -1,9 +1,10 @@
 '''
-Created on 4 Sep 2015
-
-@author: Author: Prashant Bhosale <pbhosale@lenovo.com>
-
-This module is for creating a connection session object for given xHMC 
+@since: 4 Sep 2015
+@author: Prashant Bhosale <pbhosale@lenovo.com>, Girish Kumar <gkumar1@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: This module is for creating a connection session object for given xHMC 
 '''
 
 import logging, os
@@ -15,9 +16,10 @@ try:
 except:
     pass
 
-logger = logging.getLogger(__name__)
 logger_conf_file = "lxca_logger.conf"
 pylxca_logger = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
+
+logger = logging.getLogger(__name__)
 
 class lxca_rest:
     '''

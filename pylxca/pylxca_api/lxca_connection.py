@@ -1,22 +1,22 @@
 '''
-Created on 4 Sep 2015
+@since: 4 Sep 2015
+@author: Prashant Bhosale <pbhosale@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: This module is for creating a connection session object for given xHMC.
 
-@author: Author: Prashant Bhosale <pbhosale@lenovo.com>
-
-This module is for creating a connection session object for given xHMC 
 '''
 
 import requests
-from requests.sessions import session
-import logging
+import logging, json
 import os, platform
-import json
 from _socket import timeout
-logger = logging.getLogger(__name__)
-
+from requests.sessions import session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
 
+logger = logging.getLogger(__name__)
 
 class lxcaAdapter(HTTPAdapter):
 

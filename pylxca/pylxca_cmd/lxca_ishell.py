@@ -1,3 +1,13 @@
+'''
+@since: 15 Sep 2015
+@author: Girish Kumar <gkumar1@lenovo.com>, Prashant Bhosale <pbhosale@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: This module provides interactive shell class which provides base for interactive shell 
+feature and accepts raw input from command line 
+'''
+
 import re,sys,os,traceback
 import itertools
 import logging
@@ -11,7 +21,6 @@ from pylxca.pylxca_cmd import lxca_icommands
 logger = logging.getLogger(__name__)
 
 PYTHON_SHELL = 99
-
 
 class InteractiveShell(object):
 

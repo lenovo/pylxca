@@ -1,9 +1,20 @@
+'''
+@since: 21 Oct 2015
+@author: Prashant Bhosale <pbhosale@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo
+@summary: This module implement facade interface for pylxca API interface. It provides a 
+single entry point for APIs.   
+'''
+
+import logging.config
+import json
+
 from pylxca.pylxca_api.lxca_connection import lxca_connection
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from  pylxca.pylxca_api.lxca_rest import lxca_rest
 from  pylxca.pylxca_api.lxca_rest import HTTPError
-import logging.config
-import json
 
 logger = logging.getLogger(__name__)
 

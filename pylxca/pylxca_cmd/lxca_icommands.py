@@ -1,3 +1,13 @@
+'''
+@since: 15 Sep 2015
+@author: Girish Kumar <gkumar1@lenovo.com>, Prashant Bhosale <pbhosale@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: This module provides interactive command class which provides base 
+implementation for all command classes 
+'''
+
 import sys,getopt,os,json,logging, traceback
 
 from pylxca.pylxca_api import lxca_api

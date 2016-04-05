@@ -1,24 +1,27 @@
 '''
-Created on 21 Oct 2015
-
-@author: root
+@since: 21 Oct 2015
+@author: Prashant Bhosale <pbhosale@lenovo.com>
+@license: Lenovo License
+@copyright: Copyright 2016, Lenovo
+@organization: Lenovo 
+@summary: This module is for view logic of the console commands. It parses the dictionary 
+data and displays on ostream.
 '''
-import json
-import re
-import os
-import sys
+
+import json, re, os, sys, logging
 from pprint import pprint
 import xml.etree.cElementTree as ElementTree
 from types import DictionaryType
+
 import pylxca.pylxca_cmd
 
 filter_file = "lxca_filters.xml"
 output_file = "lxca_console.out"
-
 pylxca_filter = os.path.join(os.getenv('PYLXCA_CMD_PATH'), filter_file)
 pylxca_outfile = os.path.join(os.getenv('PYLXCA_CMD_PATH'), output_file)
 
 indent = 0
+logger = logging.getLogger(__name__)
 
 class Tee(object):
     def __init__(self, *files):
