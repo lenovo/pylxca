@@ -162,7 +162,7 @@ class lxca_rest:
         return r    
     
     def set_log_config(self):  
-        logging.config.fileConfig(pylxca_logger, disable_existing_loggers=False)
+        logging.config.fileConfig(pylxca_logger)
         return
 
     def get_log_level(self):
