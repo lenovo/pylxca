@@ -27,7 +27,6 @@ with open('pylxca/__init__.py', 'r') as fd:
 if not version:
     raise RuntimeError('Cannot find version information')
 
-
 setup(
     name                = "pylxca",
     version             = version,
@@ -39,7 +38,7 @@ setup(
     url                 = "http://www.lenovo.com",
     packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
     long_description    = read('pylxca/README'),
-    install_requires    = ['logging', 'requests'],
+    install_requires    = ['logging', 'requests>=2.7.0'],#>=0.5.1.2
     include_package_data= True,
     scripts             = ['lxca_shell'],
 #    data_files          = [('pylxca_api', ['pylxca/pylxca_api/lxca_logger.conf'])],
