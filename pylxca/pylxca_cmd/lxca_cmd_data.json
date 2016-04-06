@@ -157,4 +157,18 @@
     "Retrieve and manage job information",
     "\nUsage: jobs  [-i <job id>][-u <uuid of endpoint>][-s <jobs state>][-c <cancels the job with specified id>][-d <delete the job with specified id>]\n\n\toptional arguments:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state\n\t-c, --cancel\tcancel job of specified id\n\t-d, --delete\tdelete job of specified id\n"
   ]
+  "update": [
+    "i:u:s:c:d:h",
+    [
+      "con=",
+ 	  "id=",	
+      "uuid=",
+      "state=",
+      "cancel=",
+      "delete="
+    ],
+    [],
+    "Retrieve and manage firmware update",
+    "\nUsage: update  -[c|p|r|][-i <job id>][-u <uuid of endpoint>][-s <jobs state>][-c <cancels the job with specified id>][-d <delete the job with specified id>]\n\n\toptional arguments:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state\n\t-c, --cancel\tcancel job of specified id\n\t-d, --delete\tdelete job of specified id\n"
+  ]
 }
