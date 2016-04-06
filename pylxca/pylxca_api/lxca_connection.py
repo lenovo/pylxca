@@ -95,7 +95,7 @@ class lxca_connection():
             #If valid JSON object is parsed then the connection is successfull
             py_obj = json.loads(resp.text)
         except Exception as e:
-            raise ConnectionError(e)
+            raise ConnectionError("Invalid connection")
         return 
 
     def get_url(self):
