@@ -59,6 +59,7 @@ class lxca_api ():
         except ConnectionError as re:
             logger.error("Connection Exception: Exception = %s", re)
             if self.con: self.con.disconnect()
+            raise re
         except HTTPError as re:
             logger.error("Exception %s Occurred while calling REST API for object %s" %(re, object_name))
             raise re

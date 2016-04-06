@@ -139,7 +139,8 @@ class InteractiveCommand(object):
                 self.show_output(out_obj,view_filter)
             else:
                 self.handle_output(out_obj)
-                
+        except ConnectionError:
+            self.sprint("Connection is not Initialized, Try connect")
         except HTTPError as re:
             self.sprint("Exception %s occurred while executing command."%(re))
         except ConnectionError as re:
