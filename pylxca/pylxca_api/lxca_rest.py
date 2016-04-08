@@ -172,3 +172,14 @@ class lxca_rest:
     def set_log_level(self,log_value):
         logger.setLevel(log_value)
         return
+
+    def do_discovery(self,url, session):
+        url = url + '/discovery'
+        
+        try:
+            r = session.get(url, verify=False, timeout=3)
+            r.raise_for_status()
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+        return r

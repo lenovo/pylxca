@@ -75,7 +75,8 @@ class lxca_view:
                           'powersupplies':'powerSupplyList',
                           'fanmuxes':'fanMuxList',
                           'cmms':'cmmList',
-                          'scalablesystem':'scalablesystem'}
+                          'scalablesystem':'scalablesystem',
+                          'discovery':'discovery'}
     
         
     def get_val(self,py_obj, tag ):
@@ -108,14 +109,15 @@ class lxca_view:
             self.ostream.write('%s: ' % (view_filter.tag.title()))
             
         indent += 4
-        for elem in view_filter.getchildren():
-            # View Filter has children so
-            py_obj_item = self.get_val(py_obj, view_filter.attrib.get('name', view_filter.text))
-            #if py_obj_item is list then iterate through the list and call print recur for each
-            if isinstance(py_obj_item, (list)):
-                for item in py_obj_item:
+        # View Filter has children so
+        py_obj_item = self.get_val(py_obj, view_filter.attrib.get('name', view_filter.text))
+        #if py_obj_item is list then iterate through the list and call print recur for each
+        if isinstance(py_obj_item, (list)):
+            for item in py_obj_item:
+                for elem in view_filter.getchildren():
                     self.print_recur(item,elem)
-            else:
+        else:
+            for elem in view_filter.getchildren():
                 self.print_recur(py_obj_item,elem)
         indent -= 4
         

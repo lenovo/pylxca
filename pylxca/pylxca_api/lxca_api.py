@@ -48,7 +48,8 @@ class lxca_api ():
                           'fanmuxes':self.get_fanmux,
                           'cmms':self.get_cmm,
                           'scalablesystem':self.get_scalablesystem,
-                          'log':self.get_log_level}
+                          'log':self.get_log_level,
+                          'discover':self.do_discovery}
     
     def api( self, object_name, dict_handler = None, con = None ):
         
@@ -268,5 +269,16 @@ class lxca_api ():
             status = next((item for item in [dict_handler.get('s') , dict_handler.get('status')] if item is not None),None)
             
         resp = lxca_rest().get_scalablesystem(self.con.get_url(),self.con.get_session(),complexid,complextype,status)
+        py_obj = json.loads(resp.text)
+        return py_obj
+
+    def do_discovery( self, dict_handler = None ):
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            pass
+            
+        resp = lxca_rest().do_discovery(self.con.get_url(),self.con.get_session())
         py_obj = json.loads(resp.text)
         return py_obj

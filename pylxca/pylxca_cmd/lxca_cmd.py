@@ -236,3 +236,10 @@ class jobs(InteractiveCommand):
     """
     Retrieve and Manage information about jobs.
     """
+    
+###############################################################################
+
+class discover(InteractiveCommand):
+    """
+    Retrieve a list of devices discovered by SLP discovery.
+    """

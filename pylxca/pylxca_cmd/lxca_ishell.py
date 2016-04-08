@@ -142,6 +142,7 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.scalablesystem(self))
         self.add_command(lxca_cmd.ostream(self))
         self.add_command(lxca_cmd.jobs(self))
+        self.add_command(lxca_cmd.discover(self))
 
     def sprint(self,str):
         if self.ostream:

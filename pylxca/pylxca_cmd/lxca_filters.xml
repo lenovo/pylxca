@@ -140,4 +140,11 @@
         <MachineType>machineType</MachineType>
         <Model>model</Model>
     </scalablesystem>
+    <discover name="default">
+        <DiscoveryInProgress>discoveryInProgress</DiscoveryInProgress>
+		<Chassis_List name="chassisList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+        </Chassis_List>
+    </discover>
 </filters>
