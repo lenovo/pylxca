@@ -35,7 +35,10 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
               "switches":switches, 
               "powersupplies":powersupplies,
               "nodes":nodes, 
-              "scalablesystem":scalablesystem, 
+              "scalablesystem":scalablesystem,
+              "discover":discover,
+              "manage":manage,
+              "unmanage":unmanage, 
               "help": help}
         ns.update()
         sys.ps1 = "PYLXCA >> "
@@ -225,6 +228,63 @@ def powersupplies(*args, **kwargs):
     return ch
 
 def scalablesystem(*args, **kwargs):
+    '''
+    -------
+    use this function to connect to LXCA
+    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    chassis( con, uuid, status )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','id','type','status']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def discover(*args, **kwargs):
+    '''
+    -------
+    use this function to connect to LXCA
+    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    chassis( con, uuid, status )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ip']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def manage(*args, **kwargs):
+    '''
+    -------
+    use this function to connect to LXCA
+    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    chassis( con, uuid, status )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','id','type','status']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def unmanage(*args, **kwargs):
     '''
     -------
     use this function to connect to LXCA

@@ -11,6 +11,7 @@
 import requests
 import logging, json
 import os, platform
+import base64
 from _socket import timeout
 from requests.sessions import session
 from requests.adapters import HTTPAdapter
@@ -46,7 +47,7 @@ class lxca_connection():
     def __init__(self, url, user = None,  passwd = None, verify_callback = True, retries = 3):
         self.url = url
         self.user = user
-        self.passwd = passwd
+        self.passwd = base64.b16encode(passwd)
         self.retires = retries 
         self.debug = False
         self.session = None
@@ -69,7 +70,7 @@ class lxca_connection():
             self.session = requests.session()
             self.session.verify = self.verify_callback
             self.session.headers.update({'content-type': 'application/json; charset=utf-8'})
-            payload = dict(UserId= self.user, password=self.passwd)
+            payload = dict(UserId= self.user, password=base64.b16decode(self.passwd))
             pURL = self.url + '/sessions'
             self.session.mount(self.url, lxcaAdapter(max_retries=self.retires))
             r = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback)
@@ -83,6 +84,15 @@ class lxca_connection():
         except requests.exceptions.HTTPError as e:
             logger.debug("Connection Exception: Exception = %s", e.response.text)
             return False
+        
+        '''
+        Even though the csrf-token cookie will be automatically sent with the request, 
+        the server will be still expecting a valid X-Csrf-Token header,
+        So we need to set it explicitly here
+        '''
+        if r.status_code == requests.codes['ok']:
+            self.session.headers.update({'X-Csrf-Token': self.session.cookies.get('csrf')})
+            
         return  True
 
     def test_connection(self):

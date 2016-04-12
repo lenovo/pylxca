@@ -243,3 +243,19 @@ class discover(InteractiveCommand):
     """
     Retrieve a list of devices discovered by SLP discovery.
     """
+    def handle_output(self, out_obj):
+        if out_obj == None:
+            self.sprint("Failed to start Discovery job for selected endpoint " )
+        else:
+            self.sprint("Discovery job started, jobId = " + out_obj)
+        return
+    
+class manage(InteractiveCommand):
+    """
+    manage the endpoint
+    """
+    
+class unmanage(InteractiveCommand):
+    """
+    unmanage the endpoint
+    """

@@ -147,4 +147,11 @@
             <IPAddresses>ipAddresses</IPAddresses>
         </Chassis_List>
     </discover>
+    <discover name="job">
+    	<Progress>progress</Progress>
+		<Chassis_List name="chassisList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+        </Chassis_List>
+    </discover>
 </filters>

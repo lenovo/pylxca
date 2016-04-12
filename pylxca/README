@@ -2,15 +2,15 @@ README FOR PYLXCA
 -----
 How to use?
 python lxca_shell.py
-connect -l https://10.243.15.168 -u USERID --noverify
+connect -l https://10.241.106.216 -u USERID --noverify
 connect -l https://10.243.14.34 -u USERID
-con1 = connect("https://10.243.15.168","USERID","CME44ibm","True")
+con1 = connect("https://10.241.106.216","USERID","CME44ibm","True")
 test
-
+10.241.106.216
 
 
 Example to call lxca_cmd from script/Ansible module
 
 from pylxca.pylxca_cmd.lxca_pyshell import *
 pyshell()
-con1 = connect("https://10.243.15.168","USERID","CME44ibm","True")
+con1 = connect("https://10.241.106.216","USERID","CME44ibm","True")

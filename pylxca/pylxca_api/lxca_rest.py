@@ -7,7 +7,7 @@
 @summary: This module is for creating a connection session object for given xHMC 
 '''
 
-import logging, os
+import logging, os, json, pprint, requests
 import logging.config
 from requests.exceptions import HTTPError
 
@@ -40,12 +40,12 @@ class lxca_rest:
             url = url + "?status=managed" 
             
         try:
-            r = session.get(url,verify=False,timeout=3)
-            r.raise_for_status()
+            resp = session.get(url,verify=False,timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return r
+        return resp
     
     def get_nodes(self,url, session, uuid, status):
         url = url + '/nodes'
@@ -60,12 +60,12 @@ class lxca_rest:
                 raise Exception("Invalid argument 'status'")
             
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return r
+        return resp
         
     def get_switches(self,url, session, uuid):
         url = url + '/switches'
@@ -74,12 +74,12 @@ class lxca_rest:
             url = url + '/' + uuid
                     
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return r
+        return resp
 
     def get_fan(self,url, session, uuid):
         url = url + '/fans'
@@ -88,12 +88,12 @@ class lxca_rest:
             url = url + '/' + uuid
                         
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return r
+        return resp
 
     def get_powersupply(self,url, session, uuid):
         url = url + '/powerSupplies'
@@ -102,12 +102,12 @@ class lxca_rest:
             url = url + '/' + uuid
                         
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return r
+        return resp
 
     def get_fanmux(self,url, session, uuid):
         url = url + '/fanMuxes'
@@ -116,12 +116,12 @@ class lxca_rest:
             url = url + '/' + uuid
                         
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return r
+        return resp
 
     def get_cmm(self,url, session, uuid):
         url = url + '/cmms'
@@ -130,11 +130,11 @@ class lxca_rest:
             url = url + '/' + uuid
                         
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             raise re
-        return r
+        return resp
 
     def get_scalablesystem(self,url, session, complexid,complextype,status):
         url = url + '/scalableComplex'
@@ -154,12 +154,12 @@ class lxca_rest:
                 raise Exception("Invalid argument 'status'")
                         
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return r    
+        return resp    
     
     def set_log_config(self):  
         logging.config.fileConfig(pylxca_logger)
@@ -173,13 +173,29 @@ class lxca_rest:
         logger.setLevel(log_value)
         return
 
-    def do_discovery(self,url, session):
-        url = url + '/discovery'
-        
+    def do_discovery(self,url, session, ip_addr,jobid):
         try:
-            r = session.get(url, verify=False, timeout=3)
-            r.raise_for_status()
+            if ip_addr:
+                url = url + '/discoverRequest'
+                payload = [{"ipAddresses":ip_addr.split(",")}]
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp.raise_for_status()
+                if resp.status_code == requests.codes['ok']:
+                    if resp.headers._store.has_key("location"):
+                        job = resp.headers._store["location"][-1].split("/")[-1]
+                        return job
+                    else:
+                        return None
+            elif jobid:
+                url = url + '/discoverRequest/jobs/' + jobid
+                resp = session.get(url,verify=False, timeout=3)
+                resp.raise_for_status()
+            else:
+                url = url + '/discovery'
+                resp = session.get(url, verify=False, timeout=3)
+                resp.raise_for_status()
+                              
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        return r
+        return resp

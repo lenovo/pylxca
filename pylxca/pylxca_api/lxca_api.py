@@ -84,6 +84,10 @@ class lxca_api ():
             if "noverify" in dict_handler: verify = False
                  
         self.con = lxca_connection(url,user,passwd,verify)
+        
+        #clear the temp stored passwd
+        passwd = None
+        
         if self.con.connect() == True:
             self.con.test_connection()
             logger.debug("Connection to LXCA Success")
@@ -273,12 +277,20 @@ class lxca_api ():
         return py_obj
 
     def do_discovery( self, dict_handler = None ):
+        ip_addr = None
+        jobid = None
+        
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            pass
-            
-        resp = lxca_rest().do_discovery(self.con.get_url(),self.con.get_session())
-        py_obj = json.loads(resp.text)
-        return py_obj
+            ip_addr = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
+            jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
+        
+        resp = lxca_rest().do_discovery(self.con.get_url(),self.con.get_session(),ip_addr,jobid)
+        
+        try:
+            py_obj = json.loads(resp.text)
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
