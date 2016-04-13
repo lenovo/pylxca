@@ -158,20 +158,33 @@
     "\nUsage: jobs  [-i <job id>][-u <uuid of endpoint>][-s <jobs state>][-c <cancels the job with specified id>][-d <delete the job with specified id>]\n\n\toptional arguments:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state\n\t-c, --cancel\tcancel job of specified id\n\t-d, --delete\tdelete job of specified id\n"
   ],
   "manage": [
-    "h",
+    "i:u:p:r:m:j:v:h",
     [
+	  "con=",
+      "ip=",
+	  "user=",
+	  "pw=",
+	  "rpw=",
+	  "mp=",
+      "job=",
+      "view="
     ],
     [],
-    "manage",
-    "\nUsage: manage\n"
+    "Manage the endpoint.",
+    "\nUsage: manage [-i <IP Address of endpoint>][-u <user ID to access the endpoint>][-p <current password to access the endpoint>][-r <recovery password for the endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip=\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user=\tuser ID to access the endpoint\n\t-p, --pw=\tThe current password to access the endpoint.\n\t-r, --rpw=\tThe recovery password to be used for the endpoint.\n\t-m, --mp=\tA list of endpoint management ports, it is a comma separated\n\t\t\tlist of properties which includes boolean flag of whether the\n\t\t\tport enabled, port number, protocol. properties should be separate\n\t\t\tby colon\n\t-j, --job=\tJob ID of manage request\n"
   ],
   "unmanage": [
-    "h",
+    "i:u:j:v:h",
     [
+	  "con=",
+      "ip=",
+      "uuid",
+      "job=",
+      "view="
     ],
     [],
-    "unmanage",
-    "\nUsage: unmanage\n"
+    "Unmanage the endpoint.",
+    "\nUsage: unmanage [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip=\tOne or more IP addresses for each endpoint to be unmanaged.\n\t-j, --job=\tJob ID of unmanage request\n"
   ],  
   "discover": [
     "i:j:v:h",

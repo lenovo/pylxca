@@ -276,7 +276,7 @@ def manage(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id','type','status']
+    keylist = ['con','ip','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
@@ -295,7 +295,7 @@ def unmanage(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id','type','status']
+    keylist = ['con','ip','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

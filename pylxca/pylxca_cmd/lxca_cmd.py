@@ -254,8 +254,21 @@ class manage(InteractiveCommand):
     """
     manage the endpoint
     """
+    def handle_output(self, out_obj):
+        if out_obj == None:
+            self.sprint("Failed to start manage job for selected endpoint " )
+        else:
+            self.sprint("Discovery job manage, jobId = " + out_obj)
+        return
     
 class unmanage(InteractiveCommand):
     """
     unmanage the endpoint
     """
+    def handle_output(self, out_obj):
+        if out_obj == None:
+            self.sprint("Failed to start manage job for selected endpoint " )
+        else:
+            self.sprint("Discovery job manage, jobId = " + out_obj)
+        return
+    

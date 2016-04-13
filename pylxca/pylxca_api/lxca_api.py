@@ -49,7 +49,9 @@ class lxca_api ():
                           'cmms':self.get_cmm,
                           'scalablesystem':self.get_scalablesystem,
                           'log':self.get_log_level,
-                          'discover':self.do_discovery}
+                          'discover':self.do_discovery,
+                          'manage':self.do_manage,
+                          'unmanage':self.do_unmanage}
     
     def api( self, object_name, dict_handler = None, con = None ):
         
@@ -288,6 +290,55 @@ class lxca_api ():
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
         
         resp = lxca_rest().do_discovery(self.con.get_url(),self.con.get_session(),ip_addr,jobid)
+        
+        try:
+            py_obj = json.loads(resp.text)
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
+
+    def do_manage( self, dict_handler = None ):
+        ip_addr = None
+        user = None
+        pw = None
+        rpw = None
+        mp = None
+        jobid = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            ip_addr = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
+            user = next((item for item in [dict_handler.get  ('u') , dict_handler.get('user')] if item is not None),None)
+            pw = next((item for item in [dict_handler.get  ('p') , dict_handler.get('pw')] if item is not None),None)
+            rpw = next((item for item in [dict_handler.get  ('u') , dict_handler.get('rpw')] if item is not None),None)
+            mp = next((item for item in [dict_handler.get  ('m') , dict_handler.get('mp')] if item is not None),None)
+            jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
+        
+        resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,pw,rpw,mp,jobid)
+        
+        try:
+            py_obj = json.loads(resp.text)
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
+
+
+    def do_unmanage( self, dict_handler = None ):
+        ip_addr = None
+        uuid = None
+        jobid = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            ip_addr = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
+            uuid = next((item for item in [dict_handler.get  ('u') , dict_handler.get('uuid')] if item is not None),None)
+            jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
+        
+        resp = lxca_rest().do_unmanage(self.con.get_url(),self.con.get_session(),ip_addr,uuid,jobid)
         
         try:
             py_obj = json.loads(resp.text)

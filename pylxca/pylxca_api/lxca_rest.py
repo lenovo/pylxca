@@ -199,3 +199,72 @@ class lxca_rest:
             logger.error("Exception occured: %s",re)
             raise re
         return resp
+
+    def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,jobid):
+        try:
+            #All input arguments ip_add, user, pw, rpw and mp are mandatory
+            if ip_addr & user & pw & mp:
+                url = url + '/manageRequest'
+                
+                payload = list()
+                param_dict = dict()
+                param_dict["ipAddresses"]=ip_addr.split(",")
+                param_dict["password"] = pw
+                if rpw:param_dict["recoveryPassword"] = rpw
+                param_dict["managementPorts"]= [{"enabled": False,"port": 80,"protocol": "http"}]
+                payload.append(param_dict)
+                
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp.raise_for_status()
+                
+                if resp.status_code == requests.codes['ok']:
+                    if resp.headers._store.has_key("location"):
+                        job = resp.headers._store["location"][-1].split("/")[-1]
+                        return job
+                    else:
+                        return None
+            elif jobid:
+                url = url + '/manageRequest/jobs/' + jobid
+                resp = session.get(url,verify=False, timeout=3)
+                resp.raise_for_status()
+            else:
+                logger.error("Invalid execution of manage REST API")
+                raise Exception("Invalid execution of manage REST API")
+                              
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+        return resp
+
+    def do_unmanage(self,url, session, ip_addr,uuid,jobid):
+        try:
+            if ip_addr & uuid:
+                url = url + '/unmanageRequest'
+                payload = list()
+                param_dict = dict()
+                endpoints = dict()
+                endpoints["ipAddresses"]=ip_addr.split(",")
+                endpoints["uuid"] = uuid
+
+                payload = [{"ipAddresses":ip_addr.split(",")}]
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp.raise_for_status()
+                if resp.status_code == requests.codes['ok']:
+                    if resp.headers._store.has_key("location"):
+                        job = resp.headers._store["location"][-1].split("/")[-1]
+                        return job
+                    else:
+                        return None
+            elif jobid:
+                url = url + '/discoverRequest/jobs/' + jobid
+                resp = session.get(url,verify=False, timeout=3)
+                resp.raise_for_status()
+            else:
+                url = url + '/discovery'
+                resp = session.get(url, verify=False, timeout=3)
+                resp.raise_for_status()
+                              
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+        return resp

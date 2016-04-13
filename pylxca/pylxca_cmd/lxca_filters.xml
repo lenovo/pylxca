@@ -154,4 +154,18 @@
             <IPAddresses>ipAddresses</IPAddresses>
         </Chassis_List>
     </discover>
+    <manage name="default">
+    	<Progress>progress</Progress>
+		<Results name="results" type="object">
+            <progress>progress</progress>
+            <result>result</result>
+        </Results>
+    </manage>
+    <unmanage name="default">
+    	<Progress>progress</Progress>
+		<Results name="results" type="object">
+            <progress>progress</progress>
+            <result>result</result>l
+        </Results>
+    </unmanage>
 </filters>
