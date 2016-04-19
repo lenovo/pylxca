@@ -197,5 +197,77 @@
     [],
     "Retrieve a list of devices discovered by SLP discovery.",
     "\nUsage: discover [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip=\tOne or more IP addresses for each endpoint to be discovered.\n\t-j, --job=\tJob ID of discover request\n"
+  ],
+  "configpattern": [
+    "i:h",
+    [
+	  "con=",
+      "id="
+    ],
+    [],
+    "Retrieve information about all server and category patterns that have been defined in the Lenovo XClarity Administrator.",
+    "\nUsage: configpattern [-i <ID of specific pattern>]\n"
+  ],
+  "configprofile": [
+    "i:h",
+    [
+	  "con=",
+      "id="
+    ],
+    [],
+    "Retrieve information about server profiles from the Lenovo XClarity Administrator.",
+    "\nUsage: configprofile [-i <ID of specific profile>]\n"
+  ],
+  "configtarget": [
+    "i:j:v:h",
+    [
+	  "con=",
+      "id="
+    ],
+    [],
+    "Retrieve a list of deployable target systems according to their server pattern and profile.",
+    "\nUsage: configtarget [-i <ID of specific profile or pattern>]\n"
+  ],
+  "update": [
+    "a:r:f:v:h",
+    [
+	  "con=",
+	  "action=",
+      "repo",
+	  "firmware"
+    ],
+    [],
+    "Firmware update actions on target endpoints and retrieve the status and progress of firmware updates and firmware repository.",
+    "\nUsage: update [-a <Action to take>] [-r/-f select repository or firmware for action] \n"
+  ],
+  "user": [
+    "i:h",
+    [
+	  "con=",
+	  "id="
+    ],
+    [],
+    "Retrieve information about user account of Lenovo XClarity Administrator.",
+    "\nUsage: user [-i <unique ID of the user to be retrieved>]\n"
+  ],
+  "ffdc": [
+    "u:h",
+    [
+	  "con=",
+	  "uuid="
+    ],
+    [],
+    "Collect and export the first failure data capture (FFDC) data for a specific managed endpoint (CMM, server, storage node, or switch).",
+    "\nUsage: ffdc [-u <UUID of the target endpoint>]\n"
+  ],
+  "lxcalog": [
+    "f:h",
+    [
+	  "con=",
+	  "filter="
+    ],
+    [],
+    "Retrieve hardware and management-server events in the events log.",
+    "\nUsage: lxcalog [-f < events that apply to the specified filters >]\n"
   ]
 }

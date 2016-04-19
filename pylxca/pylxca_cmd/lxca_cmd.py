@@ -271,4 +271,46 @@ class unmanage(InteractiveCommand):
         else:
             self.sprint("Discovery job manage, jobId = " + out_obj)
         return
-    
+
+###############################################################################
+
+class lxcalog(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+
+class ffdc(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+
+class user(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+
+class update(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+
+class configtarget(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+
+class configpattern(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+
+class configprofile(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
