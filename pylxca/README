@@ -1,7 +1,7 @@
 README FOR PYLXCA
 -----
 How to use?
-python lxca_shell.py
+python lxca_shell
 connect -l https://10.241.106.216 -u USERID --noverify
 connect -l https://10.243.14.34 -u USERID
 con1 = connect("https://10.241.106.216","USERID","CME44ibm","True")

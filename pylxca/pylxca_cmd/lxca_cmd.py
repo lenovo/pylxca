@@ -63,7 +63,7 @@ class connect(InteractiveCommand):
     
         return out_obj
     
-    def handle_no_input(self,con_obj):
+    def handle_no_input(self,con_obj = None):
         #no_opt action can differ command to command so override this function if required
         self.invalid_input_err()
         return
@@ -96,7 +96,7 @@ class log(InteractiveCommand):
     Connects to the LXCA Interface
     log -l <level>  
     """
-    def handle_no_input(self):
+    def handle_no_input(self,con_obj = None):
         api = pylxca.pylxca_api.lxca_api()
         self.sprint("Current Log Level is set to " + str(logging.getLevelName(api.get_log_level())))
         message = """
@@ -134,7 +134,7 @@ Possible Log Levels, Please use following values to set desired log level.
 
 class ostream(InteractiveCommand):
 
-    def handle_no_input(self):
+    def handle_no_input(self,con_obj = None):
         self.sprint("Current ostream level is set to %s" %(self.shell.ostream.get_lvl()))
         message = """
 Possible ostream levels, Please use following values to set desired stdout level. 

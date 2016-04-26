@@ -135,10 +135,11 @@ class InteractiveCommand(object):
                 if opt_dict:
                     view_filter = next((item for item in [opt_dict.get('v') , opt_dict.get('view')] if item is not None),'default')
         
-            if isinstance(out_obj, dict):
-                self.show_output(out_obj,view_filter)
-            else:
-                self.handle_output(out_obj)
+            if out_obj:
+                if isinstance(out_obj, dict):
+                    self.show_output(out_obj,view_filter)
+                else:
+                    self.handle_output(out_obj)
         except ConnectionError:
             self.sprint("Connection is not Initialized, Try connect")
         except HTTPError as re:
