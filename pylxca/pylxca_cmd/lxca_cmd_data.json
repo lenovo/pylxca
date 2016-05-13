@@ -10,7 +10,7 @@
     ], 
     [], 
     "Get nodes inventory", 
-    "\nUsage: nodes [-h] [-u <UUID>] [-s <manage/unmanaged>] [-c <chassis UUID>] [-v <view filter name>] \n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-u, --uuid=\tnode uuid\n\t-s, --status=\tnodes manage status (managed/unmanaged)\n\t-c, --chassis=\tchassis uuid\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tnodes -h \n\tnodes [-u <node UUID>] [-s <manage/unmanaged>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tnode uuid\n\t-s, --status\tnodes manage status (managed/unmanaged)\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "chassis": [
     "u:s:v:h", 
@@ -22,7 +22,7 @@
     ], 
     [], 
     "Get chassis inventory", 
-    "\nUsage: chassis [-h] [-u <UUID>] [-v <view filter name>]\n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-u, --uuid=\tchassis uuid\n\t-s, --status=\tchassis manage status (managed/unmanaged)\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tchassis -h\n\tchassis [-u <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tchassis uuid\n\t-s, --status\tchassis manage status (managed/unmanaged)\n\t-v, --view\tview filter name"
   ], 
   "switches": [
     "u:c:v:h", 
@@ -34,7 +34,7 @@
     ], 
     [], 
     "Get switches inventory", 
-    "\nUsage: switches [-h] [-u <UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-u, --uuid=\tswitch uuid\n\t-c, --chassis=\tchassis uuid\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tswitches -h \n\tswitches [-u <switch UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n-h\t\t\tThis option displays command usage information\n\t-u, --uuid\tswitch uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "fans": [
     "u:c:v:h", 
@@ -46,7 +46,7 @@
     ], 
     [], 
     "Get fans inventory", 
-    "\nUsage: fans [-h] [-u <UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-u, --uuid=\tfan uuid\n\t-c, --chassis=\tchassis uuid\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tfans -h \n\tfans [-u <fan UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tfan uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "powersupplies": [
     "u:c:v:h", 
@@ -58,7 +58,7 @@
     ], 
     [], 
     "Get Power Supply inventory", 
-    "\nUsage: powersupplies [-h] [-u <UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-u, --uuid=\tpower supply uuid\n\t-c, --chassis=\tchassis uuid\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tpowersupplies -h\n\tpowersupplies [-u <power supply UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\t\tThis option displays command usage information\n\t-u, --uuid\tpower supply uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "fanmuxes": [
     "u:c:v:h", 
@@ -70,7 +70,7 @@
     ], 
     [], 
     "Get Fan Mux inventory", 
-    "\nUsage: fanmuxes [-h] [-u <UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-u, --uuid=\tfan mux uuid\n\t-c, --chassis=\tchassis uuid\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tfanmuxes -h\n\tfanmuxes [-u <fan mux UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tfan mux uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "cmms": [
     "u:c:v:h", 
@@ -82,7 +82,7 @@
     ], 
     [], 
     "Get CMM inventory", 
-    "\nUsage: cmms [-h] [-u <UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-u, --uuid=\tcmm uuid\n\t-c, --chassis=\tchassis uuid\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tcmms -h\n\tcmms [-u <cmm UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tcmm uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "scalablesystem": [
     "i:t:v:s:h", 
@@ -95,7 +95,7 @@
     ], 
     [], 
     "Get Scalable Complex System inventory", 
-    "\nUsage: scalablesystem [-h] [-i <id>] [-t <type>] [-s <status>] [-v <view filter name>]\n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t-i, --id=\tscalable complex id\n\t-t, --type=\ttype (flex/rackserver)\n\t-s, --status=\tscalable system manage status (managed/unmanaged)\n\t-v, --view=\tview filter name"
+    "\nUSAGE:\n\tscalablesystem -h\n\tscalablesystem [-i <scalablesystem id>] [-t <scalablesystem type>] [-s <status>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-i, --id\tscalable complex id\n\t-t, --type\ttype (flex/rackserver)\n\t-s, --status\tscalable system manage status (managed/unmanaged)\n\t-v, --view\tview filter name"
   ],
   "connect": [
     "u:l:p:h", 
@@ -116,7 +116,7 @@
       ]
     ], 
     "Connect LXCA", 
-    "\nUsage: connect [-h] [-l <URL>] [-u <USER>] [--noverify] \n\n\toptional arguments:\n\t-h\t\tshow this help message\n\t--noverify\tdo not verify server certificate\n\tmandatory arguments\n\t-l, --url=\turl of LXCA\n\t-u, --user=\tusername to authenticate\n"
+    "\nUSAGE:\n\tconnect -h | --help \n\tconnect -l <URL> -u <USER> [--noverify] \n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-l, --url\tURL of LXCA\n\t-u, --user\tUsername to authenticate\n\t--noverify\tDo not verify the server certificate for https URLs"
   ], 
   "log": [
     "l:h", 
@@ -125,14 +125,14 @@
     ], 
     [], 
     "Get/set log level of Python LXCA", 
-    "\nUsage: log [-l <level>] \n\t-l, --lvl=\tlogging level\n"
+    "\nUSAGE:\n\tlog -h | --help \n\tlog [-l <level>] \n\nOPTIONS:\n\t\t-l, --lvl\tLogging level\n"
   ],
   "disconnect": [
     "h", 
     [], 
     [], 	
     "Disconnect LXCA", 
-    "\nUsage: disconnect"
+    "\nUSAGE:\n\tdisconnect -h | --help \n\tdisconnect"
   ],
   "ostream": [
     "l:h",
@@ -141,7 +141,7 @@
     ],
     [],
     "Set ostream level of PYLXCA Interactive Shell",
-    "\nUsage: ostream [-l <level>]\n\t-l, --lvl=\tverbose level\n"
+    "\nUSAGE:\n\tostream -h | --help \n\tostream [-l <level>]\n\t-l, --lvl\tverbose level\n"
   ],
   "jobs": [
     "i:u:s:c:d:h",
@@ -155,10 +155,10 @@
     ],
     [],
     "Retrieve and manage job information",
-    "\nUsage: jobs  [-i <job id>][-u <uuid of endpoint>][-s <jobs state>][-c <cancels the job with specified id>][-d <delete the job with specified id>]\n\n\toptional arguments:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state\n\t-c, --cancel\tcancel job of specified id\n\t-d, --delete\tdelete job of specified id\n"
+    "\nUSAGE:\n\tjobs -h | --help \n\tjobs  [-i <job id>][-u <uuid of endpoint>][-s <jobs state>][-c <cancels the job with specified id>][-d <delete the job with specified id>]\n\n\toptional arguments:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state\n\t-c, --cancel\tcancel job of specified id\n\t-d, --delete\tdelete job of specified id\n"
   ],
   "manage": [
-    "i:u:p:r:m:j:v:h",
+    "i:u:p:r:m:t:j:v:h",
     [
 	  "con=",
       "ip=",
@@ -166,12 +166,13 @@
 	  "pw=",
 	  "rpw=",
 	  "mp=",
+	  "type=",
       "job=",
       "view="
     ],
     [],
     "Manage the endpoint.",
-    "\nUsage: manage [-i <IP Address of endpoint>][-u <user ID to access the endpoint>][-p <current password to access the endpoint>][-r <recovery password for the endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip=\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user=\tuser ID to access the endpoint\n\t-p, --pw=\tThe current password to access the endpoint.\n\t-r, --rpw=\tThe recovery password to be used for the endpoint.\n\t-m, --mp=\tA list of endpoint management ports, it is a comma separated\n\t\t\tlist of properties which includes boolean flag of whether the\n\t\t\tport enabled, port number, protocol. properties should be separate\n\t\t\tby colon\n\t-j, --job=\tJob ID of manage request\n"
+    "\nUSAGE:\n\tmanage  -h | --help \n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> -r <recovery password for the endpoint> \n\t\t-m <list of endpoint management ports> -t <type of endpoint to be managed>\n\tmanage \n\t\t\t-j <job ID>\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated\n\t\t\tlist of properties which includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. properties \n\t\t\tshould be separate by colon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tLenovo ThinkServer\n\t\t\t\tLenovo Storage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower Server\n\t-j, --job\tJob ID of existing manage request\n"
   ],
   "unmanage": [
     "i:u:j:v:h",
@@ -184,7 +185,7 @@
     ],
     [],
     "Unmanage the endpoint.",
-    "\nUsage: unmanage [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip=\tOne or more IP addresses for each endpoint to be unmanaged.\n\t-j, --job=\tJob ID of unmanage request\n"
+    "\nUSAGE:\n\tunmanage [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be unmanaged.\n\t-j, --job\tJob ID of unmanage request\n"
   ],  
   "discover": [
     "i:j:v:h",
@@ -196,7 +197,7 @@
     ],
     [],
     "Retrieve a list of devices discovered by SLP discovery.",
-    "\nUsage: discover [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip=\tOne or more IP addresses for each endpoint to be discovered.\n\t-j, --job=\tJob ID of discover request\n"
+    "\nUSAGE:\n\tdiscover [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be discovered.\n\t-j, --job\tJob ID of discover request\n"
   ],
   "configpattern": [
     "i:h",
@@ -206,7 +207,7 @@
     ],
     [],
     "Retrieve information about all server and category patterns that have been defined in the Lenovo XClarity Administrator.",
-    "\nUsage: configpattern [-i <ID of specific pattern>]\n"
+    "\nUSAGE:\n\tconfigpattern [-i <ID of specific pattern>]\n"
   ],
   "configprofile": [
     "i:h",
@@ -216,7 +217,7 @@
     ],
     [],
     "Retrieve information about server profiles from the Lenovo XClarity Administrator.",
-    "\nUsage: configprofile [-i <ID of specific profile>]\n"
+    "\nUSAGE:\n\tconfigprofile [-i <ID of specific profile>]\n"
   ],
   "configtarget": [
     "i:j:v:h",
@@ -226,7 +227,7 @@
     ],
     [],
     "Retrieve a list of deployable target systems according to their server pattern and profile.",
-    "\nUsage: configtarget [-i <ID of specific profile or pattern>]\n"
+    "\nUSAGE:\n\tconfigtarget [-i <ID of specific profile or pattern>]\n"
   ],
   "update": [
     "a:r:f:v:h",
@@ -238,7 +239,7 @@
     ],
     [],
     "Firmware update actions on target endpoints and retrieve the status and progress of firmware updates and firmware repository.",
-    "\nUsage: update [-a <Action to take>] [-r/-f select repository or firmware for action] \n"
+    "\nUSAGE:\n\tupdate [-a <Action to take>] [-r/-f select repository or firmware for action] \n"
   ],
   "user": [
     "i:h",
@@ -248,7 +249,7 @@
     ],
     [],
     "Retrieve information about user account of Lenovo XClarity Administrator.",
-    "\nUsage: user [-i <unique ID of the user to be retrieved>]\n"
+    "\nUSAGE:\n\tuser [-i <unique ID of the user to be retrieved>]\n"
   ],
   "ffdc": [
     "u:h",
@@ -258,7 +259,7 @@
     ],
     [],
     "Collect and export the first failure data capture (FFDC) data for a specific managed endpoint (CMM, server, storage node, or switch).",
-    "\nUsage: ffdc [-u <UUID of the target endpoint>]\n"
+    "\nUSAGE:\n\tffdc [-u <UUID of the target endpoint>]\n"
   ],
   "lxcalog": [
     "f:h",
@@ -268,6 +269,6 @@
     ],
     [],
     "Retrieve hardware and management-server events in the events log.",
-    "\nUsage: lxcalog [-f < events that apply to the specified filters >]\n"
+    "\nUSAGE:\n\tlxcalog [-f < events that apply to the specified filters >]\n"
   ]
 }

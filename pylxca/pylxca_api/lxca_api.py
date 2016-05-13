@@ -304,6 +304,7 @@ class lxca_api ():
         rpw = None
         mp = None
         jobid = None
+        type = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -314,9 +315,10 @@ class lxca_api ():
             pw = next((item for item in [dict_handler.get  ('p') , dict_handler.get('pw')] if item is not None),None)
             rpw = next((item for item in [dict_handler.get  ('u') , dict_handler.get('rpw')] if item is not None),None)
             mp = next((item for item in [dict_handler.get  ('m') , dict_handler.get('mp')] if item is not None),None)
+            type = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
         
-        resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,pw,rpw,mp,jobid)
+        resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,pw,rpw,mp,type,jobid)
         
         try:
             py_obj = json.loads(resp.text)

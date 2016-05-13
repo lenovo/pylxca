@@ -4,12 +4,6 @@
 @author: Prashant Bhosale <pbhosale@lenovo.com>, Girish Kumar <gkumar1@lenovo.com>
 @license: Lenovo License
 @copyright: Lenovo Copyright
-(C) Copyright Lenovo 2015.
-LIMITED AND RESTRICTED RIGHTS NOTICE:
-If data or software is delivered pursuant a General Services
-Administration (GSA) contract, use, reproduction, or disclosure
-is subject to restrictions set forth in Contract No. GS-35F-05925.
-
 @organization: Lenovo Group Ltd
 @summary: The main script for PYLXCA Tool, It creates a shell and accept raw input to process it.
 
