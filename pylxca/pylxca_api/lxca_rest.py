@@ -180,7 +180,7 @@ class lxca_rest:
                 payload = [{"ipAddresses":ip_addr.split(",")}]
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
                 resp.raise_for_status()
-                if resp.status_code == requests.codes['ok']:
+                if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
                         job = resp.headers._store["location"][-1].split("/")[-1]
                         return job
@@ -215,7 +215,7 @@ class lxca_rest:
                 param_dict["type"] = type
                 if rpw:param_dict["recoveryPassword"] = rpw
                 for each_mp in mp.split(","):
-                    mp_data = each_mp.split(":")
+                    mp_data = each_mp.split(";")
                     mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
                 param_dict["managementPorts"] = mp_data_list                 
                 payload = [param_dict]
@@ -223,7 +223,7 @@ class lxca_rest:
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
                 resp.raise_for_status()
                 
-                if resp.status_code == requests.codes['ok']:
+                if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
                         job = resp.headers._store["location"][-1].split("/")[-1]
                         return job
@@ -242,35 +242,76 @@ class lxca_rest:
             raise re
         return resp
 
-    def do_unmanage(self,url, session, ip_addr,uuid,jobid):
+    def do_unmanage(self,url, session, endpoints,force,jobid):
+        
+        endpoints_list = list()
+        param_dict = dict()
+        
         try:
-            if ip_addr & uuid:
+            if endpoints:
                 url = url + '/unmanageRequest'
-                payload = list()
-                param_dict = dict()
-                endpoints = dict()
-                endpoints["ipAddresses"]=ip_addr.split(",")
-                endpoints["uuid"] = uuid
+                for each_ep in endpoints.split(","):
+                    ip_addr = None
+                    each_ep_dict = dict()
+                    
+                    ep_data = each_ep.split(";")
+                    ip_addr = ep_data[0]
+                    uuid = ep_data[1]
+                    type = ep_data[2]
+                    each_ep_dict = {"ipAddresses":ip_addr.split("#"),"type":type,"uuid":uuid}
+                    endpoints_list.append(each_ep_dict)
+                param_dict["endpoints"] = endpoints_list
+                param_dict["forceUnmanage"] = force
 
-                payload = [{"ipAddresses":ip_addr.split(",")}]
+                payload = param_dict
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
                 resp.raise_for_status()
-                if resp.status_code == requests.codes['ok']:
+                if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
                         job = resp.headers._store["location"][-1].split("/")[-1]
                         return job
                     else:
                         return None
             elif jobid:
-                url = url + '/discoverRequest/jobs/' + jobid
+                url = url + '/unmanageRequest/jobs/' + jobid
                 resp = session.get(url,verify=False, timeout=3)
                 resp.raise_for_status()
             else:
-                url = url + '/discovery'
-                resp = session.get(url, verify=False, timeout=3)
-                resp.raise_for_status()
+                logger.error("Invalid execution of unmanage REST API")
+                raise Exception("Invalid execution of unmanage REST API")
                               
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
+        
         return resp
+
+    def get_jobs(self,url, session,jobid,uuid,state,canceljobid,deletejobid):
+        url = url + '/jobs'
+        try: 
+            if jobid:
+                url = url + '/' + jobid
+                
+                if state:
+                    if state == "Pending " or state == "Running" \
+                    or state == "Complete" or state == "Cancelled" \
+                    or state == "Running_With_Errors" or state == "Cancelled_With_Errors" \
+                    or state == "Stopped_With_Error" or state == "Interrupted":
+                        url = url + '?state=' + state
+                        if uuid:
+                            url = url + ',uuid=' + uuid
+                    else:   
+                        raise Exception("Invalid argument 'state': %s" %state)
+                if state == None and uuid:
+                    url = url + '?uuid=' + uuid   
+                    
+                resp = session.get(url, verify=False, timeout=3)
+                resp.raise_for_status()
+                 
+            else:
+                resp = session.get(url, verify=False, timeout=3)
+                resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp    

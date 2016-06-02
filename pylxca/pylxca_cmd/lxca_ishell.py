@@ -145,13 +145,15 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.discover(self))
         self.add_command(lxca_cmd.manage(self))
         self.add_command(lxca_cmd.unmanage(self))
-        self.add_command(lxca_cmd.configpattern(self))
-        self.add_command(lxca_cmd.configprofile(self))
-        self.add_command(lxca_cmd.configtarget(self))
-        self.add_command(lxca_cmd.user(self))
+        self.add_command(lxca_cmd.configpatterns(self))
+        self.add_command(lxca_cmd.configprofiles(self))
+        self.add_command(lxca_cmd.configtargets(self))
+        self.add_command(lxca_cmd.users(self))
         self.add_command(lxca_cmd.lxcalog(self))
         self.add_command(lxca_cmd.ffdc(self))
-        self.add_command(lxca_cmd.update(self))
+        self.add_command(lxca_cmd.updatepolicy(self))
+        self.add_command(lxca_cmd.updatecomp(self))
+        self.add_command(lxca_cmd.updaterepo(self))
 
     def sprint(self,str):
         if self.ostream:

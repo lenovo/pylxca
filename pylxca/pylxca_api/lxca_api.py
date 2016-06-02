@@ -51,7 +51,18 @@ class lxca_api ():
                           'log':self.get_log_level,
                           'discover':self.do_discovery,
                           'manage':self.do_manage,
-                          'unmanage':self.do_unmanage}
+                          'unmanage':self.do_unmanage,
+                          'configpatterns':self.do_configpatterns,
+                          'configprofiles':self.do_configprofiles,
+                          'configtargets':self.do_configtargets,
+                          'updatepolicy':self.do_updatepolicy,
+                          'updaterepo':self.do_updaterepo,
+                          'updatecomp':self.do_updatecomp,
+                          'users':self.get_users,
+                          'ffdc':self.get_ffdc,
+                          'jobs':self.get_jobs,
+                          'lxcalog':self.get_lxcalog
+                        }
     
     def api( self, object_name, dict_handler = None, con = None ):
         
@@ -328,22 +339,64 @@ class lxca_api ():
 
 
     def do_unmanage( self, dict_handler = None ):
-        ip_addr = None
-        uuid = None
+        endpoints = None
+        force = False
         jobid = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            ip_addr = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
-            uuid = next((item for item in [dict_handler.get  ('u') , dict_handler.get('uuid')] if item is not None),None)
+            endpoints = next((item for item in [dict_handler.get  ('e') , dict_handler.get('ep')] if item is not None),None)
+            force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),False)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
-        
-        resp = lxca_rest().do_unmanage(self.con.get_url(),self.con.get_session(),ip_addr,uuid,jobid)
+            
+        resp = lxca_rest().do_unmanage(self.con.get_url(),self.con.get_session(),endpoints,force,jobid)
         
         try:
             py_obj = json.loads(resp.text)
             return py_obj
         except AttributeError,ValueError:
             return resp
+        
+    def do_configpatterns( self, dict_handler = None ):
+        return
+    def do_configprofiles( self, dict_handler = None ):
+        return
+    def do_updatepolicy( self, dict_handler = None ):
+        return
+    def do_updaterepo( self, dict_handler = None ):
+        return
+    def do_updatecomp( self, dict_handler = None ):
+        return
+    def get_users( self, dict_handler = None ):
+        return
+    def get_ffdc( self, dict_handler = None ): 
+        return
+    def get_lxcalog( self, dict_handler = None ):        
+        return
+    
+    def get_jobs( self, dict_handler = None ):        
+        jobid = None
+        uuid = None
+        state = None
+        canceljobid = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            jobid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+            uuid = next((item for item in [dict_handler.get  ('u') , dict_handler.get('uuid')] if item is not None),False)
+            state = next((item for item in [dict_handler.get  ('s') , dict_handler.get('state')] if item is not None),None)
+            canceljobid = next((item for item in [dict_handler.get  ('c') , dict_handler.get('cancel')] if item is not None),None)
+            deletejobid = next((item for item in [dict_handler.get  ('d') , dict_handler.get('delete')] if item is not None),None)
+            
+        resp = lxca_rest().get_jobs(self.con.get_url(),self.con.get_session(),jobid,uuid,state,canceljobid,deletejobid)
+        
+        try:
+            py_obj = json.loads(resp.text)
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
+                    

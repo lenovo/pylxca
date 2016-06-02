@@ -38,7 +38,8 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
               "scalablesystem":scalablesystem,
               "discover":discover,
               "manage":manage,
-              "unmanage":unmanage, 
+              "unmanage":unmanage,
+              "jobs":jobs, 
               "help": help}
         ns.update()
         sys.ps1 = "PYLXCA >> "
@@ -257,7 +258,7 @@ def discover(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ip']
+    keylist = ['con','ip','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
@@ -287,15 +288,207 @@ def manage(*args, **kwargs):
 def unmanage(*args, **kwargs):
     '''
     -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
 
     -------
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ip','job']
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def configpatterns(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def configprofiles(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def configtargets(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def updatepolicy(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def updaterepo(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def updatecomp(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+
+
+def users(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def ffdc(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def lxcalog(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','ep','force','job']
+    
+    for i in range(len(args)):
+        kwargs[keylist[i]]= args[i]
+    
+    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+def jobs(*args, **kwargs):
+    '''
+    -------
+    use this function to unmanage chassis from LXCA
+    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
+    unmanage( con, ep,force )
+
+    -------
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['con','id','uuid','state','cancel','delete']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

@@ -145,6 +145,10 @@
 		<Chassis_List name="chassisList" type="object">
             <Name>name</Name>
             <IPAddresses>ipAddresses</IPAddresses>
+			<machineType>machineType</machineType>
+			<name>name</name>
+			<serialNumber>serialNumber</serialNumber>
+			<type>type</type>
         </Chassis_List>
     </discover>
     <discover name="job">
@@ -152,6 +156,8 @@
 		<Chassis_List name="chassisList" type="object">
             <Name>name</Name>
             <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<name>name</name>
         </Chassis_List>
     </discover>
     <manage name="default">
@@ -159,6 +165,10 @@
 		<Results name="results" type="object">
             <progress>progress</progress>
             <result>result</result>
+			<status name="status" type="object">
+				<description>description</description>
+				<state>state</state>
+			</status>
         </Results>
     </manage>
     <unmanage name="default">

@@ -286,31 +286,40 @@ class ffdc(InteractiveCommand):
     """
 ###############################################################################
 
-class user(InteractiveCommand):
+class users(InteractiveCommand):
     """
     Retrieve and Manage information about jobs.
     """
 ###############################################################################
 
-class update(InteractiveCommand):
+class updatepolicy(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+class updaterepo(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+class updatecomp(InteractiveCommand):
+    """
+    Retrieve and Manage information about jobs.
+    """
+###############################################################################
+class configtargets(InteractiveCommand):
     """
     Retrieve and Manage information about jobs.
     """
 ###############################################################################
 
-class configtarget(InteractiveCommand):
+class configpatterns(InteractiveCommand):
     """
     Retrieve and Manage information about jobs.
     """
 ###############################################################################
 
-class configpattern(InteractiveCommand):
-    """
-    Retrieve and Manage information about jobs.
-    """
-###############################################################################
-
-class configprofile(InteractiveCommand):
+class configprofiles(InteractiveCommand):
     """
     Retrieve and Manage information about jobs.
     """

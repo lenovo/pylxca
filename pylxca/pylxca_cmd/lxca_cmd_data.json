@@ -98,7 +98,7 @@
     "\nUSAGE:\n\tscalablesystem -h\n\tscalablesystem [-i <scalablesystem id>] [-t <scalablesystem type>] [-s <status>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-i, --id\tscalable complex id\n\t-t, --type\ttype (flex/rackserver)\n\t-s, --status\tscalable system manage status (managed/unmanaged)\n\t-v, --view\tview filter name"
   ],
   "connect": [
-    "u:l:p:h", 
+    "u:l:p:n:h", 
     [
       "url=", 
       "user=",
@@ -141,7 +141,7 @@
     ],
     [],
     "Set ostream level of PYLXCA Interactive Shell",
-    "\nUSAGE:\n\tostream -h | --help \n\tostream [-l <level>]\n\t-l, --lvl\tverbose level\n"
+    "\nUSAGE:\n\tostream -h | --help \n\tostream [-l <level>]\n\nOPTIONS:\n\t-l, --lvl\tverbose level\n"
   ],
   "jobs": [
     "i:u:s:c:d:h",
@@ -155,7 +155,7 @@
     ],
     [],
     "Retrieve and manage job information",
-    "\nUSAGE:\n\tjobs -h | --help \n\tjobs  [-i <job id>][-u <uuid of endpoint>][-s <jobs state>][-c <cancels the job with specified id>][-d <delete the job with specified id>]\n\n\toptional arguments:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state\n\t-c, --cancel\tcancel job of specified id\n\t-d, --delete\tdelete job of specified id\n"
+    "\nUSAGE:\n\tjobs -h | --help \n\tjobs [-i <job id>][-u <uuid of endpoint>][-s <jobs state>]\n\tjobs [-c <cancels the job with specified id>]\n\tjobs [-d <delete the job with specified id>]\n\nOPTIONS:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state. \n\t\t\tThe state can be one of the following \n\t\t\tPending\n\t\t\tRunning\n\t\t\tComplete\n\t\t\tCancelled\n\t\t\tRunning_With_Errors\n\t\t\tCancelled_With_Errors\n\t\t\tStopped_With_Error\n\t\t\tInterrupted\n\t-c, --cancel=\tcancel job of specified id\n\t-d, --delete=\tdelete job of specified id\n"
   ],
   "manage": [
     "i:u:p:r:m:t:j:v:h",
@@ -172,20 +172,20 @@
     ],
     [],
     "Manage the endpoint.",
-    "\nUSAGE:\n\tmanage  -h | --help \n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> -r <recovery password for the endpoint> \n\t\t-m <list of endpoint management ports> -t <type of endpoint to be managed>\n\tmanage \n\t\t\t-j <job ID>\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated\n\t\t\tlist of properties which includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. properties \n\t\t\tshould be separate by colon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tLenovo ThinkServer\n\t\t\t\tLenovo Storage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower Server\n\t-j, --job\tJob ID of existing manage request\n"
+    "\nUSAGE:\n\tmanage  -h | --help \n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> -r <recovery password for the endpoint> \n\t\t-m <list of endpoint management ports> -t <type of endpoint to be managed>\n\tmanage  -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated list of \n\t\t\tmanagement port information. Each management port includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. These properties \n\t\t\tshould be separate by semicolon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tLenovo ThinkServer\n\t\t\t\tLenovo Storage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower Server\n\t-j, --job\tJob ID of existing manage request\n\t-v, --view\tview filter name"
   ],
   "unmanage": [
-    "i:u:j:v:h",
+    "e:f:j:v:h",
     [
 	  "con=",
-      "ip=",
-      "uuid",
+      "ep=",
+	  "force=",
       "job=",
       "view="
     ],
     [],
     "Unmanage the endpoint.",
-    "\nUSAGE:\n\tunmanage [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be unmanaged.\n\t-j, --job\tJob ID of unmanage request\n"
+    "\nUSAGE:\n\tunmanage -h | --help \n\tunmanage -e <list of endpoints to unmanage> [--force]\n\tunmanage -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-e, --ep\tone or more endpoints to be unmanaged.\n\t\t\tThis is comma separated list of multiple endpoints, each endpoint should\n\t\t\tcontain endpoint information separated by semicolon.\n\t\t\tendpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and\n\t\t\tType of endpoint to be unmanaged ,This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tLenovo ThinkServer\n\t\t\t\tLenovo Storage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower Server\n\t-f, --force\t\tIndicates whether to force the unmanagement of an endpoint (True/False)\n\t-j, --job\tJob ID of unmanage request\n\t-v, --view\tview filter name"
   ],  
   "discover": [
     "i:j:v:h",
@@ -197,19 +197,22 @@
     ],
     [],
     "Retrieve a list of devices discovered by SLP discovery.",
-    "\nUSAGE:\n\tdiscover [-i <IP Address of endpoint>][-j <job ID>]\n\n\toptional arguments:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be discovered.\n\t-j, --job\tJob ID of discover request\n"
+    "\nUSAGE:\n\tdiscover [-i <IP Address of endpoint>][-j <job ID>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be discovered.\n\t-j, --job\tJob ID of discover request\n"
   ],
-  "configpattern": [
-    "i:h",
+  "configpatterns": [
+    "i:e:r:t:h",
     [
 	  "con=",
-      "id="
+      "id=",
+	  "endpoint=",
+	  "restart=",
+	  "type="
     ],
     [],
-    "Retrieve information about all server and category patterns that have been defined in the Lenovo XClarity Administrator.",
-    "\nUSAGE:\n\tconfigpattern [-i <ID of specific pattern>]\n"
+    "Retrieve information and deploy all server and category patterns\n\t\t\tthat have been defined in the Lenovo XClarity Administrator ",
+    "\nUSAGE:\n\tconfigpatterns [-i <ID of specific pattern>] [-r <when to activate the configurations>] [-e <list of one or more UUIDs for the target servers>] [-t <type of the target server>] [-v <view filter name>]\n\nOPTIONS:\n\t-i, --id\tThe unique ID that was assigned when the server pattern was created\n\t-e, --endpoint\tList of one or more UUIDs for the target servers,If a target is an empty bay,\n\t\t\tspecify the location ID; otherwise, specify the server UUID\n\t-r, --restart\tWhen to activate the configurations. This can be one of the following values:\n\t\t\tdefer - Activate IMM settings but do not restart the server.\n\t\t\timmediate - Activate all settings and restart the server immediately.\n\t\t\tpending - Manually activate the server profile and restart the server. \n\t-t, --type\tType of the server, It can be one of the following\n\t\t\tNode\n\t\t\tRack\n\t\t\tTower\n\t-v, --view\tView filter name"
   ],
-  "configprofile": [
+  "configprofiles": [
     "i:h",
     [
 	  "con=",
@@ -217,31 +220,57 @@
     ],
     [],
     "Retrieve information about server profiles from the Lenovo XClarity Administrator.",
-    "\nUSAGE:\n\tconfigprofile [-i <ID of specific profile>]\n"
+    "\nUSAGE:\n\tconfigprofiles [-i <ID of specific profile>] [-v <view filter name>]\n\nOPTIONS:\n\t-i, --id\tThe unique ID that was assigned when the server pattern was created\n\t-v, --view\tView filter name"
   ],
-  "configtarget": [
+  "configtargets": [
     "i:j:v:h",
     [
 	  "con=",
-      "id="
+      "id=",
+	  "view"
     ],
     [],
-    "Retrieve a list of deployable target systems according to their server pattern and profile.",
-    "\nUSAGE:\n\tconfigtarget [-i <ID of specific profile or pattern>]\n"
+    "Retrieve a list of deployable target systems according to their\n\t\t\tserver pattern and profile.",
+    "\nUSAGE:\n\tconfigtargets [-i <ID of specific profile or pattern>] [-v <view filter name>]\n\nOPTIONS:\n\t-i, --id\tThe unique ID that was assigned when the server pattern was created\n\t-v, --view\tView filter name"
   ],
-  "update": [
-    "a:r:f:v:h",
+  "updatepolicy": [
+    "p:u:h",
     [
 	  "con=",
-	  "action=",
-      "repo",
-	  "firmware"
+	  "policy=",
+	  "uuid="
     ],
     [],
-    "Firmware update actions on target endpoints and retrieve the status and progress of firmware updates and firmware repository.",
-    "\nUSAGE:\n\tupdate [-a <Action to take>] [-r/-f select repository or firmware for action] \n"
+    "Retrieve basic or detailed information for a specified \n\t\t\tcompliance policy or all policies.",
+    "\nUSAGE:\n\tupdatepolicy [-v <view filter name>]\n\tupdatepolicy -p Information about compliance policy -u <UUID of managed endpoint>\n\nOPTIONS:\n\t-p, --policy\tThis is comma separated list of compliance policies. Each policy infomation \n\t\t\tshould contain policyname and type separated by semicolon.\n\t\t\tpolicyname - name of the compliance-policy to be assigned\n\t\t\ttype - The device type. This can be one of the following values.\n\t\t\t\tCMM - Chassis Management Module\n\t\t\t\tIOSwitch - Flex switch\n\t\t\t\tRACKSWITCH - RackSwitch switch\n\t\t\t\tSTORAGE - Lenovo Storage system\n\t\t\t\txITE - Compute node or rack server\n\t-v, --view\tView filter name"
   ],
-  "user": [
+  "updaterepo": [
+    "a:k:f:v:h",
+    [
+	  "con=",
+	  "key="
+    ],
+    [],
+	"Retrieve information about firmware in the firmware-updates repository.",
+    "\nUSAGE:\n\tupdaterepo -k <Key to return the specified type of update> [-v <view filter name>]\n\nOPTIONS:\n\t-k, --key\tReturns the specified type of update. This can be one of the following values.\n\t\t\t\tsupportedMts - Returns a list of supported machine types\n\t\t\t\tsize - Returns the repository size\n\t\t\t\tlastRefreshed - Returns the timestamp of the last repository refresh\n\t\t\t\timportDir - Returns the import directory for the repository.\n\t\t\t\tpublicKeys - Returns the supported signed keys\n\t\t\t\tupdates - Returns information about all firmware updates\n\t\t\t\tupdatesByMt - Returns information about firmware updates for the specified machine type\n\t\t\t\tupdatesByMtByComp - Returns the update component names for the specified machine type\n\t\t\t\texport - Returns the ZIP file that contain the firmware-compliance policies.\n\t-v, --view\tView filter name"
+  ],
+  "updatecomp": [
+    "q:a:m:w:s:t:c:v:h",
+    [
+	  "con=",
+	  "query=",
+	  "action=",
+	  "mode=",
+	  "switch=",
+	  "server=",
+	  "storage=",
+	  "cmm="
+    ],
+    [],
+    "Firmware update actions on target endpoints and retrieve the \n\t\t\tstatus and progress of firmware updates and firmware repository.",
+    "\nUSAGE:\n\tupdatecomp [-q <The data to return>] [-v <view filter name>]\n\tupdatecomp [-c <list of cmms>] [-w <list of switches>] [-s <list of servers>] [-t <list of storages>] [-a <The action to take.>] [-m <activate mode>]\n\nOPTIONS:\n\t-q, --query\tThe data to return. This can be one of the following values.\n\t\t\tcomponents - Returns a list of endpoints and components that can be updated.\n\t\t\tstatus - Returns the status and progress of firmware updates. This is the default value\n\t-m, --mode\tIndicates when to activate the update. This can be one of the following values.\n\t\t\timmediate - Uses Immediate Activaton mode when applying firmware updates to the selected endpoints. \n\t\t\tdelayed - Uses Delayed Activaton mode when applying firmware updates to the selected endpoints.\n\t-c, --cmm\tlist of cmms\n\t-w, --switch\tlist of switches\n\t-s, --server\tlist of servers\n\t-t, --storage\tlist of storages\n\t\t\teach of the list should contain following infomration separated by comma\n\t\t\tComponent - Component name\n\t\t\tFixid - Firmware-updare ID of the target package to be applied to the component.\n\t\t\tUUID - UUID of the device\n\t-v, --view\tView filter name"
+  ],
+  "users": [
     "i:h",
     [
 	  "con=",
@@ -249,7 +278,7 @@
     ],
     [],
     "Retrieve information about user account of Lenovo XClarity Administrator.",
-    "\nUSAGE:\n\tuser [-i <unique ID of the user to be retrieved>]\n"
+    "\nUSAGE:\n\tusers [-i <unique ID of the user to be retrieved>][-v <view filter name>]\n\nOPTIONS:\n\t-i, --id\tunique ID of the user to be retrieved\n\t-v, --view\tView filter name"
   ],
   "ffdc": [
     "u:h",
@@ -258,8 +287,8 @@
 	  "uuid="
     ],
     [],
-    "Collect and export the first failure data capture (FFDC) data for a specific managed endpoint (CMM, server, storage node, or switch).",
-    "\nUSAGE:\n\tffdc [-u <UUID of the target endpoint>]\n"
+    "Collect and export the first failure data capture (FFDC) data \n\t\t\tfor a specific managed endpoint (CMM, server, storage node, or switch).",
+    "\nUSAGE:\n\tffdc [-u <UUID of the target endpoint>]\n\nOPTIONS:\n\t-u, --uuid\t<UUID of the target endpoint>"
   ],
   "lxcalog": [
     "f:h",
