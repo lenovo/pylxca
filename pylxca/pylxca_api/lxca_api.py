@@ -359,6 +359,8 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         
+    def do_configtargets( self, dict_handler = None ):
+        return
     def do_configpatterns( self, dict_handler = None ):
         return
     def do_configprofiles( self, dict_handler = None ):
@@ -381,6 +383,7 @@ class lxca_api ():
         uuid = None
         state = None
         canceljobid = None
+        deletejobid = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -396,6 +399,7 @@ class lxca_api ():
         
         try:
             py_obj = json.loads(resp.text)
+            py_obj = {'jobsList':py_obj}
             return py_obj
         except AttributeError,ValueError:
             return resp

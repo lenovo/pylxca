@@ -178,4 +178,12 @@
             <result>result</result>l
         </Results>
     </unmanage>
+	<jobs name="default">
+    	<JOB_ID>id</JOB_ID>
+		<Status name="status" type="object">
+            <State>state</State>
+            <Percentage>percentage</Percentage>l
+        </Status>
+		<UUID>uuid</UUID>
+    </jobs>
 </filters>

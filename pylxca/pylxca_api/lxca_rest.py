@@ -307,8 +307,24 @@ class lxca_rest:
                     
                 resp = session.get(url, verify=False, timeout=3)
                 resp.raise_for_status()
-                 
+            elif canceljobid:
+                return
+            elif deletejobid:
+                return     
             else:
+                if state:
+                    if state == "Pending " or state == "Running" \
+                    or state == "Complete" or state == "Cancelled" \
+                    or state == "Running_With_Errors" or state == "Cancelled_With_Errors" \
+                    or state == "Stopped_With_Error" or state == "Interrupted":
+                        url = url + '?state=' + state
+                        if uuid:
+                            url = url + ',uuid=' + uuid
+                    else:   
+                        raise Exception("Invalid argument 'state': %s" %state)
+                if state == None and uuid:
+                    url = url + '?uuid=' + uuid  
+                
                 resp = session.get(url, verify=False, timeout=3)
                 resp.raise_for_status()
         except HTTPError as re:
