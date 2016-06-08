@@ -431,7 +431,7 @@ def users(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','id']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

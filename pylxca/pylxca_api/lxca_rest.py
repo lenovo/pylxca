@@ -331,3 +331,16 @@ class lxca_rest:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp    
+    
+    def get_users(self,url, session, userid):
+        url = url + '/userAccounts'
+        
+        if userid:
+            url = url + '/' + userid
+                        
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+        return resp

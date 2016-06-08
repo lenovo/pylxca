@@ -371,8 +371,6 @@ class lxca_api ():
         return
     def do_updatecomp( self, dict_handler = None ):
         return
-    def get_users( self, dict_handler = None ):
-        return
     def get_ffdc( self, dict_handler = None ): 
         return
     def get_lxcalog( self, dict_handler = None ):        
@@ -404,3 +402,26 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
                     
+                    
+    def get_users( self, dict_handler = None ):
+        userid = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            userid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+            
+        resp = lxca_rest().get_users(self.con.get_url(),self.con.get_session(),userid)
+        
+        try:
+            
+            if userid:
+                py_obj = json.loads(resp.text)['response']
+            else:
+                py_obj = json.loads(resp.text)
+                py_obj = {'usersList':py_obj['response']}
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
+        return

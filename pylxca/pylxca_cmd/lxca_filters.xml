@@ -186,4 +186,11 @@
         </Status>
 		<UUID>uuid</UUID>
     </jobs>
+	<users name="default">
+		<userName>userName</userName>
+    	<activeSessions>activeSessions</activeSessions>
+		<description>description</description>
+		<id>id</id>
+		<State>state</State>
+    </users>
 </filters>
