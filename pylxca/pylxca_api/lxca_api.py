@@ -355,9 +355,9 @@ class lxca_api ():
         
         try:
             py_obj = json.loads(resp.text)
-            return py_obj
         except AttributeError,ValueError:
             return resp
+        return py_obj
         
     def do_configtargets( self, dict_handler = None ):
         return
@@ -405,6 +405,7 @@ class lxca_api ():
             return py_obj
         except AttributeError,ValueError:
             return resp
+        
                     
                     
     def get_users( self, dict_handler = None ):
@@ -425,10 +426,25 @@ class lxca_api ():
             else:
                 py_obj = json.loads(resp.text)
                 py_obj = {'usersList':py_obj['response']}
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+    
+    def get_lxcalog( self, dict_handler = None ):        
+        filter = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            filter = next((item for item in [dict_handler.get  ('f') , dict_handler.get('filter')] if item is not None),None)
+            
+        resp = lxca_rest().get_lxcalog(self.con.get_url(),self.con.get_session(),filter)
+        
+        try:
+            py_obj = json.loads(resp.text)
+            py_obj = {'eventList':py_obj}
             return py_obj
         except AttributeError,ValueError:
             return resp
-        return
-    
-    def get_lxcalog( self, dict_handler = None ):        
-        return
+        

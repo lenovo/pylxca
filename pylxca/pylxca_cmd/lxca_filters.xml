@@ -193,4 +193,11 @@
 		<id>id</id>
 		<State>state</State>
     </users>
+	<lxcalog name="default">
+		<componentID>componentID</componentID>
+    	<eventID>eventID</eventID>
+		<msg>msg</msg>
+		<timeStamp>timeStamp</timeStamp>
+		<severity>severity</severity>
+    </lxcalog>
 </filters>

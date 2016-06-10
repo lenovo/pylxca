@@ -353,3 +353,16 @@ class lxca_rest:
         except HTTPError as re:
             raise re
         return resp
+    
+    def get_lxcalog(self,url, session, filter):
+        url = url + '/events'
+        
+        if filter:
+            url = url + '?filterWith=' + filter
+                        
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+        return resp

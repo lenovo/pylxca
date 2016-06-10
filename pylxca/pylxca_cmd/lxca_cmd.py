@@ -290,7 +290,7 @@ class lxcalog(InteractiveCommand):
 
 class ffdc(InteractiveCommand):
     """
-    Retrieve and Manage information about jobs.
+    Retrieve and Manage information about LXCA Event log.
     """
 ###############################################################################
 
