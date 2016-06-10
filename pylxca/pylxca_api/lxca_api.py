@@ -373,8 +373,7 @@ class lxca_api ():
         return
     def get_ffdc( self, dict_handler = None ): 
         return
-    def get_lxcalog( self, dict_handler = None ):        
-        return
+
     
     def get_jobs( self, dict_handler = None ):        
         jobid = None
@@ -396,8 +395,13 @@ class lxca_api ():
         resp = lxca_rest().get_jobs(self.con.get_url(),self.con.get_session(),jobid,uuid,state,canceljobid,deletejobid)
         
         try:
-            py_obj = json.loads(resp.text)
-            py_obj = {'jobsList':py_obj}
+            if jobid:
+                py_obj = json.loads(resp.text)
+            if canceljobid or deletejobid:
+                return resp
+            else:
+                py_obj = json.loads(resp.text)
+                py_obj = {'jobsList':py_obj}
             return py_obj
         except AttributeError,ValueError:
             return resp
@@ -424,4 +428,7 @@ class lxca_api ():
             return py_obj
         except AttributeError,ValueError:
             return resp
+        return
+    
+    def get_lxcalog( self, dict_handler = None ):        
         return

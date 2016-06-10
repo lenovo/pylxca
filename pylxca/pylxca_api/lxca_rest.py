@@ -308,9 +308,18 @@ class lxca_rest:
                 resp = session.get(url, verify=False, timeout=3)
                 resp.raise_for_status()
             elif canceljobid:
-                return
+                url = url + '/' + canceljobid
+                payload = {"cancelRequest":"true"}
+                resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
+                if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
+                    return True
+                resp.raise_for_status()
             elif deletejobid:
-                return     
+                url = url + '/' + deletejobid
+                resp = session.delete(url,verify=False, timeout=3)
+                if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
+                    return True
+                resp.raise_for_status()
             else:
                 if state:
                     if state == "Pending " or state == "Running" \

@@ -236,6 +236,14 @@ class jobs(InteractiveCommand):
     """
     Retrieve and Manage information about jobs.
     """
+    def handle_output(self, out_obj):
+        if out_obj == None:
+            self.sprint("Jobs command Failed." )
+        elif out_obj == False:
+            self.sprint("Jobs command Failed." )
+        elif out_obj == True:
+            self.sprint("Jobs command succeeded" )
+        return
     
 ###############################################################################
 
