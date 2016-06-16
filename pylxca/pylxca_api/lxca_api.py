@@ -371,8 +371,7 @@ class lxca_api ():
         return
     def do_updatecomp( self, dict_handler = None ):
         return
-    def get_ffdc( self, dict_handler = None ): 
-        return
+
 
     
     def get_jobs( self, dict_handler = None ):        
@@ -448,3 +447,19 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         
+    def get_ffdc( self, dict_handler = None ): 
+        uuid = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            uuid = next((item for item in [dict_handler.get  ('u') , dict_handler.get('uuid')] if item is not None),None)
+            
+        resp = lxca_rest().get_ffdc(self.con.get_url(),self.con.get_session(),uuid)
+        
+        try:
+            py_obj = json.loads(resp.text)
+        except AttributeError,ValueError:
+            return resp
+        return py_obj

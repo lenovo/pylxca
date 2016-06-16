@@ -284,14 +284,20 @@ class unmanage(InteractiveCommand):
 
 class lxcalog(InteractiveCommand):
     """
-    Retrieve and Manage information about jobs.
+    Retrieve and Manage information about LXCA Event log.
     """
 ###############################################################################
 
 class ffdc(InteractiveCommand):
     """
-    Retrieve and Manage information about LXCA Event log.
+    Retrieve and Manage information about ffdc
     """
+    def handle_output(self, out_obj):
+        if out_obj == None:
+            self.sprint("Failed to start ffdc job for selected endpoint " )
+        else:
+            self.sprint("FFDC job started, jobId = " + out_obj)
+        return
 ###############################################################################
 
 class users(InteractiveCommand):

@@ -114,6 +114,7 @@
     </fanmuxes>
     <cmms name="default">
         <Name>name</Name>
+		<UUID>uuid</UUID>
         <location type="object">
             <Location>location</Location>
             <Rack>rack</Rack>
@@ -200,4 +201,11 @@
 		<timeStamp>timeStamp</timeStamp>
 		<severity>severity</severity>
     </lxcalog>
+	<ffdc name="default">
+		<Result>result</Result>
+		<messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>l
+        </messages>
+    </ffdc>
 </filters>

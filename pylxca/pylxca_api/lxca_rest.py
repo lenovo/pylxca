@@ -10,6 +10,7 @@
 import logging, os, json, pprint, requests
 import logging.config
 from requests.exceptions import HTTPError
+import ast
 
 try:
     logging.captureWarnings(True)
@@ -366,3 +367,25 @@ class lxca_rest:
         except HTTPError as re:
             raise re
         return resp
+    
+    def get_ffdc(self,url, session, uuid):
+        url = url + '/ffdc/endpoint'
+        try:
+            if uuid:
+                url = url + '/' + uuid
+                resp = session.get(url,verify=False, timeout=3)
+                resp.raise_for_status()
+                if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
+                    job_info = ast.literal_eval(resp.content)    
+                    if job_info.has_key("jobURL"):
+                        job = job_info["jobURL"].split("/")[-1]
+                        return job
+                    else:
+                        return resp
+            else:
+                logger.error("Invalid execution of ffdc REST API")
+                raise Exception("Invalid execution of ffdc REST API")
+                              
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
