@@ -81,10 +81,13 @@ class lxca_api ():
             raise re
         except ValueError as re:
             logger.error("Exception ValueError %s Occurred while calling REST API for object %s" %(re, object_name))
+            raise re
         except AttributeError as re:
             logger.error("Exception AttributeError %s Occurred while calling REST API for object %s" %(re, object_name))
+            raise re
         except Exception as re:
             logger.error("Exception %s Occurred while calling REST API for object %s" %(re, object_name))
+            raise re
         return None
     
     def connect( self, dict_handler = None ):

@@ -210,11 +210,22 @@ class lxca_rest:
                 payload = list()
                 param_dict = dict()
                 mp_data_list = list()
+                
                 param_dict["ipAddresses"]=ip_addr.split(",")
                 param_dict["username"] = user
                 param_dict["password"] = pw
+                
+                #Fetch type value from input
+                type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
+                if type not in type_list:
+                    raise Exception("Invalid Type Specified")
+                if type == "ThinkServer": type = "Lenovo ThinkServer"
+                elif type == "Storage": type = "Lenovo Storage"
+                elif type == "Rack-Tower": type = "Rack-Tower Server"
                 param_dict["type"] = type
+                
                 if rpw:param_dict["recoveryPassword"] = rpw
+                
                 for each_mp in mp.split(","):
                     mp_data = each_mp.split(";")
                     mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})

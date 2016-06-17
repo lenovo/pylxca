@@ -47,17 +47,22 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
         code.interact('You are in Interactive Python Shell for LXCA.', local = ns)
 
 def connect(*args, **kwargs):
+
     '''
-    @param
+
+@summary:
+    Use this function to connect to LXCA
+    run this function as  connect( key1 = 'val1', key2 = 'val2', ...)
+    connect( con, url, user, pw, noverify )
+
+@param
     url = url to LXCA Example. https://a.b.c.d
     user = User Id to Authenticate LXCA
     pw = Password to Authenticate LXCA
     noverify = flag to indicate to not verify server certificate
-    @summary:
-    Use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    connect( url, user, pw, noverify )
 
+@example 
+    con1 = connect( con = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -73,12 +78,14 @@ def connect(*args, **kwargs):
     return con 
 def disconnect(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    connect( url, user, pw, noverify )
+@summary:
+    Use this function to disconnect from LXCA
+    run this function as  disconnect()
+    disconnect( con )
 
-    -------
+@param
+    no parameters
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
