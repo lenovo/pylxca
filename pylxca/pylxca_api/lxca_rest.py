@@ -201,7 +201,7 @@ class lxca_rest:
             raise re
         return resp
 
-    def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,type,jobid):
+    def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,type,uuid,jobid):
         try:
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
             if ip_addr and user and pw and mp:
@@ -229,7 +229,10 @@ class lxca_rest:
                 for each_mp in mp.split(","):
                     mp_data = each_mp.split(";")
                     mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
-                param_dict["managementPorts"] = mp_data_list                 
+                param_dict["managementPorts"] = mp_data_list
+                
+                param_dict["uuid"] = uuid
+                                 
                 payload = [param_dict]
                 
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)

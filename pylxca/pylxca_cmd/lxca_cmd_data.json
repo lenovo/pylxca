@@ -158,7 +158,7 @@
     "\nUSAGE:\n\tjobs -h | --help \n\tjobs [-i <job id>][-u <uuid of endpoint>][-s <jobs state>]\n\tjobs [-c <cancels the job with specified id>]\n\tjobs [-d <delete the job with specified id>]\n\nOPTIONS:\n\t-i, --id=\tjob id\n\t-u, --uuid=\tuuid of endpoint for which jobs should be retrieved\n\t-s, --state=\tjob state to retrieve jobs in specified state. \n\t\t\tThe state can be one of the following \n\t\t\tPending\n\t\t\tRunning\n\t\t\tComplete\n\t\t\tCancelled\n\t\t\tRunning_With_Errors\n\t\t\tCancelled_With_Errors\n\t\t\tStopped_With_Error\n\t\t\tInterrupted\n\t-c, --cancel=\tcancel job of specified id\n\t-d, --delete=\tdelete job of specified id\n"
   ],
   "manage": [
-    "i:u:p:r:m:t:j:v:h",
+    "i:u:p:r:m:t:e:j:v:h",
     [
 	  "con=",
       "ip=",
@@ -167,12 +167,13 @@
 	  "rpw=",
 	  "mp=",
 	  "type=",
+	  "epuuid=",
       "job=",
       "view="
     ],
     [],
     "Manage the endpoint.",
-    "\nUSAGE:\n\tmanage  -h | --help \n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> -r <recovery password for the endpoint> \n\t\t-m <list of endpoint management ports> -t <type of endpoint to be managed>\n\tmanage  -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated list of \n\t\t\tmanagement port information. Each management port includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. These properties \n\t\t\tshould be separate by semicolon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-j, --job\tJob ID of existing manage request\n\t-v, --view\tview filter name"
+    "\nUSAGE:\n\tmanage  -h | --help \n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> -r <recovery password for the endpoint> \n\t\t-m <list of endpoint management ports> -t <type of endpoint to be managed>\n\tmanage  -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated list of \n\t\t\tmanagement port information. Each management port includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. These properties \n\t\t\tshould be separate by semicolon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-e, --epuuid\tUUID of endpoint to be managed\n\t-j, --job\tJob ID of existing manage request\n\t-v, --view\tview filter name"
   ],
   "unmanage": [
     "e:f:j:v:h",
@@ -238,11 +239,11 @@
     [
 	  "con=",
 	  "policy=",
-	  "uuid="
+	  "info="
     ],
     [],
     "Retrieve basic or detailed information for a specified \n\t\t\tcompliance policy or all policies.",
-    "\nUSAGE:\n\tupdatepolicy [-v <view filter name>]\n\tupdatepolicy -p Information about compliance policy -u <UUID of managed endpoint>\n\nOPTIONS:\n\t-p, --policy\tThis is comma separated list of compliance policies. Each policy infomation \n\t\t\tshould contain policyname and type separated by semicolon.\n\t\t\tpolicyname - name of the compliance-policy to be assigned\n\t\t\ttype - The device type. This can be one of the following values.\n\t\t\t\tCMM - Chassis Management Module\n\t\t\t\tIOSwitch - Flex switch\n\t\t\t\tRACKSWITCH - RackSwitch switch\n\t\t\t\tSTORAGE - Lenovo Storage system\n\t\t\t\txITE - Compute node or rack server\n\t-v, --view\tView filter name"
+    "\nUSAGE:\n\tupdatepolicy [-v <view filter name>]\n\tupdatepolicy -p Information about compliance policy\n\nOPTIONS:\n\t-p, --policy\tThis is comma separated list of compliance policies. Each policy infomation \n\t\t\tshould contain policyname and type separated by semicolon.\n\t\t\tpolicyname - name of the compliance-policy to be assigned\n\t\t\ttype - The device type. This can be one of the following values.\n\t\t\t\tCMM - Chassis Management Module\n\t\t\t\tIOSwitch - Flex switch\n\t\t\t\tRACKSWITCH - RackSwitch switch\n\t\t\t\tSTORAGE - Lenovo Storage system\n\t\t\t\txITE - Compute node or rack server\n\t-i, --info\tSpecifies the type of information to return. This can be one of the following values:\n\t\t\t\tFIRMWARE- Returns information about firmware that is applicable to each managed endpoint\n\t\t\t\tRESULTS- Returns persisted compare result for servers to which a compliance policy is assigned\n\t-v, --view\tView filter name"
   ],
   "updaterepo": [
     "a:k:f:v:h",

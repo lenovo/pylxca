@@ -40,6 +40,15 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
               "manage":manage,
               "unmanage":unmanage,
               "jobs":jobs, 
+              "users":users,
+              "lxcalog":lxcalog,
+              "ffdc":ffdc,
+              "updatecomp":updatecomp,
+              "updatepolicy":updatepolicy,
+              "updaterepo":updaterepo,
+              "configpatterns":configpatterns,
+              "configprofiles":configprofiles,
+              "configtargets":configtargets,
               "help": help}
         ns.update()
         sys.ps1 = "PYLXCA >> "
@@ -284,7 +293,7 @@ def manage(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ip','user','pw','rpw','mp','type','job']
+    keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
@@ -379,7 +388,7 @@ def updatepolicy(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','policy','info']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

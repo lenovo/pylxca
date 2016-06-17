@@ -142,32 +142,93 @@
         <Model>model</Model>
     </scalablesystem>
     <discover name="default">
-        <DiscoveryInProgress>discoveryInProgress</DiscoveryInProgress>
-		<Chassis_List name="chassisList" type="object">
+    	<Progress>progress</Progress>
+		<rackswitchList name="rackswitchList" type="object">
             <Name>name</Name>
             <IPAddresses>ipAddresses</IPAddresses>
-			<machineType>machineType</machineType>
-			<name>name</name>
-			<serialNumber>serialNumber</serialNumber>
-			<type>type</type>
-        </Chassis_List>
-    </discover>
-    <discover name="job">
-    	<Progress>progress</Progress>
+            <machineType>machineType</machineType>
+			<status>status</status>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </rackswitchList>
 		<Chassis_List name="chassisList" type="object">
             <Name>name</Name>
             <IPAddresses>ipAddresses</IPAddresses>
             <machineType>machineType</machineType>
 			<name>name</name>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
         </Chassis_List>
+		<serverList name="serverList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </serverList>
+    </discover>
+    <discover name="job">
+    	<Progress>progress</Progress>
+		<rackswitchList name="rackswitchList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<status>status</status>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </rackswitchList>
+		<Chassis_List name="chassisList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<name>name</name>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </Chassis_List>
+		<serverList name="serverList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </serverList>
     </discover>
     <manage name="default">
     	<Progress>progress</Progress>
 		<Results name="results" type="object">
             <progress>progress</progress>
+			<messageParameters>messageParameters</messageParameters>
+			<Description>resultLongDescription</Description>
             <result>result</result>
 			<status name="status" type="object">
-				<description>description</description>
 				<state>state</state>
 			</status>
         </Results>

@@ -319,6 +319,7 @@ class lxca_api ():
         mp = None
         jobid = None
         type = None
+        uuid = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -330,9 +331,10 @@ class lxca_api ():
             rpw = next((item for item in [dict_handler.get  ('u') , dict_handler.get('rpw')] if item is not None),None)
             mp = next((item for item in [dict_handler.get  ('m') , dict_handler.get('mp')] if item is not None),None)
             type = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
+            uuid = next((item for item in [dict_handler.get  ('e') , dict_handler.get('epuuid')] if item is not None),None)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
         
-        resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,pw,rpw,mp,type,jobid)
+        resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,pw,rpw,mp,type,uuid,jobid)
         
         try:
             py_obj = json.loads(resp.text)
@@ -368,8 +370,7 @@ class lxca_api ():
         return
     def do_configprofiles( self, dict_handler = None ):
         return
-    def do_updatepolicy( self, dict_handler = None ):
-        return
+
     def do_updaterepo( self, dict_handler = None ):
         return
     def do_updatecomp( self, dict_handler = None ):
@@ -466,3 +467,22 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         return py_obj
+    
+    
+    def do_updatepolicy( self, dict_handler = None ):
+        uuid = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            uuid = next((item for item in [dict_handler.get  ('u') , dict_handler.get('uuid')] if item is not None),None)
+            
+        resp = lxca_rest().get_ffdc(self.con.get_url(),self.con.get_session(),uuid)
+        
+        try:
+            py_obj = json.loads(resp.text)
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+    
