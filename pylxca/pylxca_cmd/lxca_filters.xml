@@ -266,7 +266,22 @@
 		<Result>result</Result>
 		<messages name="messages" type="object">
             <explanation>explanation</explanation>
-            <text>text</text>l
+            <text>text</text>
         </messages>
     </ffdc>
+    <updatepolicy name="default">
+        <policies name="policies" type="object">
+			<PolicyID>id</PolicyID>
+			<PolicyName>name</PolicyName>
+            <Description>description</Description>
+			<Details name="details" type="object">
+				<BaseVersion>baseVersion</BaseVersion>
+				<Build>build</Build>
+				<Components name="components" type="object">
+					<ComponentName>name</ComponentName>
+					<type>type</type>
+				</Components>
+			</Details>
+		 </policies>
+    </updatepolicy>
 </filters>

@@ -235,7 +235,7 @@
     "\nUSAGE:\n\tconfigtargets [-i <ID of specific profile or pattern>] [-v <view filter name>]\n\nOPTIONS:\n\t-i, --id\tThe unique ID that was assigned when the server pattern was created\n\t-v, --view\tView filter name"
   ],
   "updatepolicy": [
-    "p:u:h",
+    "p:i:h",
     [
 	  "con=",
 	  "policy=",
@@ -243,7 +243,7 @@
     ],
     [],
     "Retrieve basic or detailed information for a specified \n\t\t\tcompliance policy or all policies.",
-    "\nUSAGE:\n\tupdatepolicy [-v <view filter name>]\n\tupdatepolicy -p Information about compliance policy\n\nOPTIONS:\n\t-p, --policy\tThis is comma separated list of compliance policies. Each policy infomation \n\t\t\tshould contain policyname and type separated by semicolon.\n\t\t\tpolicyname - name of the compliance-policy to be assigned\n\t\t\ttype - The device type. This can be one of the following values.\n\t\t\t\tCMM - Chassis Management Module\n\t\t\t\tIOSwitch - Flex switch\n\t\t\t\tRACKSWITCH - RackSwitch switch\n\t\t\t\tSTORAGE - Lenovo Storage system\n\t\t\t\txITE - Compute node or rack server\n\t-i, --info\tSpecifies the type of information to return. This can be one of the following values:\n\t\t\t\tFIRMWARE- Returns information about firmware that is applicable to each managed endpoint\n\t\t\t\tRESULTS- Returns persisted compare result for servers to which a compliance policy is assigned\n\t-v, --view\tView filter name"
+    "\nUSAGE:\n\tupdatepolicy [-v <view filter name>]\n\tupdatepolicy -p <Compliance policy to be assigned to device>\n\tupdatepolicy -i <Information type of compliance policy to be retreived>\n\nOPTIONS:\n\t-p, --policy\tThis is comma separated list of compliance policies. Each policy infomation \n\t\t\tshould contain policyname, type and UUID of device separated by semicolon where -\n\t\t\t\tPolicyname = Name of the compliance-policy to be assigned to device\n\t\t\t\tType = The device type. This can be one of the following values.\n\t\t\t\t\tCMM - Chassis Management Module\n\t\t\t\t\tIOSwitch - Flex switch\n\t\t\t\t\tRACKSWITCH - RackSwitch switch\n\t\t\t\t\tSTORAGE - Lenovo Storage system\n\t\t\t\t\txITE - Compute node or rack server\n\t\t\t\tUUID = UUID of the device to which you want to assign the compliance policy\n\t-i, --info\tSpecifies the type of information to return. This can be one of the following values:\n\t\t\t\tFIRMWARE- Returns information about firmware that is applicable to each managed endpoint\n\t\t\t\tRESULTS- Returns persisted compare result for servers to which a compliance policy is assigned\n\t-v, --view\tView filter name"
   ],
   "updaterepo": [
     "a:k:f:v:h",

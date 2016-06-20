@@ -403,3 +403,20 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
+        
+    def get_updatepolicy(self,url, session,info):
+        url = url + '/compliancePolicies'
+        try:
+            if info:
+                if info == "FIRMWARE":
+                    url = url + "/applicableFirmware"
+                elif info == "RESULTS":
+                    url = url + "/persistedResult"
+                
+            resp = session.get(url,verify=False, timeout=3)
+            resp.raise_for_status()
+            return resp
+                             
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
