@@ -502,19 +502,27 @@ class lxca_api ():
     
     def do_updatecomp( self, dict_handler = None ):
         mode = None
-        
+        action = None
+        server = None
+        switch = None
+        cmm = None
+        storage = None
+                
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
             mode = next((item for item in [dict_handler.get  ('m') , dict_handler.get('mode')] if item is not None),None)
+            action = next((item for item in [dict_handler.get  ('a') , dict_handler.get('action')] if item is not None),None)
+            server = next((item for item in [dict_handler.get  ('s') , dict_handler.get('server')] if item is not None),None)
+            storage = next((item for item in [dict_handler.get  ('t') , dict_handler.get('storage')] if item is not None),None)
+            switch = next((item for item in [dict_handler.get  ('w') , dict_handler.get('switch')] if item is not None),None)
+            cmm = next((item for item in [dict_handler.get  ('c') , dict_handler.get('cmm')] if item is not None),None)
                         
-        resp = lxca_rest().get_updatepolicy(self.con.get_url(),self.con.get_session(),mode)
+        resp = lxca_rest().do_updatecomp(self.con.get_url(),self.con.get_session(),mode,action,server,switch,storage,cmm)
         
         try:
             py_obj = json.loads(resp.text)
-            #if info == "RESULTS":
-            py_obj = {'updatepolicyList':[py_obj]}
         except AttributeError,ValueError:
             return resp
         return py_obj

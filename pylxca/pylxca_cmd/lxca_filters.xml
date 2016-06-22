@@ -287,6 +287,13 @@
     <updatepolicy name="chassis">
 			<chassis>chassis</chassis>
     </updatepolicy>
+    <updatepolicy name="cmms">
+		<cmms name="cmms" type="object">
+			<endpointCompliant>endpointCompliant</endpointCompliant>
+			<policyName>policyName</policyName>
+			<uuid>uuid</uuid>
+		</cmms>
+    </updatepolicy>
     <updatepolicy name="firmware">
         <policies name="policies" type="object">
 			<PolicyID>id</PolicyID>

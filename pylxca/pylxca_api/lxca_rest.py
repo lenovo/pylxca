@@ -446,3 +446,61 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
+        
+    def do_updatecomp(self,url, session,mode,action,server,switch,storage,cmm):
+        serverlist = list()
+        storagelist = list()
+        cmmlist = list()
+        switchlist = list()
+        
+        url = url + '/updatableComponents'
+        try:
+            if not mode  == None and mode == "immediate" or mode == "delayed" :
+                url= url + "?mode=" + mode
+            else:
+                raise Exception("Invalid argument mode")
+        
+            if not action  == None and action == "apply" or action == "cancelApply" :
+                url= url + "&action=" + action
+            else:
+                raise Exception("Invalid argument mode")
+            
+            if server and len(server.split(","))==3:
+                server_data = server.split(",")
+                serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
+          
+            if switch and len(switch.split(","))==3:
+                switch_data = switch.split(",")
+                switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
+                
+            if storage and len(storage.split(","))==3:
+                storage_data = storage.split(",")
+                storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
+           
+            if cmm and len(cmm.split(","))==3:
+                cmm_data = cmm.split(",")
+                cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
+            
+            param_dict = dict()
+            if serverlist:param_dict["ServerList"] = serverlist
+            if storagelist:param_dict["StorageList"] = storagelist
+            if cmmlist:param_dict["CMMList"] = cmmlist
+            if switchlist:param_dict["SwitchList"] = switchlist
+            
+            payload = dict()
+            payload["DeviceList"] = [param_dict]
+
+            resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
+            resp.raise_for_status()
+            return resp
+                             
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+        '''       
+         for each_mp in mp.split(","):
+                    mp_data = each_mp.split(";")
+                    mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
+                param_dict["managementPorts"] = mp_data_list
+                
+        '''
