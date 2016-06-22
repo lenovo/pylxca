@@ -61,14 +61,22 @@ def connect(*args, **kwargs):
 
 @summary:
     Use this function to connect to LXCA
-    run this function as  connect( key1 = 'val1', key2 = 'val2', ...)
-    connect( con, url, user, pw, noverify )
+    run this function as  
+    
+    con_variable = connect( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['url','user','pw','noverify']
 
 @param
-    url = url to LXCA Example. https://a.b.c.d
-    user = User Id to Authenticate LXCA
-    pw = Password to Authenticate LXCA
-    noverify = flag to indicate to not verify server certificate
+    The parameters for this command are as follows 
+    
+        con          Connection Object to LXCA
+        url          url to LXCA Example. https://a.b.c.d
+        user         User Id to Authenticate LXCA
+        pw           Password to Authenticate LXCA
+        noverify     flag to indicate to not verify server certificate
 
 @example 
     con1 = connect( con = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
@@ -86,16 +94,23 @@ def connect(*args, **kwargs):
     
     return con 
 def disconnect(*args, **kwargs):
+
     '''
+
 @summary:
     Use this function to disconnect from LXCA
-    run this function as  disconnect()
-    disconnect( con )
+    run this function as  
+        disconnect()  
 
 @param
-    no parameters
-
+    The parameters for this command are as follows
+        
+        con      Connection Object to LXCA
+    
+@example 
+    disconnect()
     '''
+
     global pyshell
     command_name = sys._getframe().f_code.co_name
     keylist = ['con']
@@ -112,12 +127,26 @@ def disconnect(*args, **kwargs):
 
 def cmms(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get CMMs information
+    run this function as  
+    
+    data_dictionary = cmms( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid','chassis']
+
+@param
+    The parameters for this command are as follows 
+    
+    con       Connection Object to LXCA
+    uuid      cmm uuid
+    chassis   chassis uuid  
+
+@example 
+    cmm_list = cmms( con = con1 ,uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57', pw = 'Password', noverify = "True")
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -131,12 +160,27 @@ def cmms(*args, **kwargs):
 
 def chassis(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get Chassis information
+    run this function as  
+    
+    data_dictionary = chassis( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid','status']
+
+@param
+    The parameters for this command are as follows 
+    
+    con        Connection Object to LXCA
+    uuid       chassis uuid
+    status     chassis manage status (managed/unmanaged)
+    
+
+@example 
+    
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -151,12 +195,26 @@ def chassis(*args, **kwargs):
 
 def fans(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get fans information
+    run this function as  
+    
+    data_dictionary = fans( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid','chassis']
+
+@param
+    The parameters for this command are as follows 
+    
+    con           Connection Object to LXCA
+    uuid          uuid of fan
+    chassis       chassis uuid
+    
+@example 
+    
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -170,12 +228,26 @@ def fans(*args, **kwargs):
 
 def fanmuxes(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get fanmuxes information
+    run this function as  
+    
+    data_dictionary = fanmuxes( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid','chassis']
+
+@param
+    The parameters for this command are as follows 
+    
+    con           Connection Object to LXCA
+    uuid          uuid of fanmux
+    chassis       chassis uuid
+    
+@example 
+    
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -189,12 +261,27 @@ def fanmuxes(*args, **kwargs):
 
 def nodes(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get nodes information
+    run this function as  
+    
+    data_dictionary = nodes( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid','chassis','status']
+
+@param
+    The parameters for this command are as follows 
+    
+    con           Connection Object to LXCA
+    uuid          uuid of node
+    chassis       chassis uuid
+    status        nodes manage status (managed/unmanaged)
+    
+@example 
+    
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -208,12 +295,26 @@ def nodes(*args, **kwargs):
 
 def switches(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get switches information
+    run this function as  
+    
+    data_dictionary = switches( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid','chassis']
+
+@param
+    The parameters for this command are as follows 
+    
+    con      Connection Object to LXCA
+    uuid          uuid of switch
+    chassis       chassis uuid
+    
+@example 
+    
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -227,12 +328,26 @@ def switches(*args, **kwargs):
 
 def powersupplies(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get powersupplies information
+    run this function as  
+    
+    data_dictionary = powersupplies( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid','chassis']
+
+@param
+    The parameters for this command are as follows 
+    
+    con      Connection Object to LXCA
+    uuid          uuid of power supply
+    chassis       chassis uuid
+    
+@example 
+    
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -246,12 +361,27 @@ def powersupplies(*args, **kwargs):
 
 def scalablesystem(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to get scalablesystem information
+    run this function as  
+    
+    data_dictionary = scalablesystem( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','id','type','status']
+
+@param
+    The parameters for this command are as follows 
+    
+    con      Connection Object to LXCA
+    id        scalable complex id
+    type      type (flex/rackserver)
+    status    scalable system manage status (managed/unmanaged)
+
+@example 
+    
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -265,12 +395,31 @@ def scalablesystem(*args, **kwargs):
 
 def discover(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to discover endpoint from LXCA
+    run this function as  
+    
+    data_dictionary = discover( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ip','job']
+
+@param
+    The parameters for this command are as follows 
+    
+    con      Connection Object to LXCA
+    ip     One or more IP addresses for each endpoint to be discovered.
+    job    Job ID of discover request
+
+
+@example
+ 
+    For Getting Maangement job status
+        
+        job_data = discover(con=con1,job=jobid)
+            
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -284,12 +433,56 @@ def discover(*args, **kwargs):
 
 def manage(*args, **kwargs):
     '''
-    -------
-    use this function to connect to LXCA
-    run this function as  connect(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    chassis( con, uuid, status )
 
-    -------
+@summary:
+    Use this function to manage endpoint from LXCA
+    run this function as  
+    
+    data_dictionary = manage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job']
+
+@param
+    The parameters for this command are as follows 
+    
+        con      Connection Object to LXCA
+        ip       One or more IP addresses for each endpoint to be managed.
+        user     user ID to access the endpoint
+        pw       The current password to access the endpoint.
+        rpw      The recovery password to be used for the endpoint.
+        mp       A list of endpoint management ports, it is a comma separated list of
+                      management port information. Each management port includes protocol, port number and
+                      boolean flag of whether the port enabled (True/False) respectively. These properties
+                      should be separate by semicolon. See the discovey request job response
+                      body for the supported protocols for the endpoint's management ports.
+        type     Type of endpoint to be managed. This can be one of the following values:
+                                  Chassis
+                                  ThinkServer
+                                  Storage
+                                  Rackswitch
+                                  Rack-Tower
+        epuuid    UUID of endpoint to be managed
+        job       Job ID of existing manage request
+
+@example 
+
+        jobid = manage(con=con1,ip="10.243.6.68",user="USERID",pw="PASSW0RD",rpw="PASSW0RD",mp=
+            "cimxml-http;5988;true,cimxml-https;5989;true,http;80;true,snmpv3;163;true,https;443;true,
+            snmpv1;161;true,ssh;22;true,telnet;23;true,rem-pres;3900;true,rmcp;623;true",
+            type="Rack-Tower",epuuid="fc3058cadf8b11d48c9b9b1b1b1b1b57")
+    
+    or with named variable it can be represented as
+    
+        jobid = manage(con= con1,ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",
+            "cimxml-http;5988;true,cimxml-https;5989;true,http;80;true,snmpv3;163;true,https;443;true,
+            snmpv1;161;true,ssh;22;true,telnet;23;true,rem-pres;3900;true,rmcp;623;true",
+            "Rack-Tower","fc3058cadf8b11d48c9b9b1b1b1b1b57")
+            
+    For Getting Maangement job status
+        
+        manage_data = manage(con=con1,job=jobid)
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -303,12 +496,35 @@ def manage(*args, **kwargs):
 
 def unmanage(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to manage endpoint from LXCA
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ep','force','job']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
