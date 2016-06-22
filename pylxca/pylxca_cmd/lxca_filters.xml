@@ -284,58 +284,8 @@
 			</Details>
 		 </policies>
     </updatepolicy>
-    <updatepolicy name="results">
-		<AllResults name="all" type="object">
+    <updatepolicy name="chassis">
 			<chassis>chassis</chassis>
-			<CMMS name="cmms" type="object">
-				<policyName>policyName</policyName>
-				<endpointCompliant>endpointCompliant</endpointCompliant>
-				<targetFirmware name="targetFirmware" type="object">
-					<build>build</build>
-					<compliant>compliant</compliant>
-				</targetFirmware>
-			</CMMS>
-			<RackList name="racklist" type="object">
-				<policyName>policyName</policyName>
-				<endpointCompliant>endpointCompliant</endpointCompliant>
-				<targetFirmware name="targetFirmware" type="object">
-					<build>build</build>
-					<compliant>compliant</compliant>
-				</targetFirmware>
-			</RackList>
-			<RackSwitchList name="rackswitchlist" type="object">
-				<policyName>policyName</policyName>
-				<endpointCompliant>endpointCompliant</endpointCompliant>
-				<targetFirmware name="targetFirmware" type="object">
-					<build>build</build>
-					<compliant>compliant</compliant>
-				</targetFirmware>
-			</RackSwitchList>
-			<StorageList name="storagelist" type="object">
-				<policyName>policyName</policyName>
-				<endpointCompliant>endpointCompliant</endpointCompliant>
-				<targetFirmware name="targetFirmware" type="object">
-					<build>build</build>
-					<compliant>compliant</compliant>
-				</targetFirmware>
-			</StorageList>
-			<Switches name="switches" type="object">
-				<policyName>policyName</policyName>
-				<endpointCompliant>endpointCompliant</endpointCompliant>
-				<targetFirmware name="targetFirmware" type="object">
-					<build>build</build>
-					<compliant>compliant</compliant>
-				</targetFirmware>
-			</Switches>
-			<xITEs name="xITEs" type="object">
-				<policyName>policyName</policyName>
-				<endpointCompliant>endpointCompliant</endpointCompliant>
-				<targetFirmware name="targetFirmware" type="object">
-					<build>build</build>
-					<compliant>compliant</compliant>
-				</targetFirmware>
-			</xITEs>
-		</AllResults>
     </updatepolicy>
     <updatepolicy name="firmware">
         <policies name="policies" type="object">
@@ -352,4 +302,60 @@
 			</Details>
 		</policies>
     </updatepolicy>
+    <updaterepo name="default">
+		<importDir>importDir</importDir>
+		<publicKeys>publicKeys</publicKeys>
+		<lastRefreshed>lastRefreshed</lastRefreshed>
+    </updaterepo>
+    <updaterepo name="supportedMts">
+		<supportedMts name="supportedMts" type="object">
+			<category>category</category>
+			<comp>comp</comp>
+			<displayType>displayType</displayType>
+			<name>name</name>
+			<supportDownload>supportDownload</supportDownload>
+			<type>type</type>
+		</supportedMts>
+    </updaterepo>
+    <updaterepo name="size">
+		<size name="size" type="object">
+			<allotment>allotment</allotment>
+			<freeSpace>freeSpace</freeSpace>
+			<usedSpace>usedSpace</usedSpace>
+		</size>
+    </updaterepo>
+	<updaterepo name="updatesByMt">
+		<updatesByMt name="updatesByMt" type="object">
+			<progress>progress</progress>
+			<state>state</state>
+			<InformationFirmwareUpdate name="updates" type="object">
+				<MachineType>mt</MachineType>
+				<updates name="updates" type="object">
+					<buildNumber>buildNumber</buildNumber>
+					<comp>comp</comp>
+					<fixid>fixid</fixid>
+				</updates>
+			</InformationFirmwareUpdate>
+		</updatesByMt>
+    </updaterepo>
+	<updaterepo name="updatesByMt">
+		<updatesByMt name="updatesByMt" type="object">
+			<progress>progress</progress>
+			<state>state</state>
+			<InformationFirmwareUpdate name="updates" type="object">
+				<MachineType>mt</MachineType>
+				<updates name="updates" type="object">
+					<buildNumber>buildNumber</buildNumber>
+					<comp>comp</comp>
+					<fixid>fixid</fixid>
+				</updates>
+			</InformationFirmwareUpdate>
+		</updatesByMt>
+    </updaterepo>
+    <updaterepo name="updatesByMtByComp">
+		<updatesByMtByComp>updatesByMtByComp</updatesByMtByComp>
+    </updaterepo>
+    <updaterepo name="updates">
+		<updates>updates</updates>
+    </updaterepo>
 </filters>

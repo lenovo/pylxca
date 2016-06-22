@@ -427,3 +427,22 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
+        
+    def get_updaterepo(self,url, session,key):
+        url = url + '/updateRepositories/firmware'
+        try:
+            if not key  == None \
+                    and key == "supportedMts" or key == "size" \
+                    or key == "lastRefreshed" or key == "importDir" \
+                    or key == "publicKeys" or key == "updates" \
+                    or key == "updatesByMt" or key == "updatesByMtByComp":
+                url= url + "?key=" + key
+            else:
+                raise Exception("Invalid argument key")
+            resp = session.get(url,verify=False, timeout=3)
+            resp.raise_for_status()
+            return resp
+                             
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re

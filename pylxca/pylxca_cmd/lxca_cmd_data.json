@@ -228,7 +228,7 @@
     [
 	  "con=",
       "id=",
-	  "view"
+	  "view="
     ],
     [],
     "Retrieve a list of deployable target systems according to their\n\t\t\tserver pattern and profile.",
@@ -240,21 +240,22 @@
 	  "con=",
 	  "policy=",
 	  "info=",
-	  "view"
+	  "view="
     ],
     [],
     "Retrieve basic or detailed information for a specified \n\t\t\tcompliance policy or all policies.",
     "\nUSAGE:\n\tupdatepolicy [-v <view filter name>]\n\tupdatepolicy -p <Compliance policy to be assigned to device>\n\tupdatepolicy -i <Information type of compliance policy to be retreived>\n\nOPTIONS:\n\t-p, --policy\tThis is comma separated list of compliance policies. Each policy infomation \n\t\t\tshould contain policyname, type and UUID of device separated by semicolon where -\n\t\t\t\tPolicyname = Name of the compliance-policy to be assigned to device\n\t\t\t\tType = The device type. This can be one of the following values.\n\t\t\t\t\tCMM - Chassis Management Module\n\t\t\t\t\tIOSwitch - Flex switch\n\t\t\t\t\tRACKSWITCH - RackSwitch switch\n\t\t\t\t\tSTORAGE - Lenovo Storage system\n\t\t\t\t\txITE - Compute node or rack server\n\t\t\t\tUUID = UUID of the device to which you want to assign the compliance policy\n\t-i, --info\tSpecifies the type of information to return. This can be one of the following values:\n\t\t\t\tFIRMWARE- Returns information about firmware that is applicable to each managed endpoint\n\t\t\t\tRESULTS- Returns persisted compare result for servers to which a compliance policy is assigned\n\t-v, --view\tView filter name"
   ],
   "updaterepo": [
-    "a:k:f:v:h",
+    "a:k:v:h",
     [
 	  "con=",
-	  "key="
+	  "key=",
+	  "view="
     ],
     [],
 	"Retrieve information about firmware in the firmware-updates repository.",
-    "\nUSAGE:\n\tupdaterepo -k <Key to return the specified type of update> [-v <view filter name>]\n\nOPTIONS:\n\t-k, --key\tReturns the specified type of update. This can be one of the following values.\n\t\t\t\tsupportedMts - Returns a list of supported machine types\n\t\t\t\tsize - Returns the repository size\n\t\t\t\tlastRefreshed - Returns the timestamp of the last repository refresh\n\t\t\t\timportDir - Returns the import directory for the repository.\n\t\t\t\tpublicKeys - Returns the supported signed keys\n\t\t\t\tupdates - Returns information about all firmware updates\n\t\t\t\tupdatesByMt - Returns information about firmware updates for the specified machine type\n\t\t\t\tupdatesByMtByComp - Returns the update component names for the specified machine type\n\t\t\t\texport - Returns the ZIP file that contain the firmware-compliance policies.\n\t-v, --view\tView filter name"
+    "\nUSAGE:\n\tupdaterepo -k <Key to return the specified type of update> [-v <view filter name>]\n\nOPTIONS:\n\t-k, --key\tReturns the specified type of update. This can be one of the following values.\n\t\t\t\tsupportedMts - Returns a list of supported machine types\n\t\t\t\tsize - Returns the repository size\n\t\t\t\tlastRefreshed - Returns the timestamp of the last repository refresh\n\t\t\t\timportDir - Returns the import directory for the repository.\n\t\t\t\tpublicKeys - Returns the supported signed keys\n\t\t\t\tupdates - Returns information about all firmware updates\n\t\t\t\tupdatesByMt - Returns information about firmware updates for the specified machine type\n\t\t\t\tupdatesByMtByComp - Returns the update component names for the specified machine type\n\t-v, --view\tView filter name"
   ],
   "updatecomp": [
     "q:a:m:w:s:t:c:v:h",

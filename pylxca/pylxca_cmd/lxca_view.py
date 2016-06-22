@@ -124,10 +124,11 @@ class lxca_view:
     def print_cmd_resp_object(self,cmd_resp_item, vf):
         for vf_elem in vf.getchildren():
             self.print_recur(cmd_resp_item,vf_elem)
+            
                     
     def show_output(self,cmd_reponse, cmd_name,filter_tag):
         vf = self.get_view_filter(cmd_name,filter_tag)
-        self.ostream.write("Printing "+ cmd_name + "List"+ "\n")
+        self.ostream.write("Printing "+ cmd_name + " Output:"+ "\n")
         
         if len(cmd_reponse.keys()) == 0:
             self.ostream.write("No "+ filter_tag + " returned."+ "\n")
@@ -136,3 +137,4 @@ class lxca_view:
         else:
             for cmd_resp_item in cmd_reponse[cmd_reponse.keys()[0]]:
                 self.print_cmd_resp_object(cmd_resp_item, vf)
+                self.ostream.write('\n-----------------------------------------------------')

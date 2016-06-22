@@ -56,7 +56,7 @@ class lxca_api ():
                           'configprofiles':self.do_configprofiles,
                           'configtargets':self.do_configtargets,
                           'updatepolicy':self.do_updatepolicy,
-                          'updaterepo':self.do_updaterepo,
+                          'updaterepo':self.get_updaterepo,
                           'updatecomp':self.do_updatecomp,
                           'users':self.get_users,
                           'ffdc':self.get_ffdc,
@@ -371,13 +371,6 @@ class lxca_api ():
     def do_configprofiles( self, dict_handler = None ):
         return
 
-    def do_updaterepo( self, dict_handler = None ):
-        return
-    def do_updatecomp( self, dict_handler = None ):
-        return
-
-
-    
     def get_jobs( self, dict_handler = None ):        
         jobid = None
         uuid = None
@@ -484,9 +477,44 @@ class lxca_api ():
         
         try:
             py_obj = json.loads(resp.text)
+            if info == "RESULTS":
+                py_obj = py_obj["all"]
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+
+    def get_updaterepo( self, dict_handler = None ):
+        key = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            key = next((item for item in [dict_handler.get  ('k') , dict_handler.get('key')] if item is not None),None)
+                        
+        resp = lxca_rest().get_updaterepo(self.con.get_url(),self.con.get_session(),key)
+        
+        try:
+            py_obj = json.loads(resp.text)
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+    
+    def do_updatecomp( self, dict_handler = None ):
+        mode = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            mode = next((item for item in [dict_handler.get  ('m') , dict_handler.get('mode')] if item is not None),None)
+                        
+        resp = lxca_rest().get_updatepolicy(self.con.get_url(),self.con.get_session(),mode)
+        
+        try:
+            py_obj = json.loads(resp.text)
             #if info == "RESULTS":
             py_obj = {'updatepolicyList':[py_obj]}
         except AttributeError,ValueError:
             return resp
         return py_obj
-    
