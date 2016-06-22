@@ -273,6 +273,13 @@ class lxca_rest:
                     ip_addr = ep_data[0]
                     uuid = ep_data[1]
                     type = ep_data[2]
+                    #Fetch type value from input
+                    type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
+                    if type not in type_list:
+                        raise Exception("Invalid Type Specified")
+                    if type == "ThinkServer": type = "Lenovo ThinkServer"
+                    elif type == "Storage": type = "Lenovo Storage"
+                    elif type == "Rack-Tower": type = "Rack-Tower Server"
                     each_ep_dict = {"ipAddresses":ip_addr.split("#"),"type":type,"uuid":uuid}
                     endpoints_list.append(each_ep_dict)
                 param_dict["endpoints"] = endpoints_list
@@ -404,7 +411,7 @@ class lxca_rest:
             logger.error("Exception occured: %s",re)
             raise re
         
-    def get_updatepolicy(self,url, session,info):
+    def get_updatepolicy(self,url, session,policy,info):
         url = url + '/compliancePolicies'
         try:
             if info:

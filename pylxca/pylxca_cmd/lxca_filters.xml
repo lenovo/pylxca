@@ -284,4 +284,72 @@
 			</Details>
 		 </policies>
     </updatepolicy>
+    <updatepolicy name="results">
+		<AllResults name="all" type="object">
+			<chassis>chassis</chassis>
+			<CMMS name="cmms" type="object">
+				<policyName>policyName</policyName>
+				<endpointCompliant>endpointCompliant</endpointCompliant>
+				<targetFirmware name="targetFirmware" type="object">
+					<build>build</build>
+					<compliant>compliant</compliant>
+				</targetFirmware>
+			</CMMS>
+			<RackList name="racklist" type="object">
+				<policyName>policyName</policyName>
+				<endpointCompliant>endpointCompliant</endpointCompliant>
+				<targetFirmware name="targetFirmware" type="object">
+					<build>build</build>
+					<compliant>compliant</compliant>
+				</targetFirmware>
+			</RackList>
+			<RackSwitchList name="rackswitchlist" type="object">
+				<policyName>policyName</policyName>
+				<endpointCompliant>endpointCompliant</endpointCompliant>
+				<targetFirmware name="targetFirmware" type="object">
+					<build>build</build>
+					<compliant>compliant</compliant>
+				</targetFirmware>
+			</RackSwitchList>
+			<StorageList name="storagelist" type="object">
+				<policyName>policyName</policyName>
+				<endpointCompliant>endpointCompliant</endpointCompliant>
+				<targetFirmware name="targetFirmware" type="object">
+					<build>build</build>
+					<compliant>compliant</compliant>
+				</targetFirmware>
+			</StorageList>
+			<Switches name="switches" type="object">
+				<policyName>policyName</policyName>
+				<endpointCompliant>endpointCompliant</endpointCompliant>
+				<targetFirmware name="targetFirmware" type="object">
+					<build>build</build>
+					<compliant>compliant</compliant>
+				</targetFirmware>
+			</Switches>
+			<xITEs name="xITEs" type="object">
+				<policyName>policyName</policyName>
+				<endpointCompliant>endpointCompliant</endpointCompliant>
+				<targetFirmware name="targetFirmware" type="object">
+					<build>build</build>
+					<compliant>compliant</compliant>
+				</targetFirmware>
+			</xITEs>
+		</AllResults>
+    </updatepolicy>
+    <updatepolicy name="firmware">
+        <policies name="policies" type="object">
+			<PolicyID>id</PolicyID>
+			<PolicyName>name</PolicyName>
+            <Description>description</Description>
+			<Details name="details" type="object">
+				<BaseVersion>baseVersion</BaseVersion>
+				<Build>build</Build>
+				<Components name="components" type="object">
+					<ComponentName>name</ComponentName>
+					<type>type</type>
+				</Components>
+			</Details>
+		</policies>
+    </updatepolicy>
 </filters>

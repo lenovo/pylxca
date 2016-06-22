@@ -328,7 +328,7 @@ class lxca_api ():
             ip_addr = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
             user = next((item for item in [dict_handler.get  ('u') , dict_handler.get('user')] if item is not None),None)
             pw = next((item for item in [dict_handler.get  ('p') , dict_handler.get('pw')] if item is not None),None)
-            rpw = next((item for item in [dict_handler.get  ('u') , dict_handler.get('rpw')] if item is not None),None)
+            rpw = next((item for item in [dict_handler.get  ('r') , dict_handler.get('rpw')] if item is not None),None)
             mp = next((item for item in [dict_handler.get  ('m') , dict_handler.get('mp')] if item is not None),None)
             type = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
             uuid = next((item for item in [dict_handler.get  ('e') , dict_handler.get('epuuid')] if item is not None),None)
@@ -471,17 +471,21 @@ class lxca_api ():
     
     def do_updatepolicy( self, dict_handler = None ):
         info = None
+        policy = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
+            policy = next((item for item in [dict_handler.get  ('p') , dict_handler.get('policy')] if item is not None),None)
             info = next((item for item in [dict_handler.get  ('i') , dict_handler.get('info')] if item is not None),None)
             
-        resp = lxca_rest().get_updatepolicy(self.con.get_url(),self.con.get_session(),info)
+        resp = lxca_rest().get_updatepolicy(self.con.get_url(),self.con.get_session(),policy,info)
         
         try:
             py_obj = json.loads(resp.text)
+            #if info == "RESULTS":
+            py_obj = {'updatepolicyList':[py_obj]}
         except AttributeError,ValueError:
             return resp
         return py_obj

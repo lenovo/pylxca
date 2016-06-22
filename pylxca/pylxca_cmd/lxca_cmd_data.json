@@ -186,7 +186,7 @@
     ],
     [],
     "Unmanage the endpoint.",
-    "\nUSAGE:\n\tunmanage -h | --help \n\tunmanage -e <list of endpoints to unmanage> [--force]\n\tunmanage -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-e, --ep\tone or more endpoints to be unmanaged.\n\t\t\tThis is comma separated list of multiple endpoints, each endpoint should\n\t\t\tcontain endpoint information separated by semicolon.\n\t\t\tendpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and\n\t\t\tType of endpoint to be unmanaged ,This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tLenovo ThinkServer\n\t\t\t\tLenovo Storage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower Server\n\t-f, --force\t\tIndicates whether to force the unmanagement of an endpoint (True/False)\n\t-j, --job\tJob ID of unmanage request\n\t-v, --view\tview filter name"
+    "\nUSAGE:\n\tunmanage -h | --help \n\tunmanage -e <list of endpoints to unmanage> [--force]\n\tunmanage -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-e, --ep\tone or more endpoints to be unmanaged.\n\t\t\tThis is comma separated list of multiple endpoints, each endpoint should\n\t\t\tcontain endpoint information separated by semicolon.\n\t\t\tendpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and\n\t\t\tType of endpoint to be unmanaged ,This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-f, --force\t\tIndicates whether to force the unmanagement of an endpoint (True/False)\n\t-j, --job\tJob ID of unmanage request\n\t-v, --view\tview filter name"
   ],  
   "discover": [
     "i:j:v:h",
@@ -235,11 +235,12 @@
     "\nUSAGE:\n\tconfigtargets [-i <ID of specific profile or pattern>] [-v <view filter name>]\n\nOPTIONS:\n\t-i, --id\tThe unique ID that was assigned when the server pattern was created\n\t-v, --view\tView filter name"
   ],
   "updatepolicy": [
-    "p:i:h",
+    "p:i:v:h",
     [
 	  "con=",
 	  "policy=",
-	  "info="
+	  "info=",
+	  "view"
     ],
     [],
     "Retrieve basic or detailed information for a specified \n\t\t\tcompliance policy or all policies.",
