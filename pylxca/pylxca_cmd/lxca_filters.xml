@@ -44,6 +44,7 @@
 	</chassis>
 	<nodes name="default">
 		<Name>name</Name>
+		<UUID>uuid</UUID>
 		<location type="object">
 			<Location>location</Location>
 			<Rack>rack</Rack>
@@ -347,8 +348,6 @@
     </updaterepo>
 	<updaterepo name="updatesByMt">
 		<updatesByMt name="updatesByMt" type="object">
-			<progress>progress</progress>
-			<state>state</state>
 			<InformationFirmwareUpdate name="updates" type="object">
 				<MachineType>mt</MachineType>
 				<updates name="updates" type="object">
@@ -365,4 +364,13 @@
     <updaterepo name="updates">
 		<updates>updates</updates>
     </updaterepo>
+	<updatecomp name="default">
+			<Result>result</Result>
+			<Response_Message name="messages" type="object">
+				<ID>id</ID>
+				<Explanation>explanation</Explanation>
+				<Recovery_Message>recovery</Recovery_Message>
+				<Response_Text>text</Response_Text>
+			</Response_Message >
+    </updatecomp>
 </filters>
