@@ -320,20 +320,7 @@ class updatecomp(InteractiveCommand):
     """
     Retrieve and Manage information about jobs.
     """
-    '''
 
-    def show_output(self, out_obj,vf):
-        ostream = sys.__stdout__
-        if self.shell:
-            ostream = self.shell.ostream
-        self.sprint("Output of Update command " )
-        self.sprint("Result :" + out_obj['result'])
-        self.sprint("ID :" + out_obj['id'])
-        self.sprint("Explaination :" + out_obj['explanation'])
-        self.sprint("Response Text :" + out_obj['text'])
-        self.sprint("Recovery :" + out_obj['recovery'])
-    
-    '''
     
 ###############################################################################
 class configtargets(InteractiveCommand):

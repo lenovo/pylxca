@@ -105,8 +105,8 @@ class lxca_view:
         global indent
         if str(view_filter.attrib.get('type')) != "object" :
             self.ostream.write(' '*indent + '%s: %s' % (view_filter.tag.title(), self.get_val(py_obj,view_filter.attrib.get('name', view_filter.text))))
-        else:
-            self.ostream.write('%s: ' % (view_filter.tag.title()))
+        #else:
+        #    self.ostream.write('%s: ' % (view_filter.tag.title()))
             
         indent += 4
         # View Filter has children so

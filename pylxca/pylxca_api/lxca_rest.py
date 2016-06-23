@@ -455,6 +455,12 @@ class lxca_rest:
         
         url = url + '/updatableComponents'
         try:
+            
+            if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
+                resp = session.get(url,verify=False, timeout=3)
+                resp.raise_for_status()
+                return resp
+            
             if not mode  == None and mode == "immediate" or mode == "delayed" :
                 url= url + "?mode=" + mode
             else:

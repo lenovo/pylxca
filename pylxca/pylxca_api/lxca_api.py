@@ -522,7 +522,10 @@ class lxca_api ():
         resp = lxca_rest().do_updatecomp(self.con.get_url(),self.con.get_session(),mode,action,server,switch,storage,cmm)
         
         try:
-            py_obj = json.loads(resp._content)
+            if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
+                py_obj = json.loads(resp.text)
+            else:
+                py_obj = json.loads(resp._content)
             return py_obj
         except AttributeError,ValueError:
             return resp

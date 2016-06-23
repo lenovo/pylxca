@@ -373,4 +373,39 @@
 				<Response_Text>text</Response_Text>
 			</Response_Message >
     </updatecomp>
+	<updatecomp name="status">
+		<UpdateStatusMetrics name="UpdateStatusMetrics" type="object">
+			<TotalJobsInProgress>TotalJobsInProgress</TotalJobsInProgress>
+			<TotalJobs>TotalJobs</TotalJobs>
+		</UpdateStatusMetrics >
+		<DeviceList name="DeviceList" type="object">
+			<CMMList name="CMMList" type="object">
+				<UpdateStatus name="UpdateStatus" type="object">
+					<CMMUpdatePhase>Phase</CMMUpdatePhase>
+					<CMMUpdateState>State</CMMUpdateState>
+				</UpdateStatus >
+			</CMMList >
+			<ServerList name="ServerList" type="object">
+				<Components name="Components" type="object">
+					<UpdateStatus name="UpdateStatus" type="object">
+						<ServerUpdatePhase>Phase</ServerUpdatePhase>
+						<ServerUpdateState>State</ServerUpdateState>
+					</UpdateStatus >
+				</Components >	
+			</ServerList >
+			<StorageList  name="StorageList" type="object">
+				<UpdateStatus name="UpdateStatus" type="object">
+					<StorageUpdatePhase>Phase</StorageUpdatePhase>
+					<StorageUpdateState>State</StorageUpdateState>
+				</UpdateStatus >
+			</StorageList  >
+			<SwitchList name="SwitchList" type="object">
+				<UpdateStatus name="UpdateStatus" type="object">
+					<SwitchUpdatePhase>Phase</SwitchUpdatePhase>
+					<SwitchUpdateState>State</SwitchUpdateState>
+				</UpdateStatus >
+			</SwitchList >
+		</DeviceList >
+    </updatecomp>
+	
 </filters>
