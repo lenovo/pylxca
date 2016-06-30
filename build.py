@@ -11,4 +11,4 @@ if len(sys.argv) < 2 :
 elif sys.argv[1] == "clean":
 	subprocess.call(sys.executable + " setup.py clean --all",shell = True)
 	print "Done"
-exit
+sys.exit()
