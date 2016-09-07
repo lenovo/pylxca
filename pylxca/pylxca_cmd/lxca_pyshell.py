@@ -53,14 +53,14 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
         ns.update()
         sys.ps1 = "PYLXCA >> "
         sys.ps2 = " ... "
-        code.interact('You are in Interactive Python Shell for LXCA.', local = ns)
+        code.interact('You are in Interactive Python Shell for Lenovo XClarity Administrator.', local = ns)
 
 def connect(*args, **kwargs):
 
     '''
 
 @summary:
-    Use this function to connect to LXCA
+    Use this function to connect to Lenovo XClarity Administrator
     run this function as  
     
     con_variable = connect( key1 = 'val1', key2 = 'val2', ...)
@@ -72,10 +72,10 @@ def connect(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        con          Connection Object to LXCA
-        url          url to LXCA Example. https://a.b.c.d
-        user         User Id to Authenticate LXCA
-        pw           Password to Authenticate LXCA
+        con          Connection Object to Lenovo XClarity Administrator
+        url          url to Lenovo XClarity Administrator Example. https://a.b.c.d
+        user         User Id to Authenticate Lenovo XClarity Administrator
+        pw           Password to Authenticate Lenovo XClarity Administrator
         noverify     flag to indicate to not verify server certificate
 
 @example 
@@ -98,14 +98,14 @@ def disconnect(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to disconnect from LXCA
+    Use this function to disconnect from Lenovo XClarity Administrator
     run this function as  
         disconnect()  
 
 @param
     The parameters for this command are as follows
         
-        con      Connection Object to LXCA
+        con      Connection Object to Lenovo XClarity Administrator
     
 @example 
     disconnect()
@@ -141,7 +141,7 @@ def cmms(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con       Connection Object to LXCA
+    con       Connection Object to Lenovo XClarity Administrator
     uuid      cmm uuid
     chassis   chassis uuid  
 
@@ -174,7 +174,7 @@ def chassis(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con        Connection Object to LXCA
+    con        Connection Object to Lenovo XClarity Administrator
     uuid       chassis uuid
     status     chassis manage status (managed/unmanaged)
     
@@ -209,7 +209,7 @@ def fans(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con           Connection Object to LXCA
+    con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of fan
     chassis       chassis uuid
     
@@ -242,7 +242,7 @@ def fanmuxes(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con           Connection Object to LXCA
+    con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of fanmux
     chassis       chassis uuid
     
@@ -275,7 +275,7 @@ def nodes(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con           Connection Object to LXCA
+    con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of node
     chassis       chassis uuid
     status        nodes manage status (managed/unmanaged)
@@ -309,7 +309,7 @@ def switches(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con      Connection Object to LXCA
+    con      Connection Object to Lenovo XClarity Administrator
     uuid          uuid of switch
     chassis       chassis uuid
     
@@ -342,7 +342,7 @@ def powersupplies(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con      Connection Object to LXCA
+    con      Connection Object to Lenovo XClarity Administrator
     uuid          uuid of power supply
     chassis       chassis uuid
     
@@ -375,7 +375,7 @@ def scalablesystem(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con      Connection Object to LXCA
+    con      Connection Object to Lenovo XClarity Administrator
     id        scalable complex id
     type      type (flex/rackserver)
     status    scalable system manage status (managed/unmanaged)
@@ -397,7 +397,7 @@ def discover(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to discover endpoint from LXCA
+    Use this function to discover endpoint from Lenovo XClarity Administrator
     run this function as  
     
     data_dictionary = discover( key1 = 'val1', key2 = 'val2', ...)
@@ -409,7 +409,7 @@ def discover(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-    con      Connection Object to LXCA
+    con    Connection Object to Lenovo XClarity Administrator
     ip     One or more IP addresses for each endpoint to be discovered.
     job    Job ID of discover request
 
@@ -435,7 +435,7 @@ def manage(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from LXCA
+    Use this function to manage endpoint from Lenovo XClarity Administrator
     run this function as  
     
     data_dictionary = manage( key1 = 'val1', key2 = 'val2', ...)
@@ -447,7 +447,7 @@ def manage(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        con      Connection Object to LXCA
+        con      Connection Object to Lenovo XClarity Administrator
         ip       One or more IP addresses for each endpoint to be managed.
         user     user ID to access the endpoint
         pw       The current password to access the endpoint.
@@ -498,7 +498,7 @@ def unmanage(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from LXCA
+    Use this function to unmanage endpoint from Lenovo XClarity Administrator
     run this function as  
     
     data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
@@ -538,16 +538,44 @@ def unmanage(*args, **kwargs):
 
 def configpatterns(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
-    '''
+@summary:
+    Use this function to Retrieve information and deploy all server and category patterns
+            that have been defined in the Lenovo XClarity Administrator
+            
+    run this function as  
+    
+    data_dictionary = configpatterns( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ep','force','job']
+
+@param
+    The parameters for this command are as follows 
+    
+        id          The unique ID that was assigned when the server pattern was created
+        
+        endpoint    List of one or more UUIDs for the target servers,If a target is an empty bay,
+                      specify the location ID; otherwise, specify the server UUID
+        
+        restart     When to activate the configurations. This can be one of the following values:
+                      defer - Activate IMM settings but do not restart the server.
+                      immediate - Activate all settings and restart the server immediately.
+                      pending - Manually activate the server profile and restart the server.
+        
+        type        Type of the server, It can be one of the following
+                      Node
+                      Rack
+                      Tower
+
+
+@example 
+
+    '''    
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','id','restart','type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
@@ -557,12 +585,36 @@ def configpatterns(*args, **kwargs):
 
 def configprofiles(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to manage endpoint from Lenovo XClarity Administrator
+    
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ep','force','job']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -576,12 +628,35 @@ def configprofiles(*args, **kwargs):
 
 def configtargets(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to manage endpoint from Lenovo XClarity Administrator
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ep','force','job']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -595,12 +670,35 @@ def configtargets(*args, **kwargs):
 
 def updatepolicy(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to manage endpoint from Lenovo XClarity Administrator
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','policy','info']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -614,12 +712,35 @@ def updatepolicy(*args, **kwargs):
 
 def updaterepo(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to manage endpoint from Lenovo XClarity Administrator
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ep','force','job']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -633,12 +754,35 @@ def updaterepo(*args, **kwargs):
 
 def updatecomp(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to manage endpoint from Lenovo XClarity Administrator
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','ep','force','job']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -654,12 +798,35 @@ def updatecomp(*args, **kwargs):
 
 def users(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to manage endpoint from Lenovo XClarity Administrator
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','id']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -673,12 +840,37 @@ def users(*args, **kwargs):
 
 def ffdc(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to Collect and export specific endpoint data 
+        from Lenovo XClarity Administrator
+    
+    run this function as  
+    
+    data_dictionary = ffdc( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','uuid']
+
+@param
+    The parameters for this command are as follows 
+    
+        ep          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
+        force       Indicates whether to force the unmanagement of an endpoint (True/False)
+        job         Job ID of unmanage request
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -692,12 +884,24 @@ def ffdc(*args, **kwargs):
 
 def lxcalog(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to get Lenovo XClarity Administrator LOG information
+    run this function as  
+    
+    data_dictionary = lxcalog( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','filter']
+
+@param
+    The parameters for this command are as follows 
+    
+        filter  filter for the event
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
@@ -711,12 +915,37 @@ def lxcalog(*args, **kwargs):
 
 def jobs(*args, **kwargs):
     '''
-    -------
-    use this function to unmanage chassis from LXCA
-    run this function as  unmanage(arg1, arg2, key1 = 'val1', key2 = 'val2')
-    unmanage( con, ep,force )
 
-    -------
+@summary:
+    Use this function to get jobs information from Lenovo XClarity Administrator
+    run this function as  
+    
+    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    
+    Where KeyList is as follows
+        
+        keylist = ['con','id','uuid','state','cancel','delete']
+
+@param
+    The parameters for this command are as follows 
+    
+        id=         job id
+        uuid=       uuid of endpoint for which jobs should be retrieved
+        state=      job state to retrieve jobs in specified state.
+                      The state can be one of the following
+                      Pending
+                      Running
+                      Complete
+                      Cancelled
+                      Running_With_Errors
+                      Cancelled_With_Errors
+                      Stopped_With_Error
+                      Interrupted
+        cancel=     cancel job of specified id
+        delete=     delete job of specified id
+
+@example 
+
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
