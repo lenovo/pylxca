@@ -51,7 +51,7 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
               "configtargets":configtargets,
               "help": help}
         ns.update()
-        sys.ps1 = "PYLXCA >> "
+        sys.ps1 = "pyshell >> "
         sys.ps2 = " ... "
         code.interact('You are in Interactive Python Shell for Lenovo XClarity Administrator.', local = ns)
 
