@@ -1,41 +1,63 @@
-import time
+#!/usr/bin/env /usr/bin/python2.7
+import __future__
+import time, os, sys
 import argparse
 import unittest
 import pylxca
+
+try:
+    from pylxca.pylxca_cmd.lxca_pyshell import *
+    pyshell()
+except Exception as e:
+    print "-"*20
+    print "Error:",e
+    print "Sugesstion: Please install pyLXCA before run (try using easy_install pylxca)"
+    print "Exiting.."
+    print "-"*20
+    sys.exit(-1)
 
 def get_args():
     parser = argparse.ArgumentParser(description='pylxca funation tests usage')
     parser.add_argument('-l', action='store', dest='lxca_ip', required=True,
                         help='Store LXCA IP value')
-    parser.add_argument('-n', action='store_false', default=True,
-                        dest='no_verify',
+    parser.add_argument('-n', action='store_false', default=True,dest='no_verify',
                         help='Set a no_verify to false')
-
-    parser.add_argument('-c', action='append', dest='chassis',required=True,
-                        default=[],
-                        help='Specify chassis as chassis1,chassis2..',
-                        )
+    parser.add_argument('-c', action='append', dest='chassis',required=True, default=[],
+                        help='Specify chassis as chassis1,chassis2..',)
     parser.add_argument('-u', action='store', dest='user', type=str, default='USERID',
                         help = 'Specify username. default:"USERID"')
     parser.add_argument('-p', action='store', dest='password', type=str, default = "CME44ibm",
                         help = 'Specify password. default: "CME44ibm" ')
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+    parser.add_argument('--version', action='version', version='%(prog)s v0.1')
 
     return(parser.parse_args())
 
 class TestCase(unittest.TestCase):
     arg = get_args()
-    ip          = 'https://' + arg.lxca_ip
-    user        = arg.user
-    passwd      = arg.password
-    noverify    = 'True' if arg.no_verify else 'False'
-    chassis     = arg.chassis
+    _ip          = 'https://' + arg.lxca_ip
+    _user        = arg.user
+    _passwd      = arg.password
+    _noverify    = 'True' if arg.no_verify else 'False'
+    _chassis     = arg.chassis
+    _conn       = None
+
+    @classmethod
+    def setUpClass(self):
+        print "Initializing testing environment.."
+        self._conn = connect(self._ip, self._user, self._passwd, self._noverify)
+        # expecting conn not equal to None
+        if self._conn is None:
+            raise TypeError("connection to LXCA fails. Check Credentials")
+
+    @classmethod
+    def tearDownClass(self):
+        print "tearDown testing environment.."
+        self._conn.disconnect()
+        # expecting conn equal to None
+        if self._conn.session is not None:
+            raise TypeError("Disconnection to LXCA fails.")
 
 class examples(TestCase):
-
-    def setUp(self):
-        #print "Setup env", self.ip
-        pass
 
     @unittest.skip("demonstrating skipping")
     def test_nothing(self):
@@ -122,7 +144,7 @@ if __name__ == "__main__":
 #   unittest.TextTestRunner(verbosity=2).run(suite)
 
 # run_method:4
-    tests = [examples, General, Inventory]
+    tests = [examples, General]
     for test in tests:
         suite = unittest.TestLoader().loadTestsFromTestCase(test)
         unittest.TextTestRunner(verbosity=2).run(suite)
