@@ -3,7 +3,7 @@
 @author: Prashant Bhosale <pbhosale@lenovo.com>
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
-@organization: Lenovo 
+@organization: Lenovo
 @summary: This module is for creating a connection session object for given xHMC.
 
 '''
@@ -48,7 +48,7 @@ class lxca_connection():
         self.url = url
         self.user = user
         self.passwd = base64.b16encode(passwd)
-        self.retires = retries 
+        self.retires = retries
         self.debug = False
         self.session = None
         #self.verify_callback = verify_callback
@@ -57,7 +57,7 @@ class lxca_connection():
             self.verify_callback = os.environ['REQUESTS_CA_BUNDLE']
         else:
             self.verify_callback = verify_callback
-        
+
     def __repr__(self):
         return "%s(%s, %s, debug=%s)" %(self.__class__.__name__, `self.url`, self.user, `self.debug`)
 
@@ -78,21 +78,21 @@ class lxca_connection():
         except ConnectionError as e:
             logger.debug("Connection Exception: Exception = %s", e)
             return False
-        except Exception as e:
-            logger.debug("Connection Exception: Exception = %s", e)
-            return False
         except requests.exceptions.HTTPError as e:
             logger.debug("Connection Exception: Exception = %s", e.response.text)
             return False
-        
+        except Exception as e:
+            logger.debug("Connection Exception: Exception = %s", e)
+            return False
+
         '''
-        Even though the csrf-token cookie will be automatically sent with the request, 
+        Even though the csrf-token cookie will be automatically sent with the request,
         the server will be still expecting a valid X-Csrf-Token header,
         So we need to set it explicitly here
         '''
         if r.status_code == requests.codes['ok']:
             self.session.headers.update({'X-Csrf-Token': self.session.cookies.get('csrf')})
-            
+
         return  True
 
     def test_connection(self):
@@ -106,14 +106,14 @@ class lxca_connection():
             py_obj = json.loads(resp.text)
         except Exception as e:
             raise ConnectionError("Invalid connection")
-        return 
+        return
 
     def get_url(self):
         return self.url
-    
+
     def get_session(self):
         return self.session
-    
+
     def disconnect(self):
         '''
         session Disconnection

@@ -2,7 +2,7 @@
 import __future__
 import time, os, sys
 import argparse
-import unittest
+import unittest, pytest
 import pylxca
 
 try:
@@ -39,7 +39,7 @@ class TestCase(unittest.TestCase):
     _passwd      = arg.password
     _noverify    = 'True' if arg.no_verify else 'False'
     _chassis     = arg.chassis
-    _conn       = None
+    _conn        = None
 
     @classmethod
     def setUpClass(self):
@@ -78,33 +78,82 @@ class examples(TestCase):
 
 class General(TestCase):
     def test_connect(self):
-        pass
+        self.assertIsNotNone(self._conn, "test_connect should not None")
+
     def test_disconnect(self):
-        pass
-    def test_exit(self):
-        pass
-    def test_help(self):
-        pass
-    def test_ostream(self):
-        pass
+        self._conn.disconnect()
+        self.assertIsNone(self._conn.session, "test_disconnect should None")
+
+    # def test_exit(self):
+    #     pass
+    #def test_help(self):
+    #     pass
+    # def test_ostream(self):
+    #     pass
+
+    @classmethod
+    @unittest.skipIf(1==1, "Skipping tearDown. Not required")
+    def tearDownClass(self):
+        print "tearDown testing environment.."
+        self._conn.disconnect()
+        # expecting conn equal to None
+        if self._conn.session is not None:
+            raise TypeError("Disconnection to LXCA fails.")
 
 class Inventory(TestCase):
     def test_chassis(self):
-        pass
+        chassisList = chassis(self._conn)
+        chassisList = chassisList['chassisList']
+        self.assertTrue(isinstance(chassisList,list), "ChassList Found")
+        if chassisList.__len__() == 0:
+            raise ValueError("No chassis is managed")
+
     def test_cmms(self):
-        pass
+        cmmList = cmms(self._conn)
+        cmmList = cmmList['cmmList']
+        self.assertTrue(isinstance(cmmList,list), "cmmList Found")
+        if cmmList.__len__() == 0:
+            raise ValueError("No CMM is Found")
+
     def test_fanmuxes(self):
-        pass
+        fanMuxList = fanmuxes(self._conn)
+        fanMuxList = fanMuxList['fanMuxList']
+        self.assertTrue(isinstance(fanMuxList,list), "fanMuxList Found")
+        if fanMuxList.__len__() == 0:
+            raise ValueError("No fanMuxList is Found")
+
     def test_fan(self):
-        pass
+        fanList = fans(self._conn)
+        fanList = fanList['fanList']
+        self.assertTrue(isinstance(fanList,list), "fanList Found")
+        if fanList.__len__() == 0:
+            raise ValueError("No fanList is Found")
+
     def test_nodes(self):
-        pass
+        nodeList = nodes(self._conn, status = 'managed')
+        nodeList = nodeList['nodeList']
+        self.assertTrue(isinstance(nodeList,list), "nodeList Found")
+        if nodeList.__len__() == 0:
+            raise ValueError("No nodeList is Found")
+
     def test_powersupplies(self):
-        pass
+        powerList = powersupplies(self._conn)
+        self.assertTrue(isinstance(powerList, dict), "powerList Found")
+        raise ValueError("TODO list")
+        # nodeList = nodeList['nodeList']
+        # self.assertTrue(isinstance(nodeList,list), "nodeList Found")
+        # if nodeList.__len__() == 0:
+        #     raise ValueError("No nodeList is Found")
+
     def test_scalablesystems(self):
-        pass
-    def test_switchs(self):
-        pass
+        scalablesystemList = scalablesystem(self._conn)
+        self.assertTrue(isinstance(scalablesystemList, dict), "scalablesystemList Found")
+        raise ValueError("TODO list")
+
+    def test_switches(self):
+        switchesList = switches(self._conn)
+        self.assertTrue(isinstance(switchesList, dict), "switchesList Found")
+        raise ValueError("TODO list")
 
 class ServerConfiguration(TestCase):
     pass
@@ -144,7 +193,7 @@ if __name__ == "__main__":
 #   unittest.TextTestRunner(verbosity=2).run(suite)
 
 # run_method:4
-    tests = [examples, General]
+    tests = [Inventory]
     for test in tests:
         suite = unittest.TestLoader().loadTestsFromTestCase(test)
         unittest.TextTestRunner(verbosity=2).run(suite)
