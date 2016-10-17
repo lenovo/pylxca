@@ -2,7 +2,7 @@
 import __future__
 import time, os, sys
 import argparse
-import unittest, pytest
+import unittest
 import pylxca
 
 try:
@@ -17,7 +17,7 @@ except Exception as e:
     sys.exit(-1)
 
 def get_args():
-    parser = argparse.ArgumentParser(description='pylxca funation tests usage')
+    parser = argparse.ArgumentParser(description='pylxca function tests usage')
     parser.add_argument('-l', action='store', dest='lxca_ip', required=True,
                         help='Store LXCA IP value')
     parser.add_argument('-n', action='store_false', default=True,dest='no_verify',
