@@ -3,8 +3,8 @@
 @author: Prashant Bhosale <pbhosale@lenovo.com>, Girish Kumar <gkumar1@lenovo.com>
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
-@organization: Lenovo 
-@summary: This module is for creating a connection session object for given xHMC 
+@organization: Lenovo
+@summary: This module is for creating a connection session object for given xHMC
 '''
 
 import logging, os, json, pprint, requests
@@ -28,18 +28,18 @@ class lxca_rest:
     '''
     def get_chassis(self,url, session, uuid, status ):
         url = url + '/chassis'
-        
+
         if uuid:
             url = url + "/" + uuid
-            
+
         if status:
             if status == "managed" or status == "unmanaged":
                 url = url + "?status=" + status
             else:
                 raise Exception("Invalid argument 'status'")
         else:
-            url = url + "?status=managed" 
-            
+            url = url + "?status=managed"
+
         try:
             resp = session.get(url,verify=False,timeout=3)
             resp.raise_for_status()
@@ -47,19 +47,19 @@ class lxca_rest:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp
-    
+
     def get_nodes(self,url, session, uuid, status):
         url = url + '/nodes'
-        
+
         if uuid:
             url = url + '/' + uuid
-        
+
         if status:
             if status == "managed" or status == "unmanaged":
                 url = url + "?status=" + status
             else:
                 raise Exception("Invalid argument 'status'")
-            
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
@@ -67,13 +67,13 @@ class lxca_rest:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp
-        
+
     def get_switches(self,url, session, uuid):
         url = url + '/switches'
-        
+
         if uuid:
             url = url + '/' + uuid
-                    
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
@@ -84,10 +84,10 @@ class lxca_rest:
 
     def get_fan(self,url, session, uuid):
         url = url + '/fans'
-        
+
         if uuid:
             url = url + '/' + uuid
-                        
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
@@ -98,10 +98,10 @@ class lxca_rest:
 
     def get_powersupply(self,url, session, uuid):
         url = url + '/powerSupplies'
-        
+
         if uuid:
             url = url + '/' + uuid
-                        
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
@@ -112,10 +112,10 @@ class lxca_rest:
 
     def get_fanmux(self,url, session, uuid):
         url = url + '/fanMuxes'
-        
+
         if uuid:
             url = url + '/' + uuid
-                        
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
@@ -126,10 +126,10 @@ class lxca_rest:
 
     def get_cmm(self,url, session, uuid):
         url = url + '/cmms'
-        
+
         if uuid:
             url = url + '/' + uuid
-                        
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
@@ -139,37 +139,37 @@ class lxca_rest:
 
     def get_scalablesystem(self,url, session, complexid,complextype,status):
         url = url + '/scalableComplex'
-        
+
         if complexid:
             url = url + '/' + complexid
-            
+
         if complextype:
             if complextype == "flex" or complextype == "rackserver":
                 url = url + "?complexType=" + complextype
             else:
-                raise Exception("Invalid argument 'complexType': %s" %complextype) 
+                raise Exception("Invalid argument 'complexType': %s" %complextype)
         elif status:
             if status == "managed" or status == "unmanaged":
                 url = url + "?status=" + status
             else:
                 raise Exception("Invalid argument 'status'")
-                        
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return resp    
-    
-    def set_log_config(self):  
+        return resp
+
+    def set_log_config(self):
         logging.config.fileConfig(pylxca_logger)
         return
 
     def get_log_level(self):
         logger.debug("Current Log Level is: " + str(logger.getEffectiveLevel()))
         return logger.getEffectiveLevel()
-        
+
     def set_log_level(self,log_value):
         logger.setLevel(log_value)
         return
@@ -195,7 +195,7 @@ class lxca_rest:
                 url = url + '/discovery'
                 resp = session.get(url, verify=False, timeout=3)
                 resp.raise_for_status()
-                              
+
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
@@ -206,15 +206,19 @@ class lxca_rest:
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
             if ip_addr and user and pw and mp:
                 url = url + '/manageRequest'
-                
+
                 payload = list()
                 param_dict = dict()
                 mp_data_list = list()
-                
+
                 param_dict["ipAddresses"]=ip_addr.split(",")
                 param_dict["username"] = user
                 param_dict["password"] = pw
-                
+                if rpw:param_dict["recoveryPassword"] = rpw
+
+                if type == None or mp == None:
+                    # do auto discovery
+
                 #Fetch type value from input
                 type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
                 if type not in type_list:
@@ -223,21 +227,18 @@ class lxca_rest:
                 elif type == "Storage": type = "Lenovo Storage"
                 elif type == "Rack-Tower": type = "Rack-Tower Server"
                 param_dict["type"] = type
-                
-                if rpw:param_dict["recoveryPassword"] = rpw
-                
+
                 for each_mp in mp.split(","):
                     mp_data = each_mp.split(";")
                     mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
                 param_dict["managementPorts"] = mp_data_list
-                
+
                 param_dict["uuid"] = uuid
-                                 
                 payload = [param_dict]
-                
+
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
                 resp.raise_for_status()
-                
+
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
                         job = resp.headers._store["location"][-1].split("/")[-1]
@@ -251,24 +252,24 @@ class lxca_rest:
             else:
                 logger.error("Invalid execution of manage REST API")
                 raise Exception("Invalid execution of manage REST API")
-                              
+
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
         return resp
 
     def do_unmanage(self,url, session, endpoints,force,jobid):
-        
+
         endpoints_list = list()
         param_dict = dict()
-        
+
         try:
             if endpoints:
                 url = url + '/unmanageRequest'
                 for each_ep in endpoints.split(","):
                     ip_addr = None
                     each_ep_dict = dict()
-                    
+
                     ep_data = each_ep.split(";")
                     ip_addr = ep_data[0]
                     uuid = ep_data[1]
@@ -301,19 +302,19 @@ class lxca_rest:
             else:
                 logger.error("Invalid execution of unmanage REST API")
                 raise Exception("Invalid execution of unmanage REST API")
-                              
+
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        
+
         return resp
 
     def get_jobs(self,url, session,jobid,uuid,state,canceljobid,deletejobid):
         url = url + '/jobs'
-        try: 
+        try:
             if jobid:
                 url = url + '/' + jobid
-                
+
                 if state:
                     if state == "Pending " or state == "Running" \
                     or state == "Complete" or state == "Cancelled" \
@@ -322,11 +323,11 @@ class lxca_rest:
                         url = url + '?state=' + state
                         if uuid:
                             url = url + ',uuid=' + uuid
-                    else:   
+                    else:
                         raise Exception("Invalid argument 'state': %s" %state)
                 if state == None and uuid:
-                    url = url + '?uuid=' + uuid   
-                    
+                    url = url + '?uuid=' + uuid
+
                 resp = session.get(url, verify=False, timeout=3)
                 resp.raise_for_status()
             elif canceljobid:
@@ -351,44 +352,44 @@ class lxca_rest:
                         url = url + '?state=' + state
                         if uuid:
                             url = url + ',uuid=' + uuid
-                    else:   
+                    else:
                         raise Exception("Invalid argument 'state': %s" %state)
                 if state == None and uuid:
-                    url = url + '?uuid=' + uuid  
-                
+                    url = url + '?uuid=' + uuid
+
                 resp = session.get(url, verify=False, timeout=3)
                 resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return resp    
-    
+        return resp
+
     def get_users(self,url, session, userid):
         url = url + '/userAccounts'
-        
+
         if userid:
             url = url + '/' + userid
-                        
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
         return resp
-    
+
     def get_lxcalog(self,url, session, filter):
         url = url + '/events'
-        
+
         if filter:
             url = url + '?filterWith=' + filter
-                        
+
         try:
             resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
         return resp
-    
+
     def get_ffdc(self,url, session, uuid):
         url = url + '/ffdc/endpoint'
         try:
@@ -397,7 +398,7 @@ class lxca_rest:
                 resp = session.get(url,verify=False, timeout=3)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
-                    job_info = ast.literal_eval(resp.content)    
+                    job_info = ast.literal_eval(resp.content)
                     if job_info.has_key("jobURL"):
                         job = job_info["jobURL"].split("/")[-1]
                         return job
@@ -406,11 +407,11 @@ class lxca_rest:
             else:
                 logger.error("Invalid execution of ffdc REST API")
                 raise Exception("Invalid execution of ffdc REST API")
-                              
+
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        
+
     def get_updatepolicy(self,url, session,policy,info):
         url = url + '/compliancePolicies'
         try:
@@ -419,15 +420,15 @@ class lxca_rest:
                     url = url + "/applicableFirmware"
                 elif info == "RESULTS":
                     url = url + "/persistedResult"
-                
+
             resp = session.get(url,verify=False, timeout=3)
             resp.raise_for_status()
             return resp
-                             
+
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        
+
     def get_updaterepo(self,url, session,key):
         url = url + '/updateRepositories/firmware'
         try:
@@ -442,71 +443,71 @@ class lxca_rest:
             resp = session.get(url,verify=False, timeout=3)
             resp.raise_for_status()
             return resp
-                             
+
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        
+
     def do_updatecomp(self,url, session,mode,action,server,switch,storage,cmm):
         serverlist = list()
         storagelist = list()
         cmmlist = list()
         switchlist = list()
-        
+
         url = url + '/updatableComponents'
         try:
-            
+
             if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
                 resp = session.get(url,verify=False, timeout=3)
                 resp.raise_for_status()
                 return resp
-            
+
             if not mode  == None and mode == "immediate" or mode == "delayed" :
                 url= url + "?mode=" + mode
             else:
                 raise Exception("Invalid argument mode")
-        
+
             if not action  == None and action == "apply" or action == "cancelApply" :
                 url= url + "&action=" + action
             else:
                 raise Exception("Invalid argument mode")
-            
+
             if server and len(server.split(","))==3:
                 server_data = server.split(",")
                 serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
-          
+
             if switch and len(switch.split(","))==3:
                 switch_data = switch.split(",")
                 switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
-                
+
             if storage and len(storage.split(","))==3:
                 storage_data = storage.split(",")
                 storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
-           
+
             if cmm and len(cmm.split(","))==3:
                 cmm_data = cmm.split(",")
                 cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
-            
+
             param_dict = dict()
             if serverlist:param_dict["ServerList"] = serverlist
             if storagelist:param_dict["StorageList"] = storagelist
             if cmmlist:param_dict["CMMList"] = cmmlist
             if switchlist:param_dict["SwitchList"] = switchlist
-            
+
             payload = dict()
             payload["DeviceList"] = [param_dict]
 
             resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
             resp.raise_for_status()
             return resp
-                             
+
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        '''       
+        '''
          for each_mp in mp.split(","):
                     mp_data = each_mp.split(";")
                     mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
                 param_dict["managementPorts"] = mp_data_list
-                
+
         '''

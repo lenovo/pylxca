@@ -1,137 +1,137 @@
 {
   "nodes": [
-    "u:s:c:v:h", 
+    "u:s:c:v:h",
     [
       "con=",
       "uuid=",
       "status=",
       "chassis=",
       "view="
-    ], 
-    [], 
-    "Get nodes inventory", 
+    ],
+    [],
+    "Get nodes inventory",
     "\nUSAGE:\n\tnodes -h \n\tnodes [-u <node UUID>] [-s <manage/unmanaged>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tnode uuid\n\t-s, --status\tnodes manage status (managed/unmanaged)\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "chassis": [
-    "u:s:v:h", 
+    "u:s:v:h",
     [
       "con=",
       "uuid=",
       "status=",
       "view="
-    ], 
-    [], 
-    "Get chassis inventory", 
+    ],
+    [],
+    "Get chassis inventory",
     "\nUSAGE:\n\tchassis -h\n\tchassis [-u <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tchassis uuid\n\t-s, --status\tchassis manage status (managed/unmanaged)\n\t-v, --view\tview filter name"
-  ], 
+  ],
   "switches": [
-    "u:c:v:h", 
+    "u:c:v:h",
     [
       "con=",
 	  "uuid=",
       "chassis=",
       "view="
-    ], 
-    [], 
-    "Get switches inventory", 
+    ],
+    [],
+    "Get switches inventory",
     "\nUSAGE:\n\tswitches -h \n\tswitches [-u <switch UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n-h\t\t\tThis option displays command usage information\n\t-u, --uuid\tswitch uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "fans": [
-    "u:c:v:h", 
+    "u:c:v:h",
     [
       "con=",
 	  "uuid=",
       "chassis=",
       "view="
-    ], 
-    [], 
-    "Get fans inventory", 
+    ],
+    [],
+    "Get fans inventory",
     "\nUSAGE:\n\tfans -h \n\tfans [-u <fan UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tfan uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "powersupplies": [
-    "u:c:v:h", 
+    "u:c:v:h",
     [
       "con=",
 	  "uuid=",
       "chassis=",
       "view="
-    ], 
-    [], 
-    "Get Power Supply inventory", 
+    ],
+    [],
+    "Get Power Supply inventory",
     "\nUSAGE:\n\tpowersupplies -h\n\tpowersupplies [-u <power supply UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\t\tThis option displays command usage information\n\t-u, --uuid\tpower supply uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "fanmuxes": [
-    "u:c:v:h", 
+    "u:c:v:h",
     [
       "con=",
 	  "uuid=",
       "chassis=",
       "view="
-    ], 
-    [], 
-    "Get Fan Mux inventory", 
+    ],
+    [],
+    "Get Fan Mux inventory",
     "\nUSAGE:\n\tfanmuxes -h\n\tfanmuxes [-u <fan mux UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tfan mux uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "cmms": [
-    "u:c:v:h", 
+    "u:c:v:h",
     [
       "con=",
 	  "uuid=",
       "chassis=",
       "view="
-    ], 
-    [], 
-    "Get CMM inventory", 
+    ],
+    [],
+    "Get CMM inventory",
     "\nUSAGE:\n\tcmms -h\n\tcmms [-u <cmm UUID>] [-c <chassis UUID>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-u, --uuid\tcmm uuid\n\t-c, --chassis\tchassis uuid\n\t-v, --view\tview filter name"
   ],
   "scalablesystem": [
-    "i:t:v:s:h", 
+    "i:t:v:s:h",
     [
       "con=",
       "id=",
       "type=",
       "status=",
       "view="
-    ], 
-    [], 
-    "Get Scalable Complex System inventory", 
+    ],
+    [],
+    "Get Scalable Complex System inventory",
     "\nUSAGE:\n\tscalablesystem -h\n\tscalablesystem [-i <scalablesystem id>] [-t <scalablesystem type>] [-s <status>] [-v <view filter name>]\n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-i, --id\tscalable complex id\n\t-t, --type\ttype (flex/rackserver)\n\t-s, --status\tscalable system manage status (managed/unmanaged)\n\t-v, --view\tview filter name"
   ],
   "connect": [
-    "u:l:p:n:h", 
+    "u:l:p:n:h",
     [
-      "url=", 
+      "url=",
       "user=",
       "pw=",
       "noverify"
-    ], 
+    ],
     [
       [
-        "-u", 
+        "-u",
         "--user"
-      ], 
+      ],
       [
-        "-l", 
+        "-l",
         "--url"
       ]
-    ], 
-    "Connect LXCA", 
+    ],
+    "Connect LXCA",
     "\nUSAGE:\n\tconnect -h | --help \n\tconnect -l <URL> -u <USER> [--noverify] \n\nOPTIONS:\n\t-h\t\tThis option displays command usage information\n\t-l, --url\tURL of LXCA\n\t-u, --user\tUsername to authenticate\n\t--noverify\tDo not verify the server certificate for https URLs"
-  ], 
+  ],
   "log": [
-    "l:h", 
+    "l:h",
     [
       "lvl="
-    ], 
-    [], 
-    "Get/set log level of Python LXCA", 
+    ],
+    [],
+    "Get/set log level of Python LXCA",
     "\nUSAGE:\n\tlog -h | --help \n\tlog [-l <level>] \n\nOPTIONS:\n\t\t-l, --lvl\tLogging level\n"
   ],
   "disconnect": [
-    "h", 
-    [], 
-    [], 	
-    "Disconnect LXCA", 
+    "h",
+    [],
+    [],
+    "Disconnect LXCA",
     "\nUSAGE:\n\tdisconnect -h | --help \n\tdisconnect"
   ],
   "ostream": [
@@ -147,7 +147,7 @@
     "i:u:s:c:d:h",
     [
       "con=",
- 	  "id=",	
+ 	  "id=",
       "uuid=",
       "state=",
       "cancel=",
@@ -161,19 +161,19 @@
     "i:u:p:r:m:t:e:j:v:h",
     [
 	  "con=",
-      "ip=",
+    "ip=",
 	  "user=",
 	  "pw=",
 	  "rpw=",
 	  "mp=",
 	  "type=",
 	  "epuuid=",
-      "job=",
-      "view="
+    "job=",
+    "view="
     ],
     [],
     "Manage the endpoint.",
-    "\nUSAGE:\n\tmanage  -h | --help \n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> -r <recovery password for the endpoint> \n\t\t-m <list of endpoint management ports> -t <type of endpoint to be managed>\n\tmanage  -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated list of \n\t\t\tmanagement port information. Each management port includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. These properties \n\t\t\tshould be separate by semicolon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-e, --epuuid\tUUID of endpoint to be managed\n\t-j, --job\tJob ID of existing manage request\n\t-v, --view\tview filter name"
+    "\nUSAGE:\n\tmanage  -h | --help\n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> -r <recovery password for the endpoint> \n\t\t[-m <list of endpoint management ports>] [-t <type of endpoint to be managed>]\n\tmanage  -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated list of \n\t\t\tmanagement port information. Each management port includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. These properties \n\t\t\tshould be separate by semicolon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-e, --epuuid\tUUID of endpoint to be managed\n\t-j, --job\tJob ID of existing manage request\n\t-v, --view\tview filter name"
   ],
   "unmanage": [
     "e:f:j:v:h",
@@ -187,7 +187,7 @@
     [],
     "Unmanage the endpoint.",
     "\nUSAGE:\n\tunmanage -h | --help \n\tunmanage -e <list of endpoints to unmanage> [--force]\n\tunmanage -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-e, --ep\tone or more endpoints to be unmanaged.\n\t\t\tThis is comma separated list of multiple endpoints, each endpoint should\n\t\t\tcontain endpoint information separated by semicolon.\n\t\t\tendpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and\n\t\t\tType of endpoint to be unmanaged ,This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-f, --force\t\tIndicates whether to force the unmanagement of an endpoint (True/False)\n\t-j, --job\tJob ID of unmanage request\n\t-v, --view\tview filter name"
-  ],  
+  ],
   "discover": [
     "i:j:v:h",
     [
@@ -258,7 +258,7 @@
     "\nUSAGE:\n\tupdaterepo -k <Key to return the specified type of update> [-v <view filter name>]\n\nOPTIONS:\n\t-k, --key\tReturns the specified type of update. This can be one of the following values.\n\t\t\t\tsupportedMts - Returns a list of supported machine types\n\t\t\t\tsize - Returns the repository size\n\t\t\t\tlastRefreshed - Returns the timestamp of the last repository refresh\n\t\t\t\timportDir - Returns the import directory for the repository.\n\t\t\t\tpublicKeys - Returns the supported signed keys\n\t\t\t\tupdates - Returns information about all firmware updates\n\t\t\t\tupdatesByMt - Returns information about firmware updates for the specified machine type\n\t\t\t\tupdatesByMtByComp - Returns the update component names for the specified machine type\n\t-v, --view\tView filter name"
   ],
   "updatecomp": [
-    "q:a:m:w:s:t:c:v:h",
+    "q:a:m:w:s:t:c:v:d:h",
     [
 	  "con=",
 	  "query=",
@@ -267,11 +267,12 @@
 	  "switch=",
 	  "server=",
 	  "storage=",
-	  "cmm="
+	  "cmm=",
+	  "discover="
     ],
     [],
     "Firmware update actions on target endpoints and retrieve the \n\t\t\tstatus and progress of firmware updates and firmware repository.",
-    "\nUSAGE:\n\tupdatecomp [-q <The data to return>] [-v <view filter name>]\n\tupdatecomp  [-m <activate mode>] [-a <action to take>] [-c <information of cmms>] [-w <information of switches>] [-s <information of servers>] [-t <information of storages>]  \n\nOPTIONS:\n\t-q, --query\tThe data to return. This can be one of the following values.\n\t\t\tcomponents - Returns a list of endpoints and components that can be updated.\n\t\t\tstatus - Returns the status and progress of firmware updates. This is the default value\n\t-m, --mode\tIndicates when to activate the update. This can be one of the following values.\n\t\t\timmediate - Uses Immediate Activaton mode when applying firmware updates to the selected endpoints. \n\t\t\tdelayed - Uses Delayed Activaton mode when applying firmware updates to the selected endpoints.\n\t-a, --action\tThe action to take. This can be one of the following values.\n\t\t\tapply - Applies the associated firmware to the submitted components. \n\t\t\tcancelApply - Cancels the firmware update request to the selected components.\n\t-c, --cmm\tcmms information\n\t-w, --switch\tswitch information\n\t-s, --server\tservers information\n\t-t, --storage\tstorages information\n\n\t\t\tEach of the endpoint infomration should contain following data separated by comma\n\t\t\t\tUUID - UUID of the device\n\t\t\t\tFixid - Firmware-updare ID of the target package to be applied to the component.\n\t\t\t\tComponent - Component name\n\n\t-v, --view\tView filter name"
+    "\nUSAGE:\n\tupdatecomp [-q <The data to return>] [-v <view filter name>]\n\tupdatecomp  [-m <activate mode>] [-a <action to take>] [-c <information of cmms>] [-w <information of switches>] [-s <information of servers>] [-t <information of storages>]  [-d ] \n\nOPTIONS:\n\t-q, --query\tThe data to return. This can be one of the following values.\n\t\t\tcomponents - Returns a list of endpoints and components that can be updated.\n\t\t\tstatus - Returns the status and progress of firmware updates. This is the default value\n\t-m, --mode\tIndicates when to activate the update. This can be one of the following values.\n\t\t\timmediate - Uses Immediate Activaton mode when applying firmware updates to the selected endpoints. \n\t\t\tdelayed - Uses Delayed Activaton mode when applying firmware updates to the selected endpoints.\n\t-a, --action\tThe action to take. This can be one of the following values.\n\t\t\tapply - Applies the associated firmware to the submitted components. \n\t\t\tcancelApply - Cancels the firmware update request to the selected components.\n\t-c, --cmm\tcmms information\n\t-w, --switch\tswitch information\n\t-s, --server\tservers information\n\t-t, --storage\tstorages information\n\n\t\t\tEach of the endpoint infomration should contain following data separated by comma\n\t\t\t\tUUID - UUID of the device\n\t\t\t\tFixid - Firmware-updare ID of the target package to be applied to the component.\n\t\t\t\tComponent - Component name\n\n\t-v, --view\tView filter name"
   ],
   "users": [
     "i:h",
