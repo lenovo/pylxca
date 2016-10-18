@@ -3,9 +3,15 @@ import __future__
 import time, os, sys
 import argparse
 import unittest
-import pylxca
+
+from functools import wraps
+import errno
+import os
+import signal
+
 
 try:
+    import pylxca
     from pylxca.pylxca_cmd.lxca_pyshell import *
     pyshell()
 except Exception as e:
@@ -32,6 +38,28 @@ def get_args():
 
     return(parser.parse_args())
 
+
+
+# decorator function for timeout
+class TimeoutError(Exception):
+    pass
+
+def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
+    def decorator(func):
+        def _handle_timeout(signum, frame):
+            raise TimeoutError(error_message)
+        def wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, _handle_timeout)
+            signal.alarm(seconds)
+            try:
+                result = func(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+            return result
+        return wraps(func)(wrapper)
+    return decorator
+
+
 class TestCase(unittest.TestCase):
     arg = get_args()
     _ip          = 'https://' + arg.lxca_ip
@@ -42,12 +70,13 @@ class TestCase(unittest.TestCase):
     _conn        = None
 
     @classmethod
+    @timeout() # default timeout for setUpClass is 10s
     def setUpClass(self):
         print "Initializing testing environment.."
         self._conn = connect(self._ip, self._user, self._passwd, self._noverify)
         # expecting conn not equal to None
         if self._conn is None:
-            raise TypeError("connection to LXCA fails. Check Credentials")
+           raise TypeError("connection to LXCA fails. Check LXCA IP or Credentials ")
 
     @classmethod
     def tearDownClass(self):
@@ -92,7 +121,7 @@ class General(TestCase):
     #     pass
 
     @classmethod
-    @unittest.skipIf(1==1, "Skipping tearDown. Not required")
+    @unittest.skipIf(TestCase._conn is None, "Skipping tearDown. Not required")
     def tearDownClass(self):
         print "tearDown testing environment.."
         self._conn.disconnect()
@@ -193,7 +222,7 @@ if __name__ == "__main__":
 #   unittest.TextTestRunner(verbosity=2).run(suite)
 
 # run_method:4
-    tests = [Inventory]
+    tests = [General, Inventory]
     for test in tests:
         suite = unittest.TestLoader().loadTestsFromTestCase(test)
         unittest.TextTestRunner(verbosity=2).run(suite)
