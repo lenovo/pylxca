@@ -10,7 +10,7 @@
 import logging, os, json, pprint, requests
 import logging.config
 from requests.exceptions import HTTPError
-import ast
+import ast, json
 
 try:
     logging.captureWarnings(True)
@@ -188,7 +188,7 @@ class lxca_rest:
                     else:
                         return None
             elif jobid:
-                url = url + '/discoverRequest/jobs/' + jobid
+                url = url + '/discoverRequest/jobs/' + str(jobid)
                 resp = session.get(url,verify=False, timeout=3)
                 resp.raise_for_status()
             else:
@@ -204,7 +204,8 @@ class lxca_rest:
     def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,type,uuid,jobid):
         try:
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
-            if ip_addr and user and pw and mp:
+            # if ip_addr and user and pw and mp:
+            if ip_addr and user and pw and rpw:
                 url = url + '/manageRequest'
 
                 payload = list()
@@ -216,9 +217,16 @@ class lxca_rest:
                 param_dict["password"] = pw
                 if rpw:param_dict["recoveryPassword"] = rpw
 
+
                 if type == None or mp == None:
                     # do auto discovery
+                    # handling type todo: deals with machineType
+                    # handling mp
+                    job_discovery = self.do_discovery(self, url.rsplit('/',1)[0], session, ip_addr)
+                    #print dir(job_discovery)
                     pass
+
+
                 #Fetch type value from input
                 type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
                 if type not in type_list:
@@ -246,7 +254,7 @@ class lxca_rest:
                     else:
                         return None
             elif jobid:
-                url = url + '/manageRequest/jobs/' + jobid
+                url = url + '/manageRequest/jobs/' + str(jobid)
                 resp = session.get(url,verify=False, timeout=3)
                 resp.raise_for_status()
             else:
@@ -296,7 +304,7 @@ class lxca_rest:
                     else:
                         return None
             elif jobid:
-                url = url + '/unmanageRequest/jobs/' + jobid
+                url = url + '/unmanageRequest/jobs/' + str(jobid)
                 resp = session.get(url,verify=False, timeout=3)
                 resp.raise_for_status()
             else:

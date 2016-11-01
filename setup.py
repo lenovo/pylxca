@@ -36,7 +36,7 @@ setup(
     license             = "LENOVO",
     keywords            = "PYLXCA",
     url                 = "http://www.lenovo.com",
-    packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd','pylxca.test'],
+    packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
     long_description    = read('pylxca/README'),
     install_requires    = ['logging>=0.4.9.6', 'requests>=2.7.0'],
     include_package_data= True,
