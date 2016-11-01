@@ -3,3 +3,4 @@ include pylxca/pylxca_cmd/lxca_filters.xml
 include pylxca/pylxca_cmd/lxca_cmd_data.json
 include pylxca/README
 include pylxca/LICENSE
+include pylxca/test/pylxca_unittest

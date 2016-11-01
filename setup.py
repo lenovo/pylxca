@@ -3,7 +3,7 @@
 @author: Girish Kumar <gkumar1@lenovo.com>
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
-@organization: Lenovo 
+@organization: Lenovo
 @summary: Setup Script for PYLXCA
 '''
 import os, sys, re
@@ -36,13 +36,13 @@ setup(
     license             = "LENOVO",
     keywords            = "PYLXCA",
     url                 = "http://www.lenovo.com",
-    packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
+    packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd','pylxca.test'],
     long_description    = read('pylxca/README'),
     install_requires    = ['logging>=0.4.9.6', 'requests>=2.7.0'],
     include_package_data= True,
     scripts             = ['lxca_shell'],
 #    data_files          = [('pylxca_api', ['pylxca/pylxca_api/lxca_logger.conf'])],
-    
+
     classifiers         = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",

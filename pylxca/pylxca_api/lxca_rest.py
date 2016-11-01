@@ -218,7 +218,7 @@ class lxca_rest:
 
                 if type == None or mp == None:
                     # do auto discovery
-
+                    pass
                 #Fetch type value from input
                 type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
                 if type not in type_list:
