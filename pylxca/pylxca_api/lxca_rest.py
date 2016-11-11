@@ -11,7 +11,7 @@ import logging, os, json, pprint, requests
 import logging.config
 from requests.exceptions import HTTPError
 import ast, json
-
+import socket
 try:
     logging.captureWarnings(True)
 except:
@@ -218,30 +218,50 @@ class lxca_rest:
                 if rpw:param_dict["recoveryPassword"] = rpw
 
 
-                if type == None or mp == None:
+                if type == None or mp == None or uuid == None:
                     # do auto discovery
-                    # handling type todo: deals with machineType
-                    # handling mp
-                    job_discovery = self.do_discovery(self, url.rsplit('/',1)[0], session, ip_addr)
-                    #print dir(job_discovery)
-                    pass
+                    disc_job_id = self.do_discovery(url.rsplit('/',1)[0], session, ip_addr,None)
+                    if disc_job_id:
+                        disc_job_resp = self.do_discovery(url.rsplit('/',1)[0], session, None,disc_job_id)
+                    disc_resp_py_obj = json.loads(disc_job_resp.text)
+                     
+                    for key in disc_resp_py_obj.keys():
+                        if isinstance(disc_resp_py_obj[key],list) and disc_resp_py_obj[key] != []: 
+                             #Fetch Management Port value from Response
+                            param_dict["managementPorts"] = disc_resp_py_obj[key][0]["managementPorts"]
+                            #Fetch Type value from Response
+                            param_dict["type"] = disc_resp_py_obj[key][0]["type"]
+                            #Fetch UUID value from  Response
+                            param_dict["uuid"] = disc_resp_py_obj[key][0]["uuid"]
+                            try:
+                                socket.inet_aton(ip_addr)
+                            except socket.error:
+                                #Fetch IP address from name
+                                disc_ip_addr = disc_resp_py_obj[key][0]["ipAddresses"][0]
+                                param_dict["ipAddresses"] = [disc_ip_addr]
+                    #print dir(disc_resp_py_obj)
+                    
+                    
+                else:
 
-
-                #Fetch type value from input
-                type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
-                if type not in type_list:
-                    raise Exception("Invalid Type Specified")
-                if type == "ThinkServer": type = "Lenovo ThinkServer"
-                elif type == "Storage": type = "Lenovo Storage"
-                elif type == "Rack-Tower": type = "Rack-Tower Server"
-                param_dict["type"] = type
-
-                for each_mp in mp.split(","):
-                    mp_data = each_mp.split(";")
-                    mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
-                param_dict["managementPorts"] = mp_data_list
-
-                param_dict["uuid"] = uuid
+                    #Fetch type value from input
+                    type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
+                    if type not in type_list:
+                        raise Exception("Invalid Type Specified")
+                    if type == "ThinkServer": type = "Lenovo ThinkServer"
+                    elif type == "Storage": type = "Lenovo Storage"
+                    elif type == "Rack-Tower": type = "Rack-Tower Server"
+                    param_dict["type"] = type
+    
+                    #Fetch ManagementProtocol Value from Input arguments
+                    for each_mp in mp.split(","):
+                        mp_data = each_mp.split(";")
+                        mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
+                    param_dict["managementPorts"] = mp_data_list
+    
+                    #Fetch UUID value from Input Arguments
+                    param_dict["uuid"] = uuid
+                    
                 payload = [param_dict]
 
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
