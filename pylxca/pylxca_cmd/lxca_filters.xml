@@ -3,6 +3,7 @@
 <filters>
 	<chassis name="default">
 		<Name>name</Name>
+		<FQDN>FQDN</FQDN>
 		<Chassis_Location name="location" type="object">
 			<Location>location</Location>
 			<Rack>rack</Rack>
@@ -33,6 +34,7 @@
 	</chassis>
 	<chassis name="compute">
 		<Name>name</Name>
+		<FQDN>FQDN</FQDN>
 		<Contact>contact</Contact>
 		<Type>type</Type>
 		<HealthState>overallHealthState</HealthState>
@@ -43,7 +45,8 @@
 		<Description>description</Description>
 	</chassis>
 	<nodes name="default">
-		<Name>name</Name>
+		<Name>name</Name>	
+		<FQDN>FQDN</FQDN>
 		<UUID>uuid</UUID>
 		<location type="object">
 			<Location>location</Location>
@@ -59,6 +62,7 @@
 	</nodes>
 	<switches name="default">
         <Name>name</Name>
+        <FQDN>FQDN</FQDN>
         <location type="object">
             <Location>location</Location>
             <Rack>rack</Rack>
@@ -130,6 +134,7 @@
     </cmms>
     <scalablesystem name="default">
         <Name>name</Name>
+        <FQDN>FQDN</FQDN>
         <location type="object">
             <Location>location</Location>
             <Rack>rack</Rack>
