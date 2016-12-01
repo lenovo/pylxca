@@ -10,8 +10,10 @@
 import logging, os, json, pprint, requests
 import logging.config
 from requests.exceptions import HTTPError
-import ast, json
+import ast, json, re
 import socket
+import time
+
 try:
     logging.captureWarnings(True)
 except:
@@ -46,8 +48,8 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return resp
-
+        return resp    
+    
     def get_nodes(self,url, session, uuid, status):
         url = url + '/nodes'
 
@@ -210,57 +212,37 @@ class lxca_rest:
 
                 payload = list()
                 param_dict = dict()
-                mp_data_list = list()
 
                 param_dict["ipAddresses"]=ip_addr.split(",")
                 param_dict["username"] = user
                 param_dict["password"] = pw
                 if rpw:param_dict["recoveryPassword"] = rpw
 
-
-                if type == None or mp == None or uuid == None:
-                    # do auto discovery
-                    disc_job_id = self.do_discovery(url.rsplit('/',1)[0], session, ip_addr,None)
-                    if disc_job_id:
+                # do auto discovery
+                disc_job_id = self.do_discovery(url.rsplit('/',1)[0], session, ip_addr,None)
+                disc_progress = 0
+                
+                if disc_job_id:
+                    while disc_progress < 100:
+                        time.sleep(2) # delays for 5 seconds to allow discovery to complete
                         disc_job_resp = self.do_discovery(url.rsplit('/',1)[0], session, None,disc_job_id)
-                    disc_resp_py_obj = json.loads(disc_job_resp.text)
-                     
-                    for key in disc_resp_py_obj.keys():
-                        if isinstance(disc_resp_py_obj[key],list) and disc_resp_py_obj[key] != []: 
-                             #Fetch Management Port value from Response
-                            param_dict["managementPorts"] = disc_resp_py_obj[key][0]["managementPorts"]
-                            #Fetch Type value from Response
-                            param_dict["type"] = disc_resp_py_obj[key][0]["type"]
-                            #Fetch UUID value from  Response
-                            param_dict["uuid"] = disc_resp_py_obj[key][0]["uuid"]
-                            try:
-                                socket.inet_aton(ip_addr)
-                            except socket.error:
-                                #Fetch IP address from name
-                                disc_ip_addr = disc_resp_py_obj[key][0]["ipAddresses"][0]
-                                param_dict["ipAddresses"] = [disc_ip_addr]
-                    #print dir(disc_resp_py_obj)
-                    
-                    
-                else:
-
-                    #Fetch type value from input
-                    type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
-                    if type not in type_list:
-                        raise Exception("Invalid Type Specified")
-                    if type == "ThinkServer": type = "Lenovo ThinkServer"
-                    elif type == "Storage": type = "Lenovo Storage"
-                    elif type == "Rack-Tower": type = "Rack-Tower Server"
-                    param_dict["type"] = type
-    
-                    #Fetch ManagementProtocol Value from Input arguments
-                    for each_mp in mp.split(","):
-                        mp_data = each_mp.split(";")
-                        mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
-                    param_dict["managementPorts"] = mp_data_list
-    
-                    #Fetch UUID value from Input Arguments
-                    param_dict["uuid"] = uuid
+                        disc_resp_py_obj = json.loads(disc_job_resp.text)
+                        disc_progress = disc_resp_py_obj['progress']
+                 
+                for key in disc_resp_py_obj.keys():
+                    if isinstance(disc_resp_py_obj[key],list) and disc_resp_py_obj[key] != []: 
+                        #Fetch Management Port value from Response
+                        param_dict["managementPorts"] = disc_resp_py_obj[key][0]["managementPorts"]
+                        #Fetch Type value from Response
+                        param_dict["type"] = disc_resp_py_obj[key][0]["type"]
+                        #Fetch UUID value from  Response
+                        param_dict["uuid"] = disc_resp_py_obj[key][0]["uuid"]
+                        
+                        disc_ip_addr = disc_resp_py_obj[key][0]["ipAddresses"][0]
+                        
+                        param_dict["ipAddresses"] = [disc_ip_addr]
+                
+                logger.debug("ip_addr = %s" %param_dict["ipAddresses"])
                     
                 payload = [param_dict]
 
@@ -273,6 +255,7 @@ class lxca_rest:
                         return job
                     else:
                         return None
+                    
             elif jobid:
                 url = url + '/manageRequest/jobs/' + str(jobid)
                 resp = session.get(url,verify=False, timeout=3)
@@ -532,10 +515,3 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        '''
-         for each_mp in mp.split(","):
-                    mp_data = each_mp.split(";")
-                    mp_data_list.append({'protocol': mp_data[0], 'port': long(mp_data[1]), 'enabled': bool(mp_data[2])})
-                param_dict["managementPorts"] = mp_data_list
-
-        '''
