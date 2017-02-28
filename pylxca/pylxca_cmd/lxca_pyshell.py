@@ -684,19 +684,21 @@ def updatepolicy(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
-        force       Indicates whether to force the unmanagement of an endpoint (True/False)
-        job         Job ID of unmanage request
-
+    policy  This is comma separated list of compliance policies. Each policy information
+            should contain policyname, type and UUID of device separated by semicolon where -
+                Policyname = Name of the compliance-policy to be assigned to device
+                Type = The device type. This can be one of the following values.
+                    CMM - Chassis Management Module
+                    IOSwitch - Flex switch
+                    RACKSWITCH - RackSwitch switch
+                    STORAGE - Lenovo Storage system
+                    xITE - Compute node or rack server
+                UUID = UUID of the device to which you want to assign the compliance policy
+                
+    info    Specifies the type of information to return. This can be one of the following values:
+                FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
+                RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
+                
 @example 
 
     '''
@@ -714,37 +716,34 @@ def updaterepo(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from Lenovo XClarity Administrator
+    Use this function to get repository info from Lenovo XClarity Administrator
     run this function as  
     
-    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = updaterepo( key1 = 'val1', key2 = 'val2', ...)
     
     Where KeyList is as follows
         
-        keylist = ['con','ep','force','job']
+        keylist = ['con','key']
 
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
-        force       Indicates whether to force the unmanagement of an endpoint (True/False)
-        job         Job ID of unmanage request
+    key    Returns the specified type of update. This can be one of the following values.
+                supportedMts - Returns a list of supported machine types
+                size - Returns the repository size
+                lastRefreshed - Returns the timestamp of the last repository refresh
+                importDir - Returns the import directory for the repository.
+                publicKeys - Returns the supported signed keys
+                updates - Returns information about all firmware updates
+                updatesByMt - Returns information about firmware updates for the specified machine type
+                updatesByMtByComp - Returns the update component names for the specified machine type
 
 @example 
 
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','key']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
@@ -756,37 +755,57 @@ def updatecomp(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from Lenovo XClarity Administrator
+    Use this function to update firmware of endpoint from Lenovo XClarity Administrator
     run this function as  
     
-    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = updatecomp( key1 = 'val1', key2 = 'val2', ...)
     
     Where KeyList is as follows
-        
-        keylist = ['con','ep','force','job']
+    
+    USAGE:
+
+        keylist = ['con','query','mode','action','cmm','switch','server','storage']
 
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
-        force       Indicates whether to force the unmanagement of an endpoint (True/False)
-        job         Job ID of unmanage request
+    query   The data to return. This can be one of the following values.
+                components - Returns a list of endpoints and components that can be updated.
+                status - Returns the status and progress of firmware updates. This is the default value
+    
+    mode    Indicates when to activate the update. This can be one of the following values.
+                immediate - Uses Immediate Activaton mode when applying firmware updates to the selected endpoints.
+                delayed - Uses Delayed Activaton mode when applying firmware updates to the selected endpoints.
+    
+    action  The action to take. This can be one of the following values.
+                apply - Applies the associated firmware to the submitted components.
+                power - Perform power action on selected endpoint.
+                cancelApply - Cancels the firmware update request to the selected components.
+
+    cmm     cmms information
+    switch  switch information
+    server  servers information
+    storage storages information
+
+            For action = apply/cancelApply, Each of the endpoint infomration should contain following data separated by comma
+                UUID:       UUID of the device
+                Fixid:      Firmware-updare ID of the target package to be applied to the component.
+                Component:  Component name
+    
+            For action = power, Each of the endpoint infomration should contain UUID and desired powerState separated by comma
+                UUID - UUID of the device
+                
+                Desired powerState can have one of the power state values. Possible values per device type are
+                    Server: powerOn, powerOff, powerCycleSoft, powerCycleSoftGraceful, powerOffHardGraceful
+                    Switch: powerOn, powerOff, powerCycleSoft
+                    CMM: reset
 
 @example 
 
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','query','mode','action','cmm','switch','server','storage']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

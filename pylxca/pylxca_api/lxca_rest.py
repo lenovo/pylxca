@@ -473,32 +473,50 @@ class lxca_rest:
                 resp.raise_for_status()
                 return resp
 
-            if not mode  == None and mode == "immediate" or mode == "delayed" :
-                url= url + "?mode=" + mode
-            else:
-                raise Exception("Invalid argument mode")
-
-            if not action  == None and action == "apply" or action == "cancelApply" :
-                url= url + "&action=" + action
-            else:
-                raise Exception("Invalid argument mode")
-
-            if server and len(server.split(","))==3:
-                server_data = server.split(",")
-                serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
-
-            if switch and len(switch.split(","))==3:
-                switch_data = switch.split(",")
-                switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
-
-            if storage and len(storage.split(","))==3:
-                storage_data = storage.split(",")
-                storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
-
-            if cmm and len(cmm.split(","))==3:
-                cmm_data = cmm.split(",")
-                cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
-
+            if action == "apply" or action == "cancelApply" :
+                
+                url= url + "?action=" + action
+                
+                if not mode  == None and mode == "immediate" or mode == "delayed" :
+                    url= url + "&mode=" + mode
+                else:
+                    raise Exception("Invalid argument mode")
+        
+                if server and len(server.split(","))==3:
+                    server_data = server.split(",")
+                    serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
+    
+                if switch and len(switch.split(","))==3:
+                    switch_data = switch.split(",")
+                    switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
+    
+                if storage and len(storage.split(","))==3:
+                    storage_data = storage.split(",")
+                    storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
+    
+                if cmm and len(cmm.split(","))==3:
+                    cmm_data = cmm.split(",")
+                    cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
+    
+            elif action == "power" : 
+                url= url + "?action=" + "powerState"
+                
+                if server and len(server.split(","))==2:
+                    server_data = server.split(",")
+                    serverlist = [{"UUID": server_data[0],"powerState": [server_data[1]]}]
+    
+                if switch and len(switch.split(","))==2:
+                    switch_data = switch.split(",")
+                    switchlist = [{"UUID": switch_data[0],"powerState": [switch_data[1]]}]
+                
+                if storage and len(storage.split(","))==2:
+                    storage_data = storage.split(",")
+                    storagelist = [{"UUID": storage_data[0],"powerState": [storage_data[1]]}]
+        
+                if cmm and len(cmm.split(","))==2:
+                    cmm_data = cmm.split(",")
+                    cmmlist = [{"UUID": cmm_data[0],"powerState": [cmm_data[1]]}]
+                
             param_dict = dict()
             if serverlist:param_dict["ServerList"] = serverlist
             if storagelist:param_dict["StorageList"] = storagelist
@@ -507,7 +525,7 @@ class lxca_rest:
 
             payload = dict()
             payload["DeviceList"] = [param_dict]
-
+            
             resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
             resp.raise_for_status()
             return resp
