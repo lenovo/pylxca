@@ -38,7 +38,7 @@ setup(
     url                 = "http://www.lenovo.com",
     packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
     long_description    = read('pylxca/README'),
-    install_requires    = ['logging>=0.4.9.6', 'requests>=2.7.0'],
+    install_requires    = ['requests>=2.7.0'],
     include_package_data= True,
     scripts             = ['lxca_shell'],
 #    data_files          = [('pylxca_api', ['pylxca/pylxca_api/lxca_logger.conf'])],
