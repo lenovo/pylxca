@@ -465,13 +465,12 @@ def manage(*args, **kwargs):
                                   Rack-Tower
         epuuid    UUID of endpoint to be managed
         job       Job ID of existing manage request
+        
+        Note : mp, type and epuuid parameters are dedpriciated and only kept for backword compatibility. 
 
 @example 
 
-        jobid = manage(con=con1,ip="10.243.6.68",user="USERID",pw="PASSW0RD",rpw="PASSW0RD",mp=
-            "cimxml-http;5988;true,cimxml-https;5989;true,http;80;true,snmpv3;163;true,https;443;true,
-            snmpv1;161;true,ssh;22;true,telnet;23;true,rem-pres;3900;true,rmcp;623;true",
-            type="Rack-Tower",epuuid="fc3058cadf8b11d48c9b9b1b1b1b1b57")
+        jobid = manage(con=con1,ip="10.243.6.68",user="USERID",pw="PASSW0RD",rpw="PASSW0RD")
     
     or with named variable it can be represented as
     
@@ -831,18 +830,7 @@ def users(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
-        force       Indicates whether to force the unmanagement of an endpoint (True/False)
-        job         Job ID of unmanage request
+        id    unique ID of the user to be retrieved
 
 @example 
 
@@ -875,18 +863,7 @@ def ffdc(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
-        force       Indicates whether to force the unmanagement of an endpoint (True/False)
-        job         Job ID of unmanage request
+        uuid    UUID of the target endpoint
 
 @example 
 

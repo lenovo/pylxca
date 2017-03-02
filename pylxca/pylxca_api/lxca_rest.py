@@ -207,7 +207,7 @@ class lxca_rest:
         try:
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
             # if ip_addr and user and pw and mp:
-            if ip_addr and user and pw and rpw:
+            if ip_addr and user and pw:
                 url = url + '/manageRequest'
 
                 payload = list()
