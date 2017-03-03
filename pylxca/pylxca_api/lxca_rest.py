@@ -503,19 +503,19 @@ class lxca_rest:
                 
                 if server and len(server.split(","))==2:
                     server_data = server.split(",")
-                    serverlist = [{"UUID": server_data[0],"powerState": [server_data[1]]}]
+                    serverlist = [{"UUID": server_data[0],"PowerState": server_data[1]}]
     
                 if switch and len(switch.split(","))==2:
                     switch_data = switch.split(",")
-                    switchlist = [{"UUID": switch_data[0],"powerState": [switch_data[1]]}]
+                    switchlist = [{"UUID": switch_data[0],"PowerState": switch_data[1]}]
                 
                 if storage and len(storage.split(","))==2:
                     storage_data = storage.split(",")
-                    storagelist = [{"UUID": storage_data[0],"powerState": [storage_data[1]]}]
+                    storagelist = [{"UUID": storage_data[0],"PowerState": storage_data[1]}]
         
                 if cmm and len(cmm.split(","))==2:
                     cmm_data = cmm.split(",")
-                    cmmlist = [{"UUID": cmm_data[0],"powerState": [cmm_data[1]]}]
+                    cmmlist = [{"UUID": cmm_data[0],"PowerState": cmm_data[1]}]
                 
             param_dict = dict()
             if serverlist:param_dict["ServerList"] = serverlist
