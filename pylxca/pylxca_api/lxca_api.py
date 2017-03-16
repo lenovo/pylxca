@@ -381,10 +381,7 @@ class lxca_api ():
         resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 
         try:
-            if profileid:
-                py_obj = json.loads(resp.text)['response']
-            else:
-                py_obj = json.loads(resp.text)
+            py_obj = json.loads(resp.text)
             return py_obj
         
         except AttributeError,ValueError:
