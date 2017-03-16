@@ -412,5 +412,21 @@
 			</SwitchList >
 		</DeviceList >
     </updatecomp>
-	
+	<configprofiles name="default">
+			<Identifier>identifier</Identifier>
+			<Label>label</Label>
+			<Profile_List name="items" type="object">
+				<ProfileName>profileName</ProfileName>
+				<ProfileStatus>profileStatus</ProfileStatus>
+				<ServerName>serverName</ServerName>
+				<UUID>uuid</UUID>
+				<TemplateID>templateID</TemplateID>
+				<templateName>templateName</templateName>
+				<AddressPresent>addressPresent</AddressPresent>
+				<BayId>bayId</BayId>
+				<ChassisName>chassisName</ChassisName>
+				<managementPatternPresent>managementPatternPresent</managementPatternPresent>
+				<rackID>rackID</rackID>
+			</Profile_List >
+    </configprofiles>
 </filters>

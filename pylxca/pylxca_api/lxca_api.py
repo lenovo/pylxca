@@ -368,9 +368,28 @@ class lxca_api ():
         return
     def do_configpatterns( self, dict_handler = None ):
         return
+    
     def do_configprofiles( self, dict_handler = None ):
-        return
+        profileid = None
 
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            profileid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+
+        resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
+
+        try:
+            if profileid:
+                py_obj = json.loads(resp.text)['response']
+            else:
+                py_obj = json.loads(resp.text)
+            return py_obj
+        
+        except AttributeError,ValueError:
+            return resp
+    
     def get_jobs( self, dict_handler = None ):        
         jobid = None
         uuid = None

@@ -548,7 +548,7 @@ def configpatterns(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ep','force','job']
+        keylist = ['con','id','force','job']
 
 @param
     The parameters for this command are as follows 
@@ -586,38 +586,28 @@ def configprofiles(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from Lenovo XClarity Administrator
+    Use this function to Retrieve information server configuration profiles
+            that have been defined in the Lenovo XClarity Administrator
     
     run this function as  
     
-    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = configprofiles( key1 = 'val1', key2 = 'val2', ...)
     
     Where KeyList is as follows
         
-        keylist = ['con','ep','force','job']
+        keylist = ['con','id']
 
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
-        force       Indicates whether to force the unmanagement of an endpoint (True/False)
-        job         Job ID of unmanage request
+        id    The unique ID that was assigned when the server profile was created
 
 @example 
 
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','id']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

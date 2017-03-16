@@ -533,3 +533,17 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
+
+    def get_configprofiles(self,url, session, profileid):
+        url = url + '/profiles'
+        
+        if profileid:
+            url = url + '/' + profileid
+
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+    
+        return resp
