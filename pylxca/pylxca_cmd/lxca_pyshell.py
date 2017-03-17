@@ -464,6 +464,7 @@ def manage(*args, **kwargs):
                                   Rackswitch
                                   Rack-Tower
         epuuid    UUID of endpoint to be managed
+        force     force manage
         job       Job ID of existing manage request
         
         Note : mp, type and epuuid parameters are dedpriciated and only kept for backword compatibility. 
@@ -474,10 +475,7 @@ def manage(*args, **kwargs):
     
     or with named variable it can be represented as
     
-        jobid = manage(con= con1,ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",
-            "cimxml-http;5988;true,cimxml-https;5989;true,http;80;true,snmpv3;163;true,https;443;true,
-            snmpv1;161;true,ssh;22;true,telnet;23;true,rem-pres;3900;true,rmcp;623;true",
-            "Rack-Tower","fc3058cadf8b11d48c9b9b1b1b1b1b57")
+        jobid = manage(con= con1,ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",True)
             
     For Getting Maangement job status
         
@@ -485,7 +483,7 @@ def manage(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job']
+    keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job','force']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

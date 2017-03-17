@@ -203,7 +203,7 @@ class lxca_rest:
             raise re
         return resp
 
-    def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,type,uuid,jobid):
+    def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,type,uuid,force,jobid):
         try:
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
             # if ip_addr and user and pw and mp:
@@ -241,9 +241,15 @@ class lxca_rest:
                         disc_ip_addr = disc_resp_py_obj[key][0]["ipAddresses"][0]
                         
                         param_dict["ipAddresses"] = [disc_ip_addr]
+                        
+                        if param_dict["type"] == "Rackswitch":
+                            param_dict["os"] = disc_resp_py_obj[key][0]["os"]
                 
                 logger.debug("ip_addr = %s" %param_dict["ipAddresses"])
-                    
+                
+                if force == True:
+                    param_dict["forceManage"] = True
+                
                 payload = [param_dict]
 
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
