@@ -553,3 +553,32 @@ class lxca_rest:
             raise re
     
         return resp
+    
+    def do_configpatterns(self,url, session, patternid):
+        url = url + '/patterns'
+        
+        if patternid:
+            url = url + '/' + patternid
+
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+    
+        return resp  
+
+    def get_configtargets(self,url, session, targetid):
+        url = url + '/config/target'
+        
+        if targetid:
+            url = url + '/' + targetid
+        else:
+            raise Exception("Invalid argument ID")
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+    
+        return resp  

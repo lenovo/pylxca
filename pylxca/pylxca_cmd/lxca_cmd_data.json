@@ -174,7 +174,7 @@
     ],
     [],
     "Manage the endpoint.",
-    "\nUSAGE:\n\tmanage  -h | --help\n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> [-r <recovery password for the endpoint>] \n\t\t[-m <list of endpoint management ports>] [-t <type of endpoint to be managed>] \n\t\t[-e <UUID of endpoint to be managed>] [-f <Force Manage (True/False)>]\n\tmanage  -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated list of \n\t\t\tmanagement port information. Each management port includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. These properties \n\t\t\tshould be separate by semicolon. See the discovey request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-e, --epuuid\tUUID of endpoint to be managed\n\t-j, --job\tJob ID of existing manage request\n\t-f, --force\tForce Manage Boolean flag\n\t-v, --view\tview filter name\n\n\tmp, type and epuuid parameters are dedpriciated and only kept for backword compatibility."
+    "\nUSAGE:\n\tmanage  -h | --help\n\tmanage  -i <IP Address of endpoint> -u <user ID to access the endpoint> \n\t\t-p <current password to access the endpoint> [-r <recovery password for the endpoint>] \n\t\t[-m <list of endpoint management ports>] [-t <type of endpoint to be managed>] \n\t\t[-e <UUID of endpoint to be managed>] [-f <Force Manage (True/False)>]\n\tmanage  -j <job ID> [-v <view filter name>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be managed.\n\t-u, --user\tuser ID to access the endpoint\n\t-p, --pw\tThe current password to access the endpoint.\n\t-r, --rpw\tThe recovery password to be used for the endpoint.\n\t-m, --mp\tA list of endpoint management ports, it is a comma separated list of \n\t\t\tmanagement port information. Each management port includes protocol, port number and \n\t\t\tboolean flag of whether the port enabled (True/False) respectively. These properties \n\t\t\tshould be separate by semicolon. See the discovery request job response \n\t\t\tbody for the supported protocols for the endpoint's management ports. \n\t-t, --type\tType of endpoint to be managed. This can be one of the following values:\n\t\t\t\tChassis\n\t\t\t\tThinkServer\n\t\t\t\tStorage\n\t\t\t\tRackswitch\n\t\t\t\tRack-Tower\n\t-e, --epuuid\tUUID of endpoint to be managed\n\t-j, --job\tJob ID of existing manage request\n\t-f, --force\tForce Manage Boolean flag\n\t-v, --view\tview filter name\n\n\tmp, type and epuuid parameters are depreciated and only kept for backward compatibility."
   ],
   "unmanage": [
     "e:f:j:v:h",
@@ -202,23 +202,25 @@
     "\nUSAGE:\n\tdiscover [-i <IP Address of endpoint>][-j <job ID>]\n\nOPTIONS:\n\t-i, --ip\tOne or more IP addresses for each endpoint to be discovered.\n\t-j, --job\tJob ID of discover request\n"
   ],
   "configpatterns": [
-    "i:e:r:t:h",
+    "i:e:r:t:v:h",
     [
 	  "con=",
       "id=",
 	  "endpoint=",
 	  "restart=",
-	  "type="
+	  "type=",
+	  "view"
     ],
     [],
     "Retrieve information and deploy all server and category patterns\n\t\t\tthat have been defined in the Lenovo XClarity Administrator ",
     "\nUSAGE:\n\tconfigpatterns [-i <ID of specific pattern>] [-r <when to activate the configurations>] [-e <list of one or more UUIDs for the target servers>] [-t <type of the target server>] [-v <view filter name>]\n\nOPTIONS:\n\t-i, --id\tThe unique ID that was assigned when the server pattern was created\n\t-e, --endpoint\tList of one or more UUIDs for the target servers,If a target is an empty bay,\n\t\t\tspecify the location ID; otherwise, specify the server UUID\n\t-r, --restart\tWhen to activate the configurations. This can be one of the following values:\n\t\t\tdefer - Activate IMM settings but do not restart the server.\n\t\t\timmediate - Activate all settings and restart the server immediately.\n\t\t\tpending - Manually activate the server profile and restart the server. \n\t-t, --type\tType of the server, It can be one of the following\n\t\t\tNode\n\t\t\tRack\n\t\t\tTower\n\t-v, --view\tView filter name"
   ],
   "configprofiles": [
-    "i:h",
+    "i:v:h",
     [
 	  "con=",
-      "id="
+      "id=",
+      "view="
     ],
     [],
     "Retrieve information about server profiles from the Lenovo XClarity Administrator.",

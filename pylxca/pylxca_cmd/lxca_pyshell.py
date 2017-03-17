@@ -546,7 +546,7 @@ def configpatterns(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id','force','job']
+        keylist = ['con','id','endpoint','restart','type']
 
 @param
     The parameters for this command are as follows 
@@ -572,7 +572,7 @@ def configpatterns(*args, **kwargs):
     '''    
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id','restart','type']
+    keylist = ['con','id','endpoint','restart','type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

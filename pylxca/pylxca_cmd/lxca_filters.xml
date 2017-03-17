@@ -416,6 +416,7 @@
 			<Identifier>identifier</Identifier>
 			<Label>label</Label>
 			<Profile_List name="items" type="object">
+				<ID>id</ID>
 				<ProfileName>profileName</ProfileName>
 				<ProfileStatus>profileStatus</ProfileStatus>
 				<ServerName>serverName</ServerName>
@@ -429,4 +430,45 @@
 				<rackID>rackID</rackID>
 			</Profile_List >
     </configprofiles>
+	<configprofiles name="id">
+			<ID>ID</ID>
+			<Name>Name</Name>
+			<DisplayName>DisplayName</DisplayName>
+			<DeviceId>DeviceId</DeviceId>
+			<DeviceType>DeviceType</DeviceType>
+    </configprofiles>
+	<configpatterns name="default">
+			<Identifier>identifier</Identifier>
+			<Patterns_List name="items" type="object">
+				<ID>id</ID>
+				<InUse>inUse</InUse>
+				<formFactor>formFactor</formFactor>
+				<name>name</name>
+				<nodeType>nodeType</nodeType>
+				<type>type</type>
+				<referencedBy>referencedBy</referencedBy>
+				<uri>uri</uri>
+				<userDefined>userDefined</userDefined>
+			</Patterns_List >
+    </configpatterns>
+	<configtargets name="default">
+			<Identifier>identifier</Identifier>
+			<Target_List name="items" type="object">
+				<UUID>uuid</UUID>
+				<firmwareLevel>firmwareLevel</firmwareLevel>
+				<Children name="children" type="object">
+					<DeployableServers name="ites" type="object">	
+						<UUID>id</UUID>
+						<IPS>ips</IPS>
+						<Name>name</Name>
+						<Profile>profile</Profile>
+						<Type>type</Type>
+						<DeployCompatibility name="deployCompatibility" type="object">
+							<Status>status</Status>
+							<PowerStatus>powerStatus</PowerStatus>
+						</DeployCompatibility >
+					</DeployableServers >
+				</Children >
+			</Target_List >
+    </configtargets>
 </filters>

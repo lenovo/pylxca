@@ -53,8 +53,8 @@ class lxca_api ():
                           'manage':self.do_manage,
                           'unmanage':self.do_unmanage,
                           'configpatterns':self.do_configpatterns,
-                          'configprofiles':self.do_configprofiles,
-                          'configtargets':self.do_configtargets,
+                          'configprofiles':self.get_configprofiles,
+                          'configtargets':self.get_configtargets,
                           'updatepolicy':self.do_updatepolicy,
                           'updaterepo':self.get_updaterepo,
                           'updatecomp':self.do_updatecomp,
@@ -366,12 +366,42 @@ class lxca_api ():
             return resp
         return py_obj
         
-    def do_configtargets( self, dict_handler = None ):
-        return
+    def get_configtargets( self, dict_handler = None ):
+        targetid = None
+
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            targetid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+
+        resp = lxca_rest().get_configtargets(self.con.get_url(),self.con.get_session(),targetid)
+
+        try:
+            py_obj = json.loads(resp.text)
+            return py_obj
+        
+        except AttributeError,ValueError:
+            return resp
     def do_configpatterns( self, dict_handler = None ):
-        return
+        patternid = None
+
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            patternid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+
+        resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid)
+
+        try:
+            py_obj = json.loads(resp.text)
+            return py_obj
+        
+        except AttributeError,ValueError:
+            return resp
     
-    def do_configprofiles( self, dict_handler = None ):
+    def get_configprofiles( self, dict_handler = None ):
         profileid = None
 
         if not self.con:
