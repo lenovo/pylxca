@@ -432,10 +432,11 @@
     </configprofiles>
 	<configprofiles name="id">
 			<ID>ID</ID>
-			<Name>Name</Name>
-			<DisplayName>DisplayName</DisplayName>
-			<DeviceId>DeviceId</DeviceId>
-			<DeviceType>DeviceType</DeviceType>
+			<DisplayId>displayId</DisplayId>
+			<Name>name</Name>
+			<DisplayName>displayName</DisplayName>
+			<TemplateId>templateId</TemplateId>
+			<ServerTemplateId>serverTemplateId</ServerTemplateId>
     </configprofiles>
 	<configpatterns name="default">
 			<Identifier>identifier</Identifier>
