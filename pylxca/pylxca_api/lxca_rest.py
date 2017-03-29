@@ -554,14 +554,30 @@ class lxca_rest:
     
         return resp
     
-    def do_configpatterns(self,url, session, patternid):
+    def do_configpatterns(self,url, session, patternid,endpoint,restart,etype):
+        resp = None
         url = url + '/patterns'
         
         if patternid:
             url = url + '/' + patternid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            if endpoint and restart and etype:
+                param_dict = dict()
+                
+                if etype.lower() == 'node':
+                    param_dict['uuid'] = [endpoint] 
+                elif etype.lower() == 'rack' or etype.lower() == 'tower':    
+                    param_dict['endpointIds'] = [endpoint]
+                
+                param_dict['restart'] = restart
+                
+                payload = dict()
+                payload = param_dict
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+            else:
+                resp = session.get(url, verify=False, timeout=3)
+                
             resp.raise_for_status()
         except HTTPError as re:
             raise re

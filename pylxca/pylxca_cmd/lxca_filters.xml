@@ -59,6 +59,7 @@
 		<AccessState>accessState</AccessState>
 		<MachineType>machineType</MachineType>
 		<Model>model</Model>
+		<serialNumber>serialNumber</serialNumber>
 	</nodes>
 	<switches name="default">
         <Name>name</Name>
