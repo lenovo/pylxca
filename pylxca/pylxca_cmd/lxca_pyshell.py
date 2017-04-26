@@ -617,10 +617,10 @@ def configtargets(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from Lenovo XClarity Administrator
+    Use this function to get config pattern targets from Lenovo XClarity Administrator
     run this function as  
     
-    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = configtargets( key1 = 'val1', key2 = 'val2', ...)
     
     Where KeyList is as follows
         
@@ -659,10 +659,10 @@ def updatepolicy(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from Lenovo XClarity Administrator
+    Use this function to read Firmwar update Policy from Lenovo XClarity Administrator
     run this function as  
     
-    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = updatepolicy( key1 = 'val1', key2 = 'val2', ...)
     
     Where KeyList is as follows
         
@@ -806,10 +806,10 @@ def users(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to manage endpoint from Lenovo XClarity Administrator
+    Use this function to get users data from Lenovo XClarity Administrator
     run this function as  
     
-    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = users( key1 = 'val1', key2 = 'val2', ...)
     
     Where KeyList is as follows
         
@@ -904,7 +904,7 @@ def jobs(*args, **kwargs):
     Use this function to get jobs information from Lenovo XClarity Administrator
     run this function as  
     
-    data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = jobs( key1 = 'val1', key2 = 'val2', ...)
     
     Where KeyList is as follows
         
