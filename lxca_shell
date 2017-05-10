@@ -22,7 +22,7 @@ class Application(object):
 
     def run(self):
         global shell
-        shell = lxca_ishell.InteractiveShell(banner="Welcome to PyLXCA Shell v1.3.1", prompt="PyLXCA >> ")
+        shell = lxca_ishell.InteractiveShell(banner="Welcome to PyLXCA Shell v1.4.0", prompt="PyLXCA >> ")
         if shell.run() == PYTHON_SHELL:
             pyshell(shell=shell, interactive=True) 
 
