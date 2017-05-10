@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<project name="pytoolkit-rpm" basedir="." default="pytoolkit">
+
+    <!-- Get the current working directory -->
+    <dirname property="top" file="${ant.file}" />
+
+
+    <!-- Set some build properties -->
+    <property name="build"          value="${top}/BUILD" />
+    <property name="buildroot"      value="${top}/BUILDROOT" />
+    <property name="rpms"           value="${top}/RPMS" />
+    <property name="sources"        value="${top}/SOURCES" />
+    <property name="specs"          value="${top}/SPECS" />
+    <property name="srpms"          value="${top}/SRPMS" />
+
+
+    <!-- Build targets -->
+    <target name="init">
+        <mkdir dir="${build}" />
+        <copy todir="${build}">
+            <fileset dir="${sources}">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+    </target>
+
+	<target name="pytoolkit" depends="init" description="">
+        <rpm
+            specFile="pyToolkit.spec"
+            topDir="${top}"
+            cleanBuildDir="false"
+            failOnError="true"
+            command="-bb -vv --noclean --target x86_64 --buildroot ${build}"
+        />
+    </target>
+
+
+    <!-- Deploy targets -->
+    <macrodef name="deploy-rpm">
+        <attribute name="groupId" />
+        <attribute name="artifactId" />
+        <attribute name="version" />
+        <attribute name="rpmFile" />
+        <sequential>
+            <exec dir="${top}" osfamily="unix" executable="mvn">
+                <arg line="-B" />
+                <arg line="deploy:deploy-file" />
+                <arg line="-DgroupId=@{groupId}" />
+                <arg line="-DartifactId=@{artifactId}" />
+                <arg line="-Dversion=@{version}" />
+                <arg line="-Dfile=@{rpmFile}" />
+                <arg line="-DrepositoryId=augusta-snapshots" />
+                <arg line="-Durl=http://kaitain.icelab.lenovo.com:8080/repository/augusta-snapshots/" />
+            </exec>
+            <exec dir="${top}" osfamily="windows" executable="cmd">
+                <arg value="/c"/>
+                <arg value="mvn.bat"/>
+                <arg line="-B" />
+                <arg line="deploy:deploy-file" />
+                <arg line="-DgroupId=@{groupId}" />
+                <arg line="-DartifactId=@{artifactId}" />
+                <arg line="-Dversion=@{version}" />
+                <arg line="-Dfile=@{rpmFile}" />
+                <arg line="-DrepositoryId=augusta-snapshots" />
+                <arg line="-Durl=http://kaitain.icelab.lenovo.com:8080/repository/augusta-snapshots/" />
+            </exec>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="set-version-path-for-rpm">
+        <attribute name="arch" />
+        <attribute name="package" />
+        <sequential>
+            <fileset id="@{package}-rpm-fileset" dir="${rpms}/@{arch}" includes="@{package}-*.rpm"/>
+            <property name="@{package}-rpm-path" value="${rpms}/@{arch}/${toString:@{package}-rpm-fileset}" />
+            <loadresource property="@{package}-rpm-version">
+                <propertyresource name="@{package}-rpm-path"/>
+                <filterchain>
+                    <tokenfilter>
+                        <filetokenizer/>
+                        <replacestring from="${rpms}/@{arch}/@{package}-" to=""/>
+                        <replacestring from=".@{arch}.rpm" to="" />
+                        <replacestring from="-" to="." />
+                    </tokenfilter>
+                </filterchain>
+            </loadresource>
+        </sequential>
+    </macrodef>
+
+
+    <target name="kaitain-deploy-pytoolkit" depends="pytoolkit" description="">
+        <set-version-path-for-rpm arch="x86_64" package="pytoolkit" />
+        <echo message="RPM path is ${pytoolkit-rpm-path}" />
+        <echo message="RPM version is ${pytoolkit-rpm-version}" />
+        <deploy-rpm
+            groupId="com.lenovo.lxca.appliance"
+            artifactId="pytoolkit"
+            version="${pytoolkit-rpm-version}"
+            rpmFile="${pytoolkit-rpm-path}"
+        />
+    </target>
+
+
+    <!-- Clean targets -->
+    <target name="clean" description="">
+        <delete dir="${build}" />
+        <delete dir="${buildroot}" />
+        <delete dir="${rpms}" />
+        <delete dir="${srpms}" />
+    </target>
+
+</project>
