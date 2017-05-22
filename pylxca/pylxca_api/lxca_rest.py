@@ -14,6 +14,7 @@ import ast, json, re
 import socket
 import time
 
+
 try:
     logging.captureWarnings(True)
 except:
@@ -598,3 +599,28 @@ class lxca_rest:
             raise re
     
         return resp  
+    
+    def get_set_manifests(self,url, session, sol_id, filepath):
+        resp = None
+        param_dict = dict()
+        url = url + '/manifests'
+        
+        try:
+            
+            if sol_id:
+                url = url + '/' + str(sol_id)
+            else:
+                raise Exception("Invalid argument ID")
+            
+            if  filepath:                
+                param_dict['filepath'] = filepath
+                
+                payload = dict()
+                payload = param_dict
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+            else:
+                resp = session.get(url, verify=False, timeout=3)
+                
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re

@@ -61,7 +61,8 @@ class lxca_api ():
                           'users':self.get_users,
                           'ffdc':self.get_ffdc,
                           'jobs':self.get_jobs,
-                          'lxcalog':self.get_lxcalog
+                          'lxcalog':self.get_lxcalog,
+                          'manifests':self.get_set_manifests
                         }
     
     def api( self, object_name, dict_handler = None, con = None ):
@@ -584,6 +585,26 @@ class lxca_api ():
                 py_obj = json.loads(resp.text)
             else:
                 py_obj = json.loads(resp._content)
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+    
+    def get_set_manifests( self, dict_handler = None ):
+        sol_id = None
+        filepath = None
+                
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        
+        if dict_handler:
+            sol_id = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+            filepath = next((item for item in [dict_handler.get  ('f') , dict_handler.get('file')] if item is not None),None)
+                        
+        resp = lxca_rest().get_set_manifests(self.con.get_url(),self.con.get_session(),sol_id,filepath)
+        
+        try:
+            py_obj = json.loads(resp._content)
             return py_obj
         except AttributeError,ValueError:
             return resp

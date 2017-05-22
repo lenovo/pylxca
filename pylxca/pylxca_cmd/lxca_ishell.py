@@ -14,6 +14,7 @@ import logging
 
 from pylxca.pylxca_cmd import lxca_cmd
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
+from pylxca.pylxca_cmd.lxca_icommands import PyAPI
 from lxca_view import lxca_ostream
 from pylxca.pylxca_cmd import lxca_icommands
 #from rlcompleter import readline
@@ -67,8 +68,7 @@ class InteractiveShell(object):
                 self.sprint('No help available for unknown command "%s"' % args[0])
                 return
             
-            self.sprint(self.commands[args[0]].get_help_message( ))
-            
+            self.sprint(self.commands[args[0]].__doc__)
 
         def do_command_summary(self):
             """
@@ -92,6 +92,9 @@ class InteractiveShell(object):
                 command = self.commands[name]
 
                 if name == 'help':
+                    continue
+                
+                if isinstance(command,PyAPI ):
                     continue
                 
                 self.sprint('  %s   %s' % (name.ljust(cmdwidth),
@@ -154,6 +157,7 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.updatepolicy(self))
         self.add_command(lxca_cmd.updatecomp(self))
         self.add_command(lxca_cmd.updaterepo(self))
+        self.add_command(lxca_cmd.manifests(self))
 
     def sprint(self,str):
         if self.ostream:
@@ -231,6 +235,7 @@ class InteractiveShell(object):
             logger.error("Exception occurred while processing command.")
         return
     """
+    TODO:
     def auto_complete(self, text, state):
         command_list = self.commands.keys()
         re_space = re.compile('.*\s+$', re.M)
@@ -281,3 +286,20 @@ class InteractiveShell(object):
     def set_ostream_to_null(self):
         self.ostream = open(os.devnull, 'w')
         
+
+    def handle_input_dict(self, command_name,con, param_dict):
+        # Show message when no command
+        if not command_name:
+            return
+
+        if not command_name in self.commands:
+            self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
+            return
+
+        command = self.commands[command_name]
+        
+        try:
+            return command.handle_command(param_dict,con)
+        except Exception as err:
+            self.sprint("Exception occurred while processing command.")
+            raise err

@@ -13,6 +13,7 @@ import signal, logging, sys
 from pylxca.pylxca_cmd import lxca_ishell
 from lxca_ishell import PYTHON_SHELL
 from pylxca.pylxca_cmd.lxca_cmd import fanmuxes
+from __builtin__ import ValueError
 
 #shell is a global variable
 pyshell = None
@@ -49,6 +50,7 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
               "configpatterns":configpatterns,
               "configprofiles":configprofiles,
               "configtargets":configtargets,
+              "manifests":manifests,
               "help": help}
         ns.update()
         sys.ps1 = "pyshell >> "
@@ -940,3 +942,43 @@ def jobs(*args, **kwargs):
     
     ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
     return ch
+
+def manifests(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to send solution manifest to and retreive manifests from Lenovo XClarity Administrator
+    run this function as  
+    
+    data_dictionary = manifests( conn_handle, input_args_dictionary{key,value} )
+    
+    Where KeyList is as follows
+        
+        keylist = [id','file']
+
+@param
+    The parameters for this command are as follows 
+    
+        id=         solution id
+        file=       path to manifest file
+
+@example 
+
+    '''
+    global pyshell
+    con = None
+    param_dict = {}
+    
+    command_name = sys._getframe().f_code.co_name
+    
+    if len(args) < 1 or len(args) > 2:
+        raise ValueError("Invalid Input Arguments")
+    
+    for i in range(len(args)):
+        if isinstance(args[i], dict):
+            param_dict = args[i]
+        else:
+            con = args[i]
+            
+    out_obj =  pyshell.handle_input_dict(command_name,con,param_dict)
+    return out_obj
