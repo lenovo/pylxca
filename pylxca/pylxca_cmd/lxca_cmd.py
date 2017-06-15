@@ -43,7 +43,7 @@ class connect(InteractiveCommand):
         
         for opt, arg in opts:
             if '-h' in opt:
-                self.sprint (self.get_help_message())
+                self.sprint (self.__doc__)
                 return                
         
         if not self.is_mand_opt_passed(opts):
