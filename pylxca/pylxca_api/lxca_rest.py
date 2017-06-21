@@ -85,6 +85,56 @@ class lxca_rest:
             raise re
         return resp
 
+    def get_switches_port(self,url, session, uuid, list_port):
+        url = url + '/switches'
+
+        if uuid:
+            url = url + '/' + uuid
+        else:
+            raise Exception("Invalid argument uuid is required")
+
+        if list_port:
+            url = url + '/ports'
+
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def put_switches_port(self, url, session, uuid, port_name, action):
+        url = url + '/switches'
+
+        if uuid:
+            url = url + '/' + uuid
+        else:
+            raise Exception("Invalid argument uuid is required")
+
+        if port_name:
+            url = url + '/ports'
+        else:
+            raise Exception("Invalid argument port name is required")
+
+        if action not in ['enable', 'disable']:
+            raise Exception("Invalid argument action [enable/disable] is required %s" %action)
+
+        payload = {
+                       "action":"enable",
+                        "ports":[]
+                }
+        uuid_list = port_name.split(",")
+        payload["action"] = action
+        payload["ports"] = uuid_list
+
+        try:
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
     def get_fan(self,url, session, uuid):
         url = url + '/fans'
 

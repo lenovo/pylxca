@@ -179,18 +179,31 @@ class lxca_api ():
     def get_switches( self, dict_handler = None ):
         uuid = None
         chassis_uuid = None
-        
+        port_name = None
+        list_port = None
+        action = None
+
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
-            
+            port_name = next((item for item in [dict_handler.get('ports')] if item is not None),None)
+            action = next((item for item in [dict_handler.get('action')] if item is not None),
+                             None)
+            if "ports" in dict_handler: list_port = True
+
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
             py_obj = {'switchesList':py_obj["switches"]}
+        elif list_port and (action==None):
+            resp = lxca_rest().get_switches_port(self.con.get_url(), self.con.get_session(), uuid, list_port)
+            py_obj = json.loads(resp.text)
+        elif port_name and action:
+            resp = lxca_rest().put_switches_port(self.con.get_url(), self.con.get_session(), uuid, port_name, action)
+            py_obj = json.loads(resp.text)
         else:
             resp = lxca_rest().get_switches(self.con.get_url(),self.con.get_session(),uuid)
             py_obj = json.loads(resp.text)

@@ -75,8 +75,45 @@
         <AccessState>accessState</AccessState>
         <MachineType>machineType</MachineType>
         <Model>model</Model>
+		<UUID>uuid</UUID>
     </switches>
-    <fans name="default">
+	<switches name="rack_switch_port">
+		<elapsedTimeMillisecs>elapsedTimeMillisecs</elapsedTimeMillisecs>
+		<portDataSetTimestamp>portDataSetTimestamp</portDataSetTimestamp>
+        <Ports name="ports" type="object">
+            <configuredStatus>configuredStatus</configuredStatus>
+			<interfaceIndex>interfaceIndex</interfaceIndex>
+			<operationalStatus>operationalStatus</operationalStatus>
+			<peerMacAddress>peerMacAddress</peerMacAddress>
+			<Port>port</Port>
+            <PortName>portName</PortName>
+			<portSpeed>portSpeed</portSpeed>
+			<portState>portState</portState>
+			<PVID>PVID</PVID>
+			<tagPVID>tagPVID</tagPVID>
+			<vLAN>vLAN</vLAN>
+        </Ports>
+		<uri>uri</uri>
+		<UUID>uuid</UUID>
+	</switches>
+	<switches name="flex_switch_port">
+		<SwitchID>SwitchID</SwitchID>
+        <vlans name="vlans" type="object">
+            <ports>ports</ports>
+			<VLANID>VLANID</VLANID>
+			<management>management</management>
+			<vports>vports</vports>
+			<mode>mode</mode>
+        </vlans>
+	</switches>
+	<switches name="rack_switch_port_response">
+		<result>result</result>
+		<Messages name="messages" type="object">
+            <statusCode>statusCode</statusCode>
+			<statusDescription>statusDescription</statusDescription>
+        </Messages>
+	</switches>
+	<fans name="default">
         <Name>name</Name>
         <location type="object">
             <Location>location</Location>
