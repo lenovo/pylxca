@@ -50,6 +50,7 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
               "configpatterns":configpatterns,
               "configprofiles":configprofiles,
               "configtargets":configtargets,
+              "tasks":tasks,
               "manifests":manifests,
               "help": help}
         ns.update()
@@ -981,4 +982,46 @@ def manifests(*args, **kwargs):
             con = args[i]
             
     out_obj =  pyshell.handle_input_dict(command_name,con,param_dict)
+    return out_obj
+
+
+def tasks(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get tasks information
+    run this function as
+
+    data_dictionary = tasks( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con','jobuuid']
+
+@param
+    The parameters for this command are as follows
+
+    con      Connection Object to Lenovo XClarity Administrator
+    uuid          uuid of job
+
+
+@example
+
+    '''
+    global pyshell
+    con = None
+    param_dict = {}
+
+    command_name = sys._getframe().f_code.co_name
+
+    if len(args) < 1 or len(args) > 2:
+        raise ValueError("Invalid Input Arguments")
+
+    for i in range(len(args)):
+        if isinstance(args[i], dict):
+            param_dict = args[i]
+        else:
+            con = args[i]
+
+    out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
     return out_obj

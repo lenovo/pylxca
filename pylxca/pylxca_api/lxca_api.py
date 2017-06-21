@@ -62,6 +62,7 @@ class lxca_api ():
                           'ffdc':self.get_ffdc,
                           'jobs':self.get_jobs,
                           'lxcalog':self.get_lxcalog,
+                          'tasks':self.get_set_tasks,
                           'manifests':self.get_set_manifests
                         }
     
@@ -589,7 +590,41 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         return py_obj
-    
+
+    def get_set_tasks(self, dict_handler=None):
+        job_uuid = None
+        includeChildren = False
+        action = None
+        status = None
+
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            job_uuid = next((item for item in [ dict_handler.get('jobUID')] if item is not None), None)
+            includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "false")
+            if includeChildren != "false":
+                includeChildren = 'true'
+            action = next((item for item in [dict_handler.get('action')] if item is not None), None)
+            updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
+            #state = next((item for item in [dict_handler.get('state')] if item is not None), None)
+
+        if job_uuid and action in ['cancel', 'delete']:
+            resp = lxca_rest().put_tasks(self.con.get_url(), self.con.get_session(), job_uuid, action)
+            py_obj = resp.status_code
+        elif action in ['update']:
+            resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)
+            py_obj = resp.status_code
+        elif job_uuid:
+            resp = lxca_rest().get_tasks_list(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
+            py_obj = json.loads(resp.text)
+            py_obj = {'TaskList': py_obj[:]}
+        else:
+            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session())
+            py_obj = json.loads(resp.text)
+            py_obj = {'TaskList': py_obj[:]}
+        return py_obj
+
     def get_set_manifests( self, dict_handler = None ):
         sol_id = None
         filepath = None

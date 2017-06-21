@@ -157,6 +157,7 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.updatepolicy(self))
         self.add_command(lxca_cmd.updatecomp(self))
         self.add_command(lxca_cmd.updaterepo(self))
+        self.add_command(lxca_cmd.tasks(self))
         self.add_command(lxca_cmd.manifests(self))
 
     def sprint(self,str):

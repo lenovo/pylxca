@@ -599,7 +599,75 @@ class lxca_rest:
             raise re
     
         return resp  
-    
+
+    def get_tasks(self,url, session):
+        url = url + '/tasks'
+
+        '''
+        if uuid:
+            url = url + '/' + uuid
+        '''
+
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def get_tasks_list(self,url, session, job_uuid, includeChildren):
+        url = url + '/tasks'
+
+        if job_uuid:
+            url = url + '/' + job_uuid
+            url = url + '?includeChildren=' + includeChildren
+
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def put_tasks(self, url, session, job_uuid, action):
+        '''
+        Handle action delete and cancel
+        '''
+
+        url = url + '/tasks'
+
+        job_list = job_uuid.split(',')
+
+        payload = {'action':action, 'list':job_list}
+
+        try:
+            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def put_tasks_update(self, url, session, updated_dict):
+        '''
+        Handle action update
+        '''
+
+
+        url = url + '/tasks'
+
+        payload = updated_dict
+
+        try:
+            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
     def get_set_manifests(self,url, session, sol_id, filepath):
         resp = None
         param_dict = dict()
