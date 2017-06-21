@@ -679,3 +679,21 @@ class manifests(PyAPI):
     """
     Send solution manifest to and retreive manifests from Lenovo XClarity Administrator.
     """
+
+
+class tasks(PyAPI):
+    """
+    Retrieve tasks List and tasks Information
+
+    USAGE:
+        tasks -h
+        tasks [-u <JOB UUID>]  [-v <view filter name>]
+
+    OPTIONS:
+    -h            This option displays command usage information
+        -u, --uuid    Job uuids
+        -v, --view    view filter name
+
+    """
+
+###############################################################################
