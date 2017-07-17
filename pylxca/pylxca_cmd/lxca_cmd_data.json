@@ -28,6 +28,8 @@
       "con=",
 	  "uuid=",
       "chassis=",
+      "ports=",
+      "action=",
       "view="
     ],
     [],

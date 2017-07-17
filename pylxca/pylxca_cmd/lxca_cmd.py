@@ -43,7 +43,7 @@ class connect(InteractiveCommand):
         
         for opt, arg in opts:
             if '-h' in opt:
-                self.sprint (self.get_help_message())
+                self.sprint (self.__doc__)
                 return                
         
         if not self.is_mand_opt_passed(opts):
@@ -250,15 +250,41 @@ class switches(InteractiveCommand):
     USAGE:
         switches -h
         switches [-u <switch UUID>] [-c <chassis UUID>] [-v <view filter name>]
+        switches  [-u <switch_UUID>] [--ports <port_name>] [--action <action>]
     
     OPTIONS:
-    -h            This option displays command usage information
+        -h            This option displays command usage information
         -u, --uuid    switch uuid
         -c, --chassis    chassis uuid
+        --ports        portnames if port is empty lists ports
+        --action       enable/disable ports
         -v, --view    view filter name
 
     """
-    
+
+    def handle_command(self, opts, args):
+
+        # code to handle --ports command without value
+        no_args = len(args)
+        change = False
+        try:
+            i = args.index('--ports')
+            if i < (no_args - 1):
+                next_args = args[i + 1];
+                if next_args.startswith("-"):
+                    change = True
+                else:
+                    change = False
+            else:
+                change = True
+        except ValueError:
+            change = False
+        if change:
+            args = [w.replace('--ports', '--ports=') if w == "--ports" else  w for w in args]
+
+        return InteractiveCommand.handle_command(self, opts, args)
+
+
 ###############################################################################
 
 class fans(InteractiveCommand):
