@@ -479,7 +479,7 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-
+    #TODO policy
     def get_updatepolicy(self,url, session,policy,info):
         url = url + '/compliancePolicies'
         try:
