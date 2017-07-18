@@ -1038,15 +1038,24 @@ def resourcegroups(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['name','desc','type','solVPD','members']
+        keylist = ['name','desc','type','solVPD','members','criteria']
 
 @param
     The parameters for this command are as follows
 
         name=         Name of Resource Group
         desc=         Description of Resource Group
-        type=         Type of Resource Group. static , dynamic , solution
-        solVPD=        
+        type=         Type of Resource Group. <{"static", "dynamic", "solution"}>,
+        solutionVPD": { "id": <UUID string>,
+                        "machineType": <machine type string>,
+                        "model": <model string>,
+                        "serialNumber": <serial number string>,
+                        "manufacturer": <string>
+                      },
+
+        "members": [ "uri","uri",....],
+        "criteria":[]
+
 
 @example
 
@@ -1068,4 +1077,4 @@ def resourcegroups(*args, **kwargs):
     #
     # out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
     # return out_obj
-    return
+    return True
