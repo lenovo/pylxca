@@ -1025,3 +1025,47 @@ def tasks(*args, **kwargs):
 
     out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
+
+def resourcegroups(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to Create, modify, delete or read resource group from Lenovo XClarity Administrator
+    run this function as
+
+    data_dictionary = resourcegroups( conn_handle, input_args_dictionary{key,value} )
+
+    Where KeyList is as follows
+
+        keylist = ['name','desc','type','solVPD','members']
+
+@param
+    The parameters for this command are as follows
+
+        name=         Name of Resource Group
+        desc=         Description of Resource Group
+        type=         Type of Resource Group. static , dynamic , solution
+        solVPD=        
+
+@example
+
+    '''
+    # global pyshell
+    # con = None
+    # param_dict = {}
+    #
+    # command_name = sys._getframe().f_code.co_name
+    #
+    # if len(args) < 1 or len(args) > 2:
+    #     raise ValueError("Invalid Input Arguments")
+    #
+    # for i in range(len(args)):
+    #     if isinstance(args[i], dict):
+    #         param_dict = args[i]
+    #     else:
+    #         con = args[i]
+    #
+    # out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
+    # return out_obj
+    return

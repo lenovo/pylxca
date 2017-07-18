@@ -706,6 +706,7 @@ class manifests(PyAPI):
     Send solution manifest to and retreive manifests from Lenovo XClarity Administrator.
     """
 
+###############################################################################
 
 class tasks(PyAPI):
     """
@@ -720,6 +721,14 @@ class tasks(PyAPI):
         -u, --uuid    Job uuids
         -v, --view    view filter name
 
+    """
+
+###############################################################################
+
+
+class resourcegroups(PyAPI):
+    """
+    create Group of Resources
     """
 
 ###############################################################################
