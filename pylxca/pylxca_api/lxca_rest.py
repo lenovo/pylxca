@@ -300,7 +300,13 @@ class lxca_rest:
                 
                 if force == True:
                     param_dict["forceManage"] = True
-                
+
+                #removing username
+                security_Descriptor = { }
+                security_Descriptor['managedAuthEnabled'] = True
+                security_Descriptor['managedAuthSupported'] = False
+                param_dict['securityDescriptor'] = security_Descriptor
+
                 payload = [param_dict]
 
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
