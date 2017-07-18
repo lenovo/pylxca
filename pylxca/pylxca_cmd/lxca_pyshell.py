@@ -982,7 +982,8 @@ def manifests(*args, **kwargs):
             con = args[i]
             
     out_obj =  pyshell.handle_input_dict(command_name,con,param_dict)
-    return out_obj
+    # return out_obj
+    return True
 
 
 def tasks(*args, **kwargs):
