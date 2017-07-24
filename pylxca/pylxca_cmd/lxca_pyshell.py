@@ -445,7 +445,7 @@ def manage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job']
+        keylist = ['con','ip','user','pw','rpw','job','force']
 
 @param
     The parameters for this command are as follows 
@@ -455,18 +455,6 @@ def manage(*args, **kwargs):
         user     user ID to access the endpoint
         pw       The current password to access the endpoint.
         rpw      The recovery password to be used for the endpoint.
-        mp       A list of endpoint management ports, it is a comma separated list of
-                      management port information. Each management port includes protocol, port number and
-                      boolean flag of whether the port enabled (True/False) respectively. These properties
-                      should be separate by semicolon. See the discovey request job response
-                      body for the supported protocols for the endpoint's management ports.
-        type     Type of endpoint to be managed. This can be one of the following values:
-                                  Chassis
-                                  ThinkServer
-                                  Storage
-                                  Rackswitch
-                                  Rack-Tower
-        epuuid    UUID of endpoint to be managed
         force     force manage
         job       Job ID of existing manage request
         
@@ -486,7 +474,7 @@ def manage(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job','force']
+    keylist = ['con','ip','user','pw','rpw','job','force']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

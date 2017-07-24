@@ -254,7 +254,7 @@ class lxca_rest:
             raise re
         return resp
 
-    def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,type,uuid,force,jobid):
+    def do_manage(self,url, session, ip_addr,user,pw,rpw,force,jobid):
         try:
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
             # if ip_addr and user and pw and mp:
