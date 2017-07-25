@@ -652,32 +652,38 @@ def updatepolicy(*args, **kwargs):
 
 @param
     The parameters for this command are as follows 
-    
-    policy  This is comma separated list of compliance policies. Each policy information
-            should contain policyname, type and UUID of device separated by semicolon where -
-                Policyname = Name of the compliance-policy to be assigned to device
-                Type = The device type. This can be one of the following values.
+
+    info    Specifies the type of information to return. This can be one of the following values:
+                FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
+                RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
+                COMPARE_RESULTS - method to determine whether devices are compliant with the assigned compliance
+                                policy using the job or task ID that was returned when the compliance policy was assigned
+    jobid    The job ID that was returned by POST /compliancePolicies/compareResult.
+
+    UUID     UUID of the device to which you want to assign the compliance policy
+
+    policy   Policyname, Name of the compliance-policy to be assigned to device
+
+    Type    The device type. This can be one of the following values.
                     CMM - Chassis Management Module
                     IOSwitch - Flex switch
                     RACKSWITCH - RackSwitch switch
                     STORAGE - Lenovo Storage system
-                    xITE - Compute node or rack server
-                UUID = UUID of the device to which you want to assign the compliance policy
+                    SERVER - Compute node or rack server
+
                 
-    info    Specifies the type of information to return. This can be one of the following values:
-                FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
-                RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
-                
+
 @example 
 
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','policy','info']
+    keylist = ['con', 'info', 'jobid', 'uuid', 'policy','type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
-    
+
+    logger.info(" got past kwargs %s " %str(kwargs))
     ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
     return ch
 
@@ -846,6 +852,38 @@ def ffdc(*args, **kwargs):
         kwargs[keylist[i]]= args[i]
     
     ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    return ch
+
+
+def log(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get Lenovo XClarity Administrator LOG information
+    run this function as
+
+    data_dictionary = log( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con','filter']
+
+@param
+    The parameters for this command are as follows
+
+        filter  filter for the event
+
+@example
+
+    '''
+    global pyshell
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['lvl']
+
+    for i in range(len(args)):
+        kwargs[keylist[i]] = args[i]
+
+    ch = pyshell.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def lxcalog(*args, **kwargs):

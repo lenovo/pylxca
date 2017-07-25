@@ -542,19 +542,20 @@ class updatepolicy(InteractiveCommand):
         updatepolicy -i <Information type of compliance policy to be retreived>
     
     OPTIONS:
-        -p, --policy    This is comma separated list of compliance policies. Each policy information
-                should contain policyname, type and UUID of device separated by semicolon where -
-                    Policyname = Name of the compliance-policy to be assigned to device
-                    Type = The device type. This can be one of the following values.
+        -p, --policy    Policyname = Name of the compliance-policy to be assigned to device
+        -t --type    Type = The device type. This can be one of the following values.
                         CMM - Chassis Management Module
                         IOSwitch - Flex switch
                         RACKSWITCH - RackSwitch switch
                         STORAGE - Lenovo Storage system
                         xITE - Compute node or rack server
-                    UUID = UUID of the device to which you want to assign the compliance policy
+        -j --jobid      The job ID that was returned by POST /compliancePolicies/compareResult.
+        -u --UUID    UUID of the device to which you want to assign the compliance policy
         -i, --info    Specifies the type of information to return. This can be one of the following values:
                     FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
                     RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
+                    COMPARE_RESULTS - method to determine whether devices are compliant with the assigned compliance
+                                policy using the job or task ID that was returned when the compliance policy was assigned
         -v, --view    View filter name
 
     """

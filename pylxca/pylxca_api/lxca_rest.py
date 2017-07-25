@@ -485,23 +485,77 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-    #TODO policy
-    def get_updatepolicy(self,url, session,policy,info):
+
+    def get_updatepolicy(self, url, session, info, uuid, jobid):
         url = url + '/compliancePolicies'
         try:
-            if info:
+            if info in ["FIRMWARE", "RESULTS"]:
                 if info == "FIRMWARE":
                     url = url + "/applicableFirmware"
                 elif info == "RESULTS":
                     url = url + "/persistedResult"
+                resp = session.get(url, verify=False, timeout=3)
+                resp.raise_for_status()
+                return resp
+            elif info == "COMPARE_RESULTS":
+                url = url + "/compareResult"
+                payload = dict()
+                payload["jobid"] = jobid
+                payload["uuid"] = uuid
 
-            resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url, data = json.dumps(payload), verify=False, timeout=3)
+                resp.raise_for_status()
+                return resp
+
+            resp = session.get(url, verify=False, timeout=3)
             resp.raise_for_status()
             return resp
 
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
+
+    def post_updatepolicy(self, url, session, policy, type, uuid):
+        url = url + '/compliancePolicies/compareResult'
+        try:
+
+            if not policy or not type or not uuid:
+                raise Exception("Invalid argument key")
+
+            payload = dict()
+
+            policy_dict = dict()
+            policy_dict["policyName"] = policy
+
+            # do auto discovery
+            # disc_job_resp = self.do_discovery(url.rsplit('/', 2)[0], session, None, None)
+            # disc_resp_py_obj = json.loads(disc_job_resp.text)
+            #
+            # for key in disc_resp_py_obj.keys():
+            #     if isinstance(disc_resp_py_obj[key], list) and disc_resp_py_obj[key] != []:
+            #         # Fetch UUID value from  Response
+            #         for item in disc_resp_py_obj[key]:
+            #             if uuid == item["uuid"]:
+            #                 # Fetch Type value from Response
+            #                 policy_dict["type"] = disc_resp_py_obj[key][0]["type"]
+            #
+            # logger.debug("Type for %s = %s" %(uuid, policy_dict["type"]))
+
+            policy_dict["uuid"] = uuid
+            policy_dict["type"] = type
+            compliance_list = []
+            compliance_list.append(policy_dict)
+            payload['compliance'] = compliance_list
+            logger.debug("Reached till before post call")
+
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=3)
+            resp.raise_for_status()
+            return resp
+
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+
 
     def get_updaterepo(self,url, session,key):
         url = url + '/updateRepositories/firmware'

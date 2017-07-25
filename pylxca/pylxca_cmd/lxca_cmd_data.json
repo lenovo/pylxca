@@ -218,11 +218,14 @@
     "Retrieve a list of deployable target systems according to their\n\t\t\tserver pattern and profile."
   ],
   "updatepolicy": [
-    "p:i:v:h",
+    "p:i:j:u:t:v:h",
     [
 	  "con=",
 	  "policy=",
 	  "info=",
+      "jobid=",
+      "uuid=",
+      "type=",
 	  "view="
     ],
     [],

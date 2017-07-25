@@ -538,13 +538,22 @@ class lxca_api ():
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+
         if dict_handler:
-            policy = next((item for item in [dict_handler.get  ('p') , dict_handler.get('policy')] if item is not None),None)
-            info = next((item for item in [dict_handler.get  ('i') , dict_handler.get('info')] if item is not None),None)
-            
-        resp = lxca_rest().get_updatepolicy(self.con.get_url(),self.con.get_session(),policy,info)
-        
+            policy = next((item for item in [dict_handler.get('p'), dict_handler.get('policy')] if item is not None),
+                          None)
+            info = next((item for item in [dict_handler.get('i'), dict_handler.get('info')] if item is not None), None)
+            uuid = next((item for item in [dict_handler.get('u'), dict_handler.get('uuid')] if item is not None), None)
+            jobid = next((item for item in [dict_handler.get('j'), dict_handler.get('jobid')] if item is not None),
+                         None)
+            type = next((item for item in [dict_handler.get('t'), dict_handler.get('type')] if item is not None),
+                         None)
+
+        if policy:
+            resp = lxca_rest().post_updatepolicy(self.con.get_url(), self.con.get_session(), policy, type, uuid)
+        else:
+            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, uuid, jobid)
+
         try:
             py_obj = json.loads(resp.text)
             if info == "RESULTS":
