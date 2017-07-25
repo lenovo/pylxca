@@ -471,11 +471,20 @@ class unmanage(InteractiveCommand):
 
     USAGE:
         unmanage -h | --help
-        unmanage -i <IP Address of endpoint> [--force]
+        unmanage -i <endpoint information> [--force]
         unmanage -j <job ID> [-v <view filter name>]
     
     OPTIONS:
-        -i, --ip        One or more IP addresses for each endpoint to be unmanaged.
+        -e, --ep    one or more endpoints to be unmanaged.
+                This is comma separated list of multiple endpoints, each endpoint should
+                contain endpoint information separated by semicolon.
+                endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                Type of endpoint to be unmanaged ,This can be one of the following values:
+                    Chassis
+                    ThinkServer
+                    Storage
+                    Rackswitch
+                    Rack-Tower
         -f, --force     Indicates whether to force the unmanagement of an endpoint (True/False)
         -j, --job       Job ID of unmanage request
         -v, --view      View filter name

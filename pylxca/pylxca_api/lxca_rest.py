@@ -358,7 +358,11 @@ class lxca_rest:
                     each_ep_dict = {"ipAddresses":ip_addr.split("#"),"type":type,"uuid":uuid}
                     endpoints_list.append(each_ep_dict)
                 param_dict["endpoints"] = endpoints_list
-                param_dict["forceUnmanage"] = force
+
+                if force.lower() == "true":
+                    param_dict["forceUnmanage"] = True
+                else:
+                    param_dict["forceUnmanage"] = False
 
                 payload = param_dict
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)

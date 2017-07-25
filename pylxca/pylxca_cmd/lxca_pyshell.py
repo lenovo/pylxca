@@ -498,7 +498,16 @@ def unmanage(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        ip          One or more IP addresses for each endpoint to be unmanaged.
+        ip          one or more endpoints to be unmanaged.
+                    This is comma separated list of multiple endpoints, each endpoint should
+                    contain endpoint information separated by semicolon.
+                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                    Type of endpoint to be unmanaged ,This can be one of the following values:
+                          Chassis
+                          ThinkServer
+                          Storage
+                          Rackswitch
+                          Rack-Tower
         force       Indicates whether to force the unmanagement of an endpoint (True/False)
         job         Job ID of unmanage request
 

@@ -366,7 +366,7 @@ class lxca_api ():
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            endpoints = next((item for item in [dict_handler.get  ('e') , dict_handler.get('ep')] if item is not None),None)
+            endpoints = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
             force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),False)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
             
