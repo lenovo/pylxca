@@ -493,21 +493,12 @@ def unmanage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ep','force','job']
+        keylist = ['con','ip','force','job']
 
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
+        ip          One or more IP addresses for each endpoint to be unmanaged.
         force       Indicates whether to force the unmanagement of an endpoint (True/False)
         job         Job ID of unmanage request
 
@@ -516,7 +507,7 @@ def unmanage(*args, **kwargs):
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','ip','force','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

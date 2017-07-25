@@ -426,8 +426,8 @@ class discover(InteractiveCommand):
         discover [-i <IP Address of endpoint>][-j <job ID>]
     
     OPTIONS:
-        -i, --ip    One or more IP addresses for each endpoint to be discovered.
-        -j, --job    Job ID of discover request
+        -i, --ip       One or more IP addresses for each endpoint to be discovered.
+        -j, --job      Job ID of discover request
     
 
     """
@@ -446,8 +446,7 @@ class manage(InteractiveCommand):
         manage  -h | --help
         manage  -i <IP Address of endpoint> -u <user ID to access the endpoint>
                 -p <current password to access the endpoint> [-r <recovery password for the endpoint>]
-                [-m <list of endpoint management ports>] [-t <type of endpoint to be managed>]
-                [-e <UUID of endpoint to be managed>] [-f <Force Manage (True/False)>]
+                [-f <Force Manage (True/False)>]
         manage  -j <job ID> [-v <view filter name>]
 
     OPTIONS:
@@ -455,23 +454,9 @@ class manage(InteractiveCommand):
         -u, --user      user ID to access the endpoint
         -p, --pw        The current password to access the endpoint.
         -r, --rpw       The recovery password to be used for the endpoint.
-        -m, --mp        A list of endpoint management ports, it is a comma separated list of
-                        management port information. Each management port includes protocol, port number and
-                        boolean flag of whether the port enabled (True/False) respectively. These properties
-                        should be separate by semicolon. See the discovery request job response
-                        body for the supported protocols for the endpoint's management ports.
-        -t, --type      Type of endpoint to be managed. This can be one of the following values:
-                                Chassis
-                                ThinkServer
-                                Storage
-                                Rackswitch
-                                Rack-Tower
-        -e, --epuuid    UUID of endpoint to be managed
         -j, --job       Job ID of existing manage request
         -f, --force     Force Manage Boolean flag
         -v, --view      view filter name
-
-        mp, type and epuuid parameters are depreciated and only kept for backward compatibility.
     """
     def handle_output(self, out_obj):
         if out_obj == None:
@@ -486,23 +471,14 @@ class unmanage(InteractiveCommand):
 
     USAGE:
         unmanage -h | --help
-        unmanage -e <list of endpoints to unmanage> [--force]
+        unmanage -i <IP Address of endpoint> [--force]
         unmanage -j <job ID> [-v <view filter name>]
     
     OPTIONS:
-        -e, --ep    one or more endpoints to be unmanaged.
-                This is comma separated list of multiple endpoints, each endpoint should
-                contain endpoint information separated by semicolon.
-                endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                Type of endpoint to be unmanaged ,This can be one of the following values:
-                    Chassis
-                    ThinkServer
-                    Storage
-                    Rackswitch
-                    Rack-Tower
-        -f, --force        Indicates whether to force the unmanagement of an endpoint (True/False)
-        -j, --job    Job ID of unmanage request
-        -v, --view    view filter name
+        -i, --ip        One or more IP addresses for each endpoint to be unmanaged.
+        -f, --force     Indicates whether to force the unmanagement of an endpoint (True/False)
+        -j, --job       Job ID of unmanage request
+        -v, --view      View filter name
 
     """
     def handle_output(self, out_obj):

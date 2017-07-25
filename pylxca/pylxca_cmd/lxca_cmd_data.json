@@ -147,16 +147,13 @@
     "Retrieve and manage job information"
   ],
   "manage": [
-    "i:u:p:r:m:t:e:j:f:v:h",
+    "i:u:p:r:j:f:v:h",
     [
 	  "con=",
       "ip=",
 	  "user=",
 	  "pw=",
 	  "rpw=",
-	  "mp=",
-	  "type=",
-	  "epuuid=",
       "job=",
       "force=",
       "view="
@@ -165,10 +162,10 @@
     "Manage the endpoint."
   ],
   "unmanage": [
-    "e:f:j:v:h",
+    "i:f:j:v:h",
     [
 	  "con=",
-      "ep=",
+      "ip=",
 	  "force=",
       "job=",
       "view="
