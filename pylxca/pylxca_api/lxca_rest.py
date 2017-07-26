@@ -24,6 +24,7 @@ logger_conf_file = "lxca_logger.conf"
 pylxca_logger = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
 
 logger = logging.getLogger(__name__)
+REST_TIMEOUT = 60
 
 class lxca_rest:
     '''
@@ -64,7 +65,7 @@ class lxca_rest:
                 raise Exception("Invalid argument 'status'")
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -78,7 +79,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -97,7 +98,7 @@ class lxca_rest:
             url = url + '/ports'
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -142,7 +143,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -156,7 +157,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -170,7 +171,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -184,7 +185,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
@@ -208,7 +209,7 @@ class lxca_rest:
                 raise Exception("Invalid argument 'status'")
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -232,7 +233,7 @@ class lxca_rest:
             if ip_addr:
                 url = url + '/discoverRequest'
                 payload = [{"ipAddresses":ip_addr.split(",")}]
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
@@ -242,11 +243,11 @@ class lxca_rest:
                         return None
             elif jobid:
                 url = url + '/discoverRequest/jobs/' + str(jobid)
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             else:
                 url = url + '/discovery'
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
 
         except HTTPError as re:
@@ -309,7 +310,7 @@ class lxca_rest:
 
                 payload = [param_dict]
 
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
 
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
@@ -321,7 +322,7 @@ class lxca_rest:
                     
             elif jobid:
                 url = url + '/manageRequest/jobs/' + str(jobid)
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             else:
                 logger.error("Invalid execution of manage REST API")
@@ -365,7 +366,7 @@ class lxca_rest:
                     param_dict["forceUnmanage"] = False
 
                 payload = param_dict
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
@@ -375,7 +376,7 @@ class lxca_rest:
                         return None
             elif jobid:
                 url = url + '/unmanageRequest/jobs/' + str(jobid)
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             else:
                 logger.error("Invalid execution of unmanage REST API")
@@ -406,18 +407,18 @@ class lxca_rest:
                 if state == None and uuid:
                     url = url + '?uuid=' + uuid
 
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             elif canceljobid:
                 url = url + '/' + canceljobid
                 payload = {"cancelRequest":"true"}
-                resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.put(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     return True
                 resp.raise_for_status()
             elif deletejobid:
                 url = url + '/' + deletejobid
-                resp = session.delete(url,verify=False, timeout=3)
+                resp = session.delete(url,verify=False, timeout=REST_TIMEOUT)
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     return True
                 resp.raise_for_status()
@@ -435,7 +436,7 @@ class lxca_rest:
                 if state == None and uuid:
                     url = url + '?uuid=' + uuid
 
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -449,7 +450,7 @@ class lxca_rest:
             url = url + '/' + userid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
@@ -462,7 +463,7 @@ class lxca_rest:
             url = url + '?filterWith=' + filter
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
@@ -473,7 +474,7 @@ class lxca_rest:
         try:
             if uuid:
                 url = url + '/' + uuid
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     job_info = ast.literal_eval(resp.content)
@@ -498,7 +499,7 @@ class lxca_rest:
                     url = url + "/applicableFirmware"
                 elif info == "RESULTS":
                     url = url + "/persistedResult"
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
             elif info == "COMPARE_RESULTS":
@@ -507,11 +508,11 @@ class lxca_rest:
                 payload["jobid"] = jobid
                 payload["uuid"] = uuid
 
-                resp = session.get(url, data = json.dumps(payload), verify=False, timeout=3)
+                resp = session.get(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
 
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -552,7 +553,7 @@ class lxca_rest:
             payload['compliance'] = compliance_list
             logger.debug("Reached till before post call")
 
-            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=3)
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -572,7 +573,7 @@ class lxca_rest:
                 url= url + "?key=" + key
             else:
                 raise Exception("Invalid argument key")
-            resp = session.get(url,verify=False, timeout=3)
+            resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -590,7 +591,7 @@ class lxca_rest:
         try:
 
             if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
 
@@ -647,7 +648,7 @@ class lxca_rest:
             payload = dict()
             payload["DeviceList"] = [param_dict]
             
-            resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
+            resp = session.put(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -662,7 +663,7 @@ class lxca_rest:
             url = url + '/' + profileid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
@@ -689,9 +690,9 @@ class lxca_rest:
                 
                 payload = dict()
                 payload = param_dict
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
             else:
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 
             resp.raise_for_status()
         except HTTPError as re:
@@ -707,7 +708,7 @@ class lxca_rest:
         else:
             raise Exception("Invalid argument ID")
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
@@ -723,7 +724,7 @@ class lxca_rest:
         '''
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -738,7 +739,7 @@ class lxca_rest:
             url = url + '?includeChildren=' + includeChildren
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -799,9 +800,9 @@ class lxca_rest:
                 
                 payload = dict()
                 payload = param_dict
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
             else:
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 
             resp.raise_for_status()
         except HTTPError as re:
