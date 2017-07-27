@@ -491,7 +491,7 @@ class lxca_rest:
             logger.error("Exception occured: %s",re)
             raise re
 
-    def get_updatepolicy(self, url, session, info, uuid, jobid):
+    def get_updatepolicy(self, url, session, info,  jobid):
         url = url + '/compliancePolicies'
         try:
             if info in ["FIRMWARE", "RESULTS"]:
@@ -502,16 +502,16 @@ class lxca_rest:
                 resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
-            elif info == "COMPARE_RESULTS":
+            elif jobid:
                 url = url + "/compareResult"
                 payload = dict()
                 payload["jobid"] = jobid
-                payload["uuid"] = uuid
 
                 resp = session.get(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
 
+            url = url + "?basic_full=full"
             resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
@@ -581,7 +581,7 @@ class lxca_rest:
             logger.error("Exception occured: %s",re)
             raise re
 
-    def do_updatecomp(self,url, session,mode,action,server,switch,storage,cmm):
+    def do_updatecomp(self, url, session, mode, action, server, switch, storage, cmm):
         serverlist = list()
         storagelist = list()
         cmmlist = list()
@@ -590,11 +590,13 @@ class lxca_rest:
         url = url + '/updatableComponents'
         try:
 
+            # For Query Action
             if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
                 resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
 
+            # For apply and cancelApply Action
             if action == "apply" or action == "cancelApply" :
                 
                 url= url + "?action=" + action
@@ -603,23 +605,39 @@ class lxca_rest:
                     url= url + "&mode=" + mode
                 else:
                     raise Exception("Invalid argument mode")
-        
-                if server and len(server.split(","))==3:
-                    server_data = server.split(",")
-                    serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
-    
-                if switch and len(switch.split(","))==3:
-                    switch_data = switch.split(",")
-                    switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
-    
-                if storage and len(storage.split(","))==3:
-                    storage_data = storage.split(",")
-                    storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
-    
-                if cmm and len(cmm.split(","))==3:
-                    cmm_data = cmm.split(",")
-                    cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
-    
+
+                if server:
+                    if len(server.split(","))==3:
+                        server_data = server.split(",")
+                        serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
+                    elif len(server.split(","))==2:
+                        server_data = server.split(",")
+                        serverlist = [{"UUID": server_data[0],"Components": [{"Component": server_data[1]}]}]
+
+                if switch:
+                    if len(switch.split(","))==3:
+                        switch_data = switch.split(",")
+                        switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
+                    elif len(switch.split(","))==2:
+                        switch_data = switch.split(",")
+                        switchlist = [{"UUID": switch_data[0],"Components": [{"Component": switch_data[1]}]}]
+
+                if storage:
+                    if len(storage.split(","))==3:
+                        storage_data = storage.split(",")
+                        storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
+                    elif len(storage.split(","))==2:
+                        storage_data = storage.split(",")
+                        storagelist = [{"UUID": storage_data[0],"Components": [{"Component": storage_data[1]}]}]
+
+                if cmm:
+                    if len(cmm.split(","))==3:
+                        cmm_data = cmm.split(",")
+                        cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
+                    elif len(cmm.split(","))==2:
+                        cmm_data = cmm.split(",")
+                        cmmlist = [{"UUID": cmm_data[0],"Components": [{"Component": cmm_data[1]}]}]
+
             elif action == "power" : 
                 url= url + "?action=" + "powerState"
                 
@@ -647,7 +665,7 @@ class lxca_rest:
 
             payload = dict()
             payload["DeviceList"] = [param_dict]
-            
+            logger.debug("Update Firmware payload: " + str(payload))
             resp = session.put(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp

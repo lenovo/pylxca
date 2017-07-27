@@ -535,7 +535,8 @@ class lxca_api ():
     def do_updatepolicy( self, dict_handler = None ):
         info = None
         policy = None
-        
+        jobid= None
+
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
 
@@ -552,7 +553,7 @@ class lxca_api ():
         if policy:
             resp = lxca_rest().post_updatepolicy(self.con.get_url(), self.con.get_session(), policy, type, uuid)
         else:
-            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, uuid, jobid)
+            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, jobid)
 
         try:
             py_obj = json.loads(resp.text)

@@ -657,7 +657,7 @@ def updatepolicy(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','policy','info']
+        keylist = ['con','info','job','uuid',policy','Type']
 
 @param
     The parameters for this command are as follows 
@@ -665,29 +665,26 @@ def updatepolicy(*args, **kwargs):
     info    Specifies the type of information to return. This can be one of the following values:
                 FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
                 RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
-                COMPARE_RESULTS - method to determine whether devices are compliant with the assigned compliance
-                                policy using the job or task ID that was returned when the compliance policy was assigned
-    jobid    The job ID that was returned by POST /compliancePolicies/compareResult.
 
-    UUID     UUID of the device to which you want to assign the compliance policy
+    jobid    Job ID of assign compliance policy operation
+
+    uuid     UUID of the device to which you want to assign the compliance policy
 
     policy   Policyname, Name of the compliance-policy to be assigned to device
 
-    Type    The device type. This can be one of the following values.
+    Type     Device type. This can be one of the following values.
                     CMM - Chassis Management Module
                     IOSwitch - Flex switch
                     RACKSWITCH - RackSwitch switch
                     STORAGE - Lenovo Storage system
                     SERVER - Compute node or rack server
 
-                
-
-@example 
+@example
 
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con', 'info', 'jobid', 'uuid', 'policy','type']
+    keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
@@ -754,7 +751,7 @@ def updatecomp(*args, **kwargs):
     The parameters for this command are as follows 
     
     query   The data to return. This can be one of the following values.
-                components - Returns a list of endpoints and components that can be updated.
+                components - Returns a list of devices and components that can be updated.
                 status - Returns the status and progress of firmware updates. This is the default value
     
     mode    Indicates when to activate the update. This can be one of the following values.
@@ -771,18 +768,20 @@ def updatecomp(*args, **kwargs):
     server  servers information
     storage storages information
 
-            For action = apply/cancelApply, Each of the endpoint infomration should contain following data separated by comma
-                UUID:       UUID of the device
-                Fixid:      Firmware-updare ID of the target package to be applied to the component.
-                Component:  Component name
-    
-            For action = power, Each of the endpoint infomration should contain UUID and desired powerState separated by comma
+            For action = apply/cancelApply, Device information should contain following data separated by comma
                 UUID - UUID of the device
-                
-                Desired powerState can have one of the power state values. Possible values per device type are
+                Fixid - Firmware-update ID of the target package to be applied to the component. If not provided assigned policy would be used.
+                Component - Component name
+
+            For action = power, Device information should contain following data separated by comma
+                UUID - UUID of the device
+                powerState - One of the power state values. Possible values per device type are
                     Server: powerOn, powerOff, powerCycleSoft, powerCycleSoftGraceful, powerOffHardGraceful
                     Switch: powerOn, powerOff, powerCycleSoft
                     CMM: reset
+                    Storage:powerOff,powerCycleSoft
+
+
 
 @example 
 
