@@ -547,25 +547,27 @@ class updatepolicy(InteractiveCommand):
     
     USAGE:
         updatepolicy [-v <view filter name>]
-        updatepolicy -p <Compliance policy to be assigned to device>
+        updatepolicy -p <Compliance policy to be assigned to device> -u <UUID of Device> -t <Device Type>
+        updatepolicy -j <Job Id of assign policy operation>
         updatepolicy -i <Information type of compliance policy to be retreived>
     
     OPTIONS:
-        -p, --policy    Policyname = Name of the compliance-policy to be assigned to device
-        -t --type    Type = The device type. This can be one of the following values.
-                        CMM - Chassis Management Module
-                        IOSwitch - Flex switch
-                        RACKSWITCH - RackSwitch switch
-                        STORAGE - Lenovo Storage system
-                        xITE - Compute node or rack server
-        -j --jobid      The job ID that was returned by POST /compliancePolicies/compareResult.
-        -u --UUID    UUID of the device to which you want to assign the compliance policy
-        -i, --info    Specifies the type of information to return. This can be one of the following values:
-                    FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
-                    RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
-                    COMPARE_RESULTS - method to determine whether devices are compliant with the assigned compliance
-                                policy using the job or task ID that was returned when the compliance policy was assigned
-        -v, --view    View filter name
+        -p, --policy    Name of the compliance-policy to be assigned to device
+        -u, --UUID      UUID of the device to which you want to assign the compliance policy
+        -t, --type      Type = The device type. This can be one of the following values.
+                            CMM - Chassis Management Module
+                            IOSwitch - Flex switch
+                            RACKSWITCH - RackSwitch switch
+                            STORAGE - Lenovo Storage system
+                            xITE - Compute node or rack server
+
+        -j, --job       Job ID of assign compliance policy operation
+
+        -i, --info      Specifies the type of information to return. This can be one of the following values:
+                            FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
+                            RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
+
+        -v, --view      View filter name
 
     """
 ###############################################################################
@@ -613,35 +615,35 @@ class updatecomp(InteractiveCommand):
         updatecomp  -a power [-c <cmms UUID and desired state>] [-w <switches UUID and desired state>]  [-s <servers UUID and desired state>]
     
     OPTIONS:
-        -q, --query    The data to return. This can be one of the following values.
-                components - Returns a list of endpoints and components that can be updated.
-                status - Returns the status and progress of firmware updates. This is the default value
-        -m, --mode    Indicates when to activate the update. This can be one of the following values.
-                immediate - Uses Immediate Activation mode when applying firmware updates to the selected endpoints.
-                delayed - Uses Delayed Activation mode when applying firmware updates to the selected endpoints.
+        -q, --query     The data to return. This can be one of the following values.
+                            components - Returns a list of endpoints and components that can be updated.
+                            status - Returns the status and progress of firmware updates. This is the default value
+        -m, --mode      Indicates when to activate the update. This can be one of the following values.
+                            immediate - Uses Immediate Activation mode when applying firmware updates to the selected endpoints.
+                            delayed - Uses Delayed Activation mode when applying firmware updates to the selected endpoints.
         -a, --action    The action to take. This can be one of the following values.
-                apply - Applies the associated firmware to the submitted components.
-                power - Perform power action on selected endpoint.
-                cancelApply - Cancels the firmware update request to the selected components.
-        -c, --cmm    cmms information
+                            apply - Applies the associated firmware to the submitted components.
+                            power - Perform power action on selected endpoint.
+                            cancelApply - Cancels the firmware update request to the selected components.
+        -c, --cmm       cmms information
         -w, --switch    switch information
         -s, --server    servers information
-        -t, --storage    storages information
+        -t, --storage   storages information
     
-                For action = apply/cancelApply, Each of the endpoint information should contain following data separated by comma
-                    UUID - UUID of the device
-                    Fixid - Firmware-update ID of the target package to be applied to the component.
-                    Component - Component name
-    
-                For action = power, Each of the endpoint information should contain following data separated by comma
-                    UUID - UUID of the device
-                    powerState - One of the power state values. Possible values per device type are
-                        Server: powerOn, powerOff, powerCycleSoft, powerCycleSoftGraceful, powerOffHardGraceful
-                        Switch: powerOn, powerOff, powerCycleSoft
-                        CMM: reset
-                        Storage:powerOff,powerCycleSoft
-    
-        -v, --view    View filter name
+            For action = apply/cancelApply, Device information should contain following data separated by comma
+                UUID - UUID of the device
+                Fixid - Firmware-update ID of the target package to be applied to the component. If not provided assigned policy would be used.
+                Component - Component name
+
+            For action = power, Device information should contain following data separated by comma
+                UUID - UUID of the device
+                powerState - One of the power state values. Possible values per device type are
+                    Server: powerOn, powerOff, powerCycleSoft, powerCycleSoftGraceful, powerOffHardGraceful
+                    Switch: powerOn, powerOff, powerCycleSoft
+                    CMM: reset
+                    Storage:powerOff,powerCycleSoft
+
+        -v, --view      View filter name
 
     """
 

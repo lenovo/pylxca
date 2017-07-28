@@ -76,7 +76,8 @@ class lxca_view:
                           'fanmuxes':'fanMuxList',
                           'cmms':'cmmList',
                           'scalablesystem':'scalablesystem',
-                          'discovery':'discovery'}
+                          'discovery':'discovery',
+                          'updatepolicy': 'policies'}
     
         
     def get_val(self,py_obj, tag ):
