@@ -722,12 +722,24 @@ def updaterepo(*args, **kwargs):
                 updatesByMt - Returns information about firmware updates for the specified machine type
                 updatesByMtByComp - Returns the update component names for the specified machine type
 
+    action    The action to take. This can be one of the following values.
+                read - Reloads the repository files. The clears the update information in cache and reads the update file again from the repository.
+                refresh - Retrieves information about the latest available firmware updates from the Lenovo Support website,
+                         and stores the information to the firmware-updates repository.
+                acquire - Downloads the specified firmware updates from Lenovo Support website, and stores the updates to the firmware-updates repository.
+                delete - Deletes the specified firmware updates from the firmware-updates repository.
+                export.not supported
+
+     mt        comma separated machine types
+     scope     scope of operation
+     fixids    comma separated fixids
+     type      filetype for PUT opertaion
 @example 
 
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','key']
+    keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]

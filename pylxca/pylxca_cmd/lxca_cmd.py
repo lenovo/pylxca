@@ -577,15 +577,28 @@ class updaterepo(InteractiveCommand):
         updaterepo -k <Key to return the specified type of update> [-v <view filter name>]
     
     OPTIONS:
-        -k, --key    Returns the specified type of update. This can be one of the following values.
-                    supportedMts - Returns a list of supported machine types
-                    size - Returns the repository size
-                    lastRefreshed - Returns the timestamp of the last repository refresh
-                    importDir - Returns the import directory for the repository.
-                    publicKeys - Returns the supported signed keys
-                    updates - Returns information about all firmware updates
-                    updatesByMt - Returns information about firmware updates for the specified machine type
-                    updatesByMtByComp - Returns the update component names for the specified machine type
+        -k, --key       Returns the specified type of update. This can be one of the following values.
+                        supportedMts - Returns a list of supported machine types
+                        size - Returns the repository size
+                        lastRefreshed - Returns the timestamp of the last repository refresh
+                        importDir - Returns the import directory for the repository.
+                        publicKeys - Returns the supported signed keys
+                        updates - Returns information about all firmware updates
+                        updatesByMt - Returns information about firmware updates for the specified machine type
+                        updatesByMtByComp - Returns the update component names for the specified machine type
+        -a  --action    The action to take. This can be one of the following values.
+                        read - Reloads the repository files. The clears the update information in cache and reads the update file again from the repository.
+                        refresh - Retrieves information about the latest available firmware updates from the Lenovo Support website,
+                            and stores the information to the firmware-updates repository.
+                        acquire - Downloads the specified firmware updates from Lenovo Support website, and stores the updates to the firmware-updates repository.
+                        delete - Deletes the specified firmware updates from the firmware-updates repository.
+                        export.not supported
+
+        -m  --mt        comma separated machine types
+        -s  --scope     scope of operation
+        -f  --fixids    comma separated fixids
+        -t  --type      filetype for PUT opertaion
+
         -v, --view    View filter name
 
     """

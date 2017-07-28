@@ -562,7 +562,7 @@ class lxca_rest:
             raise re
 
 
-    def get_updaterepo(self,url, session,key):
+    def get_updaterepo(self, url, session, key, mt, scope):
         url = url + '/updateRepositories/firmware'
         try:
             if not key  == None \
@@ -573,7 +573,87 @@ class lxca_rest:
                 url= url + "?key=" + key
             else:
                 raise Exception("Invalid argument key")
-            resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
+
+            if mt:
+                url = url + "&mt=" + mt
+
+            if scope:
+                if scope.lower() in ["all", "latest"]:
+                    if key == "updates" or key == "updatesByMt":
+                        url = url + "&with=" + scope.lower()
+                    else:
+                        raise Exception("Invalid argument combination of key and scope")
+                else:
+                    raise Exception("Invalid argument scope: " + scope)
+
+            resp = session.get(url,verify=False, timeout=3)
+            resp.raise_for_status()
+            return resp
+
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+
+    def put_updaterepo(self, url, session, action , fixids, mt, type, scope):
+        url = url + '/updateRepositories/firmware'
+        try:
+            if not action  == None \
+                    and action == "read" or action == "refresh" \
+                    or action == "acquire" or action == "delete":
+                    #or key == "export"
+                url= url + "?action=" + action
+            else:
+                raise Exception("Invalid argument key action: " + action)
+
+            if type:
+                if type.lower() in ["all", "payloads"]:
+                    if action == "delete" or action == "export":
+                        url = url + "&filetypes=" + type.lower()
+                    else:
+                        raise Exception("Invalid argument combination of action and type")
+                else:
+                    raise Exception("Invalid argument type:" + type)
+
+            if scope:
+                if scope.lower() in ["all", "latest", "payloads"]:
+                    if action == "refresh" and scope.lower() in ["all", "latest"]:
+                        url = url + "&with=" + scope.lower()
+                    elif action == "acquire" and scope.lower() in ["payloads"]:
+                        url = url + "&with=" + scope.lower()
+                    else:
+                        raise Exception("Invalid argument combination of action and scope")
+                else:
+                    raise Exception("Invalid argument scope:" + scope)
+
+            payload = dict()
+            if action == "delete":
+                if fixids:
+                    fixids_list = fixids.split(",")
+                    payload['fixids'] = fixids_list
+                else:
+                    raise Exception("Invalid argument fixids is required for delete")
+
+            if action == "acquire":
+                if fixids:
+                    fixids_list = fixids.split(",")
+                    payload['fixids'] = fixids_list
+
+            if action == "acquire" or action == "refresh":
+                if mt:
+                    mt_list = mt.split(",")
+                    payload['mt'] = mt_list
+                else:
+                    raise Exception("Invalid argument mt is required for action acquire and refresh")
+
+            if action == "refresh":
+                payload['os'] = ""
+                payload['type'] = "catalog"
+
+            if action == "acquire":
+                payload['type'] = "latest"
+
+            #return payload
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=3)
             resp.raise_for_status()
             return resp
 

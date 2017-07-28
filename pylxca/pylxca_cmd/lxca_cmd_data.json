@@ -232,10 +232,15 @@
     "Retrieve basic or detailed information for a specified \n\t\t\tcompliance policy or all policies."
   ],
   "updaterepo": [
-    "a:k:v:h",
+    "a:f:k:m:s:t:v:h",
     [
 	  "con=",
-	  "key=",
+      "action=",
+      "fixids=",
+      "key=",
+      "mt=",
+      "scope=",
+      "type=",
 	  "view="
     ],
     [],

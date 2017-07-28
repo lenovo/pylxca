@@ -569,10 +569,20 @@ class lxca_api ():
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            key = next((item for item in [dict_handler.get  ('k') , dict_handler.get('key')] if item is not None),None)
-                        
-        resp = lxca_rest().get_updaterepo(self.con.get_url(),self.con.get_session(),key)
-        
+            key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
+            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None), None)
+            mt = next((item for item in [dict_handler.get('m'), dict_handler.get('mt')] if item is not None), None)
+            scope = next((item for item in [dict_handler.get('s'), dict_handler.get('scope')] if item is not None), None)
+            fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None), None)
+            type = next((item for item in [dict_handler.get('t'), dict_handler.get('type')] if item is not None), None)
+
+        if key:
+            resp = lxca_rest().get_updaterepo(self.con.get_url(),self.con.get_session(), key, mt, scope)
+        elif action:
+            resp = lxca_rest().put_updaterepo(self.con.get_url(), self.con.get_session(), action, fixids, mt, type, scope)
+        else:
+            raise Exception("Invalid argument")
+
         try:
             py_obj = json.loads(resp.text)
         except AttributeError,ValueError:
