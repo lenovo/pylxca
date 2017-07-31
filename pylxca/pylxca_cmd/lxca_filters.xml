@@ -419,6 +419,12 @@
     <updaterepo name="updates">
 		<updates>updates</updates>
     </updaterepo>
+	<updaterepo name="action_result">
+		<result>result</result>
+		<taskid>taskid</taskid>
+		<jobid>jobid</jobid>
+    </updaterepo>
+
 	<updatecomp name="default">
 			<Result>result</Result>
 			<Response_Message name="messages" type="object">

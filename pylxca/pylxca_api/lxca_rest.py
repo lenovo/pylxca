@@ -768,7 +768,7 @@ class lxca_rest:
     
         return resp
     
-    def do_configpatterns(self,url, session, patternid,endpoint,restart,etype):
+    def do_configpatterns(self, url, session, patternid, endpoint, restart, etype):
         resp = None
         url = url + '/patterns'
         
@@ -788,7 +788,7 @@ class lxca_rest:
                 
                 payload = dict()
                 payload = param_dict
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
+                resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             else:
                 resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 

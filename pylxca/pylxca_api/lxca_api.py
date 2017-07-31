@@ -565,6 +565,11 @@ class lxca_api ():
 
     def get_updaterepo( self, dict_handler = None ):
         key = None
+        action = None
+        mt = None
+        scope = None
+        fixids = None
+        type = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
