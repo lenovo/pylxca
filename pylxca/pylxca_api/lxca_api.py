@@ -63,7 +63,8 @@ class lxca_api ():
                           'jobs':self.get_jobs,
                           'lxcalog':self.get_lxcalog,
                           'tasks':self.get_set_tasks,
-                          'manifests':self.get_set_manifests
+                          'manifests':self.get_set_manifests,
+                          'osimages':self.get_set_osimage,
                         }
     
     def api( self, object_name, dict_handler = None, con = None ):
@@ -471,9 +472,9 @@ class lxca_api ():
             return py_obj
         except AttributeError,ValueError:
             return resp
-        
-                    
-                    
+
+
+
     def get_users( self, dict_handler = None ):
         userid = None
         
@@ -673,6 +674,72 @@ class lxca_api ():
                         
         resp = lxca_rest().get_set_manifests(self.con.get_url(),self.con.get_session(),sol_id,filepath)
         
+        try:
+            py_obj = json.loads(resp._content)
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+
+
+
+    def get_set_osimage(self, dict_handler = None):
+        '''
+        Reference URL: http://10.240.61.40:8131/help/topic/com.lenovo.lxca_restapis_all.doc/rest_apis_os_deployment_resources.html?cp=0_4_5
+        commands construction:
+        - osimages() 									<< GET  command   ::DONE
+        - osimages(imageType=<DUD,BOOT,OS,OSPROFILE>)  	<< POST command   ::DONE
+        - osimages(fileName=<>) 						<< GET  command   ::DONE
+        - osimages(id=<>)								<< GET  command   ::DONE
+        - osimages(id=<>, **kwargs)     				<< PUT/POST/DELETE command  :: DONE [TODO: its a complex post args]
+        - osimages(jobid = <>)							<< POST command    ::DONE
+
+        - osimages(remoteFileServer)					<< GET  command    ::DONE
+        - osimages(remoteFileServer, **kwargs)			<< POST command    ::DONE
+        - osimages(remoteFileServer, getId=<>)			<< GET  command    ::DONE
+        - osimages(remoteFileServer, putId/deleteId=<>, **kwargs)	<< PUT/DELETE command  DONE
+
+        - osimages(hostplatforms)						<< GET  command    ::DONE
+        - osimages(hostplatforms, **kwargs)				<< PUT  command    ::DONE [TODO: jsonify complex args]
+
+        - osimages(osdeployment)						<< PUT  command   :: DONE
+        - osimages(osdeployment, **kwargs)				<< POST command   :: DONE [TODO: jsonify complex args]
+        - osimages(connection)                          << GET  command   :: DONE
+        - osimages(globalSettings)                      << GET  command   :: DONE
+        - osimages(globalSettings, **kwargs)            << PUT  command   :: DONE
+
+        '''
+        get_method  = True
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        # parsing dict_handler to fetch args, kwargs
+        args = dict_handler[0]
+        kwargs = dict_handler[-1]
+
+        putmethod_keylist = ['imageType','jobId', 'putid', 'deleteid']
+        for key in kwargs.keys():
+            if key in putmethod_keylist:
+                get_method = False
+                break
+        # parsing args for putId,postId,deleteId: refer osImages/<id>
+        if 'postid' in args or 'putid' in args or 'deleteid' in args:
+            get_method = False
+        if 'remoteFileServers' in args and kwargs:
+            get_method = False
+            if kwargs.has_key('id') and kwargs.keys().__len__() == 1:
+                get_method = True
+        if 'hostPlatforms' in args and kwargs:
+            get_method = False
+        if 'globalSettings' in args and kwargs:
+            get_method = False
+        if 'osdeployment' in args:
+            get_method = False
+
+        if get_method:
+            # get methods calls refer above docstring
+            resp = lxca_rest().get_osimage(*args, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
+        else:
+            resp = lxca_rest().set_osimage(*args, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
         try:
             py_obj = json.loads(resp._content)
             return py_obj

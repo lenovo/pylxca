@@ -905,3 +905,286 @@ class lxca_rest:
             resp.raise_for_status()
         except HTTPError as re:
             raise re
+
+#################
+
+    def get_osimage(self, *args, **kwargs):
+        resp        = None
+        baseurl     = kwargs['url']
+        session     = kwargs['session']
+        # url         = baseurl + '/osImages'
+        url         = ''
+        kwargs      = {key: kwargs[key] for key in kwargs if key not in ['url', 'session']}
+
+        if not args and (not kwargs.has_key('id') or not kwargs.has_key('fileName')):
+            url = baseurl + '/osImages'
+        if 'hostPlatforms' in args:
+            url = baseurl + '/hostPlatforms'
+        if kwargs.has_key('fileName'):
+            url = baseurl + '/osImages/%s' %(kwargs['fileName'])
+        if kwargs.has_key('id'):
+            url = baseurl + '/osImages/%s' %(kwargs['id'])
+            if kwargs.has_key('path'):
+                url = url + '?' + kwargs['path']
+            if kwargs.has_key('serverId'):
+                url = url + '&' + kwargs['serverId']
+        if 'connection' in args:
+            url = baseurl + '/osdeployment/connection'
+        if 'globalSettings' in args:
+            url = baseurl + '/osdeployment/globalSettings'
+        if 'remoteFileServers' in args:
+            url = baseurl + '/osImages/remoteFileServers'
+            if kwargs.has_key('id'):
+                url = url + '/' + kwargs['id']
+
+        try:
+            # print "I'm in lxca_rest get_osimage, url=", url
+            resp = session.get(url, verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def set_osimage(self, *args, **kwargs):
+        resp        = None
+        baseurl     = kwargs['url']
+        session     = kwargs['session']
+        url         = baseurl + '/osImages'
+        kwargs      = {key: kwargs[key] for key in kwargs if key not in ['url', 'session']}
+        payload     = dict()
+        # print "i'm in lxca_rest, set_osimage args,kwargs", args, kwargs
+
+        # postcall of osimage DONE
+        if kwargs.has_key('imageType') and not kwargs.has_key('jobId'):
+            if kwargs['imageType'] not in ['BOOT', 'DUD', 'OS', 'OSPROFILE']:
+                raise Exception ("Invalid Arguments, Try: [BOOT,DUD,OS,OSPROFILE]")
+            if kwargs.has_key('fileSize'):
+                payload['fileSize'] = kwargs['fileSize']
+            url = url + '/?imageType=' + kwargs['imageType']
+            payload['Action'] = 'Init'
+            resp = self.post_method(url, session, payload)
+            return resp
+
+        #put/post/delete for osimages/<id> DONE
+        if 'putid' in args or 'postid' in args:
+            if not kwargs.has_key('profile') or not isinstance(kwargs['profile'],dict):
+                raise Exception ("Invalid Arguments, Try: profile = <dict>")
+            # todo jsonify 'profile', dict
+            payload['profile'] = kwargs['profile']
+
+            if 'putid' in args:
+                resp = self.put_method(url, session, payload)
+                return resp
+            if 'postid' in args:
+                resp = self.post_method(url, session, payload)
+                return resp
+
+        if 'deleteid' in args: # associated with delete call for osimages/id DONE
+            if not kwargs.has_key('id'):
+                raise Exception ("Invalid Arguments, Try: id='id1,id2, .. ,idn' ")
+            url = url + '/' + str(kwargs['id'])
+            resp = self.delete_method(url, session, payload={})
+            return resp
+
+        # postcall for jobID DONE
+        if kwargs.has_key('jobId'):
+            url = url + '?'
+            if set(['jobId','imageName','imageType','os']).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['jobId','imageName','imageType','os']")
+            for k,v in  kwargs.items():
+                url = url + "%s=%s&" %(k,v)
+            url = url.rstrip('&')
+            resp = self.post_method(url, session, payload={})
+            return resp
+
+        # postcall for remoteFileServers DONE
+        if 'remoteFileServers' in args and not kwargs.has_key('putid') and not kwargs.has_key('deleteid'):
+            url = url + '/remoteFileServers'
+            if set(['address','displayName','port', 'protocol']).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['address','displayName','port', 'protocol']")
+            for k,v in  kwargs.items():
+                payload[k] = v
+            resp = self.post_method(url, session, payload)
+            return resp
+
+        # put/delete call for remoteFileServers DONE
+        if 'remoteFileServers' in args and kwargs.has_key('putid') or kwargs.has_key('deleteid'):
+            url = url + '/remoteFileServers'
+            if kwargs.has_key('putid'): # put call for remoteFileServers/<id>
+                if set(['putid','address','displayName','port', 'protocol']).difference(set(kwargs.keys())):
+                    raise Exception ("Invalid Arguments, Try:['address','displayName','port', 'protocol']")
+                for k,v in  kwargs.items():
+                    payload[k] = v
+                resp = self.put_method(url, session, payload)
+                return resp
+
+            if kwargs.has_key('deleteid'): # delete call for remoteFileServers/<id>
+                if kwargs.keys().__len__() != 1:
+                    raise Exception ("Invalid Arguments, Try:deleteid=<id> only")
+                url = url + '/' + kwargs['deleteid']
+                payload = {}
+                resp = self.delete_method(url, session, payload)
+                return resp
+
+        # put call for hostPlatforms DONE
+        if 'hostPlatforms' in args:
+            url = url.rsplit('/',1)[0] +'/hostPlatforms'
+            # if not kwargs.has_key('networkSettings'):
+            if set(['networkSettings', 'selectedImage', 'storageSettings','uuid',]).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['networkSettings'=<dict>, 'selectedImage', 'storageSettings'=<dict>,'uuid',]")
+            if not isinstance(kwargs['networkSettings'], dict) or not  isinstance(kwargs['storageSettings'], dict):
+                raise Exception("Invalid Arguments, Try: networkSettings=<dict>, and storageSettings=<dict>")
+            for k,v in  kwargs.items():
+                payload[k] = v
+            resp = self.put_method(url, session, [payload])
+            return resp
+
+        # put call for osdeployment DONE
+        if 'osdeployment' in args and kwargs.has_key('items'):
+            url = url.rsplit('/',1)[0] + '/osdeployment'
+            if not isinstance(kwargs['items'], list):
+                raise Exception ("Invalid Arguments, Try:items=<list>")
+
+            payload['items'] = kwargs['items']
+            #todo:
+            # "items": [{
+            #      "deploystatus": {
+            #         "id": "14",
+            #         "message": "Proceedingtopost-installation."
+            #      },
+            #      "network": [{
+            #         "ip": "10.243.4.144",
+            #         "mac": "34: 40: B5: EF: B9: BC"
+            #      },
+            #      {
+            #         "ip": "10.241.139.100",
+            #         "mac": "40: F2: E9: 90: 33: FC"
+            #      }],
+            #      "uuid": "2D16B4422AC011E38A06000AF72567B0"
+            #   },]
+
+            resp = self.put_method(url,session, payload)
+            return resp
+
+        # post call for osdeployment DONE
+        if 'osdeployment' in args:
+            url = baseurl + '/osdeployment'
+            if kwargs.has_key('action'):
+                if set(['action', 'mac', 'nodeName']).difference(set(kwargs.keys())):
+                    raise Exception ("Invalid Arguments, Try:['action', 'mac', 'nodeName']")
+                url = url + "?nodeName=%s&mac=%s" %(kwargs['nodeName'], kwargs['mac'])
+
+            resp = self.post_method(url, session, payload={})
+            return resp
+
+
+        # put call for globalSettings DONE
+        if 'globalSettings' in args and kwargs.has_key['activeDirectory']:
+            url = baseurl + '/osdeployment/globalSettings'
+            if set(['activeDirectory', 'credentials','ipAssignment','isVLANMode','licenseKeys']).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['activeDirectory'=<list>, 'credentials'=<list>,'ipAssignment','isVLANMode','licenseKeys'=<dict>]")
+            if  not isinstance(kwargs['activeDirectory'], list) or\
+                not isinstance(kwargs['credentials'], list) or\
+                not isinstance(kwargs['licenseKeys'], dict):
+                raise Exception ("Invalid Arguments, Try:['activeDirectory'=<list>, 'credentials'=<list>,'licenseKeys'=<dict>]")
+
+            for k,v in  kwargs.items():
+                payload[k] = v
+                # todo: jsonify keys
+                #    "activeDirectory": {
+                #       "allDomains": [{
+                #          "domainName": "domain1",
+                #          "id": 0,
+                #          "OU": "domain1-unit1"
+                #       },
+                #       {
+                #          "domainName": "domain2",
+                #          "id": 1,
+                #          "OU": "domain2-unit"
+                #       }],
+                #       "defaultDomain": "domain2/domain2-unit"
+                #    }
+                #    "credentials": [{
+                #       "name": "root",
+                #       "type": "ESXi",
+                #       "password": null
+                #    },
+                #    {
+                #       "name": "root",
+                #       "type": "LINUX",
+                #       "password": null
+                #    },
+                #    {
+                #       "name": "root",
+                #       "type": "RHEL\/ESXi",
+                #       "password": null
+                #    },
+                #    {
+                #       "password": "U2FsdGVkX1/fiTzKhVZaIG4JcGBuCkoqucvGBmrjtK5/ejaLy8TFkFgb9AeDoZtt",
+                #       "passwordChanged": false,
+                #       "type": "WINDOWS"
+                #    }],
+                #    "ipAssignment": "dhcpv4",
+                #    "licenseKeys": {
+                #       "win2012r1": {
+                #          "dataCenterLicenseKey": "AAAA2-BBBBB-CCCCC-DDDDD-EEEEE",
+                #          "standardLicenseKey": "AAAA1-BBBBB-CCCCC-DDDDD-EEEEE"
+                #       },
+                #       "win2012r2": {
+                #          "dataCenterLicenseKey": "AAAA4-BBBBB-CCCCC-DDDDD-EEEEE",
+                #          "standardLicenseKey": "AAAA3-BBBBB-CCCCC-DDDDD-EEEEE"
+                #       }
+                #       "win2016r1": {
+                #          "dataCenterLicenseKey": "AAAA4-BBBBB-CCCCC-DDDDD-EEEEE",
+                #          "standardLicenseKey": "AAAA3-BBBBB-CCCCC-DDDDD-EEEEE"
+                #       }
+                #    }
+
+            resp = self.put_method(url,session, payload)
+            return resp
+
+        return resp
+
+
+
+
+    def get_method(self, url, session, **kwargs):
+        resp = None
+        try:
+            resp = session.get(url,verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def put_method(self, url, session, payload, **kwargs):
+        resp = None
+        try:
+            resp = session.put(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def delete_method(self,url, session, payload, **kwargs):
+        resp = None
+        try:
+            resp = session.delete(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def post_method(self,url, session, payload, **kwargs):
+        resp = None
+        try:
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp

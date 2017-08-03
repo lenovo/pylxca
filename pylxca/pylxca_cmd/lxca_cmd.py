@@ -733,3 +733,10 @@ class resourcegroups(PyAPI):
     """
 
 ###############################################################################
+
+
+
+class osimages(PyAPI):
+    """
+    OSImages/Deployment on LXCA
+    """

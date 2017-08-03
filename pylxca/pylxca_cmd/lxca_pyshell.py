@@ -52,6 +52,7 @@ def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
               "configtargets":configtargets,
               "tasks":tasks,
               "manifests":manifests,
+              "osimages":osimages,
               "help": help}
         ns.update()
         sys.ps1 = "pyshell >> "
@@ -1116,3 +1117,58 @@ def resourcegroups(*args, **kwargs):
     # out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
     # return out_obj
     return True
+
+
+def osimages(*args, **kwargs):
+    '''
+    @summary:
+        Use this function to retrieve information about, delete, and import OS images, OS-image profiles, device driver, and boot-options files.
+        data_dictionary = osimages(input_args, key=values )
+
+        Where KeyList is as follows
+
+            keylist = [fileName, Id, profile,remoteFileServer,imageType,jobId, ...]
+
+    @param
+
+        - osimages(hostplatforms)
+        - osimages(hostplatforms, **kwargs)
+
+        - osimages(osdeployment, items=[])
+        - osimages(osdeployment, action=<>,mac=<>,nodeName=<>)
+
+        - osimages(connection)
+
+        - osimages(globalSettings)
+        - osimages(globalSettings, **kwargs)
+
+        - osimages()
+        - osimages(imageType=<DUD,BOOT,OS,OSPROFILE>)
+
+        - osimages(fileName=<>)
+
+        - osimages(id=<>)
+        - osimages(id=<>, **kwargs)
+
+        - osimages(jobid = <>)
+
+        - osimages(remoteFileServers)
+        - osimages(remoteFileServers, **kwargs)
+
+        - osimages(remoteFileServers, id=<>)
+        - osimages(remoteFileServers, putId/deleteId=<>, **kwargs)
+    @example
+        osimage()                   : shows osimages
+        osimage(imageType='BOOT')   : POST osimage with imageType='BOOT'
+        osimages(fileName='foo')    : shows osimages for fileName='foo'
+    '''
+
+    global pyshell
+    con = None
+    param_dict = {}
+    command_name = sys._getframe().f_code.co_name
+
+    param_dict = (args, kwargs)
+    # handle_input_dict only takes param_dict as input argument
+    ch = pyshell.handle_input_dict(command_name, con, param_dict)
+    return ch

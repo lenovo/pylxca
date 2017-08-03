@@ -159,6 +159,7 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.updaterepo(self))
         self.add_command(lxca_cmd.tasks(self))
         self.add_command(lxca_cmd.manifests(self))
+        self.add_command(lxca_cmd.osimages(self))
 
     def sprint(self,str):
         if self.ostream:
