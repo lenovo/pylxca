@@ -426,19 +426,55 @@ class lxca_api ():
     
     def get_configprofiles( self, dict_handler = None ):
         profileid = None
+        profilename = None
+        endpoint = None
+        restart = None
+        delete = None
+        unassign = None
+        powerdown = None
+        resetimm = None
+        force = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
 
         if dict_handler:
             profileid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+            profilename = next((item for item in [dict_handler.get('n'), dict_handler.get('name')] if item is not None),
+                             None)
+            endpoint = next(
+                (item for item in [dict_handler.get('e'), dict_handler.get('endpoint')] if item is not None), None)
+            restart = next((item for item in [dict_handler.get('r'), dict_handler.get('restart')] if item is not None),
+                           None)
+            delete = next((item for item in [dict_handler.get('d'), dict_handler.get('delete')] if item is not None),
+                           None)
+            unassign = next((item for item in [dict_handler.get('u'), dict_handler.get('unassign')] if item is not None),
+                          None)
+            powerdown = next((item for item in [dict_handler.get('p'), dict_handler.get('powerdown')] if item is not None),
+                None)
+            resetimm = next(
+                (item for item in [dict_handler.get('resetimm')] if item is not None),
+                None)
+            force = next((item for item in [dict_handler.get('f'), dict_handler.get('force')] if item is not None),
+                         None)
 
-        resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
+        if profilename:
+            resp = lxca_rest().put_configprofiles(self.con.get_url(), self.con.get_session(), profileid, profilename)
+        elif endpoint and restart:
+            resp = lxca_rest().post_configprofiles(self.con.get_url(), self.con.get_session(), profileid, endpoint, restart)
+        elif profileid and delete and delete.lower() == 'true':
+                resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
+        elif profileid and unassign and unassign.lower() == 'true':
+                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, force)
+        else:
+            resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 
         try:
-            py_obj = json.loads(resp.text)
-            return py_obj
-        
+            if len(resp.text):
+                py_obj = json.loads(resp.text)
+                return py_obj
+            elif resp.status_code == 204:   # Its success for rename of profile with empty text
+                return { 'ID':profileid, 'name':profilename}
         except AttributeError,ValueError:
             return resp
     

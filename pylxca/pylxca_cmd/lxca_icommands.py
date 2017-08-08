@@ -109,7 +109,12 @@ class InteractiveCommand(object):
         except getopt.GetoptError, e:
             self.invalid_input_err()
             return
-        
+        except AttributeError as e:
+            extype, ex, tb = sys.exc_info()
+            formatted = traceback.format_exception_only(extype, ex)[-1]
+            message = "Check getopt short and long options  %s" % (formatted)
+            raise RuntimeError, message, tb
+
         for opt, arg in opts:
             if '-h' in opt:
                 self.sprint(self.__doc__)

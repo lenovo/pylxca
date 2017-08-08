@@ -577,7 +577,7 @@ class updaterepo(InteractiveCommand):
 
     USAGE:
         updaterepo -k <Key to return the specified type of update> [-v <view filter name>]
-    
+        updaterepo -a <action to take> [-v <view filter name>]
     OPTIONS:
         -k, --key       Returns the specified type of update. This can be one of the following values.
                         supportedMts - Returns a list of supported machine types
@@ -597,9 +597,9 @@ class updaterepo(InteractiveCommand):
                         export.not supported
 
         -m  --mt        comma separated machine types
-        -s  --scope     scope of operation
+        -s  --scope     scope of operation [ all/latest] for refresh and [ payloads ] for acquire
         -f  --fixids    comma separated fixids
-        -t  --type      filetype for PUT opertaion
+        -t  --type      filetype [ all/payloads ]
 
         -v, --view    View filter name
 
@@ -694,9 +694,22 @@ class configprofiles(InteractiveCommand):
 
     USAGE:
         configprofiles [-i <ID of specific profile>] [-v <view filter name>]
-    
+        configprofiles -i <ID of specific profile> -n <New profile name>
+        configprofiles -i <ID of specific profile> -e <UUID or location ID>  -r <restart option> [-v <view filter name>]
+        configprofiles -i <ID of specific profile>  -d <boolean>   [-v <view filter name>]
+        configprofiles -i <ID of specific profile>  -u <boolean> -p <boolean> --resetimm <boolean> -f <boolean> [-v <view filter name>]
+
     OPTIONS:
         -i, --id    The unique ID that was assigned when the server pattern was created
+               id          The unique ID that was assigned when the server profile was created
+        -n, --name        profile name
+        -e,  --endpoint    endpoint  UUID of the server or location id for flex system
+        -r,  --restart     restart server to activate profile ( immediate / defer )
+        -d,  --delete      True for delete id
+        -u   --unassign    unassign specified id
+        -p   --powerdown   powerdown server [true/false]
+             --resetimm    reset IMM [true/false]
+        -f   --force       force profile deactivation [true/false]
         -v, --view    View filter name
 
     """

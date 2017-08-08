@@ -198,10 +198,18 @@
     "Retrieve information and deploy all server and category patterns\n\t\t\tthat have been defined in the Lenovo XClarity Administrator "
   ],
   "configprofiles": [
-    "i:v:h",
+    "d:e:f:i:n:p:r:u:v:h",
     [
 	  "con=",
+      "delete=",
+      "force=",
       "id=",
+      "name=",
+      "powerdown=",
+      "restart=",
+      "resetimm=",
+      "endpoint=",
+      "unassign=",
       "view="
     ],
     [],

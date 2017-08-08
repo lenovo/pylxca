@@ -9,6 +9,7 @@
 
 import os, time,code
 import signal, logging, sys
+import traceback
 
 from pylxca.pylxca_cmd import lxca_ishell
 from lxca_ishell import PYTHON_SHELL
@@ -585,23 +586,33 @@ def configprofiles(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id']
+        keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
 
 @param
     The parameters for this command are as follows 
     
-        id    The unique ID that was assigned when the server profile was created
+        id          The unique ID that was assigned when the server profile was created
+        name        profile name
+        endpoint    endpoint  UUID of the server or location id for flex system
+        restart     restart server to activate profile ( immediate / defer )
+        delete      True for delete id
+        unassign    unassign specified id
+                    options for unassign
+        powerdown   powerdown server
+        resetIMM    reset IMM
+        force       force unassign operation
 
 @example 
 
     '''
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id']
+    keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
-    
+
+    logger.info(" configprofiles got kwargs %s " % str(kwargs))
     ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
     return ch
 
@@ -690,7 +701,7 @@ def updatepolicy(*args, **kwargs):
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
 
-    logger.info(" got past kwargs %s " %str(kwargs))
+    logger.info(" updatepolicy got kwargs %s " %str(kwargs))
     ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
     return ch
 

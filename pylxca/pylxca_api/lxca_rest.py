@@ -767,7 +767,94 @@ class lxca_rest:
             raise re
     
         return resp
-    
+
+    def put_configprofiles(self, url, session, profileid, profilename):
+        url = url + '/profiles'
+
+        if profileid:
+            url = url + '/' + profileid
+        else:
+            raise Exception("Invalid argument ")
+
+        try:
+            payload = dict()
+            payload['profileName'] = profilename
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def post_configprofiles(self, url, session, profileid, endpoint, restart):
+        url = url + '/profiles'
+
+        if profileid:
+            url = url + '/' + profileid
+        else:
+            raise Exception("Invalid argument ")
+
+        try:
+            payload = dict()
+            if restart and endpoint:
+                payload['restart'] = restart
+                payload['uuid'] = endpoint
+            else:
+                raise Exception("Invalid argument, restart and endpoint ")
+
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def delete_configprofiles(self, url, session, profileid):
+        url = url + '/profiles'
+
+        if profileid:
+            url = url + '/' + profileid
+
+        try:
+            resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def unassign_configprofiles(self, url, session, profileid, powerdown, resetimm, force):
+        url = url + '/profiles/unassign'
+
+        if profileid:
+            url = url + '/' + profileid
+
+        payload = dict()
+        if powerdown:
+            if powerdown.lower() == "true":
+                payload['powerDownITE'] = True
+            else:
+                payload['powerDownITE'] = False
+        if resetimm:
+            if resetimm.lower() == "true":
+                payload['resetIMM'] = True
+            else:
+                payload['resetIMM'] = False
+        if force:
+            if force.lower() == "true":
+                payload['force'] = True
+            else:
+                payload['force'] = False
+
+        try:
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+
     def do_configpatterns(self, url, session, patternid, endpoint, restart, etype):
         resp = None
         url = url + '/patterns'
