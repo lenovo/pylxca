@@ -189,7 +189,9 @@
     [
 	  "con=",
       "id=",
+      "includeSettings=",
 	  "endpoint=",
+      "pattern_update_dict=",
 	  "restart=",
 	  "type=",
 	  "view"

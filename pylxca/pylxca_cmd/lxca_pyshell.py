@@ -539,7 +539,7 @@ def configpatterns(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id','endpoint','restart','type']
+        keylist = ['con','id', 'includeSettings', 'endpoint','restart','type']
 
 @param
     The parameters for this command are as follows 
@@ -565,13 +565,27 @@ def configpatterns(*args, **kwargs):
     '''    
     global pyshell
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id','endpoint','restart','type']
-    
+    # keylist = ['con','id', 'includeSettings', 'endpoint', 'restart', 'type']
+    #
+    # for i in range(len(args)):
+    #     kwargs[keylist[i]]= args[i]
+    #
+    # #ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    #
+    # return ch
+    if len(args) < 1 or len(args) > 2:
+        raise ValueError("Invalid Input Arguments")
+
+    param_dict = None
     for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
-    return ch
+        if isinstance(args[i], dict):
+            param_dict = args[i]
+        else:
+            con = args[i]
+
+    out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
 
 def configprofiles(*args, **kwargs):
     '''

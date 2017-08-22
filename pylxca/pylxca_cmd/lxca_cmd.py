@@ -559,7 +559,7 @@ class updatepolicy(InteractiveCommand):
                             IOSwitch - Flex switch
                             RACKSWITCH - RackSwitch switch
                             STORAGE - Lenovo Storage system
-                            xITE - Compute node or rack server
+                            SERVER - Compute node or rack server
 
         -j, --job       Job ID of assign compliance policy operation
 
@@ -664,7 +664,8 @@ class configtargets(InteractiveCommand):
     """
 ###############################################################################
 
-class configpatterns(InteractiveCommand):
+
+class configpatterns(PyAPI):
     """
     Retrieve and Manage information about config patterns.
     

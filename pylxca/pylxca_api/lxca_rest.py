@@ -302,7 +302,6 @@ class lxca_rest:
                 if force == True:
                     param_dict["forceManage"] = True
 
-                #removing username
                 security_Descriptor = { }
                 security_Descriptor['managedAuthEnabled'] = True
                 security_Descriptor['managedAuthSupported'] = False
@@ -855,13 +854,14 @@ class lxca_rest:
         return resp
 
 
-    def do_configpatterns(self, url, session, patternid, endpoint, restart, etype):
+    def do_configpatterns(self, url, session, patternid, includeSettings, endpoint, restart, etype, pattern_update_dict):
         resp = None
         url = url + '/patterns'
         
         if patternid:
             url = url + '/' + patternid
-
+            if includeSettings:
+                url = url + '/includeSettings'
         try:
             if endpoint and restart and etype:
                 param_dict = dict()
@@ -876,6 +876,10 @@ class lxca_rest:
                 payload = dict()
                 payload = param_dict
                 resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            elif pattern_update_dict:
+                payload = dict()
+                payload = pattern_update_dict
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             else:
                 resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 
@@ -883,7 +887,7 @@ class lxca_rest:
         except HTTPError as re:
             raise re
     
-        return resp  
+        return resp
 
     def get_configtargets(self,url, session, targetid):
         url = url + '/config/target'
