@@ -14,7 +14,6 @@ import logging
 
 from pylxca.pylxca_cmd import lxca_cmd
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
-from pylxca.pylxca_cmd.lxca_icommands import PyAPI
 from lxca_view import lxca_ostream
 from pylxca.pylxca_cmd import lxca_icommands
 #from rlcompleter import readline
@@ -94,8 +93,8 @@ class InteractiveShell(object):
                 if name == 'help':
                     continue
                 
-                if isinstance(command,PyAPI ):
-                    continue
+                # if isinstance(command,PyAPI ):
+                #     continue
                 
                 self.sprint('  %s   %s' % (name.ljust(cmdwidth),
                                      command.get_short_desc( )))
@@ -228,6 +227,7 @@ class InteractiveShell(object):
 
         # Split the input to allow for quotes option values
         re_args = re.findall('\-\-\S+\=\"[^\"]*\"|\S+', command_args)
+        #re_args = re.findall('\-\-\S+|\-\S+|\S+[\s*\w+]*', command_args)
         # Parse args if present
         for i in xrange(0, len(re_args)):
             args.append( re_args[i] )
@@ -301,7 +301,8 @@ class InteractiveShell(object):
         command = self.commands[command_name]
         
         try:
-            return command.handle_command(param_dict,con)
+            #return command.handle_command(param_dict,con)
+            return command.handle_input(param_dict, con)
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err

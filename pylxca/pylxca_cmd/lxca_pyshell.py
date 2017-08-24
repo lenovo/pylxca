@@ -1056,11 +1056,11 @@ def tasks(*args, **kwargs):
     Use this function to get tasks information
     run this function as
 
-    data_dictionary = tasks( key1 = 'val1', key2 = 'val2', ...)
+     = tasks( con, data_dictionary)
 
-    Where KeyList is as follows
+    Where data_dictionary contain input arguments as follows
 
-        keylist = ['con','jobuuid']
+        keylist = ['jobuuid']
 
 @param
     The parameters for this command are as follows

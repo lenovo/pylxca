@@ -15,7 +15,6 @@ import pylxca.pylxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
-from pylxca.pylxca_cmd.lxca_icommands import PyAPI
 
 logger = logging.getLogger(__name__)
 
@@ -665,7 +664,7 @@ class configtargets(InteractiveCommand):
 ###############################################################################
 
 
-class configpatterns(PyAPI):
+class configpatterns(InteractiveCommand):
     """
     Retrieve and Manage information about config patterns.
     
@@ -716,14 +715,14 @@ class configprofiles(InteractiveCommand):
     """
 ###############################################################################
 
-class manifests(PyAPI):
+class manifests(InteractiveCommand):
     """
     Send solution manifest to and retreive manifests from Lenovo XClarity Administrator.
     """
 
 ###############################################################################
 
-class tasks(PyAPI):
+class tasks(InteractiveCommand):
     """
     Retrieve tasks List and tasks Information
 
@@ -741,7 +740,7 @@ class tasks(PyAPI):
 ###############################################################################
 
 
-class resourcegroups(PyAPI):
+class resourcegroups(InteractiveCommand):
     """
     create Group of Resources
     """
@@ -750,7 +749,7 @@ class resourcegroups(PyAPI):
 
 
 
-class osimages(PyAPI):
+class osimages(InteractiveCommand):
     """
     OSImages/Deployment on LXCA
     """

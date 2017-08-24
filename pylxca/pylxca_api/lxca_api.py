@@ -403,7 +403,7 @@ class lxca_api ():
         endpoint = None
         restart = None
         etype = None
-        post_dict = None
+        pattern_update_dict = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")

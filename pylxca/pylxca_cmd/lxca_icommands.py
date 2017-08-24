@@ -157,35 +157,3 @@ class InteractiveCommand(object):
             self.sprint("Exception occurred: %s" %(err)) 
             
         return out_obj
-
-
-class PyAPI(InteractiveCommand):
-    
-    
-    def handle_input(self, dict_handler,con_obj = None):
-        obj = None
-        api = lxca_api()
-        obj = api.api(self.get_name(),dict_handler,con_obj)
-        return obj
-        
-    def handle_command(self, param_dict, con = None):
-        
-        con_obj = con        
-        out_obj = None
-        
-        try:
-            out_obj = self.handle_input(param_dict,con_obj)
-        except ConnectionError:
-            self.sprint("Connection is not Initialized, Try connect")
-        except HTTPError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
-        except ConnectionError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
-        except RuntimeError:
-            self.sprint("Session Error to LXCA, Try connect")
-        except Exception as err:
-            self.sprint("Exception occurred: %s" %(err)) 
-            
-        return out_obj
-
-    
