@@ -36,14 +36,8 @@ class InteractiveCommand(object):
     def get_long_options(self):
         return self.command_data[self.__class__.__name__][1]
 
-    def get_mand_opts(self):
-        return self.command_data[self.__class__.__name__][2]
-
     def get_short_desc(self):
-        return self.command_data[self.__class__.__name__][3]
-    
-#    def get_help_message(self):
-#        return self.command_data[self.__class__.__name__][4]
+        return self.command_data[self.__class__.__name__][2]
     
     def invalid_input_err(self):
         self.sprint("Invalid Input ")
@@ -53,13 +47,6 @@ class InteractiveCommand(object):
     def sprint(self,str):
         if self.shell: self.shell.sprint(str)
         
-    def is_mand_opt_passed(self,opts):
-        for mand_opt_tup in self.get_mand_opts():
-            if (([item for item in opts if mand_opt_tup[0] in item] == []) and  
-                ([item for item in opts if mand_opt_tup[1] in item] == [])):
-                return False
-        return True
-
     def parse_args(self, opts, argv):
         opt_dict = {}
         
@@ -121,11 +108,6 @@ class InteractiveCommand(object):
                 return
             if 'con' in opt:
                 con_obj = arg
-                
-        if not self.is_mand_opt_passed(opts):
-            self.invalid_input_err()
-            return
-        
         
         out_obj = None
         opt_dict = None

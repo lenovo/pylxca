@@ -11,54 +11,59 @@ import os, time,code
 import signal, logging, sys
 import traceback
 
+from pylxca import __version__
 from pylxca.pylxca_cmd import lxca_ishell
-from lxca_ishell import PYTHON_SHELL
 from pylxca.pylxca_cmd.lxca_cmd import fanmuxes
 from __builtin__ import ValueError
 
 #shell is a global variable
-pyshell = None
+shell_obj = None
 logger = logging.getLogger(__name__)
 
-def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
+
+def pyshell(shell=lxca_ishell.InteractiveShell()):
     '''
-    @summary: this method provides scriptable interactive python shell 
+    @summary: this method provides scriptable python shell
     '''
-    global pyshell
-    pyshell = shell
-    pyshell.set_ostream_to_null()
-    if interactive:
-        ns = {"connect": connect,
-              "disconnect": disconnect,
-              "chassis":chassis,
-              "cmms":cmms,
-              "fans":fans,
-              "fanmuxes":fanmuxes,
-              "switches":switches, 
-              "powersupplies":powersupplies,
-              "nodes":nodes, 
-              "scalablesystem":scalablesystem,
-              "discover":discover,
-              "manage":manage,
-              "unmanage":unmanage,
-              "jobs":jobs, 
-              "users":users,
-              "lxcalog":lxcalog,
-              "ffdc":ffdc,
-              "updatecomp":updatecomp,
-              "updatepolicy":updatepolicy,
-              "updaterepo":updaterepo,
-              "configpatterns":configpatterns,
-              "configprofiles":configprofiles,
-              "configtargets":configtargets,
-              "tasks":tasks,
-              "manifests":manifests,
-              "osimages":osimages,
-              "help": help}
-        ns.update()
-        sys.ps1 = "pyshell >> "
-        sys.ps2 = " ... "
-        code.interact('You are in Interactive Python Shell for Lenovo XClarity Administrator.', local = ns)
+    global shell_obj
+    shell_obj = shell
+    shell_obj.set_ostream_to_null()
+
+def set_interactive():
+    '''
+    @summary: This method set the shell in interactive mode
+    '''
+    ns = {"connect": connect,
+          "disconnect": disconnect,
+          "chassis": chassis,
+          "cmms": cmms,
+          "fans": fans,
+          "fanmuxes": fanmuxes,
+          "switches": switches,
+          "powersupplies": powersupplies,
+          "nodes": nodes,
+          "scalablesystem": scalablesystem,
+          "discover": discover,
+          "manage": manage,
+          "unmanage": unmanage,
+          "jobs": jobs,
+          "users": users,
+          "lxcalog": lxcalog,
+          "ffdc": ffdc,
+          "updatecomp": updatecomp,
+          "updatepolicy": updatepolicy,
+          "updaterepo": updaterepo,
+          "configpatterns": configpatterns,
+          "configprofiles": configprofiles,
+          "configtargets": configtargets,
+          "tasks": tasks,
+          "manifests": manifests,
+          "osimages": osimages,
+          "help": help}
+    ns.update()
+    global __version__
+    code.interact('Interactive Python Shell for Lenovo XClarity Administrator v' + __version__ + '\nType "dir()" or "help(lxca command object)" for more information.', local=ns)
+
 
 def connect(*args, **kwargs):
 
@@ -86,7 +91,7 @@ def connect(*args, **kwargs):
 @example 
     con1 = connect( con = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['url','user','pw','noverify']
     if len(args) == 0 and len(kwargs) == 0:
@@ -95,7 +100,7 @@ def connect(*args, **kwargs):
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    con = pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    con = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     
     return con 
 def disconnect(*args, **kwargs):
@@ -116,7 +121,7 @@ def disconnect(*args, **kwargs):
     disconnect()
     '''
 
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con']
     if len(args) == 0 and len(kwargs) == 0:
@@ -126,7 +131,7 @@ def disconnect(*args, **kwargs):
         #print args[i]
         kwargs[keylist[i]]= args[i]
     
-    con = pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    con = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     
     return con 
 
@@ -153,14 +158,14 @@ def cmms(*args, **kwargs):
 @example 
     cmm_list = cmms( con = con1 ,uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57', pw = 'Password', noverify = "True")
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def chassis(*args, **kwargs):
@@ -187,7 +192,7 @@ def chassis(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','status']
     
@@ -195,7 +200,7 @@ def chassis(*args, **kwargs):
         #print args[i]
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def fans(*args, **kwargs):
@@ -221,14 +226,14 @@ def fans(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def fanmuxes(*args, **kwargs):
@@ -254,14 +259,14 @@ def fanmuxes(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def nodes(*args, **kwargs):
@@ -288,14 +293,14 @@ def nodes(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis','status']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def switches(*args, **kwargs):
@@ -321,14 +326,14 @@ def switches(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis','ports','action']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def powersupplies(*args, **kwargs):
@@ -354,14 +359,14 @@ def powersupplies(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def scalablesystem(*args, **kwargs):
@@ -388,14 +393,14 @@ def scalablesystem(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','id','type','status']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def discover(*args, **kwargs):
@@ -426,14 +431,14 @@ def discover(*args, **kwargs):
         job_data = discover(con=con1,job=jobid)
             
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','ip','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def manage(*args, **kwargs):
@@ -474,14 +479,14 @@ def manage(*args, **kwargs):
         
         manage_data = manage(con=con1,job=jobid)
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','ip','user','pw','rpw','job','force']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def unmanage(*args, **kwargs):
@@ -516,14 +521,14 @@ def unmanage(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','ip','force','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def configpatterns(*args, **kwargs):
@@ -563,7 +568,7 @@ def configpatterns(*args, **kwargs):
 @example 
 
     '''    
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     # keylist = ['con','id', 'includeSettings', 'endpoint', 'restart', 'type']
     #
@@ -583,7 +588,7 @@ def configpatterns(*args, **kwargs):
         else:
             con = args[i]
 
-    out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -619,7 +624,7 @@ def configprofiles(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
     
@@ -627,7 +632,7 @@ def configprofiles(*args, **kwargs):
         kwargs[keylist[i]]= args[i]
 
     logger.info(" configprofiles got kwargs %s " % str(kwargs))
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def configtargets(*args, **kwargs):
@@ -662,14 +667,14 @@ def configtargets(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','id','force','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def updatepolicy(*args, **kwargs):
@@ -708,7 +713,7 @@ def updatepolicy(*args, **kwargs):
 @example
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
     
@@ -716,7 +721,7 @@ def updatepolicy(*args, **kwargs):
         kwargs[keylist[i]]= args[i]
 
     logger.info(" updatepolicy got kwargs %s " %str(kwargs))
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def updaterepo(*args, **kwargs):
@@ -760,14 +765,14 @@ def updaterepo(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def updatecomp(*args, **kwargs):
@@ -824,14 +829,14 @@ def updatecomp(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','query','mode','action','cmm','switch','server','storage']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 
@@ -857,14 +862,14 @@ def users(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','id']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def ffdc(*args, **kwargs):
@@ -890,14 +895,14 @@ def ffdc(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 
@@ -922,14 +927,14 @@ def log(*args, **kwargs):
 @example
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['lvl']
 
     for i in range(len(args)):
         kwargs[keylist[i]] = args[i]
 
-    ch = pyshell.handle_input_args(command_name, args=args, kwargs=kwargs)
+    ch = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def lxcalog(*args, **kwargs):
@@ -953,14 +958,14 @@ def lxcalog(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','filter']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def jobs(*args, **kwargs):
@@ -997,14 +1002,14 @@ def jobs(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','id','uuid','state','cancel','delete']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def manifests(*args, **kwargs):
@@ -1029,7 +1034,7 @@ def manifests(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     con = None
     param_dict = {}
     
@@ -1044,7 +1049,7 @@ def manifests(*args, **kwargs):
         else:
             con = args[i]
             
-    out_obj =  pyshell.handle_input_dict(command_name,con,param_dict)
+    out_obj =  shell_obj.handle_input_dict(command_name, con, param_dict)
     # return out_obj
     return True
 
@@ -1072,7 +1077,7 @@ def tasks(*args, **kwargs):
 @example
 
     '''
-    global pyshell
+    global shell_obj
     con = None
     param_dict = {}
 
@@ -1087,7 +1092,7 @@ def tasks(*args, **kwargs):
         else:
             con = args[i]
 
-    out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -1188,12 +1193,12 @@ def osimages(*args, **kwargs):
         osimages(fileName='foo')    : shows osimages for fileName='foo'
     '''
 
-    global pyshell
+    global shell_obj
     con = None
     param_dict = {}
     command_name = sys._getframe().f_code.co_name
 
     param_dict = (args, kwargs)
     # handle_input_dict only takes param_dict as input argument
-    ch = pyshell.handle_input_dict(command_name, con, param_dict)
+    ch = shell_obj.handle_input_dict(command_name, con, param_dict)
     return ch

@@ -44,11 +44,7 @@ class connect(InteractiveCommand):
             if '-h' in opt:
                 self.sprint (self.__doc__)
                 return                
-        
-        if not self.is_mand_opt_passed(opts):
-            self.invalid_input_err()
-            return
-        
+
         if not opts:
             self.handle_no_input()
             return

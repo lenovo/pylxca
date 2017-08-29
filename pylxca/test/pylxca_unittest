@@ -11,9 +11,7 @@ import os
 import signal
 
 try:
-    import pylxca
-    from pylxca.pylxca_cmd.lxca_pyshell import *
-    pyshell()
+    from pylxca import *
 except Exception as e:
     print "-" * 20
     print "Error:", e

@@ -9,18 +9,15 @@
 '''
 import sys
 try:
-    import pylxca
+    from pylxca import *
 except Exception as e:
     print "pyLXCA is not installed correctly"
     print "ERROR MSG ", str(e)
     sys.exit()
 
-from pylxca.pylxca_cmd.lxca_pyshell import *
-pyshell()
-
-ip      = 'https://10.243.12.111'
+ip      = 'https://10.240.29.217'
 user    = 'USERID'
-passwd  = 'CME44ibm'
+passwd  = 'Passw0rd'
 no_verify   = 'True'
 
 # create a connection object

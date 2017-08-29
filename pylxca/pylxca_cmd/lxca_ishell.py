@@ -92,13 +92,12 @@ class InteractiveShell(object):
 
                 if name == 'help':
                     continue
-                
-                # if isinstance(command,PyAPI ):
-                #     continue
-                
-                self.sprint('  %s   %s' % (name.ljust(cmdwidth),
+                try:
+                    self.sprint('  %s   %s' % (name.ljust(cmdwidth),
                                      command.get_short_desc( )))
-                
+                except:
+                    #For some commands there is no short desc so it will be skipped
+                    continue
 
         def get_short_desc(self):
             return ''
@@ -267,7 +266,7 @@ class InteractiveShell(object):
         self.sprint('-'*50)
         self.sprint(self.banner)
         self.sprint('Type "help" at any time for a list of commands.')
-        self.sprint('Type "pyshell" at any time to get interactive python shell')
+        self.sprint('Use "lxca_shell --api" to enable Interactive Python LXCA Shell ')
         self.sprint('-'*50)
         self.sprint('')
             
@@ -280,10 +279,8 @@ class InteractiveShell(object):
             except (KeyboardInterrupt, EOFError):
                 break
 
-            if self.handle_input(command_line) == PYTHON_SHELL:
-                return PYTHON_SHELL
-            else:
-                continue
+            self.handle_input(command_line)
+            continue
             
     def set_ostream_to_null(self):
         self.ostream = open(os.devnull, 'w')
