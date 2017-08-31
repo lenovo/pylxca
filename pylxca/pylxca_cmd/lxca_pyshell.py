@@ -59,6 +59,7 @@ def set_interactive():
           "tasks": tasks,
           "manifests": manifests,
           "osimages": osimages,
+          "resourcegroups": resourcegroups, 
           "help": help}
     ns.update()
     global __version__
@@ -570,14 +571,6 @@ def configpatterns(*args, **kwargs):
     '''    
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    # keylist = ['con','id', 'includeSettings', 'endpoint', 'restart', 'type']
-    #
-    # for i in range(len(args)):
-    #     kwargs[keylist[i]]= args[i]
-    #
-    # #ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
-    #
-    # return ch
     if len(args) < 1 or len(args) > 2:
         raise ValueError("Invalid Input Arguments")
 
@@ -1103,15 +1096,16 @@ def resourcegroups(*args, **kwargs):
     Use this function to Create, modify, delete or read resource group from Lenovo XClarity Administrator
     run this function as
 
-    data_dictionary = resourcegroups( conn_handle, input_args_dictionary{key,value} )
+    data_dictionary = resourcegroups( con_handle,uuid, name, desc, type, solutionVPD, members, criteria )
 
     Where KeyList is as follows
 
-        keylist = ['name','desc','type','solVPD','members','criteria']
+        keylist = ['uuid', 'name','description','type','solutionVPD','members','criteria']
 
 @param
     The parameters for this command are as follows
 
+        uuid=         UUID of already created Group 
         name=         Name of Resource Group
         desc=         Description of Resource Group
         type=         Type of Resource Group. <{"static", "dynamic", "solution"}>,
@@ -1125,28 +1119,55 @@ def resourcegroups(*args, **kwargs):
         "members": [ "uri","uri",....],
         "criteria":[]
 
-
 @example
 
     '''
-    # global pyshell
-    # con = None
-    # param_dict = {}
-    #
-    # command_name = sys._getframe().f_code.co_name
-    #
-    # if len(args) < 1 or len(args) > 2:
-    #     raise ValueError("Invalid Input Arguments")
-    #
-    # for i in range(len(args)):
-    #     if isinstance(args[i], dict):
-    #         param_dict = args[i]
-    #     else:
-    #         con = args[i]
-    #
-    # out_obj = pyshell.handle_input_dict(command_name, con, param_dict)
-    # return out_obj
-    return True
+    global shell_obj
+    con = None
+    arglist = list(args)
+    param_dict = {}
+
+    command_name = sys._getframe().f_code.co_name
+
+    keylist = ['con','uuid','name','description','type','solutionVPD','members','criteria']
+    optional_keylist = ['uuid','name','description','type','solutionVPD','members','criteria']
+    mutually_exclusive_keys = ['uuid', 'name']
+    mandatory_options_list = {'uuid':[],'name':['type']}
+
+    if len(args) == 0 and len(kwargs) == 0:
+        raise AttributeError("Invalid Input Arguments")
+
+    arglist = arglist[::-1]
+
+    for key in keylist:
+        if (key in kwargs.keys()):
+            param_dict[key] = kwargs[key]
+        elif len(arglist)>=1:
+            param_dict[key] = arglist.pop()
+        elif key not in optional_keylist:
+            raise ValueError("Invalid Input Arguments")
+        
+        if key == 'con':
+            con = param_dict.pop(key)
+      
+    if not con:
+        raise AttributeError("Invalid command invocation: Connection Object missing.")
+    
+    me_key_found = False
+    for me_key in param_dict.keys():
+        #Checking mandatory option_list presence
+        if me_key in mandatory_options_list.keys():
+            if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
+                raise AttributeError("Invalid command invocation")
+            
+        #Checking mutually exclusive key presense 
+        if me_key in mutually_exclusive_keys:
+            if me_key_found:
+                raise AttributeError("Invalid command invocation")
+            me_key_found = True
+            
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 
 def osimages(*args, **kwargs):

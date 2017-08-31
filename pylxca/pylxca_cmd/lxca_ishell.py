@@ -20,8 +20,6 @@ from pylxca.pylxca_cmd import lxca_icommands
 
 logger = logging.getLogger(__name__)
 
-PYTHON_SHELL = 99
-
 class InteractiveShell(object):
 
     class help(InteractiveCommand):
@@ -158,6 +156,7 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.tasks(self))
         self.add_command(lxca_cmd.manifests(self))
         self.add_command(lxca_cmd.osimages(self))
+        self.add_command(lxca_cmd.resourcegroups(self))
 
     def sprint(self,str):
         if self.ostream:
@@ -213,11 +212,8 @@ class InteractiveShell(object):
             return
 
         if not command_name in self.commands:
-            if (command_name == "pyshell"):
-                return PYTHON_SHELL
             self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
-            return
-        
+            return 
 
         command = self.commands[command_name]
 

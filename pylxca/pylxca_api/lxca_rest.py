@@ -999,6 +999,45 @@ class lxca_rest:
 
 #################
 
+    def get_set_resourcegroups(self, url, session, uuid, name, desc, type, solutionVPD, members, criteria):
+        url = url + '/resourceGroups'
+
+        try:
+            if uuid:
+                url = url + '/' + uuid 
+            elif name:
+                param_dict = dict()
+                param_dict['name'] = name
+                param_dict['description'] = desc
+                param_dict['type'] = type
+                
+                #Validate if correct Solution VPD is set
+                if  type == 'solution' and \
+                    isinstance(solutionVPD, dict) and \
+                    set(["id","machineType","model","serialNumber","manufacturer"]).issubset(set(solutionVPD.keys())):
+                    param_dict['solutionVPD'] = solutionVPD
+                else:
+                    raise ValueError("Invalid Argument SolutionVPD")    
+                
+                param_dict['members'] = members
+                param_dict['criteria'] = criteria
+            
+                payload = dict()
+                payload = param_dict
+                
+                resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+                resp.raise_for_status()
+                return resp
+             
+            # Default case for get operation   
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+        return resp
+    
+#################
+
     def get_osimage(self, *args, **kwargs):
         resp        = None
         baseurl     = kwargs['url']

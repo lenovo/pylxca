@@ -15,6 +15,7 @@ from pylxca.pylxca_api.lxca_connection import lxca_connection
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from  pylxca.pylxca_api.lxca_rest import lxca_rest
 from  pylxca.pylxca_api.lxca_rest import HTTPError
+from __builtin__ import isinstance
 
 logger = logging.getLogger(__name__)
 
@@ -65,13 +66,19 @@ class lxca_api ():
                           'tasks':self.get_set_tasks,
                           'manifests':self.get_set_manifests,
                           'osimages':self.get_set_osimage,
+                          'resourcegroups':self.get_set_resourcegroups
                         }
     
     def api( self, object_name, dict_handler = None, con = None ):
         
-        if con: self.con = con
-
+ 
         try:
+            if object_name  != "connect":
+                if con and isinstance(con,lxca_connection): 
+                    self.con = con
+                else:
+                    raise ConnectionError("Invalid Connection Object")
+
             return self.func_dict[object_name](dict_handler)
         except ConnectionError as re:
             logger.error("Connection Exception: Exception = %s", re)
@@ -786,3 +793,33 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         return py_obj
+
+
+    def get_set_resourcegroups(self, dict_handler = None):
+        '''
+    
+        '''
+        
+        uuid = name = desc = type = solutionVPD = members = criteria = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        # parsing dict_handler to fetch parameter    
+        if dict_handler:
+            uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
+            name = next((item for item in [dict_handler.get('n') , dict_handler.get('name')] if item is not None),None)
+            desc = next((item for item in [dict_handler.get('d') , dict_handler.get('description')] if item is not None),None)
+            type = next((item for item in [dict_handler.get('t') , dict_handler.get('type')] if item is not None),None)
+            solutionVPD = next((item for item in [dict_handler.get('s') , dict_handler.get('solutionVPD')] if item is not None),None)
+            members = next((item for item in [dict_handler.get('m') , dict_handler.get('members')] if item is not None),None)
+            criteria = next((item for item in [dict_handler.get('c') , dict_handler.get('criteria')] if item is not None),None)
+            
+        resp = lxca_rest().get_set_resourcegroups(self.con.get_url(),self.con.get_session(),uuid,name,desc,type,solutionVPD,members,criteria)
+        
+        try:
+            py_obj = json.loads(resp.text)
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+    
