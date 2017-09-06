@@ -73,6 +73,10 @@ class lxca_api ():
         
  
         try:
+            # If Any connection is establibshed
+            if con == None and self.con and isinstance(self.con,lxca_connection):
+                con = self.con
+                
             if object_name  != "connect":
                 if con and isinstance(con,lxca_connection): 
                     self.con = con
