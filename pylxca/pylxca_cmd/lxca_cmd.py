@@ -15,7 +15,6 @@ import pylxca.pylxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
-from pylxca.pylxca_cmd.lxca_icommands import PyAPI
 
 logger = logging.getLogger(__name__)
 
@@ -45,11 +44,7 @@ class connect(InteractiveCommand):
             if '-h' in opt:
                 self.sprint (self.__doc__)
                 return                
-        
-        if not self.is_mand_opt_passed(opts):
-            self.invalid_input_err()
-            return
-        
+
         if not opts:
             self.handle_no_input()
             return
@@ -426,8 +421,8 @@ class discover(InteractiveCommand):
         discover [-i <IP Address of endpoint>][-j <job ID>]
     
     OPTIONS:
-        -i, --ip    One or more IP addresses for each endpoint to be discovered.
-        -j, --job    Job ID of discover request
+        -i, --ip       One or more IP addresses for each endpoint to be discovered.
+        -j, --job      Job ID of discover request
     
 
     """
@@ -446,8 +441,7 @@ class manage(InteractiveCommand):
         manage  -h | --help
         manage  -i <IP Address of endpoint> -u <user ID to access the endpoint>
                 -p <current password to access the endpoint> [-r <recovery password for the endpoint>]
-                [-m <list of endpoint management ports>] [-t <type of endpoint to be managed>]
-                [-e <UUID of endpoint to be managed>] [-f <Force Manage (True/False)>]
+                [-f <Force Manage (True/False)>]
         manage  -j <job ID> [-v <view filter name>]
 
     OPTIONS:
@@ -455,23 +449,9 @@ class manage(InteractiveCommand):
         -u, --user      user ID to access the endpoint
         -p, --pw        The current password to access the endpoint.
         -r, --rpw       The recovery password to be used for the endpoint.
-        -m, --mp        A list of endpoint management ports, it is a comma separated list of
-                        management port information. Each management port includes protocol, port number and
-                        boolean flag of whether the port enabled (True/False) respectively. These properties
-                        should be separate by semicolon. See the discovery request job response
-                        body for the supported protocols for the endpoint's management ports.
-        -t, --type      Type of endpoint to be managed. This can be one of the following values:
-                                Chassis
-                                ThinkServer
-                                Storage
-                                Rackswitch
-                                Rack-Tower
-        -e, --epuuid    UUID of endpoint to be managed
         -j, --job       Job ID of existing manage request
         -f, --force     Force Manage Boolean flag
         -v, --view      view filter name
-
-        mp, type and epuuid parameters are depreciated and only kept for backward compatibility.
     """
     def handle_output(self, out_obj):
         if out_obj == None:
@@ -486,7 +466,7 @@ class unmanage(InteractiveCommand):
 
     USAGE:
         unmanage -h | --help
-        unmanage -e <list of endpoints to unmanage> [--force]
+        unmanage -i <endpoint information> [--force]
         unmanage -j <job ID> [-v <view filter name>]
     
     OPTIONS:
@@ -500,9 +480,9 @@ class unmanage(InteractiveCommand):
                     Storage
                     Rackswitch
                     Rack-Tower
-        -f, --force        Indicates whether to force the unmanagement of an endpoint (True/False)
-        -j, --job    Job ID of unmanage request
-        -v, --view    view filter name
+        -f, --force     Indicates whether to force the unmanagement of an endpoint (True/False)
+        -j, --job       Job ID of unmanage request
+        -v, --view      View filter name
 
     """
     def handle_output(self, out_obj):
@@ -562,24 +542,27 @@ class updatepolicy(InteractiveCommand):
     
     USAGE:
         updatepolicy [-v <view filter name>]
-        updatepolicy -p <Compliance policy to be assigned to device>
+        updatepolicy -p <Compliance policy to be assigned to device> -u <UUID of Device> -t <Device Type>
+        updatepolicy -j <Job Id of assign policy operation>
         updatepolicy -i <Information type of compliance policy to be retreived>
     
     OPTIONS:
-        -p, --policy    This is comma separated list of compliance policies. Each policy information
-                should contain policyname, type and UUID of device separated by semicolon where -
-                    Policyname = Name of the compliance-policy to be assigned to device
-                    Type = The device type. This can be one of the following values.
-                        CMM - Chassis Management Module
-                        IOSwitch - Flex switch
-                        RACKSWITCH - RackSwitch switch
-                        STORAGE - Lenovo Storage system
-                        xITE - Compute node or rack server
-                    UUID = UUID of the device to which you want to assign the compliance policy
-        -i, --info    Specifies the type of information to return. This can be one of the following values:
-                    FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
-                    RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
-        -v, --view    View filter name
+        -p, --policy    Name of the compliance-policy to be assigned to device
+        -u, --UUID      UUID of the device to which you want to assign the compliance policy
+        -t, --type      Type = The device type. This can be one of the following values.
+                            CMM - Chassis Management Module
+                            IOSwitch - Flex switch
+                            RACKSWITCH - RackSwitch switch
+                            STORAGE - Lenovo Storage system
+                            SERVER - Compute node or rack server
+
+        -j, --job       Job ID of assign compliance policy operation
+
+        -i, --info      Specifies the type of information to return. This can be one of the following values:
+                            FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
+                            RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
+
+        -v, --view      View filter name
 
     """
 ###############################################################################
@@ -589,17 +572,30 @@ class updaterepo(InteractiveCommand):
 
     USAGE:
         updaterepo -k <Key to return the specified type of update> [-v <view filter name>]
-    
+        updaterepo -a <action to take> [-v <view filter name>]
     OPTIONS:
-        -k, --key    Returns the specified type of update. This can be one of the following values.
-                    supportedMts - Returns a list of supported machine types
-                    size - Returns the repository size
-                    lastRefreshed - Returns the timestamp of the last repository refresh
-                    importDir - Returns the import directory for the repository.
-                    publicKeys - Returns the supported signed keys
-                    updates - Returns information about all firmware updates
-                    updatesByMt - Returns information about firmware updates for the specified machine type
-                    updatesByMtByComp - Returns the update component names for the specified machine type
+        -k, --key       Returns the specified type of update. This can be one of the following values.
+                        supportedMts - Returns a list of supported machine types
+                        size - Returns the repository size
+                        lastRefreshed - Returns the timestamp of the last repository refresh
+                        importDir - Returns the import directory for the repository.
+                        publicKeys - Returns the supported signed keys
+                        updates - Returns information about all firmware updates
+                        updatesByMt - Returns information about firmware updates for the specified machine type
+                        updatesByMtByComp - Returns the update component names for the specified machine type
+        -a  --action    The action to take. This can be one of the following values.
+                        read - Reloads the repository files. The clears the update information in cache and reads the update file again from the repository.
+                        refresh - Retrieves information about the latest available firmware updates from the Lenovo Support website,
+                            and stores the information to the firmware-updates repository.
+                        acquire - Downloads the specified firmware updates from Lenovo Support website, and stores the updates to the firmware-updates repository.
+                        delete - Deletes the specified firmware updates from the firmware-updates repository.
+                        export.not supported
+
+        -m  --mt        comma separated machine types
+        -s  --scope     scope of operation [ all/latest] for refresh and [ payloads ] for acquire
+        -f  --fixids    comma separated fixids
+        -t  --type      filetype [ all/payloads ]
+
         -v, --view    View filter name
 
     """
@@ -614,35 +610,35 @@ class updatecomp(InteractiveCommand):
         updatecomp  -a power [-c <cmms UUID and desired state>] [-w <switches UUID and desired state>]  [-s <servers UUID and desired state>]
     
     OPTIONS:
-        -q, --query    The data to return. This can be one of the following values.
-                components - Returns a list of endpoints and components that can be updated.
-                status - Returns the status and progress of firmware updates. This is the default value
-        -m, --mode    Indicates when to activate the update. This can be one of the following values.
-                immediate - Uses Immediate Activation mode when applying firmware updates to the selected endpoints.
-                delayed - Uses Delayed Activation mode when applying firmware updates to the selected endpoints.
+        -q, --query     The data to return. This can be one of the following values.
+                            components - Returns a list of endpoints and components that can be updated.
+                            status - Returns the status and progress of firmware updates. This is the default value
+        -m, --mode      Indicates when to activate the update. This can be one of the following values.
+                            immediate - Uses Immediate Activation mode when applying firmware updates to the selected endpoints.
+                            delayed - Uses Delayed Activation mode when applying firmware updates to the selected endpoints.
         -a, --action    The action to take. This can be one of the following values.
-                apply - Applies the associated firmware to the submitted components.
-                power - Perform power action on selected endpoint.
-                cancelApply - Cancels the firmware update request to the selected components.
-        -c, --cmm    cmms information
+                            apply - Applies the associated firmware to the submitted components.
+                            power - Perform power action on selected endpoint.
+                            cancelApply - Cancels the firmware update request to the selected components.
+        -c, --cmm       cmms information
         -w, --switch    switch information
         -s, --server    servers information
-        -t, --storage    storages information
+        -t, --storage   storages information
     
-                For action = apply/cancelApply, Each of the endpoint information should contain following data separated by comma
-                    UUID - UUID of the device
-                    Fixid - Firmware-update ID of the target package to be applied to the component.
-                    Component - Component name
-    
-                For action = power, Each of the endpoint information should contain following data separated by comma
-                    UUID - UUID of the device
-                    powerState - One of the power state values. Possible values per device type are
-                        Server: powerOn, powerOff, powerCycleSoft, powerCycleSoftGraceful, powerOffHardGraceful
-                        Switch: powerOn, powerOff, powerCycleSoft
-                        CMM: reset
-                        Storage:powerOff,powerCycleSoft
-    
-        -v, --view    View filter name
+            For action = apply/cancelApply, Device information should contain following data separated by comma
+                UUID - UUID of the device
+                Fixid - Firmware-update ID of the target package to be applied to the component. If not provided assigned policy would be used.
+                Component - Component name
+
+            For action = power, Device information should contain following data separated by comma
+                UUID - UUID of the device
+                powerState - One of the power state values. Possible values per device type are
+                    Server: powerOn, powerOff, powerCycleSoft, powerCycleSoftGraceful, powerOffHardGraceful
+                    Switch: powerOn, powerOff, powerCycleSoft
+                    CMM: reset
+                    Storage:powerOff,powerCycleSoft
+
+        -v, --view      View filter name
 
     """
 
@@ -662,6 +658,7 @@ class configtargets(InteractiveCommand):
     
     """
 ###############################################################################
+
 
 class configpatterns(InteractiveCommand):
     """
@@ -693,15 +690,62 @@ class configprofiles(InteractiveCommand):
 
     USAGE:
         configprofiles [-i <ID of specific profile>] [-v <view filter name>]
-    
+        configprofiles -i <ID of specific profile> -n <New profile name>
+        configprofiles -i <ID of specific profile> -e <UUID or location ID>  -r <restart option> [-v <view filter name>]
+        configprofiles -i <ID of specific profile>  -d <boolean>   [-v <view filter name>]
+        configprofiles -i <ID of specific profile>  -u <boolean> -p <boolean> --resetimm <boolean> -f <boolean> [-v <view filter name>]
+
     OPTIONS:
         -i, --id    The unique ID that was assigned when the server pattern was created
+               id          The unique ID that was assigned when the server profile was created
+        -n, --name        profile name
+        -e,  --endpoint    endpoint  UUID of the server or location id for flex system
+        -r,  --restart     restart server to activate profile ( immediate / defer )
+        -d,  --delete      True for delete id
+        -u   --unassign    unassign specified id
+        -p   --powerdown   powerdown server [true/false]
+             --resetimm    reset IMM [true/false]
+        -f   --force       force profile deactivation [true/false]
         -v, --view    View filter name
 
     """
 ###############################################################################
 
-class manifests(PyAPI):
+class manifests(InteractiveCommand):
     """
     Send solution manifest to and retreive manifests from Lenovo XClarity Administrator.
+    """
+
+###############################################################################
+
+class tasks(InteractiveCommand):
+    """
+    Retrieve tasks List and tasks Information
+
+    USAGE:
+        tasks -h
+        tasks [-u <JOB UUID>]  [-v <view filter name>]
+
+    OPTIONS:
+    -h            This option displays command usage information
+        -u, --uuid    Job uuids
+        -v, --view    view filter name
+
+    """
+
+###############################################################################
+
+
+class resourcegroups(InteractiveCommand):
+    """
+    create Group of Resources
+    """
+
+###############################################################################
+
+
+
+class osimages(InteractiveCommand):
+    """
+    OSImages/Deployment on LXCA
     """

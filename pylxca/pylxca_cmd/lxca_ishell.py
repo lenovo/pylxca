@@ -14,14 +14,11 @@ import logging
 
 from pylxca.pylxca_cmd import lxca_cmd
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
-from pylxca.pylxca_cmd.lxca_icommands import PyAPI
 from lxca_view import lxca_ostream
 from pylxca.pylxca_cmd import lxca_icommands
 #from rlcompleter import readline
 
 logger = logging.getLogger(__name__)
-
-PYTHON_SHELL = 99
 
 class InteractiveShell(object):
 
@@ -93,13 +90,12 @@ class InteractiveShell(object):
 
                 if name == 'help':
                     continue
-                
-                if isinstance(command,PyAPI ):
-                    continue
-                
-                self.sprint('  %s   %s' % (name.ljust(cmdwidth),
+                try:
+                    self.sprint('  %s   %s' % (name.ljust(cmdwidth),
                                      command.get_short_desc( )))
-                
+                except:
+                    #For some commands there is no short desc so it will be skipped
+                    continue
 
         def get_short_desc(self):
             return ''
@@ -157,7 +153,10 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.updatepolicy(self))
         self.add_command(lxca_cmd.updatecomp(self))
         self.add_command(lxca_cmd.updaterepo(self))
+        self.add_command(lxca_cmd.tasks(self))
         self.add_command(lxca_cmd.manifests(self))
+        self.add_command(lxca_cmd.osimages(self))
+        self.add_command(lxca_cmd.resourcegroups(self))
 
     def sprint(self,str):
         if self.ostream:
@@ -213,11 +212,8 @@ class InteractiveShell(object):
             return
 
         if not command_name in self.commands:
-            if (command_name == "pyshell"):
-                return PYTHON_SHELL
             self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
-            return
-        
+            return 
 
         command = self.commands[command_name]
 
@@ -226,6 +222,7 @@ class InteractiveShell(object):
 
         # Split the input to allow for quotes option values
         re_args = re.findall('\-\-\S+\=\"[^\"]*\"|\S+', command_args)
+        #re_args = re.findall('\-\-\S+|\-\S+|\S+[\s*\w+]*', command_args)
         # Parse args if present
         for i in xrange(0, len(re_args)):
             args.append( re_args[i] )
@@ -265,7 +262,7 @@ class InteractiveShell(object):
         self.sprint('-'*50)
         self.sprint(self.banner)
         self.sprint('Type "help" at any time for a list of commands.')
-        self.sprint('Type "pyshell" at any time to get interactive python shell')
+        self.sprint('Use "lxca_shell --api" to enable Interactive Python LXCA Shell ')
         self.sprint('-'*50)
         self.sprint('')
             
@@ -278,10 +275,8 @@ class InteractiveShell(object):
             except (KeyboardInterrupt, EOFError):
                 break
 
-            if self.handle_input(command_line) == PYTHON_SHELL:
-                return PYTHON_SHELL
-            else:
-                continue
+            self.handle_input(command_line)
+            continue
             
     def set_ostream_to_null(self):
         self.ostream = open(os.devnull, 'w')
@@ -299,7 +294,8 @@ class InteractiveShell(object):
         command = self.commands[command_name]
         
         try:
-            return command.handle_command(param_dict,con)
+            #return command.handle_command(param_dict,con)
+            return command.handle_input(param_dict, con)
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err

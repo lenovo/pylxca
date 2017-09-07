@@ -15,6 +15,7 @@ from pylxca.pylxca_api.lxca_connection import lxca_connection
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from  pylxca.pylxca_api.lxca_rest import lxca_rest
 from  pylxca.pylxca_api.lxca_rest import HTTPError
+from __builtin__ import isinstance
 
 logger = logging.getLogger(__name__)
 
@@ -62,14 +63,26 @@ class lxca_api ():
                           'ffdc':self.get_ffdc,
                           'jobs':self.get_jobs,
                           'lxcalog':self.get_lxcalog,
-                          'manifests':self.get_set_manifests
+                          'tasks':self.get_set_tasks,
+                          'manifests':self.get_set_manifests,
+                          'osimages':self.get_set_osimage,
+                          'resourcegroups':self.get_set_resourcegroups
                         }
     
     def api( self, object_name, dict_handler = None, con = None ):
         
-        if con: self.con = con
-
+ 
         try:
+            # If Any connection is establibshed
+            if con == None and self.con and isinstance(self.con,lxca_connection):
+                con = self.con
+                
+            if object_name  != "connect":
+                if con and isinstance(con,lxca_connection): 
+                    self.con = con
+                else:
+                    raise ConnectionError("Invalid Connection Object")
+
             return self.func_dict[object_name](dict_handler)
         except ConnectionError as re:
             logger.error("Connection Exception: Exception = %s", re)
@@ -292,17 +305,15 @@ class lxca_api ():
     def get_scalablesystem( self, dict_handler = None ):
         complexid = None
         complextype = None
-        status = None
-        
+
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
             complexid = next((item for item in [dict_handler.get('i') , dict_handler.get('id')] if item is not None),None)
             complextype = next((item for item in [dict_handler.get('t') , dict_handler.get('type')] if item is not None),None)
-            status = next((item for item in [dict_handler.get('s') , dict_handler.get('status')] if item is not None),None)
-            
-        resp = lxca_rest().get_scalablesystem(self.con.get_url(),self.con.get_session(),complexid,complextype,status)
+
+        resp = lxca_rest().get_scalablesystem(self.con.get_url(),self.con.get_session(),complexid,complextype)
         py_obj = json.loads(resp.text)
         return py_obj
 
@@ -344,13 +355,10 @@ class lxca_api ():
             user = next((item for item in [dict_handler.get  ('u') , dict_handler.get('user')] if item is not None),None)
             pw = next((item for item in [dict_handler.get  ('p') , dict_handler.get('pw')] if item is not None),None)
             rpw = next((item for item in [dict_handler.get  ('r') , dict_handler.get('rpw')] if item is not None),None)
-            mp = next((item for item in [dict_handler.get  ('m') , dict_handler.get('mp')] if item is not None),None)
-            type = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
-            uuid = next((item for item in [dict_handler.get  ('e') , dict_handler.get('epuuid')] if item is not None),None)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
             force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),None)
         
-        resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,pw,rpw,mp,type,uuid,force,jobid)
+        resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,pw,rpw,force,jobid)
         
         try:
             py_obj = json.loads(resp.text)
@@ -368,7 +376,7 @@ class lxca_api ():
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            endpoints = next((item for item in [dict_handler.get  ('e') , dict_handler.get('ep')] if item is not None),None)
+            endpoints = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
             force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),False)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
             
@@ -394,52 +402,92 @@ class lxca_api ():
         try:
             py_obj = json.loads(resp.text)
             return py_obj
-        
+
         except AttributeError,ValueError:
             return resp
 
     def do_configpatterns( self, dict_handler = None ):
         patternid = None
+        includeSettings = None
         endpoint = None
         restart = None
         etype = None
+        pattern_update_dict = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
 
         if dict_handler:
             patternid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+            includeSettings = next((item for item in [dict_handler.get('includeSettings')] if item is not None),None)
             endpoint = next((item for item in [dict_handler.get  ('e') , dict_handler.get('endpoint')] if item is not None),None)
             restart = next((item for item in [dict_handler.get  ('r') , dict_handler.get('restart')] if item is not None),None)
             etype = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
+            pattern_update_dict = next((item for item in [dict_handler.get('pattern_update_dict')] if item is not None), None)
 
-        resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid,endpoint,restart,etype)
+        resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid, includeSettings, endpoint, restart, etype, pattern_update_dict)
 
         try:
-            if endpoint:
-                return resp
-            else:
-                py_obj = json.loads(resp.text)
-                return py_obj
+            # if endpoint:
+            #     return resp
+            # else:
+            py_obj = json.loads(resp.text)
+            return py_obj
         
         except AttributeError,ValueError:
             return resp
     
     def get_configprofiles( self, dict_handler = None ):
         profileid = None
+        profilename = None
+        endpoint = None
+        restart = None
+        delete = None
+        unassign = None
+        powerdown = None
+        resetimm = None
+        force = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
 
         if dict_handler:
             profileid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+            profilename = next((item for item in [dict_handler.get('n'), dict_handler.get('name')] if item is not None),
+                             None)
+            endpoint = next(
+                (item for item in [dict_handler.get('e'), dict_handler.get('endpoint')] if item is not None), None)
+            restart = next((item for item in [dict_handler.get('r'), dict_handler.get('restart')] if item is not None),
+                           None)
+            delete = next((item for item in [dict_handler.get('d'), dict_handler.get('delete')] if item is not None),
+                           None)
+            unassign = next((item for item in [dict_handler.get('u'), dict_handler.get('unassign')] if item is not None),
+                          None)
+            powerdown = next((item for item in [dict_handler.get('p'), dict_handler.get('powerdown')] if item is not None),
+                None)
+            resetimm = next(
+                (item for item in [dict_handler.get('resetimm')] if item is not None),
+                None)
+            force = next((item for item in [dict_handler.get('f'), dict_handler.get('force')] if item is not None),
+                         None)
 
-        resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
+        if profilename:
+            resp = lxca_rest().put_configprofiles(self.con.get_url(), self.con.get_session(), profileid, profilename)
+        elif endpoint and restart:
+            resp = lxca_rest().post_configprofiles(self.con.get_url(), self.con.get_session(), profileid, endpoint, restart)
+        elif profileid and delete and delete.lower() == 'true':
+                resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
+        elif profileid and unassign and unassign.lower() == 'true':
+                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, force)
+        else:
+            resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 
         try:
-            py_obj = json.loads(resp.text)
-            return py_obj
-        
+            if len(resp.text):
+                py_obj = json.loads(resp.text)
+                return py_obj
+            elif resp.status_code == 204:   # Its success for rename of profile with empty text
+                return { 'ID':profileid, 'name':profilename}
         except AttributeError,ValueError:
             return resp
     
@@ -473,9 +521,9 @@ class lxca_api ():
             return py_obj
         except AttributeError,ValueError:
             return resp
-        
-                    
-                    
+
+
+
     def get_users( self, dict_handler = None ):
         userid = None
         
@@ -537,16 +585,26 @@ class lxca_api ():
     def do_updatepolicy( self, dict_handler = None ):
         info = None
         policy = None
-        
+        jobid= None
+
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+
         if dict_handler:
-            policy = next((item for item in [dict_handler.get  ('p') , dict_handler.get('policy')] if item is not None),None)
-            info = next((item for item in [dict_handler.get  ('i') , dict_handler.get('info')] if item is not None),None)
-            
-        resp = lxca_rest().get_updatepolicy(self.con.get_url(),self.con.get_session(),policy,info)
-        
+            policy = next((item for item in [dict_handler.get('p'), dict_handler.get('policy')] if item is not None),
+                          None)
+            info = next((item for item in [dict_handler.get('i'), dict_handler.get('info')] if item is not None), None)
+            uuid = next((item for item in [dict_handler.get('u'), dict_handler.get('uuid')] if item is not None), None)
+            jobid = next((item for item in [dict_handler.get('j'), dict_handler.get('jobid')] if item is not None),
+                         None)
+            type = next((item for item in [dict_handler.get('t'), dict_handler.get('type')] if item is not None),
+                         None)
+
+        if policy:
+            resp = lxca_rest().post_updatepolicy(self.con.get_url(), self.con.get_session(), policy, type, uuid)
+        else:
+            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, jobid)
+
         try:
             py_obj = json.loads(resp.text)
             if info == "RESULTS":
@@ -557,15 +615,30 @@ class lxca_api ():
 
     def get_updaterepo( self, dict_handler = None ):
         key = None
+        action = None
+        mt = None
+        scope = None
+        fixids = None
+        type = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            key = next((item for item in [dict_handler.get  ('k') , dict_handler.get('key')] if item is not None),None)
-                        
-        resp = lxca_rest().get_updaterepo(self.con.get_url(),self.con.get_session(),key)
-        
+            key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
+            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None), None)
+            mt = next((item for item in [dict_handler.get('m'), dict_handler.get('mt')] if item is not None), None)
+            scope = next((item for item in [dict_handler.get('s'), dict_handler.get('scope')] if item is not None), None)
+            fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None), None)
+            type = next((item for item in [dict_handler.get('t'), dict_handler.get('type')] if item is not None), None)
+
+        if key:
+            resp = lxca_rest().get_updaterepo(self.con.get_url(),self.con.get_session(), key, mt, scope)
+        elif action:
+            resp = lxca_rest().put_updaterepo(self.con.get_url(), self.con.get_session(), action, fixids, mt, type, scope)
+        else:
+            raise Exception("Invalid argument")
+
         try:
             py_obj = json.loads(resp.text)
         except AttributeError,ValueError:
@@ -602,7 +675,41 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         return py_obj
-    
+
+    def get_set_tasks(self, dict_handler=None):
+        job_uuid = None
+        includeChildren = False
+        action = None
+        status = None
+
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            job_uuid = next((item for item in [ dict_handler.get('jobUID')] if item is not None), None)
+            includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "false")
+            if includeChildren != "false":
+                includeChildren = 'true'
+            action = next((item for item in [dict_handler.get('action')] if item is not None), None)
+            updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
+            #state = next((item for item in [dict_handler.get('state')] if item is not None), None)
+
+        if job_uuid and action in ['cancel', 'delete']:
+            resp = lxca_rest().put_tasks(self.con.get_url(), self.con.get_session(), job_uuid, action)
+            py_obj = resp.status_code
+        elif action in ['update']:
+            resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)
+            py_obj = resp.status_code
+        elif job_uuid:
+            resp = lxca_rest().get_tasks_list(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
+            py_obj = json.loads(resp.text)
+            py_obj = {'TaskList': py_obj[:]}
+        else:
+            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session())
+            py_obj = json.loads(resp.text)
+            py_obj = {'TaskList': py_obj[:]}
+        return py_obj
+
     def get_set_manifests( self, dict_handler = None ):
         sol_id = None
         filepath = None
@@ -622,3 +729,99 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         return py_obj
+
+
+
+    def get_set_osimage(self, dict_handler = None):
+        '''
+        Reference URL: http://10.240.61.40:8131/help/topic/com.lenovo.lxca_restapis_all.doc/rest_apis_os_deployment_resources.html?cp=0_4_5
+        commands construction:
+        - osimages() 									<< GET  command   ::DONE
+        - osimages(imageType=<DUD,BOOT,OS,OSPROFILE>)  	<< POST command   ::DONE
+        - osimages(fileName=<>) 						<< GET  command   ::DONE
+        - osimages(id=<>)								<< GET  command   ::DONE
+        - osimages(id=<>, **kwargs)     				<< PUT/POST/DELETE command  :: DONE [TODO: its a complex post args]
+        - osimages(jobid = <>)							<< POST command    ::DONE
+
+        - osimages(remoteFileServer)					<< GET  command    ::DONE
+        - osimages(remoteFileServer, **kwargs)			<< POST command    ::DONE
+        - osimages(remoteFileServer, getId=<>)			<< GET  command    ::DONE
+        - osimages(remoteFileServer, putId/deleteId=<>, **kwargs)	<< PUT/DELETE command  DONE
+
+        - osimages(hostplatforms)						<< GET  command    ::DONE
+        - osimages(hostplatforms, **kwargs)				<< PUT  command    ::DONE [TODO: jsonify complex args]
+
+        - osimages(osdeployment)						<< PUT  command   :: DONE
+        - osimages(osdeployment, **kwargs)				<< POST command   :: DONE [TODO: jsonify complex args]
+        - osimages(connection)                          << GET  command   :: DONE
+        - osimages(globalSettings)                      << GET  command   :: DONE
+        - osimages(globalSettings, **kwargs)            << PUT  command   :: DONE
+
+        '''
+        get_method  = True
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+        # parsing dict_handler to fetch args, kwargs
+        args = dict_handler[0]
+        kwargs = dict_handler[-1]
+
+        putmethod_keylist = ['imageType','jobId', 'putid', 'deleteid']
+        for key in kwargs.keys():
+            if key in putmethod_keylist:
+                get_method = False
+                break
+        # parsing args for putId,postId,deleteId: refer osImages/<id>
+        if 'postid' in args or 'putid' in args or 'deleteid' in args:
+            get_method = False
+        if 'remoteFileServers' in args and kwargs:
+            get_method = False
+            if kwargs.has_key('id') and kwargs.keys().__len__() == 1:
+                get_method = True
+        if 'hostPlatforms' in args and kwargs:
+            get_method = False
+        if 'globalSettings' in args and kwargs:
+            get_method = False
+        if 'osdeployment' in args:
+            get_method = False
+
+        if get_method:
+            # get methods calls refer above docstring
+            resp = lxca_rest().get_osimage(*args, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
+        else:
+            resp = lxca_rest().set_osimage(*args, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
+        try:
+            py_obj = json.loads(resp._content)
+            return py_obj
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+
+
+    def get_set_resourcegroups(self, dict_handler = None):
+        '''
+    
+        '''
+        
+        uuid = name = desc = type = solutionVPD = members = criteria = None
+        
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        # parsing dict_handler to fetch parameter    
+        if dict_handler:
+            uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
+            name = next((item for item in [dict_handler.get('n') , dict_handler.get('name')] if item is not None),None)
+            desc = next((item for item in [dict_handler.get('d') , dict_handler.get('description')] if item is not None),None)
+            type = next((item for item in [dict_handler.get('t') , dict_handler.get('type')] if item is not None),None)
+            solutionVPD = next((item for item in [dict_handler.get('s') , dict_handler.get('solutionVPD')] if item is not None),None)
+            members = next((item for item in [dict_handler.get('m') , dict_handler.get('members')] if item is not None),None)
+            criteria = next((item for item in [dict_handler.get('c') , dict_handler.get('criteria')] if item is not None),None)
+            
+        resp = lxca_rest().get_set_resourcegroups(self.con.get_url(),self.con.get_session(),uuid,name,desc,type,solutionVPD,members,criteria)
+        
+        try:
+            py_obj = json.loads(resp.text)
+        except AttributeError,ValueError:
+            return resp
+        return py_obj
+    

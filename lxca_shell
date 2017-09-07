@@ -12,19 +12,21 @@
 import os, time, code
 import signal, time, sys
 
-from pylxca.pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
-from pylxca.pylxca_cmd.lxca_ishell import PYTHON_SHELL
-from pylxca.pylxca_cmd.lxca_pyshell import pyshell
+from pylxca import __version__
+from pylxca.pylxca_cmd import lxca_ishell
+from pylxca.pylxca_cmd.lxca_pyshell import *
 
 class Application(object):
     def __init__(self): 
         self.client = None
 
-    def run(self):
-        global shell
-        shell = lxca_ishell.InteractiveShell(banner="Welcome to PyLXCA Shell v2.0", prompt="PyLXCA >> ")
-        if shell.run() == PYTHON_SHELL:
-            pyshell(shell=shell, interactive=True) 
+    def run(self,api_mode):
+        if api_mode and "api" in api_mode :
+            set_interactive()
+        else:
+            global __version__
+            shell = lxca_ishell.InteractiveShell(banner="Welcome to LXCA Command Shell v" + __version__ , prompt="PyLXCA >> ")
+            shell.run()
 
 def handle_ctrl_c(signum, frame):
     # restore the original signal handler as otherwise evil things will happen
@@ -37,8 +39,13 @@ def handle_ctrl_c(signum, frame):
 
 
 def main():
+    
+    api_mode = None
+    if len(sys.argv) > 1:
+        api_mode = sys.argv[1]
+    
     app = Application()
-    app.run()
+    app.run(api_mode)
 
 
 if __name__ == "__main__":

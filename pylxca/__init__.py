@@ -9,6 +9,7 @@ __version__ = '2.0.0'
 # These are explicitly safe for 'import *'
 from pylxca_api import *
 from pylxca_cmd import *
+from pylxca.pylxca_cmd.lxca_pyshell import *
 
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
@@ -24,4 +25,4 @@ logging.getLogger(__name__).addHandler(NullHandler())
 #Configure Logger
 import logging.config
 pylxca.pylxca_api.lxca_rest().set_log_config()
-
+pyshell()

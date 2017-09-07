@@ -9,53 +9,62 @@
 
 import os, time,code
 import signal, logging, sys
+import traceback
 
+from pylxca import __version__
 from pylxca.pylxca_cmd import lxca_ishell
-from lxca_ishell import PYTHON_SHELL
 from pylxca.pylxca_cmd.lxca_cmd import fanmuxes
 from __builtin__ import ValueError
 
 #shell is a global variable
-pyshell = None
+shell_obj = None
 logger = logging.getLogger(__name__)
 
-def pyshell(shell=lxca_ishell.InteractiveShell(),interactive=False):
+
+def pyshell(shell=lxca_ishell.InteractiveShell()):
     '''
-    @summary: this method provides scriptable interactive python shell 
+    @summary: this method provides scriptable python shell
     '''
-    global pyshell
-    pyshell = shell
-    pyshell.set_ostream_to_null()
-    if interactive:
-        ns = {"connect": connect,
-              "disconnect": disconnect,
-              "chassis":chassis,
-              "cmms":cmms,
-              "fans":fans,
-              "fanmuxes":fanmuxes,
-              "switches":switches, 
-              "powersupplies":powersupplies,
-              "nodes":nodes, 
-              "scalablesystem":scalablesystem,
-              "discover":discover,
-              "manage":manage,
-              "unmanage":unmanage,
-              "jobs":jobs, 
-              "users":users,
-              "lxcalog":lxcalog,
-              "ffdc":ffdc,
-              "updatecomp":updatecomp,
-              "updatepolicy":updatepolicy,
-              "updaterepo":updaterepo,
-              "configpatterns":configpatterns,
-              "configprofiles":configprofiles,
-              "configtargets":configtargets,
-              "manifests":manifests,
-              "help": help}
-        ns.update()
-        sys.ps1 = "pyshell >> "
-        sys.ps2 = " ... "
-        code.interact('You are in Interactive Python Shell for Lenovo XClarity Administrator.', local = ns)
+    global shell_obj
+    shell_obj = shell
+    shell_obj.set_ostream_to_null()
+
+def set_interactive():
+    '''
+    @summary: This method set the shell in interactive mode
+    '''
+    ns = {"connect": connect,
+          "disconnect": disconnect,
+          "chassis": chassis,
+          "cmms": cmms,
+          "fans": fans,
+          "fanmuxes": fanmuxes,
+          "switches": switches,
+          "powersupplies": powersupplies,
+          "nodes": nodes,
+          "scalablesystem": scalablesystem,
+          "discover": discover,
+          "manage": manage,
+          "unmanage": unmanage,
+          "jobs": jobs,
+          "users": users,
+          "lxcalog": lxcalog,
+          "ffdc": ffdc,
+          "updatecomp": updatecomp,
+          "updatepolicy": updatepolicy,
+          "updaterepo": updaterepo,
+          "configpatterns": configpatterns,
+          "configprofiles": configprofiles,
+          "configtargets": configtargets,
+          "tasks": tasks,
+          "manifests": manifests,
+          "osimages": osimages,
+          "resourcegroups": resourcegroups, 
+          "help": help}
+    ns.update()
+    global __version__
+    code.interact('Interactive Python Shell for Lenovo XClarity Administrator v' + __version__ + '\nType "dir()" or "help(lxca command object)" for more information.', local=ns)
+
 
 def connect(*args, **kwargs):
 
@@ -83,7 +92,7 @@ def connect(*args, **kwargs):
 @example 
     con1 = connect( con = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['url','user','pw','noverify']
     if len(args) == 0 and len(kwargs) == 0:
@@ -92,7 +101,7 @@ def connect(*args, **kwargs):
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    con = pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    con = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     
     return con 
 def disconnect(*args, **kwargs):
@@ -113,7 +122,7 @@ def disconnect(*args, **kwargs):
     disconnect()
     '''
 
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con']
     if len(args) == 0 and len(kwargs) == 0:
@@ -123,7 +132,7 @@ def disconnect(*args, **kwargs):
         #print args[i]
         kwargs[keylist[i]]= args[i]
     
-    con = pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    con = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     
     return con 
 
@@ -150,14 +159,14 @@ def cmms(*args, **kwargs):
 @example 
     cmm_list = cmms( con = con1 ,uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57', pw = 'Password', noverify = "True")
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def chassis(*args, **kwargs):
@@ -184,7 +193,7 @@ def chassis(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','status']
     
@@ -192,7 +201,7 @@ def chassis(*args, **kwargs):
         #print args[i]
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def fans(*args, **kwargs):
@@ -218,14 +227,14 @@ def fans(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def fanmuxes(*args, **kwargs):
@@ -251,14 +260,14 @@ def fanmuxes(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def nodes(*args, **kwargs):
@@ -285,14 +294,14 @@ def nodes(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis','status']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def switches(*args, **kwargs):
@@ -318,14 +327,14 @@ def switches(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis','ports','action']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def powersupplies(*args, **kwargs):
@@ -351,14 +360,14 @@ def powersupplies(*args, **kwargs):
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def scalablesystem(*args, **kwargs):
@@ -372,7 +381,7 @@ def scalablesystem(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id','type','status']
+        keylist = ['con','id','type']
 
 @param
     The parameters for this command are as follows 
@@ -380,19 +389,18 @@ def scalablesystem(*args, **kwargs):
     con      Connection Object to Lenovo XClarity Administrator
     id        scalable complex id
     type      type (flex/rackserver)
-    status    scalable system manage status (managed/unmanaged)
 
 @example 
     
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id','type','status']
+    keylist = ['con','id','type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def discover(*args, **kwargs):
@@ -423,14 +431,14 @@ def discover(*args, **kwargs):
         job_data = discover(con=con1,job=jobid)
             
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','ip','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def manage(*args, **kwargs):
@@ -444,7 +452,7 @@ def manage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job']
+        keylist = ['con','ip','user','pw','rpw','job','force']
 
 @param
     The parameters for this command are as follows 
@@ -454,18 +462,6 @@ def manage(*args, **kwargs):
         user     user ID to access the endpoint
         pw       The current password to access the endpoint.
         rpw      The recovery password to be used for the endpoint.
-        mp       A list of endpoint management ports, it is a comma separated list of
-                      management port information. Each management port includes protocol, port number and
-                      boolean flag of whether the port enabled (True/False) respectively. These properties
-                      should be separate by semicolon. See the discovey request job response
-                      body for the supported protocols for the endpoint's management ports.
-        type     Type of endpoint to be managed. This can be one of the following values:
-                                  Chassis
-                                  ThinkServer
-                                  Storage
-                                  Rackswitch
-                                  Rack-Tower
-        epuuid    UUID of endpoint to be managed
         force     force manage
         job       Job ID of existing manage request
         
@@ -483,14 +479,14 @@ def manage(*args, **kwargs):
         
         manage_data = manage(con=con1,job=jobid)
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ip','user','pw','rpw','mp','type','epuuid','job','force']
+    keylist = ['con','ip','user','pw','rpw','job','force']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def unmanage(*args, **kwargs):
@@ -504,12 +500,12 @@ def unmanage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ep','force','job']
+        keylist = ['con','ip','force','job']
 
 @param
     The parameters for this command are as follows 
     
-        ep          one or more endpoints to be unmanaged.
+        ip          one or more endpoints to be unmanaged.
                     This is comma separated list of multiple endpoints, each endpoint should
                     contain endpoint information separated by semicolon.
                     endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
@@ -525,14 +521,14 @@ def unmanage(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','ip','force','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def configpatterns(*args, **kwargs):
@@ -548,7 +544,7 @@ def configpatterns(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id','endpoint','restart','type']
+        keylist = ['con','id', 'includeSettings', 'endpoint','restart','type']
 
 @param
     The parameters for this command are as follows 
@@ -572,15 +568,21 @@ def configpatterns(*args, **kwargs):
 @example 
 
     '''    
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id','endpoint','restart','type']
-    
+    if len(args) < 1 or len(args) > 2:
+        raise ValueError("Invalid Input Arguments")
+
+    param_dict = None
     for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
-    return ch
+        if isinstance(args[i], dict):
+            param_dict = args[i]
+        else:
+            con = args[i]
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
 
 def configprofiles(*args, **kwargs):
     '''
@@ -595,24 +597,34 @@ def configprofiles(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id']
+        keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
 
 @param
     The parameters for this command are as follows 
     
-        id    The unique ID that was assigned when the server profile was created
+        id          The unique ID that was assigned when the server profile was created
+        name        profile name
+        endpoint    endpoint  UUID of the server or location id for flex system
+        restart     restart server to activate profile ( immediate / defer )
+        delete      True for delete id
+        unassign    unassign specified id
+                    options for unassign
+        powerdown   powerdown server
+        resetIMM    reset IMM
+        force       force unassign operation
 
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id']
+    keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
-    
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+
+    logger.info(" configprofiles got kwargs %s " % str(kwargs))
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def configtargets(*args, **kwargs):
@@ -647,14 +659,14 @@ def configtargets(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','ep','force','job']
+    keylist = ['con','id','force','job']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def updatepolicy(*args, **kwargs):
@@ -668,37 +680,40 @@ def updatepolicy(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','policy','info']
+        keylist = ['con','info','job','uuid',policy','Type']
 
 @param
     The parameters for this command are as follows 
-    
-    policy  This is comma separated list of compliance policies. Each policy information
-            should contain policyname, type and UUID of device separated by semicolon where -
-                Policyname = Name of the compliance-policy to be assigned to device
-                Type = The device type. This can be one of the following values.
+
+    info    Specifies the type of information to return. This can be one of the following values:
+                FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
+                RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
+
+    jobid    Job ID of assign compliance policy operation
+
+    uuid     UUID of the device to which you want to assign the compliance policy
+
+    policy   Policyname, Name of the compliance-policy to be assigned to device
+
+    Type     Device type. This can be one of the following values.
                     CMM - Chassis Management Module
                     IOSwitch - Flex switch
                     RACKSWITCH - RackSwitch switch
                     STORAGE - Lenovo Storage system
-                    xITE - Compute node or rack server
-                UUID = UUID of the device to which you want to assign the compliance policy
-                
-    info    Specifies the type of information to return. This can be one of the following values:
-                FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
-                RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
-                
-@example 
+                    SERVER - Compute node or rack server
+
+@example
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','policy','info']
+    keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
-    
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+
+    logger.info(" updatepolicy got kwargs %s " %str(kwargs))
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def updaterepo(*args, **kwargs):
@@ -727,17 +742,29 @@ def updaterepo(*args, **kwargs):
                 updatesByMt - Returns information about firmware updates for the specified machine type
                 updatesByMtByComp - Returns the update component names for the specified machine type
 
+    action    The action to take. This can be one of the following values.
+                read - Reloads the repository files. The clears the update information in cache and reads the update file again from the repository.
+                refresh - Retrieves information about the latest available firmware updates from the Lenovo Support website,
+                         and stores the information to the firmware-updates repository.
+                acquire - Downloads the specified firmware updates from Lenovo Support website, and stores the updates to the firmware-updates repository.
+                delete - Deletes the specified firmware updates from the firmware-updates repository.
+                export.not supported
+
+     mt        comma separated machine types
+     scope     scope of operation
+     fixids    comma separated fixids
+     type      filetype for PUT opertaion
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','key']
+    keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def updatecomp(*args, **kwargs):
@@ -759,7 +786,7 @@ def updatecomp(*args, **kwargs):
     The parameters for this command are as follows 
     
     query   The data to return. This can be one of the following values.
-                components - Returns a list of endpoints and components that can be updated.
+                components - Returns a list of devices and components that can be updated.
                 status - Returns the status and progress of firmware updates. This is the default value
     
     mode    Indicates when to activate the update. This can be one of the following values.
@@ -776,30 +803,32 @@ def updatecomp(*args, **kwargs):
     server  servers information
     storage storages information
 
-            For action = apply/cancelApply, Each of the endpoint infomration should contain following data separated by comma
-                UUID:       UUID of the device
-                Fixid:      Firmware-updare ID of the target package to be applied to the component.
-                Component:  Component name
-    
-            For action = power, Each of the endpoint infomration should contain UUID and desired powerState separated by comma
+            For action = apply/cancelApply, Device information should contain following data separated by comma
                 UUID - UUID of the device
-                
-                Desired powerState can have one of the power state values. Possible values per device type are
+                Fixid - Firmware-update ID of the target package to be applied to the component. If not provided assigned policy would be used.
+                Component - Component name
+
+            For action = power, Device information should contain following data separated by comma
+                UUID - UUID of the device
+                powerState - One of the power state values. Possible values per device type are
                     Server: powerOn, powerOff, powerCycleSoft, powerCycleSoftGraceful, powerOffHardGraceful
                     Switch: powerOn, powerOff, powerCycleSoft
                     CMM: reset
+                    Storage:powerOff,powerCycleSoft
+
+
 
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','query','mode','action','cmm','switch','server','storage']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 
@@ -825,14 +854,14 @@ def users(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','id']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def ffdc(*args, **kwargs):
@@ -858,14 +887,46 @@ def ffdc(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
+    return ch
+
+
+def log(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get Lenovo XClarity Administrator LOG information
+    run this function as
+
+    data_dictionary = log( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con','filter']
+
+@param
+    The parameters for this command are as follows
+
+        filter  filter for the event
+
+@example
+
+    '''
+    global shell_obj
+    command_name = sys._getframe().f_code.co_name
+    keylist = ['lvl']
+
+    for i in range(len(args)):
+        kwargs[keylist[i]] = args[i]
+
+    ch = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def lxcalog(*args, **kwargs):
@@ -889,14 +950,14 @@ def lxcalog(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','filter']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def jobs(*args, **kwargs):
@@ -933,14 +994,14 @@ def jobs(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','id','uuid','state','cancel','delete']
     
     for i in range(len(args)):
         kwargs[keylist[i]]= args[i]
     
-    ch =  pyshell.handle_input_args(command_name,args=args,kwargs=kwargs)
+    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
 def manifests(*args, **kwargs):
@@ -965,7 +1026,7 @@ def manifests(*args, **kwargs):
 @example 
 
     '''
-    global pyshell
+    global shell_obj
     con = None
     param_dict = {}
     
@@ -980,5 +1041,184 @@ def manifests(*args, **kwargs):
         else:
             con = args[i]
             
-    out_obj =  pyshell.handle_input_dict(command_name,con,param_dict)
+    out_obj =  shell_obj.handle_input_dict(command_name, con, param_dict)
+    # return out_obj
+    return True
+
+
+def tasks(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get tasks information
+    run this function as
+
+     = tasks( con, data_dictionary)
+
+    Where data_dictionary contain input arguments as follows
+
+        keylist = ['jobuuid']
+
+@param
+    The parameters for this command are as follows
+
+    con      Connection Object to Lenovo XClarity Administrator
+    uuid          uuid of job
+
+
+@example
+
+    '''
+    global shell_obj
+    con = None
+    param_dict = {}
+
+    command_name = sys._getframe().f_code.co_name
+
+    if len(args) < 1 or len(args) > 2:
+        raise ValueError("Invalid Input Arguments")
+
+    for i in range(len(args)):
+        if isinstance(args[i], dict):
+            param_dict = args[i]
+        else:
+            con = args[i]
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
+
+def resourcegroups(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to Create, modify, delete or read resource group from Lenovo XClarity Administrator
+    run this function as
+
+    data_dictionary = resourcegroups( con_handle,uuid, name, desc, type, solutionVPD, members, criteria )
+
+    Where KeyList is as follows
+
+        keylist = ['uuid', 'name','description','type','solutionVPD','members','criteria']
+
+@param
+    The parameters for this command are as follows
+
+        uuid=         UUID of already created Group 
+        name=         Name of Resource Group
+        desc=         Description of Resource Group
+        type=         Type of Resource Group. <{"static", "dynamic", "solution"}>,
+        solutionVPD": { "id": <UUID string>,
+                        "machineType": <machine type string>,
+                        "model": <model string>,
+                        "serialNumber": <serial number string>,
+                        "manufacturer": <string>
+                      },
+
+        "members": [ "uri","uri",....],
+        "criteria":[]
+
+@example
+
+    '''
+    global shell_obj
+    con = None
+    arglist = list(args)
+    param_dict = {}
+
+    command_name = sys._getframe().f_code.co_name
+
+    keylist = ['con','uuid','name','description','type','solutionVPD','members','criteria']
+    optional_keylist = ['uuid','name','description','type','solutionVPD','members','criteria']
+    mutually_exclusive_keys = ['uuid', 'name']
+    mandatory_options_list = {'uuid':[],'name':['type']}
+
+    if len(args) == 0 and len(kwargs) == 0:
+        raise AttributeError("Invalid Input Arguments")
+
+    arglist = arglist[::-1]
+
+    for key in keylist:
+        if (key in kwargs.keys()):
+            param_dict[key] = kwargs[key]
+        elif len(arglist)>=1:
+            param_dict[key] = arglist.pop()
+        elif key not in optional_keylist:
+            raise ValueError("Invalid Input Arguments")
+        
+        if key == 'con':
+            con = param_dict.pop(key)
+      
+    if not con:
+        raise AttributeError("Invalid command invocation: Connection Object missing.")
+    
+    me_key_found = False
+    for me_key in param_dict.keys():
+        #Checking mandatory option_list presence
+        if me_key in mandatory_options_list.keys():
+            if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
+                raise AttributeError("Invalid command invocation")
+            
+        #Checking mutually exclusive key presense 
+        if me_key in mutually_exclusive_keys:
+            if me_key_found:
+                raise AttributeError("Invalid command invocation")
+            me_key_found = True
+            
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
+
+def osimages(*args, **kwargs):
+    '''
+    @summary:
+        Use this function to retrieve information about, delete, and import OS images, OS-image profiles, device driver, and boot-options files.
+        data_dictionary = osimages(input_args, key=values )
+
+        Where KeyList is as follows
+
+            keylist = [fileName, Id, profile,remoteFileServer,imageType,jobId, ...]
+
+    @param
+
+        - osimages(hostplatforms)
+        - osimages(hostplatforms, **kwargs)
+
+        - osimages(osdeployment, items=[])
+        - osimages(osdeployment, action=<>,mac=<>,nodeName=<>)
+
+        - osimages(connection)
+
+        - osimages(globalSettings)
+        - osimages(globalSettings, **kwargs)
+
+        - osimages()
+        - osimages(imageType=<DUD,BOOT,OS,OSPROFILE>)
+
+        - osimages(fileName=<>)
+
+        - osimages(id=<>)
+        - osimages(id=<>, **kwargs)
+
+        - osimages(jobid = <>)
+
+        - osimages(remoteFileServers)
+        - osimages(remoteFileServers, **kwargs)
+
+        - osimages(remoteFileServers, id=<>)
+        - osimages(remoteFileServers, putId/deleteId=<>, **kwargs)
+    @example
+        osimage()                   : shows osimages
+        osimage(imageType='BOOT')   : POST osimage with imageType='BOOT'
+        osimages(fileName='foo')    : shows osimages for fileName='foo'
+    '''
+
+    global shell_obj
+    con = None
+    param_dict = {}
+    command_name = sys._getframe().f_code.co_name
+
+    param_dict = (args, kwargs)
+    # handle_input_dict only takes param_dict as input argument
+    ch = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return ch

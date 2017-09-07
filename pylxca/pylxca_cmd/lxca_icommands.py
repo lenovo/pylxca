@@ -36,14 +36,8 @@ class InteractiveCommand(object):
     def get_long_options(self):
         return self.command_data[self.__class__.__name__][1]
 
-    def get_mand_opts(self):
-        return self.command_data[self.__class__.__name__][2]
-
     def get_short_desc(self):
-        return self.command_data[self.__class__.__name__][3]
-    
-#    def get_help_message(self):
-#        return self.command_data[self.__class__.__name__][4]
+        return self.command_data[self.__class__.__name__][2]
     
     def invalid_input_err(self):
         self.sprint("Invalid Input ")
@@ -53,13 +47,6 @@ class InteractiveCommand(object):
     def sprint(self,str):
         if self.shell: self.shell.sprint(str)
         
-    def is_mand_opt_passed(self,opts):
-        for mand_opt_tup in self.get_mand_opts():
-            if (([item for item in opts if mand_opt_tup[0] in item] == []) and  
-                ([item for item in opts if mand_opt_tup[1] in item] == [])):
-                return False
-        return True
-
     def parse_args(self, opts, argv):
         opt_dict = {}
         
@@ -109,18 +96,18 @@ class InteractiveCommand(object):
         except getopt.GetoptError, e:
             self.invalid_input_err()
             return
-        
+        except AttributeError as e:
+            extype, ex, tb = sys.exc_info()
+            formatted = traceback.format_exception_only(extype, ex)[-1]
+            message = "Check getopt short and long options  %s" % (formatted)
+            raise RuntimeError, message, tb
+
         for opt, arg in opts:
             if '-h' in opt:
                 self.sprint(self.__doc__)
                 return
             if 'con' in opt:
                 con_obj = arg
-                
-        if not self.is_mand_opt_passed(opts):
-            self.invalid_input_err()
-            return
-        
         
         out_obj = None
         opt_dict = None
@@ -152,35 +139,3 @@ class InteractiveCommand(object):
             self.sprint("Exception occurred: %s" %(err)) 
             
         return out_obj
-
-
-class PyAPI(InteractiveCommand):
-    
-    
-    def handle_input(self, dict_handler,con_obj = None):
-        obj = None
-        api = lxca_api()
-        obj = api.api(self.get_name(),dict_handler,con_obj)
-        return obj
-        
-    def handle_command(self, param_dict, con = None):
-        
-        con_obj = con        
-        out_obj = None
-        
-        try:
-            out_obj = self.handle_input(param_dict,con_obj)
-        except ConnectionError:
-            self.sprint("Connection is not Initialized, Try connect")
-        except HTTPError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
-        except ConnectionError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
-        except RuntimeError:
-            self.sprint("Session Error to LXCA, Try connect")
-        except Exception as err:
-            self.sprint("Exception occurred: %s" %(err)) 
-            
-        return out_obj
-
-    

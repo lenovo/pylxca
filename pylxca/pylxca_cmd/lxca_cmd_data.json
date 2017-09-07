@@ -8,7 +8,6 @@
       "chassis=",
       "view="
     ],
-    [],
     "Get nodes inventory"
   ],
   "chassis": [
@@ -19,7 +18,6 @@
       "status=",
       "view="
     ],
-    [],
     "Get chassis inventory"
   ],
   "switches": [
@@ -32,7 +30,6 @@
       "action=",
       "view="
     ],
-    [],
     "Get switches inventory"
   ],
   "fans": [
@@ -43,7 +40,6 @@
       "chassis=",
       "view="
     ],
-    [],
     "Get fans inventory"
   ],
   "powersupplies": [
@@ -54,7 +50,6 @@
       "chassis=",
       "view="
     ],
-    [],
     "Get Power Supply inventory"
   ],
   "fanmuxes": [
@@ -65,7 +60,6 @@
       "chassis=",
       "view="
     ],
-    [],
     "Get Fan Mux inventory"
   ],
   "cmms": [
@@ -76,19 +70,16 @@
       "chassis=",
       "view="
     ],
-    [],
     "Get CMM inventory"
   ],
   "scalablesystem": [
-    "i:t:v:s:h",
+    "i:t:v:h",
     [
       "con=",
       "id=",
       "type=",
-      "status=",
       "view="
     ],
-    [],
     "Get Scalable Complex System inventory"
   ],
   "connect": [
@@ -99,16 +90,6 @@
       "pw=",
       "noverify"
     ],
-    [
-      [
-        "-u",
-        "--user"
-      ],
-      [
-        "-l",
-        "--url"
-      ]
-    ],
     "Connect LXCA"
   ],
   "log": [
@@ -116,12 +97,10 @@
     [
       "lvl="
     ],
-    [],
     "Get/set log level of Python LXCA"
   ],
   "disconnect": [
     "h",
-    [],
     [],
     "Disconnect LXCA"
   ],
@@ -130,7 +109,6 @@
     [
       "lvl="
     ],
-    [],
     "Set ostream level of PYLXCA Interactive Shell"
   ],
   "jobs": [
@@ -143,37 +121,31 @@
       "cancel=",
       "delete="
     ],
-    [],
     "Retrieve and manage job information"
   ],
   "manage": [
-    "i:u:p:r:m:t:e:j:f:v:h",
+    "i:u:p:r:j:f:v:h",
     [
 	  "con=",
       "ip=",
 	  "user=",
 	  "pw=",
 	  "rpw=",
-	  "mp=",
-	  "type=",
-	  "epuuid=",
       "job=",
       "force=",
       "view="
     ],
-    [],
     "Manage the endpoint."
   ],
   "unmanage": [
-    "e:f:j:v:h",
+    "i:f:j:v:h",
     [
 	  "con=",
-      "ep=",
+      "ip=",
 	  "force=",
       "job=",
       "view="
     ],
-    [],
     "Unmanage the endpoint."
   ],
   "discover": [
@@ -184,7 +156,6 @@
       "job=",
       "view="
     ],
-    [],
     "Retrieve a list of devices discovered by SLP discovery."
   ],
   "configpatterns": [
@@ -192,22 +163,30 @@
     [
 	  "con=",
       "id=",
+      "includeSettings=",
 	  "endpoint=",
+      "pattern_update_dict=",
 	  "restart=",
 	  "type=",
 	  "view"
     ],
-    [],
     "Retrieve information and deploy all server and category patterns\n\t\t\tthat have been defined in the Lenovo XClarity Administrator "
   ],
   "configprofiles": [
-    "i:v:h",
+    "d:e:f:i:n:p:r:u:v:h",
     [
 	  "con=",
+      "delete=",
+      "force=",
       "id=",
+      "name=",
+      "powerdown=",
+      "restart=",
+      "resetimm=",
+      "endpoint=",
+      "unassign=",
       "view="
     ],
-    [],
     "Retrieve information about server profiles from the Lenovo XClarity Administrator."
   ],
   "configtargets": [
@@ -217,28 +196,33 @@
       "id=",
 	  "view="
     ],
-    [],
     "Retrieve a list of deployable target systems according to their\n\t\t\tserver pattern and profile."
   ],
   "updatepolicy": [
-    "p:i:v:h",
+    "p:i:j:u:t:v:h",
     [
 	  "con=",
 	  "policy=",
 	  "info=",
+      "job=",
+      "uuid=",
+      "type=",
 	  "view="
     ],
-    [],
     "Retrieve basic or detailed information for a specified \n\t\t\tcompliance policy or all policies."
   ],
   "updaterepo": [
-    "a:k:v:h",
+    "a:f:k:m:s:t:v:h",
     [
 	  "con=",
-	  "key=",
+      "action=",
+      "fixids=",
+      "key=",
+      "mt=",
+      "scope=",
+      "type=",
 	  "view="
     ],
-    [],
 	"Retrieve information about firmware in the firmware-updates repository."
   ],
   "updatecomp": [
@@ -253,7 +237,6 @@
 	  "storage=",
 	  "cmm="
     ],
-    [],
     "Firmware update actions on target endpoints and retrieve the \n\t\t\tstatus and progress of firmware updates and firmware repository."
   ],
   "users": [
@@ -262,7 +245,6 @@
 	  "con=",
 	  "id="
     ],
-    [],
     "Retrieve information about user account of Lenovo XClarity Administrator."
   ],
   "ffdc": [
@@ -271,7 +253,6 @@
 	  "con=",
 	  "uuid="
     ],
-    [],
     "Collect and export the first failure data capture (FFDC) data \n\t\t\tfor a specific managed endpoint (CMM, server, storage node, or switch)."
   ],
   "lxcalog": [
@@ -280,7 +261,6 @@
 	  "con=",
 	  "filter="
     ],
-    [],
     "Retrieve hardware and management-server events in the events log."
   ]
 }

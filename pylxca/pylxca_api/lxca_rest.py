@@ -24,6 +24,7 @@ logger_conf_file = "lxca_logger.conf"
 pylxca_logger = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
 
 logger = logging.getLogger(__name__)
+REST_TIMEOUT = 60
 
 class lxca_rest:
     '''
@@ -64,7 +65,7 @@ class lxca_rest:
                 raise Exception("Invalid argument 'status'")
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -78,7 +79,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -97,7 +98,7 @@ class lxca_rest:
             url = url + '/ports'
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -142,7 +143,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -156,7 +157,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -170,7 +171,7 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -184,13 +185,13 @@ class lxca_rest:
             url = url + '/' + uuid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
         return resp
 
-    def get_scalablesystem(self,url, session, complexid,complextype,status):
+    def get_scalablesystem(self,url, session, complexid,complextype):
         url = url + '/scalableComplex'
 
         if complexid:
@@ -201,14 +202,9 @@ class lxca_rest:
                 url = url + "?complexType=" + complextype
             else:
                 raise Exception("Invalid argument 'complexType': %s" %complextype)
-        elif status:
-            if status == "managed" or status == "unmanaged":
-                url = url + "?status=" + status
-            else:
-                raise Exception("Invalid argument 'status'")
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -232,7 +228,7 @@ class lxca_rest:
             if ip_addr:
                 url = url + '/discoverRequest'
                 payload = [{"ipAddresses":ip_addr.split(",")}]
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
@@ -242,11 +238,11 @@ class lxca_rest:
                         return None
             elif jobid:
                 url = url + '/discoverRequest/jobs/' + str(jobid)
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             else:
                 url = url + '/discovery'
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
 
         except HTTPError as re:
@@ -254,7 +250,7 @@ class lxca_rest:
             raise re
         return resp
 
-    def do_manage(self,url, session, ip_addr,user,pw,rpw,mp,type,uuid,force,jobid):
+    def do_manage(self,url, session, ip_addr,user,pw,rpw,force,jobid):
         try:
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
             # if ip_addr and user and pw and mp:
@@ -300,10 +296,15 @@ class lxca_rest:
                 
                 if force == True:
                     param_dict["forceManage"] = True
-                
+
+                security_Descriptor = { }
+                security_Descriptor['managedAuthEnabled'] = True
+                security_Descriptor['managedAuthSupported'] = False
+                param_dict['securityDescriptor'] = security_Descriptor
+
                 payload = [param_dict]
 
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
 
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
@@ -315,7 +316,7 @@ class lxca_rest:
                     
             elif jobid:
                 url = url + '/manageRequest/jobs/' + str(jobid)
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             else:
                 logger.error("Invalid execution of manage REST API")
@@ -352,10 +353,14 @@ class lxca_rest:
                     each_ep_dict = {"ipAddresses":ip_addr.split("#"),"type":type,"uuid":uuid}
                     endpoints_list.append(each_ep_dict)
                 param_dict["endpoints"] = endpoints_list
-                param_dict["forceUnmanage"] = force
+
+                if force.lower() == "true":
+                    param_dict["forceUnmanage"] = True
+                else:
+                    param_dict["forceUnmanage"] = False
 
                 payload = param_dict
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if resp.headers._store.has_key("location"):
@@ -365,7 +370,7 @@ class lxca_rest:
                         return None
             elif jobid:
                 url = url + '/unmanageRequest/jobs/' + str(jobid)
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             else:
                 logger.error("Invalid execution of unmanage REST API")
@@ -396,18 +401,18 @@ class lxca_rest:
                 if state == None and uuid:
                     url = url + '?uuid=' + uuid
 
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
             elif canceljobid:
                 url = url + '/' + canceljobid
                 payload = {"cancelRequest":"true"}
-                resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.put(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     return True
                 resp.raise_for_status()
             elif deletejobid:
                 url = url + '/' + deletejobid
-                resp = session.delete(url,verify=False, timeout=3)
+                resp = session.delete(url,verify=False, timeout=REST_TIMEOUT)
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     return True
                 resp.raise_for_status()
@@ -425,7 +430,7 @@ class lxca_rest:
                 if state == None and uuid:
                     url = url + '?uuid=' + uuid
 
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -439,7 +444,7 @@ class lxca_rest:
             url = url + '/' + userid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
@@ -452,7 +457,7 @@ class lxca_rest:
             url = url + '?filterWith=' + filter
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
@@ -463,7 +468,7 @@ class lxca_rest:
         try:
             if uuid:
                 url = url + '/' + uuid
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     job_info = ast.literal_eval(resp.content)
@@ -480,16 +485,28 @@ class lxca_rest:
             logger.error("Exception occured: %s",re)
             raise re
 
-    def get_updatepolicy(self,url, session,policy,info):
+    def get_updatepolicy(self, url, session, info,  jobid):
         url = url + '/compliancePolicies'
         try:
-            if info:
+            if info in ["FIRMWARE", "RESULTS"]:
                 if info == "FIRMWARE":
                     url = url + "/applicableFirmware"
                 elif info == "RESULTS":
                     url = url + "/persistedResult"
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+                resp.raise_for_status()
+                return resp
+            elif jobid:
+                url = url + "/compareResult"
+                payload = dict()
+                payload["jobid"] = jobid
 
-            resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+                resp.raise_for_status()
+                return resp
+
+            url = url + "?basic_full=full"
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -497,7 +514,49 @@ class lxca_rest:
             logger.error("Exception occured: %s",re)
             raise re
 
-    def get_updaterepo(self,url, session,key):
+    def post_updatepolicy(self, url, session, policy, type, uuid):
+        url = url + '/compliancePolicies/compareResult'
+        try:
+
+            if not policy or not type or not uuid:
+                raise Exception("Invalid argument key")
+
+            payload = dict()
+
+            policy_dict = dict()
+            policy_dict["policyName"] = policy
+
+            # do auto discovery
+            # disc_job_resp = self.do_discovery(url.rsplit('/', 2)[0], session, None, None)
+            # disc_resp_py_obj = json.loads(disc_job_resp.text)
+            #
+            # for key in disc_resp_py_obj.keys():
+            #     if isinstance(disc_resp_py_obj[key], list) and disc_resp_py_obj[key] != []:
+            #         # Fetch UUID value from  Response
+            #         for item in disc_resp_py_obj[key]:
+            #             if uuid == item["uuid"]:
+            #                 # Fetch Type value from Response
+            #                 policy_dict["type"] = disc_resp_py_obj[key][0]["type"]
+            #
+            # logger.debug("Type for %s = %s" %(uuid, policy_dict["type"]))
+
+            policy_dict["uuid"] = uuid
+            policy_dict["type"] = type
+            compliance_list = []
+            compliance_list.append(policy_dict)
+            payload['compliance'] = compliance_list
+            logger.debug("Reached till before post call")
+
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+            return resp
+
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+
+
+    def get_updaterepo(self, url, session, key, mt, scope):
         url = url + '/updateRepositories/firmware'
         try:
             if not key  == None \
@@ -508,6 +567,19 @@ class lxca_rest:
                 url= url + "?key=" + key
             else:
                 raise Exception("Invalid argument key")
+
+            if mt:
+                url = url + "&mt=" + mt
+
+            if scope:
+                if scope.lower() in ["all", "latest"]:
+                    if key == "updates" or key == "updatesByMt":
+                        url = url + "&with=" + scope.lower()
+                    else:
+                        raise Exception("Invalid argument combination of key and scope")
+                else:
+                    raise Exception("Invalid argument scope: " + scope)
+
             resp = session.get(url,verify=False, timeout=3)
             resp.raise_for_status()
             return resp
@@ -516,7 +588,74 @@ class lxca_rest:
             logger.error("Exception occured: %s",re)
             raise re
 
-    def do_updatecomp(self,url, session,mode,action,server,switch,storage,cmm):
+    def put_updaterepo(self, url, session, action , fixids, mt, type, scope):
+        url = url + '/updateRepositories/firmware'
+        try:
+            if not action  == None \
+                    and action == "read" or action == "refresh" \
+                    or action == "acquire" or action == "delete":
+                    #or key == "export"
+                url= url + "?action=" + action
+            else:
+                raise Exception("Invalid argument key action: " + action)
+
+            if type:
+                if type.lower() in ["all", "payloads"]:
+                    if action == "delete" or action == "export":
+                        url = url + "&filetypes=" + type.lower()
+                    else:
+                        raise Exception("Invalid argument combination of action and type")
+                else:
+                    raise Exception("Invalid argument type:" + type)
+
+            if scope:
+                if scope.lower() in ["all", "latest", "payloads"]:
+                    if action == "refresh" and scope.lower() in ["all", "latest"]:
+                        url = url + "&with=" + scope.lower()
+                    elif action == "acquire" and scope.lower() in ["payloads"]:
+                        url = url + "&with=" + scope.lower()
+                    else:
+                        raise Exception("Invalid argument combination of action and scope")
+                else:
+                    raise Exception("Invalid argument scope:" + scope)
+
+            payload = dict()
+            if action == "delete":
+                if fixids:
+                    fixids_list = fixids.split(",")
+                    payload['fixids'] = fixids_list
+                else:
+                    raise Exception("Invalid argument fixids is required for delete")
+
+            if action == "acquire":
+                if fixids:
+                    fixids_list = fixids.split(",")
+                    payload['fixids'] = fixids_list
+
+            if action == "acquire" or action == "refresh":
+                if mt:
+                    mt_list = mt.split(",")
+                    payload['mt'] = mt_list
+                else:
+                    raise Exception("Invalid argument mt is required for action acquire and refresh")
+
+            if action == "refresh":
+                payload['os'] = ""
+                payload['type'] = "catalog"
+
+            if action == "acquire":
+                payload['type'] = "latest"
+
+            #return payload
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=3)
+            resp.raise_for_status()
+            return resp
+
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+
+    def do_updatecomp(self, url, session, mode, action, server, switch, storage, cmm):
         serverlist = list()
         storagelist = list()
         cmmlist = list()
@@ -525,11 +664,13 @@ class lxca_rest:
         url = url + '/updatableComponents'
         try:
 
+            # For Query Action
             if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
-                resp = session.get(url,verify=False, timeout=3)
+                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
 
+            # For apply and cancelApply Action
             if action == "apply" or action == "cancelApply" :
                 
                 url= url + "?action=" + action
@@ -538,23 +679,39 @@ class lxca_rest:
                     url= url + "&mode=" + mode
                 else:
                     raise Exception("Invalid argument mode")
-        
-                if server and len(server.split(","))==3:
-                    server_data = server.split(",")
-                    serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
-    
-                if switch and len(switch.split(","))==3:
-                    switch_data = switch.split(",")
-                    switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
-    
-                if storage and len(storage.split(","))==3:
-                    storage_data = storage.split(",")
-                    storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
-    
-                if cmm and len(cmm.split(","))==3:
-                    cmm_data = cmm.split(",")
-                    cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
-    
+
+                if server:
+                    if len(server.split(","))==3:
+                        server_data = server.split(",")
+                        serverlist = [{"UUID": server_data[0],"Components": [{"Fixid": server_data[1],"Component": server_data[2]}]}]
+                    elif len(server.split(","))==2:
+                        server_data = server.split(",")
+                        serverlist = [{"UUID": server_data[0],"Components": [{"Component": server_data[1]}]}]
+
+                if switch:
+                    if len(switch.split(","))==3:
+                        switch_data = switch.split(",")
+                        switchlist = [{"UUID": switch_data[0],"Components": [{"Fixid": switch_data[1],"Component": switch_data[2]}]}]
+                    elif len(switch.split(","))==2:
+                        switch_data = switch.split(",")
+                        switchlist = [{"UUID": switch_data[0],"Components": [{"Component": switch_data[1]}]}]
+
+                if storage:
+                    if len(storage.split(","))==3:
+                        storage_data = storage.split(",")
+                        storagelist = [{"UUID": storage_data[0],"Components": [{"Fixid": storage_data[1],"Component": storage_data[2]}]}]
+                    elif len(storage.split(","))==2:
+                        storage_data = storage.split(",")
+                        storagelist = [{"UUID": storage_data[0],"Components": [{"Component": storage_data[1]}]}]
+
+                if cmm:
+                    if len(cmm.split(","))==3:
+                        cmm_data = cmm.split(",")
+                        cmmlist = [{"UUID": cmm_data[0],"Components": [{"Fixid": cmm_data[1],"Component": cmm_data[2]}]}]
+                    elif len(cmm.split(","))==2:
+                        cmm_data = cmm.split(",")
+                        cmmlist = [{"UUID": cmm_data[0],"Components": [{"Component": cmm_data[1]}]}]
+
             elif action == "power" : 
                 url= url + "?action=" + "powerState"
                 
@@ -582,8 +739,8 @@ class lxca_rest:
 
             payload = dict()
             payload["DeviceList"] = [param_dict]
-            
-            resp = session.put(url,data = json.dumps(payload),verify=False, timeout=3)
+            logger.debug("Update Firmware payload: " + str(payload))
+            resp = session.put(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -598,20 +755,108 @@ class lxca_rest:
             url = url + '/' + profileid
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
     
         return resp
-    
-    def do_configpatterns(self,url, session, patternid,endpoint,restart,etype):
+
+    def put_configprofiles(self, url, session, profileid, profilename):
+        url = url + '/profiles'
+
+        if profileid:
+            url = url + '/' + profileid
+        else:
+            raise Exception("Invalid argument ")
+
+        try:
+            payload = dict()
+            payload['profileName'] = profilename
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def post_configprofiles(self, url, session, profileid, endpoint, restart):
+        url = url + '/profiles'
+
+        if profileid:
+            url = url + '/' + profileid
+        else:
+            raise Exception("Invalid argument ")
+
+        try:
+            payload = dict()
+            if restart and endpoint:
+                payload['restart'] = restart
+                payload['uuid'] = endpoint
+            else:
+                raise Exception("Invalid argument, restart and endpoint ")
+
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def delete_configprofiles(self, url, session, profileid):
+        url = url + '/profiles'
+
+        if profileid:
+            url = url + '/' + profileid
+
+        try:
+            resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def unassign_configprofiles(self, url, session, profileid, powerdown, resetimm, force):
+        url = url + '/profiles/unassign'
+
+        if profileid:
+            url = url + '/' + profileid
+
+        payload = dict()
+        if powerdown:
+            if powerdown.lower() == "true":
+                payload['powerDownITE'] = True
+            else:
+                payload['powerDownITE'] = False
+        if resetimm:
+            if resetimm.lower() == "true":
+                payload['resetIMM'] = True
+            else:
+                payload['resetIMM'] = False
+        if force:
+            if force.lower() == "true":
+                payload['force'] = True
+            else:
+                payload['force'] = False
+
+        try:
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+
+    def do_configpatterns(self, url, session, patternid, includeSettings, endpoint, restart, etype, pattern_update_dict):
         resp = None
         url = url + '/patterns'
         
         if patternid:
             url = url + '/' + patternid
-
+            if includeSettings:
+                url = url + '/includeSettings'
         try:
             if endpoint and restart and etype:
                 param_dict = dict()
@@ -625,15 +870,19 @@ class lxca_rest:
                 
                 payload = dict()
                 payload = param_dict
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            elif pattern_update_dict:
+                payload = dict()
+                payload = pattern_update_dict
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             else:
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 
             resp.raise_for_status()
         except HTTPError as re:
             raise re
     
-        return resp  
+        return resp
 
     def get_configtargets(self,url, session, targetid):
         url = url + '/config/target'
@@ -643,13 +892,81 @@ class lxca_rest:
         else:
             raise Exception("Invalid argument ID")
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
     
         return resp  
-    
+
+    def get_tasks(self,url, session):
+        url = url + '/tasks'
+
+        '''
+        if uuid:
+            url = url + '/' + uuid
+        '''
+
+        try:
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def get_tasks_list(self,url, session, job_uuid, includeChildren):
+        url = url + '/tasks'
+
+        if job_uuid:
+            url = url + '/' + job_uuid
+            url = url + '?includeChildren=' + includeChildren
+
+        try:
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def put_tasks(self, url, session, job_uuid, action):
+        '''
+        Handle action delete and cancel
+        '''
+
+        url = url + '/tasks'
+
+        job_list = job_uuid.split(',')
+
+        payload = {'action':action, 'list':job_list}
+
+        try:
+            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def put_tasks_update(self, url, session, updated_dict):
+        '''
+        Handle action update
+        '''
+
+
+        url = url + '/tasks'
+
+        payload = updated_dict
+
+        try:
+            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
     def get_set_manifests(self,url, session, sol_id, filepath):
         resp = None
         param_dict = dict()
@@ -667,10 +984,332 @@ class lxca_rest:
                 
                 payload = dict()
                 payload = param_dict
-                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=3)
+                resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
             else:
-                resp = session.get(url, verify=False, timeout=3)
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 
             resp.raise_for_status()
         except HTTPError as re:
             raise re
+
+#################
+
+    def get_set_resourcegroups(self, url, session, uuid, name, desc, type, solutionVPD, members, criteria):
+        url = url + '/resourceGroups'
+
+        try:
+            if uuid:
+                url = url + '/' + uuid 
+            elif name:
+                param_dict = dict()
+                param_dict['name'] = name
+                param_dict['description'] = desc
+                param_dict['type'] = type
+                
+                #Validate if correct Solution VPD is set
+                if  type == 'solution' and \
+                    isinstance(solutionVPD, dict) and \
+                    set(["id","machineType","model","serialNumber","manufacturer"]).issubset(set(solutionVPD.keys())):
+                    param_dict['solutionVPD'] = solutionVPD
+                else:
+                    raise ValueError("Invalid Argument SolutionVPD")    
+                
+                param_dict['members'] = members
+                param_dict['criteria'] = criteria
+            
+                payload = dict()
+                payload = param_dict
+                
+                resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+                resp.raise_for_status()
+                return resp
+             
+            # Default case for get operation   
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+        return resp
+    
+#################
+
+    def get_osimage(self, *args, **kwargs):
+        resp        = None
+        baseurl     = kwargs['url']
+        session     = kwargs['session']
+        # url         = baseurl + '/osImages'
+        url         = ''
+        kwargs      = {key: kwargs[key] for key in kwargs if key not in ['url', 'session']}
+
+        if not args and (not kwargs.has_key('id') or not kwargs.has_key('fileName')):
+            url = baseurl + '/osImages'
+        if 'hostPlatforms' in args:
+            url = baseurl + '/hostPlatforms'
+        if kwargs.has_key('fileName'):
+            url = baseurl + '/osImages/%s' %(kwargs['fileName'])
+        if kwargs.has_key('id'):
+            url = baseurl + '/osImages/%s' %(kwargs['id'])
+            if kwargs.has_key('path'):
+                url = url + '?' + kwargs['path']
+            if kwargs.has_key('serverId'):
+                url = url + '&' + kwargs['serverId']
+        if 'connection' in args:
+            url = baseurl + '/osdeployment/connection'
+        if 'globalSettings' in args:
+            url = baseurl + '/osdeployment/globalSettings'
+        if 'remoteFileServers' in args:
+            url = baseurl + '/osImages/remoteFileServers'
+            if kwargs.has_key('id'):
+                url = url + '/' + kwargs['id']
+
+        try:
+            # print "I'm in lxca_rest get_osimage, url=", url
+            resp = session.get(url, verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def set_osimage(self, *args, **kwargs):
+        resp        = None
+        baseurl     = kwargs['url']
+        session     = kwargs['session']
+        url         = baseurl + '/osImages'
+        kwargs      = {key: kwargs[key] for key in kwargs if key not in ['url', 'session']}
+        payload     = dict()
+        # print "i'm in lxca_rest, set_osimage args,kwargs", args, kwargs
+
+        # postcall of osimage DONE
+        if kwargs.has_key('imageType') and not kwargs.has_key('jobId'):
+            if kwargs['imageType'] not in ['BOOT', 'DUD', 'OS', 'OSPROFILE']:
+                raise Exception ("Invalid Arguments, Try: [BOOT,DUD,OS,OSPROFILE]")
+            if kwargs.has_key('fileSize'):
+                payload['fileSize'] = kwargs['fileSize']
+            url = url + '/?imageType=' + kwargs['imageType']
+            payload['Action'] = 'Init'
+            resp = self.post_method(url, session, payload)
+            return resp
+
+        #put/post/delete for osimages/<id> DONE
+        if 'putid' in args or 'postid' in args:
+            if not kwargs.has_key('profile') or not isinstance(kwargs['profile'],dict):
+                raise Exception ("Invalid Arguments, Try: profile = <dict>")
+            # todo jsonify 'profile', dict
+            payload['profile'] = kwargs['profile']
+
+            if 'putid' in args:
+                resp = self.put_method(url, session, payload)
+                return resp
+            if 'postid' in args:
+                resp = self.post_method(url, session, payload)
+                return resp
+
+        if 'deleteid' in args: # associated with delete call for osimages/id DONE
+            if not kwargs.has_key('id'):
+                raise Exception ("Invalid Arguments, Try: id='id1,id2, .. ,idn' ")
+            url = url + '/' + str(kwargs['id'])
+            resp = self.delete_method(url, session, payload={})
+            return resp
+
+        # postcall for jobID DONE
+        if kwargs.has_key('jobId'):
+            url = url + '?'
+            if set(['jobId','imageName','imageType','os']).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['jobId','imageName','imageType','os']")
+            for k,v in  kwargs.items():
+                url = url + "%s=%s&" %(k,v)
+            url = url.rstrip('&')
+            resp = self.post_method(url, session, payload={})
+            return resp
+
+        # postcall for remoteFileServers DONE
+        if 'remoteFileServers' in args and not kwargs.has_key('putid') and not kwargs.has_key('deleteid'):
+            url = url + '/remoteFileServers'
+            if set(['address','displayName','port', 'protocol']).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['address','displayName','port', 'protocol']")
+            for k,v in  kwargs.items():
+                payload[k] = v
+            resp = self.post_method(url, session, payload)
+            return resp
+
+        # put/delete call for remoteFileServers DONE
+        if 'remoteFileServers' in args and kwargs.has_key('putid') or kwargs.has_key('deleteid'):
+            url = url + '/remoteFileServers'
+            if kwargs.has_key('putid'): # put call for remoteFileServers/<id>
+                if set(['putid','address','displayName','port', 'protocol']).difference(set(kwargs.keys())):
+                    raise Exception ("Invalid Arguments, Try:['address','displayName','port', 'protocol']")
+                for k,v in  kwargs.items():
+                    payload[k] = v
+                resp = self.put_method(url, session, payload)
+                return resp
+
+            if kwargs.has_key('deleteid'): # delete call for remoteFileServers/<id>
+                if kwargs.keys().__len__() != 1:
+                    raise Exception ("Invalid Arguments, Try:deleteid=<id> only")
+                url = url + '/' + kwargs['deleteid']
+                payload = {}
+                resp = self.delete_method(url, session, payload)
+                return resp
+
+        # put call for hostPlatforms DONE
+        if 'hostPlatforms' in args:
+            url = url.rsplit('/',1)[0] +'/hostPlatforms'
+            # if not kwargs.has_key('networkSettings'):
+            if set(['networkSettings', 'selectedImage', 'storageSettings','uuid',]).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['networkSettings'=<dict>, 'selectedImage', 'storageSettings'=<dict>,'uuid',]")
+            if not isinstance(kwargs['networkSettings'], dict) or not  isinstance(kwargs['storageSettings'], dict):
+                raise Exception("Invalid Arguments, Try: networkSettings=<dict>, and storageSettings=<dict>")
+            for k,v in  kwargs.items():
+                payload[k] = v
+            resp = self.put_method(url, session, [payload])
+            return resp
+
+        # put call for osdeployment DONE
+        if 'osdeployment' in args and kwargs.has_key('items'):
+            url = url.rsplit('/',1)[0] + '/osdeployment'
+            if not isinstance(kwargs['items'], list):
+                raise Exception ("Invalid Arguments, Try:items=<list>")
+
+            payload['items'] = kwargs['items']
+            #todo:
+            # "items": [{
+            #      "deploystatus": {
+            #         "id": "14",
+            #         "message": "Proceedingtopost-installation."
+            #      },
+            #      "network": [{
+            #         "ip": "10.243.4.144",
+            #         "mac": "34: 40: B5: EF: B9: BC"
+            #      },
+            #      {
+            #         "ip": "10.241.139.100",
+            #         "mac": "40: F2: E9: 90: 33: FC"
+            #      }],
+            #      "uuid": "2D16B4422AC011E38A06000AF72567B0"
+            #   },]
+
+            resp = self.put_method(url,session, payload)
+            return resp
+
+        # post call for osdeployment DONE
+        if 'osdeployment' in args:
+            url = baseurl + '/osdeployment'
+            if kwargs.has_key('action'):
+                if set(['action', 'mac', 'nodeName']).difference(set(kwargs.keys())):
+                    raise Exception ("Invalid Arguments, Try:['action', 'mac', 'nodeName']")
+                url = url + "?nodeName=%s&mac=%s" %(kwargs['nodeName'], kwargs['mac'])
+
+            resp = self.post_method(url, session, payload={})
+            return resp
+
+
+        # put call for globalSettings DONE
+        if 'globalSettings' in args and kwargs.has_key['activeDirectory']:
+            url = baseurl + '/osdeployment/globalSettings'
+            if set(['activeDirectory', 'credentials','ipAssignment','isVLANMode','licenseKeys']).difference(set(kwargs.keys())):
+                raise Exception ("Invalid Arguments, Try:['activeDirectory'=<list>, 'credentials'=<list>,'ipAssignment','isVLANMode','licenseKeys'=<dict>]")
+            if  not isinstance(kwargs['activeDirectory'], list) or\
+                not isinstance(kwargs['credentials'], list) or\
+                not isinstance(kwargs['licenseKeys'], dict):
+                raise Exception ("Invalid Arguments, Try:['activeDirectory'=<list>, 'credentials'=<list>,'licenseKeys'=<dict>]")
+
+            for k,v in  kwargs.items():
+                payload[k] = v
+                # todo: jsonify keys
+                #    "activeDirectory": {
+                #       "allDomains": [{
+                #          "domainName": "domain1",
+                #          "id": 0,
+                #          "OU": "domain1-unit1"
+                #       },
+                #       {
+                #          "domainName": "domain2",
+                #          "id": 1,
+                #          "OU": "domain2-unit"
+                #       }],
+                #       "defaultDomain": "domain2/domain2-unit"
+                #    }
+                #    "credentials": [{
+                #       "name": "root",
+                #       "type": "ESXi",
+                #       "password": null
+                #    },
+                #    {
+                #       "name": "root",
+                #       "type": "LINUX",
+                #       "password": null
+                #    },
+                #    {
+                #       "name": "root",
+                #       "type": "RHEL\/ESXi",
+                #       "password": null
+                #    },
+                #    {
+                #       "password": "U2FsdGVkX1/fiTzKhVZaIG4JcGBuCkoqucvGBmrjtK5/ejaLy8TFkFgb9AeDoZtt",
+                #       "passwordChanged": false,
+                #       "type": "WINDOWS"
+                #    }],
+                #    "ipAssignment": "dhcpv4",
+                #    "licenseKeys": {
+                #       "win2012r1": {
+                #          "dataCenterLicenseKey": "AAAA2-BBBBB-CCCCC-DDDDD-EEEEE",
+                #          "standardLicenseKey": "AAAA1-BBBBB-CCCCC-DDDDD-EEEEE"
+                #       },
+                #       "win2012r2": {
+                #          "dataCenterLicenseKey": "AAAA4-BBBBB-CCCCC-DDDDD-EEEEE",
+                #          "standardLicenseKey": "AAAA3-BBBBB-CCCCC-DDDDD-EEEEE"
+                #       }
+                #       "win2016r1": {
+                #          "dataCenterLicenseKey": "AAAA4-BBBBB-CCCCC-DDDDD-EEEEE",
+                #          "standardLicenseKey": "AAAA3-BBBBB-CCCCC-DDDDD-EEEEE"
+                #       }
+                #    }
+
+            resp = self.put_method(url,session, payload)
+            return resp
+
+        return resp
+
+
+
+
+    def get_method(self, url, session, **kwargs):
+        resp = None
+        try:
+            resp = session.get(url,verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def put_method(self, url, session, payload, **kwargs):
+        resp = None
+        try:
+            resp = session.put(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def delete_method(self,url, session, payload, **kwargs):
+        resp = None
+        try:
+            resp = session.delete(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp
+
+    def post_method(self,url, session, payload, **kwargs):
+        resp = None
+        try:
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re  ## uncomment this
+        return resp

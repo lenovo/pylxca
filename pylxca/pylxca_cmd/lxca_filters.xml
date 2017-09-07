@@ -171,19 +171,19 @@
         <Model>model</Model>
     </cmms>
     <scalablesystem name="default">
-        <Name>name</Name>
-        <FQDN>FQDN</FQDN>
-        <location type="object">
+        <complexID>complexID</complexID>
+        <nodeCount>nodeCount</nodeCount>
+        <location name="location" type="object">
             <Location>location</Location>
             <Rack>rack</Rack>
             <Room>room</Room>
         </location>
-        <Contact>contact</Contact>
-        <Type>type</Type>
-        <HealthState>overallHealthState</HealthState>
-        <AccessState>accessState</AccessState>
-        <MachineType>machineType</MachineType>
-        <Model>model</Model>
+		<partitions name="partition" type="object">
+            <nodes name="nodes" type="object">
+                <Name>name</Name>
+                <Type>type</Type>
+            </nodes>
+        </partitions>
     </scalablesystem>
     <discover name="default">
     	<Progress>progress</Progress>
@@ -314,19 +314,17 @@
         </messages>
     </ffdc>
     <updatepolicy name="default">
-        <policies name="policies" type="object">
-			<PolicyID>id</PolicyID>
-			<PolicyName>name</PolicyName>
-            <Description>description</Description>
-			<Details name="details" type="object">
-				<BaseVersion>baseVersion</BaseVersion>
-				<Build>build</Build>
-				<Components name="components" type="object">
-					<ComponentName>name</ComponentName>
-					<type>type</type>
-				</Components>
-			</Details>
-		 </policies>
+		<PolicyID>id</PolicyID>
+		<PolicyName>name</PolicyName>
+		<Description>description</Description>
+		<Details name="details" type="object">
+			<BaseVersion>baseVersion</BaseVersion>
+			<Build>build</Build>
+			<Components name="components" type="object">
+				<ComponentName>name</ComponentName>
+				<type>type</type>
+			</Components>
+		</Details>
     </updatepolicy>
     <updatepolicy name="chassis">
 			<chassis>chassis</chassis>
@@ -337,6 +335,20 @@
 			<policyName>policyName</policyName>
 			<uuid>uuid</uuid>
 		</cmms>
+    </updatepolicy>
+	<updatepolicy name="job">
+		<result name="result" type="object">
+			<endpointCompliant>endpointCompliant</endpointCompliant>
+			<status>status</status>
+			<targetFirmware name="targetFirmware" type="object">
+				<compliant>compliant</compliant>
+				<Build>build</Build>
+				<ComponentName>name</ComponentName>
+				<fixid>fixid</fixid>
+			</targetFirmware>
+			<uuid>uuid</uuid>
+		</result>
+		<status>status</status>
     </updatepolicy>
     <updatepolicy name="firmware">
         <policies name="policies" type="object">
@@ -407,6 +419,12 @@
     <updaterepo name="updates">
 		<updates>updates</updates>
     </updaterepo>
+	<updaterepo name="action_result">
+		<result>result</result>
+		<taskid>taskid</taskid>
+		<jobid>jobid</jobid>
+    </updaterepo>
+
 	<updatecomp name="default">
 			<Result>result</Result>
 			<Response_Message name="messages" type="object">
