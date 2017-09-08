@@ -270,14 +270,17 @@ class lxca_rest:
                 disc_progress = 0
                 
                 if disc_job_id:
+                    #TODO Check if dicovery succeed, if not throw Exception
                     while disc_progress < 100:
                         time.sleep(2) # delays for 5 seconds to allow discovery to complete
                         disc_job_resp = self.do_discovery(url.rsplit('/',1)[0], session, None,disc_job_id)
                         disc_resp_py_obj = json.loads(disc_job_resp.text)
                         disc_progress = disc_resp_py_obj['progress']
-                 
+                
+                discovered_endpoint = False
                 for key in disc_resp_py_obj.keys():
                     if isinstance(disc_resp_py_obj[key],list) and disc_resp_py_obj[key] != []: 
+                        discovered_endpoint = True
                         #Fetch Management Port value from Response
                         param_dict["managementPorts"] = disc_resp_py_obj[key][0]["managementPorts"]
                         #Fetch Type value from Response
@@ -292,7 +295,9 @@ class lxca_rest:
                         if param_dict["type"] == "Rackswitch":
                             param_dict["os"] = disc_resp_py_obj[key][0]["os"]
                 
-                logger.debug("ip_addr = %s" %param_dict["ipAddresses"])
+                if not discovered_endpoint:
+                    logger.debug("Failed to discover given endpoint  %s" %param_dict["ipAddresses"])
+                    raise Exception("Failed to discover given endpoint  %s" %param_dict["ipAddresses"])
                 
                 if force == True:
                     param_dict["forceManage"] = True

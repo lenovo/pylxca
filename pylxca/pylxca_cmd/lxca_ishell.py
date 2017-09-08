@@ -158,6 +158,9 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.osimages(self))
         self.add_command(lxca_cmd.resourcegroups(self))
 
+    def set_ostream_to_null(self):
+        self.ostream = open(os.devnull, 'w')
+        
     def sprint(self,str):
         if self.ostream:
             self.ostream.write(str)
@@ -171,29 +174,28 @@ class InteractiveShell(object):
 
         self.commands[command.get_name()] = command
 
-    def handle_input_args(self, command_name,*args, **kwargs):
-        # Show message when no command
-        if not command_name:
-            return
-
-        if not command_name in self.commands:
-            self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
-            return
-
-        command = self.commands[command_name]
-
-        opts = {}
-        args = {}
-       
-        for item in kwargs['kwargs']:
-            args['--' + item] = kwargs['kwargs'][item]
-        
-        try:
-            return command.handle_command(opts=opts, args=list(itertools.chain(*args.items())))
-        except Exception as err:
-            self.sprint("Exception occurred while processing command.")
-            raise err
+    def run(self):
+        self.sprint('')
+        self.sprint('-'*50)
+        self.sprint(self.banner)
+        self.sprint('Type "help" at any time for a list of commands.')
+        self.sprint('Use "lxca_shell --api" to enable Interactive Python LXCA Shell ')
+        self.sprint('-'*50)
+        self.sprint('')
             
+        while True:
+            try:
+#                readline.set_completer_delims(' \t\n;')
+#                readline.parse_and_bind("tab: complete")
+#                readline.set_completer(self.auto_complete)
+                command_line = raw_input(self.prompt)
+            except (KeyboardInterrupt, EOFError):
+                break
+
+            self.handle_input(command_line)
+            continue
+            
+    # TODO: Need to rename this function to handle_cli_params
     def handle_input(self, command_line):
 
         command_line = command_line.strip()
@@ -231,6 +233,52 @@ class InteractiveShell(object):
         except Exception as err:
             logger.error("Exception occurred while processing command.")
         return
+    
+    # TODO: We should remove this, All API level code should give call to handle_input_dict rather
+    def handle_input_args(self, command_name,*args, **kwargs):
+        # Show message when no command
+        if not command_name:
+            return
+
+        if not command_name in self.commands:
+            self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
+            return
+
+        command = self.commands[command_name]
+
+        opts = {}
+        args = {}
+       
+        for item in kwargs['kwargs']:
+            args['--' + item] = kwargs['kwargs'][item]
+        
+        try:
+            return command.handle_command(opts=opts, args=list(itertools.chain(*args.items())))
+        except Exception as err:
+            self.sprint("Exception occurred while processing command.")
+            raise err
+            
+    # TODO: We should rename this to handle_api_params
+    def handle_input_dict(self, command_name,con, param_dict):
+        # Show message when no command
+        if not command_name:
+            return
+
+        if not command_name in self.commands:
+            self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
+            return
+
+        command = self.commands[command_name]
+        
+        try:
+            #return command.handle_command(param_dict,con)
+            return command.handle_input(param_dict, con)
+        except Exception as err:
+            self.sprint("Exception occurred while processing command.")
+            raise err
+        
+        
+    
     """
     TODO:
     def auto_complete(self, text, state):
@@ -256,46 +304,3 @@ class InteractiveShell(object):
         results = [c + ' ' for c in command_list if c.startswith(cmd)] + [None]
         return results[state]
     """
-    
-    def run(self):
-        self.sprint('')
-        self.sprint('-'*50)
-        self.sprint(self.banner)
-        self.sprint('Type "help" at any time for a list of commands.')
-        self.sprint('Use "lxca_shell --api" to enable Interactive Python LXCA Shell ')
-        self.sprint('-'*50)
-        self.sprint('')
-            
-        while True:
-            try:
-#                readline.set_completer_delims(' \t\n;')
-#                readline.parse_and_bind("tab: complete")
-#                readline.set_completer(self.auto_complete)
-                command_line = raw_input(self.prompt)
-            except (KeyboardInterrupt, EOFError):
-                break
-
-            self.handle_input(command_line)
-            continue
-            
-    def set_ostream_to_null(self):
-        self.ostream = open(os.devnull, 'w')
-        
-
-    def handle_input_dict(self, command_name,con, param_dict):
-        # Show message when no command
-        if not command_name:
-            return
-
-        if not command_name in self.commands:
-            self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
-            return
-
-        command = self.commands[command_name]
-        
-        try:
-            #return command.handle_command(param_dict,con)
-            return command.handle_input(param_dict, con)
-        except Exception as err:
-            self.sprint("Exception occurred while processing command.")
-            raise err
