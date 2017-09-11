@@ -544,7 +544,7 @@ def configpatterns(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id', 'includeSettings', 'endpoint','restart','type']
+        keylist = ['con','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict]
 
 @param
     The parameters for this command are as follows 
@@ -564,6 +564,7 @@ def configpatterns(*args, **kwargs):
                       Rack
                       Tower
 
+        pattern_update_dict  dictionary of category_pattern to import.
 
 @example 
 
@@ -573,12 +574,17 @@ def configpatterns(*args, **kwargs):
     if len(args) < 1 or len(args) > 2:
         raise ValueError("Invalid Input Arguments")
 
-    param_dict = None
-    for i in range(len(args)):
-        if isinstance(args[i], dict):
-            param_dict = args[i]
-        else:
-            con = args[i]
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict']
+    optional_keylist = ['id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict']
+    mutually_exclusive_keys = ['id', 'pattern_update_dict']
+    mandatory_options_list = {'id': [], 'endpoint': ['type', 'restart'], 'pattern_update_dict': [],
+                              'includeSettings': ['id']}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                        con, param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -627,7 +633,7 @@ def configprofiles(*args, **kwargs):
     ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
-def configtargets(*args, **kwargs):
+def configttargets(*args, **kwargs):
     '''
 
 @summary:
@@ -1169,7 +1175,57 @@ def resourcegroups(*args, **kwargs):
     return out_obj
 
 
-def osimages(*args, **kwargs):
+def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys, con, param_dict, *args, **kwargs):
+    '''
+     validate parameters
+    :param arglist: list of arguments derived from args
+
+    :param keylist: keylist of name of fields
+    :param mandatory_options_list:
+    :param optional_keylist:
+    :param mutually_exclusive_keys:
+    :param con:  return parameter
+    :param param_dict: append to param_dict
+    :return:
+    '''
+    arglist = list(args)
+    arglist = arglist[::-1]
+
+    for key in keylist:
+        if (key in kwargs.keys()):
+            param_dict[key] = kwargs[key]
+        elif len(arglist) >= 1:
+            param_dict[key] = arglist.pop()
+        elif key not in optional_keylist:
+            logger.error(" Invalid Input args %s is not in optional list %s" %(key, str(mandatory_options_list)))
+            raise ValueError("Invalid Input Arguments")
+
+        if key == 'con':
+            con = param_dict.pop(key)
+
+    if not con:
+        raise AttributeError("Invalid command invocation: Connection Object missing.")
+
+    logger.debug(" Parameter dict %s " %str(param_dict))
+
+    me_key_found = False
+    for me_key in param_dict.keys():
+        # Checking mandatory option_list presence
+        if me_key in mandatory_options_list.keys():
+            if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
+                logger.error(" Invalid command invocation %s of mandatory list %s is not in arguments parovided" % (me_key, str(mandatory_options_list)))
+                raise AttributeError("Invalid command invocation")
+
+        # Checking mutually exclusive key presense
+        if me_key in mutually_exclusive_keys:
+            if me_key_found:
+                logger.error(" Invalid command invocation %s of mutual exclusive list %s " % (
+                me_key, str(mutually_exclusive_keys)))
+                raise AttributeError("Invalid command invocation")
+            me_key_found = True
+
+
+def osimages(con, *args, **kwargs):
     '''
     @summary:
         Use this function to retrieve information about, delete, and import OS images, OS-image profiles, device driver, and boot-options files.
@@ -1214,11 +1270,17 @@ def osimages(*args, **kwargs):
     '''
 
     global shell_obj
-    con = None
+    #con = None
     param_dict = {}
     command_name = sys._getframe().f_code.co_name
 
+    # con = kwargs.get('con')
+    # if not con:
+    #     raise ValueError("Invalid Input Arguments")
+
+    logger.info(" osimages got kwargs %s " % str(kwargs))
     param_dict = (args, kwargs)
+    logger.info(" osimages got param_dict %s " % str(param_dict))
     # handle_input_dict only takes param_dict as input argument
     ch = shell_obj.handle_input_dict(command_name, con, param_dict)
     return ch
