@@ -633,7 +633,7 @@ def configprofiles(*args, **kwargs):
     ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
     return ch
 
-def configttargets(*args, **kwargs):
+def configtargets(*args, **kwargs):
     '''
 
 @summary:
