@@ -1038,7 +1038,7 @@ class lxca_rest:
     
 #################
 
-    def get_osimage(self, *args, **kwargs):
+    def get_osimage(self, osimages_info, **kwargs):
         resp        = None
         baseurl     = kwargs['url']
         session     = kwargs['session']
@@ -1046,9 +1046,9 @@ class lxca_rest:
         url         = ''
         kwargs      = {key: kwargs[key] for key in kwargs if key not in ['url', 'session']}
 
-        if not args and (not kwargs.has_key('id') or not kwargs.has_key('fileName')):
+        if not osimages_info and (not kwargs.has_key('id') or not kwargs.has_key('fileName')):
             url = baseurl + '/osImages'
-        if 'hostPlatforms' in args:
+        if 'hostPlatforms' in osimages_info:
             url = baseurl + '/hostPlatforms'
         if kwargs.has_key('fileName'):
             url = baseurl + '/osImages/%s' %(kwargs['fileName'])
@@ -1058,11 +1058,11 @@ class lxca_rest:
                 url = url + '?' + kwargs['path']
             if kwargs.has_key('serverId'):
                 url = url + '&' + kwargs['serverId']
-        if 'connection' in args:
+        if 'connection' in osimages_info:
             url = baseurl + '/osdeployment/connection'
-        if 'globalSettings' in args:
+        if 'globalSettings' in osimages_info:
             url = baseurl + '/osdeployment/globalSettings'
-        if 'remoteFileServers' in args:
+        if 'remoteFileServers' in osimages_info:
             url = baseurl + '/osImages/remoteFileServers'
             if kwargs.has_key('id'):
                 url = url + '/' + kwargs['id']
@@ -1076,7 +1076,7 @@ class lxca_rest:
             raise re  ## uncomment this
         return resp
 
-    def set_osimage(self, *args, **kwargs):
+    def set_osimage(self, osimages_info, **kwargs):
         resp        = None
         baseurl     = kwargs['url']
         session     = kwargs['session']
@@ -1097,20 +1097,24 @@ class lxca_rest:
             return resp
 
         #put/post/delete for osimages/<id> DONE
-        if 'putid' in args or 'postid' in args:
+        if 'putid' in osimages_info or 'postid' in osimages_info:
+            if not kwargs.has_key('id'):
+                raise Exception ("Invalid Arguments, Try: id='id1,id2, .. ,idn' ")
+            url = url + '/' + str(kwargs['id'])
+
             if not kwargs.has_key('profile') or not isinstance(kwargs['profile'],dict):
                 raise Exception ("Invalid Arguments, Try: profile = <dict>")
             # todo jsonify 'profile', dict
             payload['profile'] = kwargs['profile']
 
-            if 'putid' in args:
+            if 'putid' in osimages_info:
                 resp = self.put_method(url, session, payload)
                 return resp
-            if 'postid' in args:
+            if 'postid' in osimages_info:
                 resp = self.post_method(url, session, payload)
                 return resp
 
-        if 'deleteid' in args: # associated with delete call for osimages/id DONE
+        if 'deleteid' in osimages_info: # associated with delete call for osimages/id DONE
             if not kwargs.has_key('id'):
                 raise Exception ("Invalid Arguments, Try: id='id1,id2, .. ,idn' ")
             url = url + '/' + str(kwargs['id'])
@@ -1122,6 +1126,8 @@ class lxca_rest:
             url = url + '?'
             if set(['jobId','imageName','imageType','os']).difference(set(kwargs.keys())):
                 raise Exception ("Invalid Arguments, Try:['jobId','imageName','imageType','os']")
+            if kwargs['imageType'] in ['BOOT', 'DUD'] and not kwargs.has_key('osrelease') :
+                raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType','os','osrelease]")
             for k,v in  kwargs.items():
                 url = url + "%s=%s&" %(k,v)
             url = url.rstrip('&')
@@ -1129,7 +1135,7 @@ class lxca_rest:
             return resp
 
         # postcall for remoteFileServers DONE
-        if 'remoteFileServers' in args and not kwargs.has_key('putid') and not kwargs.has_key('deleteid'):
+        if 'remoteFileServers' in osimages_info and not kwargs.has_key('putid') and not kwargs.has_key('deleteid'):
             url = url + '/remoteFileServers'
             if set(['address','displayName','port', 'protocol']).difference(set(kwargs.keys())):
                 raise Exception ("Invalid Arguments, Try:['address','displayName','port', 'protocol']")
@@ -1139,7 +1145,7 @@ class lxca_rest:
             return resp
 
         # put/delete call for remoteFileServers DONE
-        if 'remoteFileServers' in args and kwargs.has_key('putid') or kwargs.has_key('deleteid'):
+        if 'remoteFileServers' in osimages_info and ( kwargs.has_key('putid') or kwargs.has_key('deleteid')):
             url = url + '/remoteFileServers'
             if kwargs.has_key('putid'): # put call for remoteFileServers/<id>
                 if set(['putid','address','displayName','port', 'protocol']).difference(set(kwargs.keys())):
@@ -1158,7 +1164,7 @@ class lxca_rest:
                 return resp
 
         # put call for hostPlatforms DONE
-        if 'hostPlatforms' in args:
+        if 'hostPlatforms' in osimages_info:
             url = url.rsplit('/',1)[0] +'/hostPlatforms'
             # if not kwargs.has_key('networkSettings'):
             if set(['networkSettings', 'selectedImage', 'storageSettings','uuid',]).difference(set(kwargs.keys())):
@@ -1170,8 +1176,10 @@ class lxca_rest:
             resp = self.put_method(url, session, [payload])
             return resp
 
+        '''
+        THESE ARE INTERNALLY ONLY APIs
         # put call for osdeployment DONE
-        if 'osdeployment' in args and kwargs.has_key('items'):
+        if 'osdeployment' in osimages_info and kwargs.has_key('items'):
             url = url.rsplit('/',1)[0] + '/osdeployment'
             if not isinstance(kwargs['items'], list):
                 raise Exception ("Invalid Arguments, Try:items=<list>")
@@ -1198,7 +1206,7 @@ class lxca_rest:
             return resp
 
         # post call for osdeployment DONE
-        if 'osdeployment' in args:
+        if 'osdeployment' in osimages_info:
             url = baseurl + '/osdeployment'
             if kwargs.has_key('action'):
                 if set(['action', 'mac', 'nodeName']).difference(set(kwargs.keys())):
@@ -1208,13 +1216,14 @@ class lxca_rest:
             resp = self.post_method(url, session, payload={})
             return resp
 
+        '''
 
         # put call for globalSettings DONE
-        if 'globalSettings' in args and kwargs.has_key['activeDirectory']:
+        if 'globalSettings' in osimages_info and kwargs.has_key('activeDirectory'):
             url = baseurl + '/osdeployment/globalSettings'
             if set(['activeDirectory', 'credentials','ipAssignment','isVLANMode','licenseKeys']).difference(set(kwargs.keys())):
                 raise Exception ("Invalid Arguments, Try:['activeDirectory'=<list>, 'credentials'=<list>,'ipAssignment','isVLANMode','licenseKeys'=<dict>]")
-            if  not isinstance(kwargs['activeDirectory'], list) or\
+            if  not isinstance(kwargs['activeDirectory'], dict) or\
                 not isinstance(kwargs['credentials'], list) or\
                 not isinstance(kwargs['licenseKeys'], dict):
                 raise Exception ("Invalid Arguments, Try:['activeDirectory'=<list>, 'credentials'=<list>,'licenseKeys'=<dict>]")

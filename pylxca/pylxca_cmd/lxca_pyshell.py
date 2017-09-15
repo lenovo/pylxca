@@ -1279,8 +1279,10 @@ def osimages(con, *args, **kwargs):
     #     raise ValueError("Invalid Input Arguments")
 
     logger.info(" osimages got kwargs %s " % str(kwargs))
-    param_dict = (args, kwargs)
-    logger.info(" osimages got param_dict %s " % str(param_dict))
+    if args:
+        kwargs['osimages_info'] = args[0]
+    #param_dict = (args, kwargs)
+    logger.info(" osimages got param_dict %s " % str(kwargs))
     # handle_input_dict only takes param_dict as input argument
-    ch = shell_obj.handle_input_dict(command_name, con, param_dict)
+    ch = shell_obj.handle_input_dict(command_name, con, kwargs)
     return ch

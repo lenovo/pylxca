@@ -743,10 +743,10 @@ class lxca_api ():
         - osimages(id=<>, **kwargs)     				<< PUT/POST/DELETE command  :: DONE [TODO: its a complex post args]
         - osimages(jobid = <>)							<< POST command    ::DONE
 
-        - osimages(remoteFileServer)					<< GET  command    ::DONE
-        - osimages(remoteFileServer, **kwargs)			<< POST command    ::DONE
-        - osimages(remoteFileServer, getId=<>)			<< GET  command    ::DONE
-        - osimages(remoteFileServer, putId/deleteId=<>, **kwargs)	<< PUT/DELETE command  DONE
+        - osimages(remoteFileServers)					<< GET  command    ::DONE
+        - osimages(remoteFileServers, **kwargs)			<< POST command    ::DONE
+        - osimages(remoteFileServers, getId=<>)			<< GET  command    ::DONE
+        - osimages(remoteFileServers, putId/deleteId=<>, **kwargs)	<< PUT/DELETE command  DONE
 
         - osimages(hostplatforms)						<< GET  command    ::DONE
         - osimages(hostplatforms, **kwargs)				<< PUT  command    ::DONE [TODO: jsonify complex args]
@@ -762,8 +762,11 @@ class lxca_api ():
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         # parsing dict_handler to fetch args, kwargs
-        args = dict_handler[0]
-        kwargs = dict_handler[-1]
+        osimages_info = ()
+        if dict_handler.has_key('osimages_info'):
+            osimages_info = (dict_handler['osimages_info'],)
+            dict_handler.pop('osimages_info')
+        kwargs = dict_handler
 
         putmethod_keylist = ['imageType','jobId', 'putid', 'deleteid']
         for key in kwargs.keys():
@@ -771,24 +774,24 @@ class lxca_api ():
                 get_method = False
                 break
         # parsing args for putId,postId,deleteId: refer osImages/<id>
-        if 'postid' in args or 'putid' in args or 'deleteid' in args:
+        if 'postid' in osimages_info or 'putid' in osimages_info or 'deleteid' in osimages_info:
             get_method = False
-        if 'remoteFileServers' in args and kwargs:
+        if 'remoteFileServers' in osimages_info and kwargs:
             get_method = False
             if kwargs.has_key('id') and kwargs.keys().__len__() == 1:
                 get_method = True
-        if 'hostPlatforms' in args and kwargs:
+        if 'hostPlatforms' in osimages_info and kwargs:
             get_method = False
-        if 'globalSettings' in args and kwargs:
+        if 'globalSettings' in osimages_info and kwargs:
             get_method = False
-        if 'osdeployment' in args:
+        if 'osdeployment' in osimages_info:
             get_method = False
 
         if get_method:
             # get methods calls refer above docstring
-            resp = lxca_rest().get_osimage(*args, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
+            resp = lxca_rest().get_osimage(osimages_info, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
         else:
-            resp = lxca_rest().set_osimage(*args, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
+            resp = lxca_rest().set_osimage(osimages_info, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
         try:
             py_obj = json.loads(resp._content)
             return py_obj
