@@ -1128,10 +1128,14 @@ class lxca_rest:
                 raise Exception ("Invalid Arguments, Try:['jobId','imageName','imageType','os']")
             if kwargs['imageType'] in ['BOOT', 'DUD'] and not kwargs.has_key('osrelease') :
                 raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType','os','osrelease]")
+            payload_keylist = ['serverId', 'path']
             for k,v in  kwargs.items():
-                url = url + "%s=%s&" %(k,v)
+                if k in payload_keylist:
+                    payload[k] = v
+                else:
+                    url = url + "%s=%s&" %(k,v)
             url = url.rstrip('&')
-            resp = self.post_method(url, session, payload={})
+            resp = self.post_method(url, session, payload)
             return resp
 
         # postcall for remoteFileServers DONE
@@ -1321,7 +1325,7 @@ class lxca_rest:
     def post_method(self,url, session, payload, **kwargs):
         resp = None
         try:
-            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=600)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
