@@ -1135,7 +1135,7 @@ class lxca_rest:
                 else:
                     url = url + "%s=%s&" %(k,v)
             url = url.rstrip('&')
-            resp = self.post_method(url, session, payload)
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=600)
             return resp
 
         # postcall for remoteFileServers DONE
@@ -1325,7 +1325,7 @@ class lxca_rest:
     def post_method(self,url, session, payload, **kwargs):
         resp = None
         try:
-            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=600)    ## It raises HTTPError here
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
