@@ -256,7 +256,7 @@ class lxca_api ():
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
-            py_obj = {'powersuppliesList':py_obj["powersupplies"]}
+            py_obj = {'powersuppliesList':py_obj["powerSupplies"]}
         else:
             resp = lxca_rest().get_powersupply(self.con.get_url(),self.con.get_session(),uuid)
             py_obj = json.loads(resp.text)
@@ -408,6 +408,7 @@ class lxca_api ():
 
     def do_configpatterns( self, dict_handler = None ):
         patternid = None
+        patternname = None
         includeSettings = None
         endpoint = None
         restart = None
@@ -419,11 +420,25 @@ class lxca_api ():
 
         if dict_handler:
             patternid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
+            patternname = next((item for item in [dict_handler.get('n'), dict_handler.get('name')] if item is not None),
+                             None)
             includeSettings = next((item for item in [dict_handler.get('includeSettings')] if item is not None),None)
             endpoint = next((item for item in [dict_handler.get  ('e') , dict_handler.get('endpoint')] if item is not None),None)
             restart = next((item for item in [dict_handler.get  ('r') , dict_handler.get('restart')] if item is not None),None)
             etype = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
             pattern_update_dict = next((item for item in [dict_handler.get('pattern_update_dict')] if item is not None), None)
+
+        if patternname and not patternid:
+            # get all patterns and get id from name
+            resp = lxca_rest().do_configpatterns(self.con.get_url(), self.con.get_session(), None, None,
+                                                 None, None, None, None)
+            py_obj = json.loads(resp.text)
+            for item in py_obj['items']:
+                if item['name'] == patternname:
+                    patternid = item['id']
+                    break
+            if not patternid:
+                raise Exception("Pattern Name %s not found" %patternname)
 
         resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid, includeSettings, endpoint, restart, etype, pattern_update_dict)
 

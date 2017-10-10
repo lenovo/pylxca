@@ -161,13 +161,20 @@ def cmms(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
     keylist = ['con','uuid','chassis']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['uuid','chassis']
+    mutually_exclusive_keys = ['uuid','chassis']
+    mandatory_options_list = {}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                        con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
 
 def chassis(*args, **kwargs):
     '''
@@ -195,14 +202,21 @@ def chassis(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
     keylist = ['con','uuid','status']
-    
-    for i in range(len(args)):
-        #print args[i]
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['uuid','status']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {'status':[
+        'uuid'
+    ]}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                        con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def fans(*args, **kwargs):
     '''
@@ -229,13 +243,19 @@ def fans(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
     keylist = ['con','uuid','chassis']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['uuid','chassis']
+    mutually_exclusive_keys = ['uuid','chassis']
+    mandatory_options_list = {}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                        con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def fanmuxes(*args, **kwargs):
     '''
@@ -262,13 +282,20 @@ def fanmuxes(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','uuid','chassis']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'uuid', 'chassis']
+    optional_keylist = ['uuid', 'chassis']
+    mutually_exclusive_keys = ['uuid', 'chassis']
+    mandatory_options_list = {}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                    con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
 
 def nodes(*args, **kwargs):
     '''
@@ -296,13 +323,19 @@ def nodes(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
     keylist = ['con','uuid','chassis','status']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['uuid', 'chassis','status']
+    mutually_exclusive_keys = ['uuid', 'chassis']
+    mandatory_options_list = {}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                    con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def switches(*args, **kwargs):
     '''
@@ -315,7 +348,7 @@ def switches(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','uuid','chassis']
+        keylist = ['con','uuid','chassis','ports','action']
 
 @param
     The parameters for this command are as follows 
@@ -323,6 +356,8 @@ def switches(*args, **kwargs):
     con      Connection Object to Lenovo XClarity Administrator
     uuid          uuid of switch
     chassis       chassis uuid
+    ports         empty ports string list all ports for uuid, comma separated ports
+    action        enable/disable ports
     
 @example 
     
@@ -331,11 +366,19 @@ def switches(*args, **kwargs):
     command_name = sys._getframe().f_code.co_name
     keylist = ['con','uuid','chassis','ports','action']
     
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'uuid', 'chassis', 'ports', 'action']
+    optional_keylist = ['uuid', 'chassis', 'ports', 'action']
+    mutually_exclusive_keys = ['uuid', 'chassis']
+    mandatory_options_list = {}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                    con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def powersupplies(*args, **kwargs):
     '''
@@ -362,13 +405,19 @@ def powersupplies(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','uuid','chassis']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'uuid', 'chassis']
+    optional_keylist = ['uuid', 'chassis']
+    mutually_exclusive_keys = ['uuid', 'chassis']
+    mandatory_options_list = {}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                    con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def scalablesystem(*args, **kwargs):
     '''
@@ -577,8 +626,8 @@ def configpatterns(*args, **kwargs):
     param_dict = {}
     con = None
 
-    keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict']
-    optional_keylist = ['id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict']
+    keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
+    optional_keylist = ['id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
     mandatory_options_list = {'id': [], 'endpoint': ['type', 'restart'], 'pattern_update_dict': [],
                               'includeSettings': ['id']}
@@ -1195,7 +1244,9 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
         if (key in kwargs.keys()):
             param_dict[key] = kwargs[key]
         elif len(arglist) >= 1:
-            param_dict[key] = arglist.pop()
+            value = arglist.pop()
+            if value != None:
+                param_dict[key] = value
         elif key not in optional_keylist:
             logger.error(" Invalid Input args %s is not in optional list %s" %(key, str(mandatory_options_list)))
             raise ValueError("Invalid Input Arguments")
