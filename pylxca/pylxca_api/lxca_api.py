@@ -59,6 +59,7 @@ class lxca_api ():
                           'updatepolicy':self.do_updatepolicy,
                           'updaterepo':self.get_updaterepo,
                           'updatecomp':self.do_updatecomp,
+                          'managementserver':self.do_managementserver,
                           'users':self.get_users,
                           'ffdc':self.get_ffdc,
                           'jobs':self.get_jobs,
@@ -659,7 +660,42 @@ class lxca_api ():
         except AttributeError,ValueError:
             return resp
         return py_obj
-    
+
+
+
+    def do_managementserver(self, dict_handler=None):
+        key = None
+        action = None
+        fixids = None
+        type = None
+        jobid = None
+        files = None
+
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
+            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None),
+                          None)
+            fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None),
+                          None)
+            type = next((item for item in [dict_handler.get('t'), dict_handler.get('type')] if item is not None), None)
+            jobid = next((item for item in [dict_handler.get('j'), dict_handler.get('jobid')] if item is not None), None)
+            files = next((item for item in [dict_handler.get('files')] if item is not None),       None)
+        if key:
+            resp = lxca_rest().get_managementserver(self.con.get_url(), self.con.get_session(), key, fixids, type)
+        elif action:
+            resp = lxca_rest().set_managementserver(self.con.get_url(), self.con.get_session(), action, files, jobid, fixids)
+        else:
+            resp = lxca_rest().get_managementserver(self.con.get_url(), self.con.get_session(), key, fixids, type)
+
+        try:
+            py_obj = json.loads(resp.text)
+        except AttributeError, ValueError:
+            return resp
+        return py_obj
+
     def do_updatecomp( self, dict_handler = None ):
         mode = None
         action = None

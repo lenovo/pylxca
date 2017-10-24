@@ -749,3 +749,13 @@ class osimages(InteractiveCommand):
     """
     OSImages/Deployment on LXCA
     """
+
+
+###############################################################################
+
+
+
+class managementserver(InteractiveCommand):
+    """
+    managementserver update on LXCA
+    """

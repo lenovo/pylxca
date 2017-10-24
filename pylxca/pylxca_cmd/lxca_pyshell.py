@@ -1337,3 +1337,61 @@ def osimages(con, *args, **kwargs):
     # handle_input_dict only takes param_dict as input argument
     ch = shell_obj.handle_input_dict(command_name, con, kwargs)
     return ch
+
+
+def managementserver(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get repository info from Lenovo XClarity Administrator
+    run this function as
+
+    data_dictionary = managementserver( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con', 'key', 'fixids', 'type', 'action', 'files','jobid']
+
+@param
+    The parameters for this command are as follows
+
+    key    Returns the specified type of update. This can be one of the following values.
+                all. Returns all information. This is the default value.
+                currentVersion. Returns the current version of Lenovo XClarity Administrator.
+                history. Returns the history of management-server updates.
+                importDir. Returns the directory for the management-server updates repository.
+                size. Returns the repository size (in bytes).
+                updates. Returns information about all updates packages.
+                updatedDate. Returns the date when the last update was performed.
+
+    action    The action to take. This can be one of the following values.
+                apply   - install a management-server update.
+                refresh - Retrieves information (metadata) about the latest available management-server updates from the Lenovo XClarity Support website.
+                acquire - Downloads the specified management-server update packages from the Lenovo XClarity Support website.
+                delete  - Use the DELETE method to delete update packages. - removeMetadata not supported
+                import  - import fixids files
+
+     fixids    comma separated fixids
+     type      Type for Get with fixids
+                changeHistory. Returns the change-history file for the specified management-server update.
+                readme. Returns the readme file for the specified management-server update
+     jobid     jobid for import
+     files     files to be imported with fullpath and comma separated
+@example
+
+    '''
+    global shell_obj
+    command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'key', 'fixids', 'type', 'action', 'files','jobid']
+    optional_keylist = ['key', 'fixids', 'type', 'action', 'files', 'jobid']
+    mutually_exclusive_keys = ['key','action']
+    mandatory_options_list = {}
+
+    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                        con, param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj

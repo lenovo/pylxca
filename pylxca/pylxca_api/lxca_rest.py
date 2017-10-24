@@ -9,6 +9,8 @@
 
 import logging, os, json, pprint, requests
 import logging.config
+from requests_toolbelt import (MultipartEncoder,
+                               MultipartEncoderMonitor)
 from requests.exceptions import HTTPError
 import ast, json, re
 import socket
@@ -25,6 +27,12 @@ pylxca_logger = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
 
 logger = logging.getLogger(__name__)
 REST_TIMEOUT = 60
+
+
+def callback(encoder):
+    # uncomment it to debug, spit lot of data in log file for big upload
+    #logger.debug("Callback called with data length %d" % (encoder.bytes_read))
+    pass
 
 class lxca_rest:
     '''
@@ -651,7 +659,6 @@ class lxca_rest:
             if action == "acquire":
                 payload['type'] = "latest"
 
-            #return payload
             resp = session.put(url, data=json.dumps(payload), verify=False, timeout=3)
             resp.raise_for_status()
             return resp
@@ -659,6 +666,126 @@ class lxca_rest:
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
+
+    def get_managementserver(self, url, session, key, fixids, type):
+        url = url + '/managementServer/updates'
+        try:
+            if fixids:
+                url = url + "/" + fixids
+
+                if key:
+                    if key not in ['all', 'actions', 'keys', 'filetypes', 'updates']:
+                        raise Exception("Invalid Arguments, Try: with keys ['all', 'actions', 'keys', 'filetypes', 'updates']")
+                    url = url + "?key=" + key
+                elif type:
+                    if type not in ['changeHistory', 'readme']:
+                        raise Exception("Invalid Arguments, Try: with type ['changeHistory', 'readme']")
+                    url = url + "?type=" + type
+
+            else:
+                if key:
+                    if key not in ['all', 'currentVersion', 'size', 'importDir', 'history', 'updates', 'updateDate']:
+                        raise Exception(
+                            "Invalid Arguments, Try: with keys ['all', 'currentVersion', 'size', 'importDir', 'history', 'updates', 'updateDate']")
+                    url = url + "?key=" + key
+
+            resp = session.get(url,verify=False, timeout=3)
+            resp.raise_for_status()
+            return resp
+
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+
+    def set_managementserver(self, url, session, action, files, jobid, fixids):
+        url = url + '/managementServer/updates'
+        try:
+            if not action  == None \
+                    and action == "apply":
+                # implement PUT
+                url = url + "?action=apply"
+                payload = {}
+
+                if fixids:
+                    payload['fixids'] = [fixids]
+                else:
+                    raise Exception("Invalid argument apply requires fixids")
+                resp = session.put(url, data=json.dumps(payload), verify=False, timeout=3)
+                return resp
+            # Creations of Import job POST
+            if not action == None and action == "import":
+                file_list = files.strip().split(",")
+                file_type_dict = {'.txt': 'text/plain',
+                                  '.xml': 'text/xml',
+                                  '.chg': 'application/octet-stream',
+                                  '.tgz': 'application/x-compressed'}
+
+                if jobid == None:
+                    url = url + "?action=import"
+                    #payload = {"files":[{"index":0,"name":"lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml","size":7329,"type":"text/xml"}]}
+                    payload_files = [{
+                                         'index': index,
+                                         'name': os.path.basename(file),
+                                         'size': os.path.getsize(file),
+                                         'type': file_type_dict[os.path.splitext(os.path.basename(file))[-1]]
+                                     } for index, file in enumerate(file_list)]
+                    payload = {'files' : payload_files}
+
+                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout=120)
+                    return resp
+
+                else :
+                    url = url + "?action=import&jobid=" + jobid
+                    m = MultipartEncoder(
+                        fields=[('uploadedfile[]', (os.path.basename(file),
+                                                    open(file, 'rb'),
+                                                    file_type_dict[os.path.splitext(os.path.basename(file))[-1]])
+                                 ) for file in file_list]
+                    )
+                    monitor = MultipartEncoderMonitor(m, callback)
+                    resp = session.post(url, data = monitor, headers={'Content-Type': monitor.content_type}, verify=False, timeout=6000)
+                    return resp
+
+
+            if not action == None \
+                    and action == "acquire":
+                # implement delete
+
+                payload = {}
+                if fixids:
+                    fixids_list = fixids.split(",")
+                    payload['fixids'] = fixids_list
+                else:
+                    raise Exception("Invalid argument key action: acquire requires fixids ")
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=3)
+                return resp
+
+            if not action == None \
+                    and action == "refresh":
+                # implement delete
+
+                payload = {}
+                payload['mts'] = 'lxca'
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=3)
+                return resp
+
+            if not action == None \
+                    and action == "delete":
+                # implement delete
+
+                if fixids:
+                    url = url + "/" + fixids
+                else:
+                    raise Exception("Invalid argument key action: delete requires fixids ")
+
+                #url = url + "&key=removeMetadata"
+                resp = session.delete(url,  verify=False, timeout=3)
+                return resp
+
+        except HTTPError as re:
+            logger.error("Exception occured: %s",re)
+            raise re
+
 
     def do_updatecomp(self, url, session, mode, action, server, switch, storage, cmm):
         serverlist = list()
@@ -1087,8 +1214,8 @@ class lxca_rest:
 
         # postcall of osimage DONE
         if kwargs.has_key('imageType') and not kwargs.has_key('jobId'):
-            if kwargs['imageType'] not in ['BOOT', 'DUD', 'OS', 'OSPROFILE']:
-                raise Exception ("Invalid Arguments, Try: [BOOT,DUD,OS,OSPROFILE]")
+            if kwargs['imageType'] not in ['BOOT', 'DUD', 'OS', 'OSPROFILE', 'SCRIPT']:
+                raise Exception ("Invalid Arguments, Try: [BOOT,DUD,OS,OSPROFILE,SCRIPT]")
             if kwargs.has_key('fileSize'):
                 payload['fileSize'] = kwargs['fileSize']
             url = url + '/?imageType=' + kwargs['imageType']
@@ -1128,16 +1255,33 @@ class lxca_rest:
                 raise Exception ("Invalid Arguments, Try:['jobId','imageName','imageType','os']")
             if kwargs['imageType'] in ['BOOT', 'DUD'] and not kwargs.has_key('osrelease') :
                 raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType','os','osrelease]")
-            payload_keylist = ['serverId', 'path']
-            for k,v in  kwargs.items():
-                if k in payload_keylist:
-                    payload[k] = v
-                else:
+            if kwargs.has_key('serverId'):
+                payload_keylist = ['serverId', 'path']
+                for k,v in  kwargs.items():
+                    if k in payload_keylist:
+                        payload[k] = v
+                    else:
+                        url = url + "%s=%s&" %(k,v)
+                url = url.rstrip('&')
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=600)
+                return resp
+            else:    # local case
+                for k,v in  kwargs.items():
                     url = url + "%s=%s&" %(k,v)
-            url = url.rstrip('&')
-            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=600)
-            return resp
+                url = url.rstrip('&')
 
+                # m = MultipartEncoder(
+                #     fields={ 'name':'updatedfile', 'filename': ('trail.py', open('/home/naval/trail.py', 'r'), 'text/plain')}
+                # )
+                #
+                # monitor = MultipartEncoderMonitor(m, self.callback)
+                # logger.debug("Form data = %s", m.to_string())
+                files = {
+                    #'name':(None,'uploadedfile'),
+                    'uploadedfile': ('trail.py', open('/home/naval/trail.py', 'rb'),'text/plain')}
+                #files = {'file': ('trail.py', open('/home/naval/trail.py', 'r'), 'text/plain')}
+                resp = session.post(url, files=files, verify=False, timeout=600)
+                return resp
         # postcall for remoteFileServers DONE
         if 'remoteFileServers' in osimages_info and not kwargs.has_key('putid') and not kwargs.has_key('deleteid'):
             url = url + '/remoteFileServers'
@@ -1288,7 +1432,6 @@ class lxca_rest:
             return resp
 
         return resp
-
 
 
 
