@@ -676,7 +676,8 @@ class lxca_rest:
                 if key:
                     if key not in ['all', 'actions', 'keys', 'filetypes', 'updates']:
                         raise Exception("Invalid Arguments, Try: with keys ['all', 'actions', 'keys', 'filetypes', 'updates']")
-                    url = url + "?key=" + key
+                    if key not in ['all']:
+                        url = url + "?key=" + key
                 elif type:
                     if type not in ['changeHistory', 'readme']:
                         raise Exception("Invalid Arguments, Try: with type ['changeHistory', 'readme']")
@@ -687,7 +688,8 @@ class lxca_rest:
                     if key not in ['all', 'currentVersion', 'size', 'importDir', 'history', 'updates', 'updateDate']:
                         raise Exception(
                             "Invalid Arguments, Try: with keys ['all', 'currentVersion', 'size', 'importDir', 'history', 'updates', 'updateDate']")
-                    url = url + "?key=" + key
+                    if key not in ['all']:
+                        url = url + "?key=" + key
 
             resp = session.get(url,verify=False, timeout=3)
             resp.raise_for_status()
