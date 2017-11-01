@@ -307,8 +307,14 @@ class lxca_rest:
                     logger.debug("Failed to discover given endpoint  %s" %param_dict["ipAddresses"])
                     raise Exception("Failed to discover given endpoint  %s" %param_dict["ipAddresses"])
                 
-                if force == True:
-                    param_dict["forceManage"] = True
+                if force:
+                    if isinstance(force, bool):
+                        param_dict["forceManage"] = force
+                    else:
+                        if force.lower() == "true":
+                            param_dict["forceManage"] = True
+                        else:
+                            param_dict["forceManage"] = False
 
                 security_Descriptor = { }
                 security_Descriptor['managedAuthEnabled'] = True
@@ -367,10 +373,14 @@ class lxca_rest:
                     endpoints_list.append(each_ep_dict)
                 param_dict["endpoints"] = endpoints_list
 
-                if force.lower() == "true":
-                    param_dict["forceUnmanage"] = True
-                else:
-                    param_dict["forceUnmanage"] = False
+                if force:
+                    if isinstance(force, bool):
+                        param_dict["forceUnmanage"] = force
+                    else:
+                        if force.lower() == "true":
+                            param_dict["forceUnmanage"] = True
+                        else:
+                            param_dict["forceUnmanage"] = False
 
                 payload = param_dict
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
@@ -968,11 +978,16 @@ class lxca_rest:
                 payload['resetIMM'] = True
             else:
                 payload['resetIMM'] = False
+
         if force:
-            if force.lower() == "true":
-                payload['force'] = True
+            if isinstance(force, bool):
+                payload["force"] = force
             else:
-                payload['force'] = False
+                if force:
+                    if force.lower() == "true":
+                        payload['force'] = True
+                    else:
+                        payload['force'] = False
 
         try:
             resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)

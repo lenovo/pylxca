@@ -370,7 +370,7 @@ class lxca_api ():
 
     def do_unmanage( self, dict_handler = None ):
         endpoints = None
-        force = False
+        force = None
         jobid = None
         
         if not self.con:
@@ -378,7 +378,7 @@ class lxca_api ():
         
         if dict_handler:
             endpoints = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
-            force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),False)
+            force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),None)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
             
         resp = lxca_rest().do_unmanage(self.con.get_url(),self.con.get_session(),endpoints,force,jobid)
