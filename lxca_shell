@@ -32,7 +32,7 @@ def handle_ctrl_c(signum, frame):
     # restore the original signal handler as otherwise evil things will happen
     # in raw_input when CTRL+C is pressed, and our signal handler is not re-entrant
     signal.signal(signal.SIGINT, original_sigint)
-    print '\nKeyboardInterrupt: Press ctrl+D to exit'
+    print ('\nKeyboardInterrupt: Press ctrl+D to exit')
     
     # restore the exit gracefully handler here
     signal.signal(signal.SIGINT, handle_ctrl_c)

@@ -36,7 +36,7 @@ class connect(InteractiveCommand):
     def handle_command(self, opts, args):
         try:
             opts, argv = getopt.getopt(args, self.get_char_options(), self.get_long_options())
-        except getopt.GetoptError, e:
+        except getopt.GetoptError as e:
             self.invalid_input_err()
             return
         
@@ -50,7 +50,7 @@ class connect(InteractiveCommand):
             return
         
         opt_dict = self.parse_args(opts, argv)
-        if not opt_dict.has_key("pw"):
+        if "pw" not in opt_dict:
             opt_dict ['pw'] = getpass("Enter Password: ")
         
         out_obj = None

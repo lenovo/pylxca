@@ -11,10 +11,11 @@ feature and accepts raw input from command line
 import re,sys,os,traceback
 import itertools
 import logging
+from platform import python_version
 
 from pylxca.pylxca_cmd import lxca_cmd
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
-from lxca_view import lxca_ostream
+from pylxca.pylxca_cmd.lxca_view import lxca_ostream
 from pylxca.pylxca_cmd import lxca_icommands
 #from rlcompleter import readline
 
@@ -80,7 +81,7 @@ class InteractiveShell(object):
             self.sprint('The following commands are available:\n')
 
             cmdwidth = 0
-            for name in self.commands.keys( ):
+            for name in list(self.commands.keys( )):
                 if len(name) > cmdwidth:
                     cmdwidth = len(name)
 
@@ -171,7 +172,7 @@ class InteractiveShell(object):
         
     def add_command(self, command):
         if command.get_name( ) in self.commands:
-            raise Exception, 'command %s already registered' % command.get_name( )
+            raise Exception('command %s already registered' % command.get_name( ))
 
         self.commands[command.get_name()] = command
 
@@ -189,7 +190,10 @@ class InteractiveShell(object):
 #                readline.set_completer_delims(' \t\n;')
 #                readline.parse_and_bind("tab: complete")
 #                readline.set_completer(self.auto_complete)
-                command_line = raw_input(self.prompt)
+                if python_version()[0] == '2':
+                    command_line = raw_input(self.prompt)
+                else:
+                    command_line = input(self.prompt)
             except (KeyboardInterrupt, EOFError):
                 break
 
@@ -227,7 +231,7 @@ class InteractiveShell(object):
         re_args = re.findall('\-\-\S+\=\"[^\"]*\"|\S+', command_args)
         #re_args = re.findall('\-\-\S+|\-\S+|\S+[\s*\w+]*', command_args)
         # Parse args if present
-        for i in xrange(0, len(re_args)):
+        for i in range(0, len(re_args)):
             args.append( re_args[i] )
         try:
             return command.handle_command(opts=opts, args=args)
@@ -254,7 +258,7 @@ class InteractiveShell(object):
             args['--' + item] = kwargs['kwargs'][item]
         
         try:
-            return command.handle_command(opts=opts, args=list(itertools.chain(*args.items())))
+            return command.handle_command(opts=opts, args=list(itertools.chain(*list(args.items()))))
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err

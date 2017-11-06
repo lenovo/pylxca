@@ -14,7 +14,6 @@ import traceback
 from pylxca import __version__
 from pylxca.pylxca_cmd import lxca_ishell
 from pylxca.pylxca_cmd.lxca_cmd import fanmuxes
-from __builtin__ import ValueError
 
 #shell is a global variable
 shell_obj = None
@@ -1194,7 +1193,7 @@ def resourcegroups(*args, **kwargs):
     arglist = arglist[::-1]
 
     for key in keylist:
-        if (key in kwargs.keys()):
+        if (key in list(kwargs.keys())):
             param_dict[key] = kwargs[key]
         elif len(arglist)>=1:
             param_dict[key] = arglist.pop()
@@ -1208,9 +1207,9 @@ def resourcegroups(*args, **kwargs):
         raise AttributeError("Invalid command invocation: Connection Object missing.")
     
     me_key_found = False
-    for me_key in param_dict.keys():
+    for me_key in list(param_dict.keys()):
         #Checking mandatory option_list presence
-        if me_key in mandatory_options_list.keys():
+        if me_key in list(mandatory_options_list.keys()):
             if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
                 raise AttributeError("Invalid command invocation")
             
@@ -1241,7 +1240,7 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
     arglist = arglist[::-1]
 
     for key in keylist:
-        if (key in kwargs.keys()):
+        if (key in list(kwargs.keys())):
             param_dict[key] = kwargs[key]
         elif len(arglist) >= 1:
             value = arglist.pop()
@@ -1260,9 +1259,9 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
     logger.debug(" Parameter dict %s " %str(param_dict))
 
     me_key_found = False
-    for me_key in param_dict.keys():
+    for me_key in list(param_dict.keys()):
         # Checking mandatory option_list presence
-        if me_key in mandatory_options_list.keys():
+        if me_key in list(mandatory_options_list.keys()):
             if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
                 logger.error(" Invalid command invocation %s of mandatory list %s is not in arguments parovided" % (me_key, str(mandatory_options_list)))
                 raise AttributeError("Invalid command invocation")

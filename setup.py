@@ -8,13 +8,14 @@
 '''
 import os, sys, re
 from codecs import open
+from platform import python_version
 
 try:
     from setuptools import setup, find_packages
 except ImportError:
-    print "setuptools is needed to run this file"
-    print "Try -- 'sudo pip install setuptools'"
-    print "Exiting .."
+    print ("setuptools is needed to run this file")
+    print ("Try -- 'sudo pip install setuptools'")
+    print ("Exiting ..")
     sys.exit(1)
 
 def read(fname):
@@ -23,6 +24,7 @@ def read(fname):
 with open('pylxca/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
+    version = python_version()[0]
 
 if not version:
     raise RuntimeError('Cannot find version information')
@@ -38,7 +40,7 @@ setup(
     url                 = "http://www.lenovo.com",
     packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
     long_description    = read('README'),
-    install_requires    = ['requests>=2.7.0','requests-toolbelt>=0.8.0'],
+    install_requires    = ['requests>=2.7.0', 'requests-toolbelt>=0.8.0'],
     include_package_data= True,
     scripts             = ['lxca_shell'],
 #    data_files          = [('pylxca_api', ['pylxca/pylxca_api/lxca_logger.conf'])],

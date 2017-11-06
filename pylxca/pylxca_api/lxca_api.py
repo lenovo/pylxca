@@ -8,6 +8,7 @@
 single entry point for APIs.   
 '''
 
+
 import logging.config
 import json
 
@@ -15,7 +16,6 @@ from pylxca.pylxca_api.lxca_connection import lxca_connection
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from  pylxca.pylxca_api.lxca_rest import lxca_rest
 from  pylxca.pylxca_api.lxca_rest import HTTPError
-from __builtin__ import isinstance
 
 logger = logging.getLogger(__name__)
 
@@ -27,12 +27,21 @@ class Singleton(type):
         except AttributeError:
             cls.__instance = super(Singleton, cls).__call__(*args, **kwargs)
             return cls.__instance
-        
-class lxca_api ():
+
+def with_metaclass(meta, *bases):
+    class metaclass(meta):
+        __call__ = type.__call__
+        __init__ = type.__init__
+        def __new__(cls, name, this_bases, d):
+            if this_bases is None:
+                return type.__new__(cls, name, (), d)
+            return meta(name, bases, d)
+    return metaclass('temporary_class', None, {})
+
+class lxca_api(with_metaclass(Singleton, object)):
     '''
     Facade class which exposes interface for accessing various LXCA APIs
     '''
-    __metaclass__ = Singleton
     
     def __init__(self):
         '''
@@ -334,7 +343,7 @@ class lxca_api ():
         try:
             py_obj = json.loads(resp.text)
             return py_obj
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
 
     def do_manage( self, dict_handler = None ):
@@ -364,7 +373,7 @@ class lxca_api ():
         try:
             py_obj = json.loads(resp.text)
             return py_obj
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
 
 
@@ -378,14 +387,14 @@ class lxca_api ():
         
         if dict_handler:
             endpoints = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
-            force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),None)
+            force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),False)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
             
         resp = lxca_rest().do_unmanage(self.con.get_url(),self.con.get_session(),endpoints,force,jobid)
         
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
         
@@ -404,7 +413,7 @@ class lxca_api ():
             py_obj = json.loads(resp.text)
             return py_obj
 
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
 
     def do_configpatterns( self, dict_handler = None ):
@@ -450,7 +459,7 @@ class lxca_api ():
             py_obj = json.loads(resp.text)
             return py_obj
         
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
     
     def get_configprofiles( self, dict_handler = None ):
@@ -504,7 +513,7 @@ class lxca_api ():
                 return py_obj
             elif resp.status_code == 204:   # Its success for rename of profile with empty text
                 return { 'ID':profileid, 'name':profilename}
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
     
     def get_jobs( self, dict_handler = None ):        
@@ -535,7 +544,7 @@ class lxca_api ():
                 py_obj = json.loads(resp.text)
                 py_obj = {'jobsList':py_obj}
             return py_obj
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
 
 
@@ -558,7 +567,7 @@ class lxca_api ():
             else:
                 py_obj = json.loads(resp.text)
                 py_obj = {'usersList':py_obj['response']}
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
     
@@ -577,7 +586,7 @@ class lxca_api ():
             py_obj = json.loads(resp.text)
             py_obj = {'eventList':py_obj}
             return py_obj
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         
     def get_ffdc( self, dict_handler = None ): 
@@ -593,7 +602,7 @@ class lxca_api ():
         
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
     
@@ -625,7 +634,7 @@ class lxca_api ():
             py_obj = json.loads(resp.text)
             if info == "RESULTS":
                 py_obj = py_obj["all"]
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
 
@@ -657,7 +666,7 @@ class lxca_api ():
 
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
 
@@ -692,7 +701,7 @@ class lxca_api ():
 
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError, ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
 
@@ -723,7 +732,7 @@ class lxca_api ():
             else:
                 py_obj = json.loads(resp._content)
             return py_obj
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
 
@@ -777,7 +786,7 @@ class lxca_api ():
         try:
             py_obj = json.loads(resp._content)
             return py_obj
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
 
@@ -814,13 +823,13 @@ class lxca_api ():
             raise ConnectionError("Connection is not Initialized.")
         # parsing dict_handler to fetch args, kwargs
         osimages_info = ()
-        if dict_handler.has_key('osimages_info'):
+        if 'osimages_info' in dict_handler:
             osimages_info = (dict_handler['osimages_info'],)
             dict_handler.pop('osimages_info')
         kwargs = dict_handler
 
         putmethod_keylist = ['imageType','jobId', 'putid', 'deleteid']
-        for key in kwargs.keys():
+        for key in list(kwargs.keys()):
             if key in putmethod_keylist:
                 get_method = False
                 break
@@ -829,7 +838,7 @@ class lxca_api ():
             get_method = False
         if 'remoteFileServers' in osimages_info and kwargs:
             get_method = False
-            if kwargs.has_key('id') and kwargs.keys().__len__() == 1:
+            if 'id' in kwargs and list(kwargs.keys()).__len__() == 1:
                 get_method = True
         if 'hostPlatforms' in osimages_info and kwargs:
             get_method = False
@@ -846,7 +855,7 @@ class lxca_api ():
         try:
             py_obj = json.loads(resp._content)
             return py_obj
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
 
@@ -875,7 +884,7 @@ class lxca_api ():
         
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError,ValueError:
+        except AttributeError as ValueError:
             return resp
         return py_obj
     

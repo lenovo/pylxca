@@ -7,8 +7,8 @@ __version__ = '2.0.0'
 # Importing just this module is enough.
 
 # These are explicitly safe for 'import *'
-from pylxca_api import *
-from pylxca_cmd import *
+from pylxca.pylxca_api import *
+from pylxca.pylxca_cmd import *
 from pylxca.pylxca_cmd.lxca_pyshell import *
 
 # Set default logging handler to avoid "No handler found" warnings.

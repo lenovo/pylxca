@@ -40,14 +40,14 @@ class ConnectionError(Error):
     """This exception is raised when a connection related problem occurs, where a retry might make sense."""
     pass
 
-class lxca_connection():
+class lxca_connection(object):
     '''
     C
     '''
     def __init__(self, url, user = None,  passwd = None, verify_callback = True, retries = 3):
         self.url = url
         self.user = user
-        self.passwd = base64.b16encode(passwd)
+        self.passwd = base64.b16encode(passwd.encode())
         self.retires = retries
         self.debug = False
         self.session = None
@@ -59,7 +59,7 @@ class lxca_connection():
             self.verify_callback = verify_callback
 
     def __repr__(self):
-        return "%s(%s, %s, debug=%s)" %(self.__class__.__name__, `self.url`, self.user, `self.debug`)
+        return "%s(%s, %s, debug=%s)" %(self.__class__.__name__, repr(self.url), self.user, repr(self.debug))
 
     def connect(self):
         '''
@@ -70,7 +70,7 @@ class lxca_connection():
             self.session = requests.session()
             self.session.verify = self.verify_callback
             self.session.headers.update({'content-type': 'application/json; charset=utf-8'})
-            payload = dict(UserId= self.user, password=base64.b16decode(self.passwd))
+            payload = dict(UserId= self.user, password=base64.b16decode(self.passwd).decode())
             pURL = self.url + '/sessions'
             self.session.mount(self.url, lxcaAdapter(max_retries=self.retires))
             r = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback)
