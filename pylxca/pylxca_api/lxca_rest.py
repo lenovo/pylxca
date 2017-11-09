@@ -441,7 +441,7 @@ class lxca_rest(object):
                 resp.raise_for_status()
             else:
                 if state:
-                    if state == "Pending " or state == "Running" \
+                    if state == "Pending" or state == "Running" \
                     or state == "Complete" or state == "Cancelled" \
                     or state == "Running_With_Errors" or state == "Cancelled_With_Errors" \
                     or state == "Stopped_With_Error" or state == "Interrupted":
