@@ -966,6 +966,8 @@ class lxca_rest(object):
 
         if profileid:
             url = url + '/' + profileid
+        else:
+            raise Exception("Invalid argument, profile id is required for unassign ")
 
         payload = dict()
         if powerdown:

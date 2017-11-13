@@ -168,8 +168,8 @@ def cmms(*args, **kwargs):
     mutually_exclusive_keys = ['uuid','chassis']
     mandatory_options_list = {}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                        con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -211,8 +211,8 @@ def chassis(*args, **kwargs):
         'uuid'
     ]}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                        con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -250,8 +250,8 @@ def fans(*args, **kwargs):
     mutually_exclusive_keys = ['uuid','chassis']
     mandatory_options_list = {}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                        con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -289,8 +289,8 @@ def fanmuxes(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                    con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -330,8 +330,8 @@ def nodes(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                    con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -373,8 +373,8 @@ def switches(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                    con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -412,8 +412,8 @@ def powersupplies(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                    con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -443,13 +443,20 @@ def scalablesystem(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+
+    param_dict = {}
+    con = None
+
     keylist = ['con','id','type']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['id','type']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def discover(*args, **kwargs):
     '''
@@ -481,13 +488,18 @@ def discover(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
     keylist = ['con','ip','job']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['ip','job']
+    mutually_exclusive_keys = ['ip','job']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def manage(*args, **kwargs):
     '''
@@ -529,13 +541,21 @@ def manage(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+
+    param_dict = {}
+    con = None
+
     keylist = ['con','ip','user','pw','rpw','job','force']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['ip','user','pw','rpw','job','force']
+    mutually_exclusive_keys = ['ip', 'job']
+    mandatory_options_list = {'ip':['user','pw'], 'job':[]}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
 
 def unmanage(*args, **kwargs):
     '''
@@ -571,13 +591,20 @@ def unmanage(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
     keylist = ['con','ip','force','job']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['ip','force','job']
+    mutually_exclusive_keys = ['ip', 'job']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
 
 def configpatterns(*args, **kwargs):
     '''
@@ -619,8 +646,6 @@ def configpatterns(*args, **kwargs):
     '''    
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    if len(args) < 1 or len(args) > 2:
-        raise ValueError("Invalid Input Arguments")
 
     param_dict = {}
     con = None
@@ -631,8 +656,8 @@ def configpatterns(*args, **kwargs):
     mandatory_options_list = {'id': [], 'endpoint': ['type', 'restart'], 'pattern_update_dict': [],
                               'includeSettings': ['id']}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                        con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                        param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -672,14 +697,22 @@ def configprofiles(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
 
-    logger.info(" configprofiles got kwargs %s " % str(kwargs))
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
+    optional_keylist = ['id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {'id': [], 'endpoint': ['restart'], 'delete': ['id'],
+                              'unassign': ['id']}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
 
 def configtargets(*args, **kwargs):
     '''
@@ -692,36 +725,30 @@ def configtargets(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ep','force','job']
+        keylist = ['con','id']
 
 @param
     The parameters for this command are as follows 
-    
-        ep          one or more endpoints to be unmanaged.
-                    This is comma separated list of multiple endpoints, each endpoint should
-                    contain endpoint information separated by semicolon.
-                    endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                    Type of endpoint to be unmanaged ,This can be one of the following values:
-                          Chassis
-                          ThinkServer
-                          Storage
-                          Rackswitch
-                          Rack-Tower
-        force       Indicates whether to force the unmanagement of an endpoint (True/False)
-        job         Job ID of unmanage request
+        id    config target id
 
 @example 
 
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','id','force','job']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    param_dict = {}
+    con = None
+
+    keylist = ['con','id']
+    optional_keylist = []
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def updatepolicy(*args, **kwargs):
     '''
@@ -761,14 +788,20 @@ def updatepolicy(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
 
-    logger.info(" updatepolicy got kwargs %s " %str(kwargs))
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
+    optional_keylist = ['info', 'job', 'uuid', 'policy','type']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def updaterepo(*args, **kwargs):
     '''
@@ -813,13 +846,20 @@ def updaterepo(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+
+    param_dict = {}
+    con = None
+
     keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['key', 'action', 'mt', 'scope', 'fixids', 'type']
+    mutually_exclusive_keys = ['key','action']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def updatecomp(*args, **kwargs):
     '''
@@ -877,13 +917,20 @@ def updatecomp(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','query','mode','action','cmm','switch','server','storage']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'query','mode','action','cmm','switch','server','storage']
+    optional_keylist = ['query','mode','action','cmm','switch','server','storage']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 
 
@@ -910,13 +957,20 @@ def users(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+
+    param_dict = {}
+    con = None
+
     keylist = ['con','id']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['id']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def ffdc(*args, **kwargs):
     '''
@@ -943,13 +997,20 @@ def ffdc(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+
+    param_dict = {}
+    con = None
+
     keylist = ['con','uuid']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['uuid']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 
 def log(*args, **kwargs):
@@ -1006,13 +1067,20 @@ def lxcalog(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+
+    param_dict = {}
+    con = None
+
     keylist = ['con','filter']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['filter']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def jobs(*args, **kwargs):
     '''
@@ -1050,13 +1118,20 @@ def jobs(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
+
+    param_dict = {}
+    con = None
+
     keylist = ['con','id','uuid','state','cancel','delete']
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    ch =  shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    optional_keylist = ['id','uuid','state','cancel','delete']
+    mutually_exclusive_keys = ['id','cancel','delete']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def manifests(*args, **kwargs):
     '''
@@ -1081,22 +1156,22 @@ def manifests(*args, **kwargs):
 
     '''
     global shell_obj
-    con = None
-    param_dict = {}
-    
+
     command_name = sys._getframe().f_code.co_name
-    
-    if len(args) < 1 or len(args) > 2:
-        raise ValueError("Invalid Input Arguments")
-    
-    for i in range(len(args)):
-        if isinstance(args[i], dict):
-            param_dict = args[i]
-        else:
-            con = args[i]
-            
-    out_obj =  shell_obj.handle_input_dict(command_name, con, param_dict)
-    # return out_obj
+
+    param_dict = {}
+    con = None
+
+    keylist = ['con', 'id', 'file']
+    optional_keylist = ['file']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    #return out_obj
     return True
 
 
@@ -1111,7 +1186,7 @@ def tasks(*args, **kwargs):
 
     Where data_dictionary contain input arguments as follows
 
-        keylist = ['jobuuid']
+        keylist = ['jobUID','children','action', 'updateList']
 
 @param
     The parameters for this command are as follows
@@ -1129,14 +1204,16 @@ def tasks(*args, **kwargs):
 
     command_name = sys._getframe().f_code.co_name
 
-    if len(args) < 1 or len(args) > 2:
-        raise ValueError("Invalid Input Arguments")
+    param_dict = {}
+    con = None
 
-    for i in range(len(args)):
-        if isinstance(args[i], dict):
-            param_dict = args[i]
-        else:
-            con = args[i]
+    keylist = ['con','jobUID','children','action', 'updateList']
+    optional_keylist = ['jobUID','children','action', 'updateList']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -1177,7 +1254,6 @@ def resourcegroups(*args, **kwargs):
     '''
     global shell_obj
     con = None
-    arglist = list(args)
     param_dict = {}
 
     command_name = sys._getframe().f_code.co_name
@@ -1187,43 +1263,13 @@ def resourcegroups(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'name']
     mandatory_options_list = {'uuid':[],'name':['type']}
 
-    if len(args) == 0 and len(kwargs) == 0:
-        raise AttributeError("Invalid Input Arguments")
-
-    arglist = arglist[::-1]
-
-    for key in keylist:
-        if (key in list(kwargs.keys())):
-            param_dict[key] = kwargs[key]
-        elif len(arglist)>=1:
-            param_dict[key] = arglist.pop()
-        elif key not in optional_keylist:
-            raise ValueError("Invalid Input Arguments")
-        
-        if key == 'con':
-            con = param_dict.pop(key)
-      
-    if not con:
-        raise AttributeError("Invalid command invocation: Connection Object missing.")
-    
-    me_key_found = False
-    for me_key in list(param_dict.keys()):
-        #Checking mandatory option_list presence
-        if me_key in list(mandatory_options_list.keys()):
-            if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
-                raise AttributeError("Invalid command invocation")
-            
-        #Checking mutually exclusive key presense 
-        if me_key in mutually_exclusive_keys:
-            if me_key_found:
-                raise AttributeError("Invalid command invocation")
-            me_key_found = True
-            
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
-def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys, con, param_dict, *args, **kwargs):
+def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys, param_dict, *args, **kwargs):
     '''
      validate parameters
     :param arglist: list of arguments derived from args
@@ -1232,9 +1278,8 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
     :param mandatory_options_list:
     :param optional_keylist:
     :param mutually_exclusive_keys:
-    :param con:  return parameter
     :param param_dict: append to param_dict
-    :return:
+    :return: connection object
     '''
     arglist = list(args)
     arglist = arglist[::-1]
@@ -1273,9 +1318,9 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
                 me_key, str(mutually_exclusive_keys)))
                 raise AttributeError("Invalid command invocation")
             me_key_found = True
+    return con
 
-
-def osimages(con, *args, **kwargs):
+def osimages(*args, **kwargs):
     '''
     @summary:
         Use this function to retrieve information about, delete, and import OS images, OS-image profiles, device driver, and boot-options files.
@@ -1320,23 +1365,39 @@ def osimages(con, *args, **kwargs):
     '''
 
     global shell_obj
-    #con = None
+    # #con = None
+    # param_dict = {}
+    # command_name = sys._getframe().f_code.co_name
+    #
+    # # con = kwargs.get('con')
+    # # if not con:
+    # #     raise ValueError("Invalid Input Arguments")
+    #
+    # logger.info(" osimages got kwargs %s " % str(kwargs))
+    # if args:
+    #     kwargs['osimages_info'] = args[0]
+    # #param_dict = (args, kwargs)
+    # logger.info(" osimages got param_dict %s " % str(kwargs))
+    # # handle_input_dict only takes param_dict as input argument
+    # ch = shell_obj.handle_input_dict(command_name, con, kwargs)
+    #  return ch
+
+
+    con = None
     param_dict = {}
+
     command_name = sys._getframe().f_code.co_name
 
-    # con = kwargs.get('con')
-    # if not con:
-    #     raise ValueError("Invalid Input Arguments")
+    keylist = ['con', 'osimages_info']
+    optional_keylist = ['osimages_info']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
 
-    logger.info(" osimages got kwargs %s " % str(kwargs))
-    if args:
-        kwargs['osimages_info'] = args[0]
-    #param_dict = (args, kwargs)
-    logger.info(" osimages got param_dict %s " % str(kwargs))
-    # handle_input_dict only takes param_dict as input argument
-    ch = shell_obj.handle_input_dict(command_name, con, kwargs)
-    return ch
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def managementserver(*args, **kwargs):
     '''
@@ -1389,8 +1450,8 @@ def managementserver(*args, **kwargs):
     mutually_exclusive_keys = ['key','action']
     mandatory_options_list = {}
 
-    _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                        con, param_dict, *args, **kwargs)
+    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
