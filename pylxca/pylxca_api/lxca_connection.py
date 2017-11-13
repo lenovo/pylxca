@@ -12,6 +12,7 @@ import requests
 import logging, json
 import os, platform
 import base64
+import pkg_resources
 from _socket import timeout
 from requests.sessions import session
 from requests.adapters import HTTPAdapter
@@ -69,7 +70,15 @@ class lxca_connection(object):
             logger.debug("Establishing Connection")
             self.session = requests.session()
             self.session.verify = self.verify_callback
-            self.session.headers.update({'content-type': 'application/json; charset=utf-8'})
+
+            pylxca_version = pkg_resources.require("pylxca")[0].version
+            # Update the headers with your custom ones
+            # You don't have to worry about case-sensitivity with
+            # the dictionary keys, because default_headers uses a custom
+            # CaseInsensitiveDict implementation within requests' source code.
+            self.session.headers.update({'content-type': 'application/json; charset=utf-8','User-Agent': 'LXCA via Python Client / ' + pylxca_version})
+
+
             payload = dict(UserId= self.user, password=base64.b16decode(self.passwd).decode())
             pURL = self.url + '/sessions'
             self.session.mount(self.url, lxcaAdapter(max_retries=self.retires))
