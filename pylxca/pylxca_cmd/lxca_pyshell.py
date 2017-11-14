@@ -1283,7 +1283,7 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
     '''
     arglist = list(args)
     arglist = arglist[::-1]
-
+    con = None
     for key in keylist:
         if (key in list(kwargs.keys())):
             param_dict[key] = kwargs[key]
@@ -1296,7 +1296,8 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
             raise ValueError("Invalid Input Arguments")
 
         if key == 'con':
-            con = param_dict.pop(key)
+            if param_dict.has_key(key):
+                con = param_dict.pop(key)
 
     if not con:
         raise AttributeError("Invalid command invocation: Connection Object missing.")

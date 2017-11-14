@@ -82,7 +82,7 @@ class lxca_connection(object):
             payload = dict(UserId= self.user, password=base64.b16decode(self.passwd).decode())
             pURL = self.url + '/sessions'
             self.session.mount(self.url, lxcaAdapter(max_retries=self.retires))
-            r = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback)
+            r = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback, timeout = 3)
             r.raise_for_status()
         except ConnectionError as e:
             logger.debug("Connection Exception: Exception = %s", e)
