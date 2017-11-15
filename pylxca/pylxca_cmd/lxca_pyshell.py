@@ -207,9 +207,7 @@ def chassis(*args, **kwargs):
     keylist = ['con','uuid','status']
     optional_keylist = ['uuid','status']
     mutually_exclusive_keys = []
-    mandatory_options_list = {'status':[
-        'uuid'
-    ]}
+    mandatory_options_list = {}
 
     con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
