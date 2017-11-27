@@ -501,8 +501,8 @@ class lxca_rest(object):
                     else:
                         return resp
             else:
-                logger.error("Invalid execution of ffdc REST API")
-                raise Exception("Invalid execution of ffdc REST API")
+                logger.error("Invalid execution of ffdc REST API mandatory parameter uuid is missing")
+                raise Exception("Invalid execution of ffdc REST API mandatory parameter uuid is missing")
 
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
