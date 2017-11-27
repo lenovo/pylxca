@@ -164,7 +164,7 @@ def cmms(*args, **kwargs):
     con = None
 
     keylist = ['con','uuid','chassis']
-    optional_keylist = ['uuid','chassis']
+    optional_keylist = ['con', 'uuid','chassis']
     mutually_exclusive_keys = ['uuid','chassis']
     mandatory_options_list = {}
 
@@ -205,7 +205,7 @@ def chassis(*args, **kwargs):
     con = None
 
     keylist = ['con','uuid','status']
-    optional_keylist = ['uuid','status']
+    optional_keylist = ['con', 'uuid','status']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -244,7 +244,7 @@ def fans(*args, **kwargs):
     con = None
 
     keylist = ['con','uuid','chassis']
-    optional_keylist = ['uuid','chassis']
+    optional_keylist = ['con', 'uuid','chassis']
     mutually_exclusive_keys = ['uuid','chassis']
     mandatory_options_list = {}
 
@@ -283,7 +283,7 @@ def fanmuxes(*args, **kwargs):
     con = None
 
     keylist = ['con', 'uuid', 'chassis']
-    optional_keylist = ['uuid', 'chassis']
+    optional_keylist = ['con', 'uuid', 'chassis']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
@@ -324,7 +324,7 @@ def nodes(*args, **kwargs):
     con = None
 
     keylist = ['con','uuid','chassis','status']
-    optional_keylist = ['uuid', 'chassis','status']
+    optional_keylist = ['con', 'uuid', 'chassis','status']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
@@ -367,7 +367,7 @@ def switches(*args, **kwargs):
     con = None
 
     keylist = ['con', 'uuid', 'chassis', 'ports', 'action']
-    optional_keylist = ['uuid', 'chassis', 'ports', 'action']
+    optional_keylist = ['con', 'uuid', 'chassis', 'ports', 'action']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
@@ -406,7 +406,7 @@ def powersupplies(*args, **kwargs):
     con = None
 
     keylist = ['con', 'uuid', 'chassis']
-    optional_keylist = ['uuid', 'chassis']
+    optional_keylist = ['con', 'uuid', 'chassis']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
@@ -446,7 +446,7 @@ def scalablesystem(*args, **kwargs):
     con = None
 
     keylist = ['con','id','type']
-    optional_keylist = ['id','type']
+    optional_keylist = ['con', 'id','type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -490,7 +490,7 @@ def discover(*args, **kwargs):
     con = None
 
     keylist = ['con','ip','job']
-    optional_keylist = ['ip','job']
+    optional_keylist = ['con', 'ip','job']
     mutually_exclusive_keys = ['ip','job']
     mandatory_options_list = {}
 
@@ -544,7 +544,7 @@ def manage(*args, **kwargs):
     con = None
 
     keylist = ['con','ip','user','pw','rpw','job','force']
-    optional_keylist = ['ip','user','pw','rpw','job','force']
+    optional_keylist = ['con', 'ip','user','pw','rpw','job','force']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {'ip':['user','pw'], 'job':[]}
 
@@ -593,7 +593,7 @@ def unmanage(*args, **kwargs):
     con = None
 
     keylist = ['con','ip','force','job']
-    optional_keylist = ['ip','force','job']
+    optional_keylist = ['con', 'ip','force','job']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {}
 
@@ -649,7 +649,7 @@ def configpatterns(*args, **kwargs):
     con = None
 
     keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
-    optional_keylist = ['id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
+    optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
     mandatory_options_list = {'id': [], 'endpoint': ['type', 'restart'], 'pattern_update_dict': [],
                               'includeSettings': ['id']}
@@ -700,7 +700,7 @@ def configprofiles(*args, **kwargs):
     con = None
 
     keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
-    optional_keylist = ['id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
+    optional_keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
     mutually_exclusive_keys = []
     mandatory_options_list = {'id': [], 'endpoint': ['restart'], 'delete': ['id'],
                               'unassign': ['id']}
@@ -738,7 +738,7 @@ def configtargets(*args, **kwargs):
     con = None
 
     keylist = ['con','id']
-    optional_keylist = []
+    optional_keylist = ['con']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -791,7 +791,7 @@ def updatepolicy(*args, **kwargs):
     con = None
 
     keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
-    optional_keylist = ['info', 'job', 'uuid', 'policy','type']
+    optional_keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -849,7 +849,7 @@ def updaterepo(*args, **kwargs):
     con = None
 
     keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
-    optional_keylist = ['key', 'action', 'mt', 'scope', 'fixids', 'type']
+    optional_keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
     mutually_exclusive_keys = ['key','action']
     mandatory_options_list = {}
 
@@ -920,7 +920,7 @@ def updatecomp(*args, **kwargs):
     con = None
 
     keylist = ['con', 'query','mode','action','cmm','switch','server','storage']
-    optional_keylist = ['query','mode','action','cmm','switch','server','storage']
+    optional_keylist = ['con', 'query','mode','action','cmm','switch','server','storage']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -960,7 +960,7 @@ def users(*args, **kwargs):
     con = None
 
     keylist = ['con','id']
-    optional_keylist = ['id']
+    optional_keylist = ['con', 'id']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1000,7 +1000,7 @@ def ffdc(*args, **kwargs):
     con = None
 
     keylist = ['con','uuid']
-    optional_keylist = ['uuid']
+    optional_keylist = ['con', 'uuid']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1070,7 +1070,7 @@ def lxcalog(*args, **kwargs):
     con = None
 
     keylist = ['con','filter']
-    optional_keylist = ['filter']
+    optional_keylist = ['con', 'filter']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1121,7 +1121,7 @@ def jobs(*args, **kwargs):
     con = None
 
     keylist = ['con','id','uuid','state','cancel','delete']
-    optional_keylist = ['id','uuid','state','cancel','delete']
+    optional_keylist = ['con', 'id','uuid','state','cancel','delete']
     mutually_exclusive_keys = ['id','cancel','delete']
     mandatory_options_list = {}
 
@@ -1161,7 +1161,7 @@ def manifests(*args, **kwargs):
     con = None
 
     keylist = ['con', 'id', 'file']
-    optional_keylist = ['file']
+    optional_keylist = ['con', 'file']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1206,7 +1206,7 @@ def tasks(*args, **kwargs):
     con = None
 
     keylist = ['con','jobUID','children','action', 'updateList']
-    optional_keylist = ['jobUID','children','action', 'updateList']
+    optional_keylist = ['con', 'jobUID','children','action', 'updateList']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1257,7 +1257,7 @@ def resourcegroups(*args, **kwargs):
     command_name = sys._getframe().f_code.co_name
 
     keylist = ['con','uuid','name','description','type','solutionVPD','members','criteria']
-    optional_keylist = ['uuid','name','description','type','solutionVPD','members','criteria']
+    optional_keylist = ['con', 'uuid','name','description','type','solutionVPD','members','criteria']
     mutually_exclusive_keys = ['uuid', 'name']
     mandatory_options_list = {'uuid':[],'name':['type']}
 
@@ -1297,8 +1297,8 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
             if param_dict.has_key(key):
                 con = param_dict.pop(key)
 
-    if not con:
-        raise AttributeError("Invalid command invocation: Connection Object missing.")
+    #if not con:
+    #    raise AttributeError("Invalid command invocation: Connection Object missing.")
 
     logger.debug(" Parameter dict %s " %str(param_dict))
 
@@ -1388,7 +1388,7 @@ def osimages(*args, **kwargs):
     command_name = sys._getframe().f_code.co_name
 
     keylist = ['con', 'osimages_info']
-    optional_keylist = ['osimages_info']
+    optional_keylist = ['con', 'osimages_info']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1445,7 +1445,7 @@ def managementserver(*args, **kwargs):
     con = None
 
     keylist = ['con', 'key', 'fixids', 'type', 'action', 'files','jobid']
-    optional_keylist = ['key', 'fixids', 'type', 'action', 'files', 'jobid']
+    optional_keylist = ['con', 'key', 'fixids', 'type', 'action', 'files', 'jobid']
     mutually_exclusive_keys = ['key','action']
     mandatory_options_list = {}
 
