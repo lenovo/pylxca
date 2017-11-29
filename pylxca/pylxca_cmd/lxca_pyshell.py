@@ -163,12 +163,13 @@ def cmms(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
     keylist = ['con','uuid','chassis']
     optional_keylist = ['con', 'uuid','chassis']
     mutually_exclusive_keys = ['uuid','chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map,  mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -204,12 +205,13 @@ def chassis(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'uuid': 'u', 'status': 's'}
     keylist = ['con','uuid','status']
     optional_keylist = ['con', 'uuid','status']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map,  mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -243,12 +245,13 @@ def fans(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
     keylist = ['con','uuid','chassis']
     optional_keylist = ['con', 'uuid','chassis']
     mutually_exclusive_keys = ['uuid','chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -282,12 +285,13 @@ def fanmuxes(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
     keylist = ['con', 'uuid', 'chassis']
     optional_keylist = ['con', 'uuid', 'chassis']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -323,12 +327,13 @@ def nodes(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'uuid':'u' , 'chassis':'c', 'status':'s'}
     keylist = ['con','uuid','chassis','status']
     optional_keylist = ['con', 'uuid', 'chassis','status']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -361,17 +366,17 @@ def switches(*args, **kwargs):
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['con','uuid','chassis','ports','action']
-    
+
     param_dict = {}
     con = None
 
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}  # other parameter don't have short option
     keylist = ['con', 'uuid', 'chassis', 'ports', 'action']
     optional_keylist = ['con', 'uuid', 'chassis', 'ports', 'action']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -404,13 +409,13 @@ def powersupplies(*args, **kwargs):
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
-
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
     keylist = ['con', 'uuid', 'chassis']
     optional_keylist = ['con', 'uuid', 'chassis']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -445,12 +450,13 @@ def scalablesystem(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'id': 'i', 'type': 't'}
     keylist = ['con','id','type']
     optional_keylist = ['con', 'id','type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -489,12 +495,13 @@ def discover(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'ip': 'i', 'job': 'j'}
     keylist = ['con','ip','job']
     optional_keylist = ['con', 'ip','job']
     mutually_exclusive_keys = ['ip','job']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -543,12 +550,13 @@ def manage(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'ip': 'i', 'user':'u', 'pw':'p', 'rpw':'r', 'job': 'j', 'force':'f'}
     keylist = ['con','ip','user','pw','rpw','job','force']
     optional_keylist = ['con', 'ip','user','pw','rpw','job','force']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {'ip':['user','pw'], 'job':[]}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -592,12 +600,13 @@ def unmanage(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'ip': 'i', 'job': 'j', 'force': 'f'}
     keylist = ['con','ip','force','job']
     optional_keylist = ['con', 'ip','force','job']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -647,14 +656,15 @@ def configpatterns(*args, **kwargs):
 
     param_dict = {}
     con = None
-
+    # some of them don't have short options
+    long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r', 'type': 't', 'name': 'n'}
     keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
     optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
     mandatory_options_list = {'id': [], 'endpoint': ['type', 'restart'], 'pattern_update_dict': [],
                               'includeSettings': ['id']}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                         param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -698,14 +708,16 @@ def configprofiles(*args, **kwargs):
 
     param_dict = {}
     con = None
-
+    # some of keys don't have short option
+    long_short_key_map = {'id': 'i', 'name': 'n', 'endpoint': 'e', 'restart': 'r', 'delete': 'd', 'unassign': 'u',
+                          'powerdown':'p', 'force':'f'}
     keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
     optional_keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
     mutually_exclusive_keys = []
     mandatory_options_list = {'id': [], 'endpoint': ['restart'], 'delete': ['id'],
                               'unassign': ['id']}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -736,13 +748,13 @@ def configtargets(*args, **kwargs):
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
-
+    long_short_key_map = {'id': 'i'}
     keylist = ['con','id']
     optional_keylist = ['con']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -789,13 +801,13 @@ def updatepolicy(*args, **kwargs):
 
     param_dict = {}
     con = None
-
+    long_short_key_map = {'info': 'i','job': 'j', 'uuid': 'u', 'policy': 'p', 'type': 't'}
     keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
     optional_keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -848,12 +860,13 @@ def updaterepo(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'key': 'k', 'action': 'a', 'mt': 'm', 'scope': 's', 'fixids': 'f', 'type':'t'}
     keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
     optional_keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
     mutually_exclusive_keys = ['key','action']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -918,13 +931,14 @@ def updatecomp(*args, **kwargs):
 
     param_dict = {}
     con = None
-
+    long_short_key_map = {'query': 'q', 'mode': 'm', 'action': 'a', 'cmm': 'c', 'switch': 'w','server':'s',
+                          'storage':'t'}
     keylist = ['con', 'query','mode','action','cmm','switch','server','storage']
     optional_keylist = ['con', 'query','mode','action','cmm','switch','server','storage']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -958,13 +972,13 @@ def users(*args, **kwargs):
 
     param_dict = {}
     con = None
-
+    long_short_key_map = {'id':'i'}
     keylist = ['con','id']
     optional_keylist = ['con', 'id']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -998,13 +1012,13 @@ def ffdc(*args, **kwargs):
 
     param_dict = {}
     con = None
-
+    long_short_key_map = {'uuid':'u'}
     keylist = ['con','uuid']
     optional_keylist = ['con', 'uuid']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -1069,12 +1083,13 @@ def lxcalog(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'filter':'f'}
     keylist = ['con','filter']
     optional_keylist = ['con', 'filter']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -1120,12 +1135,13 @@ def jobs(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'id': 'i', 'uuid':'u', 'state':'s','cancel':'c', 'delete':'d'}
     keylist = ['con','id','uuid','state','cancel','delete']
     optional_keylist = ['con', 'id','uuid','state','cancel','delete']
     mutually_exclusive_keys = ['id','cancel','delete']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -1160,12 +1176,13 @@ def manifests(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'id':'i', 'file':'f'}
     keylist = ['con', 'id', 'file']
     optional_keylist = ['con', 'file']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -1190,8 +1207,10 @@ def tasks(*args, **kwargs):
     The parameters for this command are as follows
 
     con      Connection Object to Lenovo XClarity Administrator
-    uuid          uuid of job
-
+    jobUID          uuid of job
+    children        result will include children if True
+    action          cancel/update
+    updateList      required for update action
 
 @example
 
@@ -1205,12 +1224,13 @@ def tasks(*args, **kwargs):
     param_dict = {}
     con = None
 
+    long_short_key_map = {'jobUID':'j','children':'c','action':'a', 'updateList':'u'}
     keylist = ['con','jobUID','children','action', 'updateList']
     optional_keylist = ['con', 'jobUID','children','action', 'updateList']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -1256,20 +1276,24 @@ def resourcegroups(*args, **kwargs):
 
     command_name = sys._getframe().f_code.co_name
 
+    long_short_key_map = {'uuid':'u', 'name':'n','description':'d','type':'t','solutionVPD':'s',
+                          'members':'m','criteria':'c'}
+
     keylist = ['con','uuid','name','description','type','solutionVPD','members','criteria']
     optional_keylist = ['con', 'uuid','name','description','type','solutionVPD','members','criteria']
     mutually_exclusive_keys = ['uuid', 'name']
     mandatory_options_list = {'uuid':[],'name':['type']}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
-def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys, param_dict, *args, **kwargs):
+def _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys, param_dict, *args, **kwargs):
     '''
-     validate parameters
+     this function will create param_dict and con from args and kwargs, param_dict will have only long options for keys,
+     it will convert short option to long option key and finally validate parameters
     :param arglist: list of arguments derived from args
 
     :param keylist: keylist of name of fields
@@ -1283,8 +1307,12 @@ def _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_
     arglist = arglist[::-1]
     con = None
     for key in keylist:
+        short_key = long_short_key_map.get(key)
         if (key in list(kwargs.keys())):
             param_dict[key] = kwargs[key]
+        elif short_key and (short_key in list(kwargs.keys())):
+            param_dict[key] = kwargs[short_key]
+
         elif len(arglist) >= 1:
             value = arglist.pop()
             if value != None:
@@ -1387,12 +1415,13 @@ def osimages(*args, **kwargs):
 
     command_name = sys._getframe().f_code.co_name
 
+    long_short_key_map = {'osimages_info':'i'}
     keylist = ['con', 'osimages_info']
     optional_keylist = ['con', 'osimages_info']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
@@ -1444,12 +1473,15 @@ def managementserver(*args, **kwargs):
     param_dict = {}
     con = None
 
+    # some paramters don't have short options
+    long_short_key_map = {'key':'k', 'fixids':'f', 'type':'t', 'action':'a','jobid':'j'}
+
     keylist = ['con', 'key', 'fixids', 'type', 'action', 'files','jobid']
     optional_keylist = ['con', 'key', 'fixids', 'type', 'action', 'files', 'jobid']
     mutually_exclusive_keys = ['key','action']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
