@@ -333,7 +333,7 @@ def nodes(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
