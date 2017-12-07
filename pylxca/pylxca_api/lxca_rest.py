@@ -1149,8 +1149,27 @@ class lxca_rest(object):
         url = url + '/resourceGroups'
 
         try:
+
             if uuid:
-                url = url + '/' + uuid 
+                # If it is modify group request
+                if name and (desc or members):
+                    param_dict = dict()
+                    param_dict['uuid'] = uuid
+                    param_dict['name'] = name
+                    if desc:
+                        param_dict['description'] = desc
+                    if members:
+                        param_dict['members'] = members
+
+                    payload = dict()
+                    payload = param_dict
+
+                    resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+                    resp.raise_for_status()
+                    return resp
+
+                url = url + '/' + uuid
+
             elif name:
                 param_dict = dict()
                 param_dict['name'] = name
@@ -1166,7 +1185,7 @@ class lxca_rest(object):
                     raise ValueError("Invalid Argument SolutionVPD")    
                 
                 param_dict['members'] = members
-                param_dict['criteria'] = criteria
+                param_dict['criteria'] = None
             
                 payload = dict()
                 payload = param_dict
