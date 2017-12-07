@@ -4,6 +4,8 @@ import os
 import sys
 import argparse
 import unittest
+import string
+import random
 
 from functools import wraps
 import errno
@@ -15,7 +17,7 @@ try:
 except Exception as e:
     print "-" * 20
     print "Error:", e
-    print "Sugesstion: Please install pyLXCA before run (try using easy_install pylxca)"
+    print "Suggestion: Please install PyLXCA before run (try using `pip install pylxca`)"
     print "Exiting.."
     print "-" * 20
     sys.exit(-1)
@@ -26,7 +28,7 @@ def get_args():
                         help='Store LXCA IP value')
     parser.add_argument('-n', action='store_false', default=True, dest='no_verify',
                         help='Set a no_verify to false')
-    parser.add_argument('-c', action='append', dest='chassis', required=True, default=[],
+    parser.add_argument('-c', action='append', dest='chassis', required=False, default=[],
                         help='Specify chassis as chassis1,chassis2..',)
     parser.add_argument('-u', action='store', dest='user', type=str, default='USERID',
                         help='Specify username. default:"USERID"')
@@ -224,6 +226,22 @@ class ServiceSupport(TestCase):
 class logs(TestCase):
     pass
 
+class UHMTestCases(TestCase):
+
+    def test_resource_groups(self):
+        result = None
+        param_dict = {'name': random.SystemRandom().choice(string.ascii_uppercase + string.digits),
+                      'description': "TestGroup",
+                      'type': 'solution',
+                      'solutionVPD': {'model': 'TESTMODEL', 'serialNumber': 'TESTSERIAL', 'machineType': 'TESTMTM', 'id': '59A54997C18DCF0594A8CCD0', 'manufacturer': 'LENOVO'},
+                      'members': [],
+                      'criteria': []}
+        try:
+            result = resourcegroups(self._conn, **param_dict)
+        except Exception as e:
+            self.assertTrue("Resource Group Creation failed")
+        return result
+
 
 if __name__ == "__main__":
     # run_method:1
@@ -240,7 +258,7 @@ if __name__ == "__main__":
     #   unittest.TextTestRunner(verbosity=2).run(suite)
 
     # run_method:4
-    tests = [General, Inventory]
+    tests = [UHMTestCases]
     for test in tests:
         suite = unittest.TestLoader().loadTestsFromTestCase(test)
         unittest.TextTestRunner(verbosity=2).run(suite)
