@@ -759,3 +759,21 @@ class managementserver(InteractiveCommand):
     """
     managementserver update on LXCA
     """
+
+###############################################################################
+
+
+
+class rules(InteractiveCommand):
+    """
+    complaince rules get and update on LXCA
+    """
+
+###############################################################################
+
+
+
+class compositeResults(InteractiveCommand):
+    """
+    complaince compositeresult get and update on LXCA
+    """

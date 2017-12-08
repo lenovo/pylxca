@@ -1486,3 +1486,82 @@ def managementserver(*args, **kwargs):
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
+def rules(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get and set complaince rules on Lenovo XClarity Administrator
+    run this function as
+
+    data_dictionary = managementserver( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con', 'id', 'name', 'targetResourceType', 'targetGroup', 'content']
+
+@param
+    The parameters for this command are as follows
+
+
+@example
+
+    '''
+    global shell_obj
+    command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    # some paramters don't have short options
+    long_short_key_map = { 'id':'i', 'name':'n', 'targetResourceType':'t', 'targetGroup':'g', 'content':'c'}
+
+    keylist = ['con', 'id',  'name', 'targetResourceType', 'targetGroup', 'content']
+    optional_keylist = ['con', 'id',  'name', 'targetResourceType', 'targetGroup', 'content']
+    mutually_exclusive_keys = ['id','name']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
+
+def compositeResults(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get and set complaince rules on Lenovo XClarity Administrator
+    run this function as
+
+    data_dictionary = managementserver( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con', 'id', 'solutionGroup']
+
+@param
+    The parameters for this command are as follows
+
+
+@example
+
+    '''
+    global shell_obj
+    command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    # some paramters don't have short options
+    long_short_key_map = { 'id':'i', 'solutionGroup':'s'}
+
+    keylist = ['con', 'id',  'solutionGroup']
+    optional_keylist = ['con', 'id',  'solutionGroup']
+    mutually_exclusive_keys = ['id','solutionGroup']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj

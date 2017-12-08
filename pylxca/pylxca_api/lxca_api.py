@@ -76,7 +76,9 @@ class lxca_api(with_metaclass(Singleton, object)):
                           'tasks':self.get_set_tasks,
                           'manifests':self.get_set_manifests,
                           'osimages':self.get_set_osimage,
-                          'resourcegroups':self.get_set_resourcegroups
+                          'resourcegroups':self.get_set_resourcegroups,
+                          'rules': self.get_set_rules,
+                          'compositeResults': self.get_set_compositeResults
                         }
     
     def api( self, object_name, dict_handler = None, con = None ):
@@ -887,4 +889,52 @@ class lxca_api(with_metaclass(Singleton, object)):
         except AttributeError as ValueError:
             return resp
         return py_obj
-    
+
+    def get_set_rules(self, dict_handler=None):
+        id = None
+        name = None
+        targetResourceType = None
+        targetGroup = None
+        content = None
+
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None),
+                        None)
+            name = next((item for item in [dict_handler.get('n'), dict_handler.get('name')] if item is not None),
+                             None)
+            targetResourceType = next((item for item in [dict_handler.get('t'), dict_handler.get('targetResourceType')] if item is not None),
+                               None)
+            targetGroup = next((item for item in [dict_handler.get('g'), dict_handler.get('targetGroup')] if item is not None),
+                             None)
+            content = next((item for item in [dict_handler.get('c'), dict_handler.get('content')] if item is not None),
+                               None)
+
+        if name:
+            resp = lxca_rest().set_rules(self.con.get_url(), self.con.get_session(), name, targetResourceType, targetGroup, content)
+        else:
+            resp = lxca_rest().get_rules(self.con.get_url(), self.con.get_session(), id)
+        py_obj = json.loads(resp.text)
+        return py_obj
+
+    def get_set_compositeResults(self, dict_handler=None):
+        id = None
+        solutionGroup = None
+
+        if not self.con:
+            raise ConnectionError("Connection is not Initialized.")
+
+        if dict_handler:
+            id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None),
+                        None)
+            solutionGroup = next((item for item in [dict_handler.get('s'), dict_handler.get('solutionGroup')] if item is not None),
+                             None)
+
+        if solutionGroup:
+            resp = lxca_rest().set_compositeResults(self.con.get_url(), self.con.get_session(), solutionGroup)
+        else:
+            resp = lxca_rest().get_compositeResults(self.con.get_url(), self.con.get_session(), id)
+        py_obj = json.loads(resp.text)
+        return py_obj

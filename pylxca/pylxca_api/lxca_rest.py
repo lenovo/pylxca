@@ -1512,3 +1512,82 @@ class lxca_rest(object):
             logger.error("REST API Exception: Exception = %s", re)
             raise re  ## uncomment this
         return resp
+
+    def get_rules(self,url, session, id):
+        url = url + ":58443"
+        url = url + '/rules'
+
+        if id:
+            url = url + '/' + id
+
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            # resp = requests.get("http://localhost:8888/rules", headers={"content-type": "application/json"},
+            #                      verify=False, timeout=REST_TIMEOUT)
+
+            # resp = requests.get(url, headers={"content-type": "application/json"},
+            #                     verify=False, timeout=3)
+
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def set_rules(self, url, session, name, targetResourceType, targetGroup, content):
+        url = url + ":58443"
+        resp = None
+        url = url + '/rules'
+
+        try:
+            payload = dict()
+            payload['name'] = name
+            payload['targetResourceType'] = targetResourceType
+            payload['targetGroup'] = targetGroup
+            payload['content'] = content
+
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            #resp = requests.post("http://localhost:8888/rules", headers={"content-type":"application/json"}, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def get_compositeResults(self,url, session, id):
+        url = url + ":58443"
+        url = url + '/compositeResults'
+
+        if id:
+            url = url + '/' + id
+
+        try:
+            #resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp = requests.get("http://localhost:8888/compositeResults", headers={"content-type": "application/json"},
+                                 verify=False, timeout=REST_TIMEOUT)
+
+            #resp = requests.get(url, headers={"content-type": "application/json"},
+            #                    verify=False, timeout=3)
+
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def set_compositeResults(self, url, session, solutionGroup):
+        url = url + ":58443"
+        resp = None
+        url = url + '/compositeResults'
+
+        try:
+            payload = dict()
+            payload['solutionGroup'] = solutionGroup
+
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            #resp = requests.post("http://localhost:8888/compositeResults", headers={"content-type":"application/json"}, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp

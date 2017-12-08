@@ -159,6 +159,9 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.osimages(self))
         self.add_command(lxca_cmd.resourcegroups(self))
         self.add_command(lxca_cmd.managementserver(self))
+        self.add_command(lxca_cmd.rules(self))
+        self.add_command(lxca_cmd.compositeResults(self))
+
 
     def set_ostream_to_null(self):
         self.ostream = open(os.devnull, 'w')
