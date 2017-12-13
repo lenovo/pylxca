@@ -642,11 +642,15 @@ def configpatterns(*args, **kwargs):
                       pending - Manually activate the server profile and restart the server.
         
         type        Type of the server, It can be one of the following
+                      flex -  Flex System Placeholder chassis empty bays
                       Node
                       Rack
                       Tower
 
         pattern_update_dict  dictionary of category_pattern to import.
+
+        status      check config status for given uuid in endpoint
+                    True
 
 @example 
 
@@ -657,11 +661,11 @@ def configpatterns(*args, **kwargs):
     param_dict = {}
     con = None
     # some of them don't have short options
-    long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r', 'type': 't', 'name': 'n'}
-    keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
-    optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name']
+    long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r', 'type': 't', 'name': 'n','status':'s'}
+    keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
+    optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
-    mandatory_options_list = {'id': [], 'endpoint': ['type', 'restart'], 'pattern_update_dict': [],
+    mandatory_options_list = {'id': [], 'pattern_update_dict': [],
                               'includeSettings': ['id']}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,

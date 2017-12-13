@@ -426,6 +426,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         restart = None
         etype = None
         pattern_update_dict = None
+        status = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -439,7 +440,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             restart = next((item for item in [dict_handler.get  ('r') , dict_handler.get('restart')] if item is not None),None)
             etype = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
             pattern_update_dict = next((item for item in [dict_handler.get('pattern_update_dict')] if item is not None), None)
-
+            status = next((item for item in [dict_handler.get('s'), dict_handler.get('status')] if item is not None), None)
         if patternname and not patternid:
             # get all patterns and get id from name
             resp = lxca_rest().do_configpatterns(self.con.get_url(), self.con.get_session(), None, None,
@@ -451,8 +452,10 @@ class lxca_api(with_metaclass(Singleton, object)):
                     break
             if not patternid:
                 raise Exception("Pattern Name %s not found" %patternname)
-
-        resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid, includeSettings, endpoint, restart, etype, pattern_update_dict)
+        if status:
+            resp = lxca_rest().get_configstatus(self.con.get_url(), self.con.get_session(), endpoint)
+        else:
+            resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid, includeSettings, endpoint, restart, etype, pattern_update_dict)
 
         try:
             # if endpoint:

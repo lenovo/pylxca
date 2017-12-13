@@ -159,7 +159,7 @@
     "Retrieve a list of devices discovered by SLP discovery."
   ],
   "configpatterns": [
-    "i:e:r:t:v:h",
+    "i:e:r:t:v:n:s:h",
     [
 	  "con=",
       "id=",
@@ -168,6 +168,8 @@
       "pattern_update_dict=",
 	  "restart=",
 	  "type=",
+      "name=",
+      "status=",
 	  "view"
     ],
     "Retrieve information and deploy all server and category patterns\n\t\t\tthat have been defined in the Lenovo XClarity Administrator "

@@ -1012,9 +1012,9 @@ class lxca_rest(object):
             if endpoint and restart and etype:
                 param_dict = dict()
                 
-                if etype.lower() == 'node':
+                if etype.lower() == 'node' or etype.lower() == 'rack' or etype.lower() == 'tower':
                     param_dict['uuid'] = [endpoint] 
-                elif etype.lower() == 'rack' or etype.lower() == 'tower':    
+                elif  etype.lower() == 'flex':
                     param_dict['endpointIds'] = [endpoint]
                 
                 param_dict['restart'] = restart
@@ -1035,6 +1035,24 @@ class lxca_rest(object):
     
         return resp
 
+
+    def get_configstatus(self, url, session, endpoint):
+        resp = None
+        url = url + '/config/server'
+
+        if endpoint:
+            url = url + '/' + endpoint + '/status'
+        else:
+            raise Exception("Invalid argument endpoint uuid is required for config status")
+
+        try:
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
     def get_configtargets(self,url, session, targetid):
         url = url + '/config/target'
         
@@ -1052,11 +1070,6 @@ class lxca_rest(object):
 
     def get_tasks(self,url, session):
         url = url + '/tasks'
-
-        '''
-        if uuid:
-            url = url + '/' + uuid
-        '''
 
         try:
             resp = session.get(url, verify=False, timeout=REST_TIMEOUT)

@@ -665,10 +665,11 @@ class configpatterns(InteractiveCommand):
     Retrieve and Manage information about config patterns.
     
     USAGE:
-        configpatterns [-i <ID of specific pattern>] [-r <when to activate the configurations>] [-e <Comma separated list of one or more UUIDs for the target servers>] [-t <type of the target server>] [-v <view filter name>]
+        configpatterns [-i <ID of specific pattern>] [-r <when to activate the configurations>] [-e <Comma separated list of one or more UUIDs for the target servers>] [-t <type of the target server>] [-s True] [-v <view filter name>]
     
     OPTIONS:
         -i, --id    The unique ID that was assigned when the server pattern was created
+        -n, --name  Name of pattern
         -e, --endpoint    Comma separated list of one or more UUIDs for the target servers,If a target is an empty bay,
                 specify the location ID; otherwise, specify the server UUID
         -r, --restart    When to activate the configurations. This can be one of the following values:
@@ -676,9 +677,11 @@ class configpatterns(InteractiveCommand):
                 immediate - Activate all settings and restart the server immediately.
                 pending - Manually activate the server profile and restart the server.
         -t, --type    Type of the server, It can be one of the following
+                Flex  - for empty bay having endpoint other than UUID
                 Node
                 Rack
                 Tower
+        -s, --status  return config status
         -v, --view    View filter name
 
     """
