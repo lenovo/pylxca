@@ -511,11 +511,13 @@ class lxca_rest(object):
     def get_updatepolicy(self, url, session, info,  jobid):
         url = url + '/compliancePolicies'
         try:
-            if info in ["FIRMWARE", "RESULTS"]:
+            if info in ["FIRMWARE", "RESULTS", "NAMELIST"]:
                 if info == "FIRMWARE":
                     url = url + "/applicableFirmware"
                 elif info == "RESULTS":
                     url = url + "/persistedResult"
+                elif info == "NAMELIST":
+                    url = url + "/nameList"
                 resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
@@ -799,7 +801,12 @@ class lxca_rest(object):
             raise re
 
 
-    def do_updatecomp(self, url, session, mode, action, server, switch, storage, cmm):
+    def do_updatecomp(self, url, session, query, mode, action, server, switch, storage, cmm, dev_list):
+
+        if dev_list:
+            resp = self.do_updatecomp_all(url, session, action, mode,dev_list)
+            return resp
+
         serverlist = list()
         storagelist = list()
         cmmlist = list()
@@ -809,8 +816,10 @@ class lxca_rest(object):
         try:
 
             # For Query Action
-            if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
-                resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
+            if mode == None and action == None and server == None and switch == None and storage == None and cmm == None:
+                if query and query.lower() == 'components':
+                    url = url + "?action=getComponents"
+                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
 
@@ -820,7 +829,7 @@ class lxca_rest(object):
                 url= url + "?action=" + action
                 
                 if not mode  == None and mode == "immediate" or mode == "delayed" :
-                    url= url + "&mode=" + mode
+                    url= url + "&activationMode=" + mode
                 else:
                     raise Exception("Invalid argument mode")
 
@@ -890,6 +899,33 @@ class lxca_rest(object):
 
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
+            raise re
+
+
+    def do_updatecomp_all(self, url, session, action, mode,dev_list):
+        try:
+            url = url + '/updatableComponents'
+            if action == "apply" or action == "cancelApply":
+                url = url + "?action=" + action
+
+                if not mode == None and mode == "immediate" or mode == "delayed":
+                    url = url + "&activationMode=" + mode
+                else:
+                    raise Exception("Invalid argument mode")
+            else:
+                raise Exception("Invalid argument action")
+
+            payload = dict()
+            payload["DeviceList"] = dev_list
+            payload_data = json.dumps(payload)
+            logger.debug("Update Firmware payload: " + str(payload_data))
+
+            resp = session.put(url, data=payload_data, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+            return resp
+
+        except HTTPError as re:
+            logger.error("Exception occured: %s", re)
             raise re
 
     def get_configprofiles(self,url, session, profileid):
@@ -1165,24 +1201,19 @@ class lxca_rest(object):
 
             if uuid:
                 # If it is modify group request
-                if name and (desc or members):
-                    param_dict = dict()
-                    param_dict['uuid'] = uuid
-                    param_dict['name'] = name
-                    if desc:
-                        param_dict['description'] = desc
-                    if members:
-                        param_dict['members'] = members
+                url = url + '/' + uuid
+                if members:
+                    payload = []
+                    for dev in members:
+                        param_dict = dict()
+                        param_dict['op'] = 'add'
+                        param_dict["path"] = "/members/-"
+                        param_dict["value"] = dev
+                        payload.append( param_dict )
 
-                    payload = dict()
-                    payload = param_dict
-
-                    resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+                    resp = session.patch(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                     resp.raise_for_status()
                     return resp
-
-                url = url + '/' + uuid
-
             elif name:
                 param_dict = dict()
                 param_dict['name'] = name
@@ -1365,7 +1396,6 @@ class lxca_rest(object):
         # put call for hostPlatforms DONE
         if 'hostPlatforms' in osimages_info:
             url = url.rsplit('/',1)[0] +'/hostPlatforms'
-            # if not kwargs.has_key('networkSettings'):
             if set(['networkSettings', 'selectedImage', 'storageSettings','uuid',]).difference(set(kwargs.keys())):
                 raise Exception ("Invalid Arguments, Try:['networkSettings'=<dict>, 'selectedImage', 'storageSettings'=<dict>,'uuid',]")
             if not isinstance(kwargs['networkSettings'], dict) or not  isinstance(kwargs['storageSettings'], dict):
@@ -1378,7 +1408,7 @@ class lxca_rest(object):
         '''
         THESE ARE INTERNALLY ONLY APIs
         # put call for osdeployment DONE
-        if 'osdeployment' in osimages_info and kwargs.has_key('items'):
+        if 'osdeployment' in osimages_info and ('items' in kwargs):
             url = url.rsplit('/',1)[0] + '/osdeployment'
             if not isinstance(kwargs['items'], list):
                 raise Exception ("Invalid Arguments, Try:items=<list>")
@@ -1407,7 +1437,7 @@ class lxca_rest(object):
         # post call for osdeployment DONE
         if 'osdeployment' in osimages_info:
             url = baseurl + '/osdeployment'
-            if kwargs.has_key('action'):
+            if 'action' in kwargs:
                 if set(['action', 'mac', 'nodeName']).difference(set(kwargs.keys())):
                     raise Exception ("Invalid Arguments, Try:['action', 'mac', 'nodeName']")
                 url = url + "?nodeName=%s&mac=%s" %(kwargs['nodeName'], kwargs['mac'])
@@ -1527,78 +1557,64 @@ class lxca_rest(object):
         return resp
 
     def get_rules(self,url, session, id):
-        url = url + ":58443"
-        url = url + '/rules'
+        url = url + '/compliance/rules'
 
         if id:
             url = url + '/' + id
 
         try:
             resp = session.get(url, verify=False, timeout=3)
-            # resp = requests.get("http://localhost:8888/rules", headers={"content-type": "application/json"},
-            #                      verify=False, timeout=REST_TIMEOUT)
-
-            # resp = requests.get(url, headers={"content-type": "application/json"},
-            #                     verify=False, timeout=3)
-
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp
 
-    def set_rules(self, url, session, name, targetResourceType, targetGroup, content):
-        url = url + ":58443"
+    def set_rules(self, url, session, rule):
         resp = None
-        url = url + '/rules'
+        url = url + '/compliance/rules'
 
         try:
-            payload = dict()
-            payload['name'] = name
-            payload['targetResourceType'] = targetResourceType
-            payload['targetGroup'] = targetGroup
-            payload['content'] = content
-
-            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
-            #resp = requests.post("http://localhost:8888/rules", headers={"content-type":"application/json"}, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp = session.post(url, data=json.dumps(rule), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re
 
         return resp
 
-    def get_compositeResults(self,url, session, id):
-        url = url + ":58443"
-        url = url + '/compositeResults'
+    def get_compositeResults(self,url, session, id, query_solutionGroups):
+        url = url + '/compliance/compositeResults'
 
         if id:
             url = url + '/' + id
+        elif query_solutionGroups:
+            url = url + '?groupID=' + query_solutionGroups
 
         try:
-            #resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
-            resp = requests.get("http://localhost:8888/compositeResults", headers={"content-type": "application/json"},
-                                 verify=False, timeout=REST_TIMEOUT)
-
-            #resp = requests.get(url, headers={"content-type": "application/json"},
-            #                    verify=False, timeout=3)
-
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp
 
-    def set_compositeResults(self, url, session, solutionGroup):
-        url = url + ":58443"
+    def set_compositeResults(self, url, session, solutionGroups, targetResources, all_rules):
         resp = None
-        url = url + '/compositeResults'
+        url = url + '/compliance/compositeResults'
 
         try:
+            if all_rules:
+                resp = session.post(url, verify=False, timeout=REST_TIMEOUT)
+                resp.raise_for_status()
+                return resp
+
             payload = dict()
-            payload['solutionGroup'] = solutionGroup
+            if solutionGroups:
+                payload['solutionGroups'] = solutionGroups
+            elif targetResources:
+                payload['targetResources'] = targetResources
 
             resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
-            #resp = requests.post("http://localhost:8888/compositeResults", headers={"content-type":"application/json"}, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             raise re

@@ -783,7 +783,7 @@ def updatepolicy(*args, **kwargs):
     info    Specifies the type of information to return. This can be one of the following values:
                 FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
                 RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
-
+                NAMELIST -  Returns the available compliance policies
     jobid    Job ID of assign compliance policy operation
 
     uuid     UUID of the device to which you want to assign the compliance policy
@@ -876,32 +876,33 @@ def updaterepo(*args, **kwargs):
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
+
 def updatecomp(*args, **kwargs):
     '''
 
 @summary:
     Use this function to update firmware of endpoint from Lenovo XClarity Administrator
-    run this function as  
-    
+    run this function as
+
     data_dictionary = updatecomp( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-    
+
     USAGE:
 
-        keylist = ['con','query','mode','action','cmm','switch','server','storage']
+        keylist = ['con','query','mode','action','cmm','switch','server','storage','dev_list']
 
 @param
-    The parameters for this command are as follows 
-    
+    The parameters for this command are as follows
+
     query   The data to return. This can be one of the following values.
                 components - Returns a list of devices and components that can be updated.
                 status - Returns the status and progress of firmware updates. This is the default value
-    
+
     mode    Indicates when to activate the update. This can be one of the following values.
                 immediate - Uses Immediate Activaton mode when applying firmware updates to the selected endpoints.
                 delayed - Uses Delayed Activaton mode when applying firmware updates to the selected endpoints.
-    
+
     action  The action to take. This can be one of the following values.
                 apply - Applies the associated firmware to the submitted components.
                 power - Perform power action on selected endpoint.
@@ -911,7 +912,7 @@ def updatecomp(*args, **kwargs):
     switch  switch information
     server  servers information
     storage storages information
-
+    dev_list  - update all updateable components
             For action = apply/cancelApply, Device information should contain following data separated by comma
                 UUID - UUID of the device
                 Fixid - Firmware-update ID of the target package to be applied to the component. If not provided assigned policy would be used.
@@ -927,7 +928,7 @@ def updatecomp(*args, **kwargs):
 
 
 
-@example 
+@example
 
     '''
     global shell_obj
@@ -935,19 +936,19 @@ def updatecomp(*args, **kwargs):
 
     param_dict = {}
     con = None
-    long_short_key_map = {'query': 'q', 'mode': 'm', 'action': 'a', 'cmm': 'c', 'switch': 'w','server':'s',
-                          'storage':'t'}
-    keylist = ['con', 'query','mode','action','cmm','switch','server','storage']
-    optional_keylist = ['con', 'query','mode','action','cmm','switch','server','storage']
+    long_short_key_map = {'query': 'q', 'mode': 'm', 'action': 'a', 'cmm': 'c', 'switch': 'w', 'server': 's',
+                          'storage': 't', 'dev_list': 'l'}
+    keylist = ['con', 'query', 'mode', 'action', 'cmm', 'switch', 'server', 'storage', 'dev_list']
+    optional_keylist = ['con', 'query', 'mode', 'action', 'cmm', 'switch', 'server', 'storage', 'dev_list']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
-
 
 
 def users(*args, **kwargs):
@@ -1285,7 +1286,7 @@ def resourcegroups(*args, **kwargs):
 
     keylist = ['con','uuid','name','description','type','solutionVPD','members','criteria']
     optional_keylist = ['con', 'uuid','name','description','type','solutionVPD','members','criteria']
-    mutually_exclusive_keys = ['uuid', 'name']
+    mutually_exclusive_keys = []
     mandatory_options_list = {'uuid':[],'name':['type']}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
@@ -1326,7 +1327,7 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
             raise ValueError("Invalid Input Arguments")
 
         if key == 'con':
-            if param_dict.has_key(key):
+            if key in param_dict:
                 con = param_dict.pop(key)
 
     #if not con:
@@ -1502,7 +1503,7 @@ def rules(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con', 'id', 'name', 'targetResourceType', 'targetGroup', 'content']
+        keylist = ['con', 'id', 'rule']
 
 @param
     The parameters for this command are as follows
@@ -1517,11 +1518,11 @@ def rules(*args, **kwargs):
     con = None
 
     # some paramters don't have short options
-    long_short_key_map = { 'id':'i', 'name':'n', 'targetResourceType':'t', 'targetGroup':'g', 'content':'c'}
+    long_short_key_map = { 'id':'i', 'rule':'r'}
 
-    keylist = ['con', 'id',  'name', 'targetResourceType', 'targetGroup', 'content']
-    optional_keylist = ['con', 'id',  'name', 'targetResourceType', 'targetGroup', 'content']
-    mutually_exclusive_keys = ['id','name']
+    keylist = ['con', 'id',  'rule']
+    optional_keylist = ['con', 'id',  'rule']
+    mutually_exclusive_keys = ['id','rule']
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
@@ -1542,7 +1543,7 @@ def compositeResults(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con', 'id', 'solutionGroup']
+        keylist = ['con', 'id', ,'query_solutionGroups', 'solutionGroups','targetResources','all_rules']
 
 @param
     The parameters for this command are as follows
@@ -1557,11 +1558,12 @@ def compositeResults(*args, **kwargs):
     con = None
 
     # some paramters don't have short options
-    long_short_key_map = { 'id':'i', 'solutionGroup':'s'}
+    long_short_key_map = { 'id':'i', 'query_solutionGroups':'q',
+            'solutionGroups':'s', 'targetResources':'t', 'all_rules':'a'}
 
-    keylist = ['con', 'id',  'solutionGroup']
-    optional_keylist = ['con', 'id',  'solutionGroup']
-    mutually_exclusive_keys = ['id','solutionGroup']
+    keylist = ['con', 'id', 'query_solutionGroups', 'solutionGroups', 'targetResources', 'all_rules']
+    optional_keylist = ['con', 'id','query_solutionGroups',  'solutionGroups','targetResources','all_rules']
+    mutually_exclusive_keys = ['id','query_solutionGroups', 'solutionGroups','targetResources','all_rules']
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,

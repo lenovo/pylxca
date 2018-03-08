@@ -6,6 +6,7 @@ import argparse
 import unittest
 import string
 import random
+import pprint
 
 from functools import wraps
 import errno
@@ -230,18 +231,26 @@ class UHMTestCases(TestCase):
 
     def test_resource_groups(self):
         result = None
-        param_dict = {'name': random.SystemRandom().choice(string.ascii_uppercase + string.digits),
-                      'description': "TestGroup",
-                      'type': 'solution',
-                      'solutionVPD': {'model': 'TESTMODEL', 'serialNumber': 'TESTSERIAL', 'machineType': 'TESTMTM', 'id': '59A54997C18DCF0594A8CCD0', 'manufacturer': 'LENOVO'},
-                      'members': [],
-                      'criteria': []}
         try:
-            result = resourcegroups(self._conn, **param_dict)
+            result = resourcegroups(self._conn)
+            pprint.pprint(result)
         except Exception as e:
             self.assertTrue("Resource Group Creation failed")
         return result
 
+   # def test_resource_groups(self):
+   #      result = None
+   #      param_dict = {'name': random.SystemRandom().choice(string.ascii_uppercase + string.digits),
+   #                    'description': "TestGroup",
+   #                    'type': 'solution',
+   #                    'solutionVPD': {'model': 'TESTMODEL', 'serialNumber': 'TESTSERIAL', 'machineType': 'TESTMTM', 'id': '59A54997C18DCF0594A8CCD0', 'manufacturer': 'LENOVO'},
+   #                    'members': [],
+   #                    'criteria': []}
+   #      try:
+   #          result = resourcegroups(self._conn, **param_dict)
+   #      except Exception as e:
+   #          self.assertTrue("Resource Group Creation failed")
+   #      return result
 
 if __name__ == "__main__":
     # run_method:1

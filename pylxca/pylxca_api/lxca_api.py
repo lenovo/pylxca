@@ -717,6 +717,8 @@ class lxca_api(with_metaclass(Singleton, object)):
         switch = None
         cmm = None
         storage = None
+        query = None
+        dev_list = None
                 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -728,11 +730,13 @@ class lxca_api(with_metaclass(Singleton, object)):
             storage = next((item for item in [dict_handler.get  ('t') , dict_handler.get('storage')] if item is not None),None)
             switch = next((item for item in [dict_handler.get  ('w') , dict_handler.get('switch')] if item is not None),None)
             cmm = next((item for item in [dict_handler.get  ('c') , dict_handler.get('cmm')] if item is not None),None)
-                        
-        resp = lxca_rest().do_updatecomp(self.con.get_url(),self.con.get_session(),mode,action,server,switch,storage,cmm)
+            query = next((item for item in [dict_handler.get('q'), dict_handler.get('query')] if item is not None), None)
+            dev_list = next((item for item in [dict_handler.get('l'), dict_handler.get('dev_list')] if item is not None), None)
+
+        resp = lxca_rest().do_updatecomp(self.con.get_url(),self.con.get_session(), query, mode,action,server,switch,storage,cmm, dev_list)
         
         try:
-            if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None :
+            if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None and dev_list == None :
                 py_obj = json.loads(resp.text)
             else:
                 py_obj = json.loads(resp._content)
@@ -895,10 +899,7 @@ class lxca_api(with_metaclass(Singleton, object)):
 
     def get_set_rules(self, dict_handler=None):
         id = None
-        name = None
-        targetResourceType = None
-        targetGroup = None
-        content = None
+        rule = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -906,17 +907,11 @@ class lxca_api(with_metaclass(Singleton, object)):
         if dict_handler:
             id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None),
                         None)
-            name = next((item for item in [dict_handler.get('n'), dict_handler.get('name')] if item is not None),
+            rule = next((item for item in [dict_handler.get('r'), dict_handler.get('rule')] if item is not None),
                              None)
-            targetResourceType = next((item for item in [dict_handler.get('t'), dict_handler.get('targetResourceType')] if item is not None),
-                               None)
-            targetGroup = next((item for item in [dict_handler.get('g'), dict_handler.get('targetGroup')] if item is not None),
-                             None)
-            content = next((item for item in [dict_handler.get('c'), dict_handler.get('content')] if item is not None),
-                               None)
 
-        if name:
-            resp = lxca_rest().set_rules(self.con.get_url(), self.con.get_session(), name, targetResourceType, targetGroup, content)
+        if rule:
+            resp = lxca_rest().set_rules(self.con.get_url(), self.con.get_session(), rule)
         else:
             resp = lxca_rest().get_rules(self.con.get_url(), self.con.get_session(), id)
         py_obj = json.loads(resp.text)
@@ -924,7 +919,10 @@ class lxca_api(with_metaclass(Singleton, object)):
 
     def get_set_compositeResults(self, dict_handler=None):
         id = None
-        solutionGroup = None
+        query_solutionGroups = None
+        solutionGroups = None
+        targetResources = None
+        all_rules = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -932,12 +930,24 @@ class lxca_api(with_metaclass(Singleton, object)):
         if dict_handler:
             id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None),
                         None)
-            solutionGroup = next((item for item in [dict_handler.get('s'), dict_handler.get('solutionGroup')] if item is not None),
+            query_solutionGroups = next((item for item in
+                [dict_handler.get('q'), dict_handler.get('query_solutionGroups')] if item is not None),
+                      None)
+            solutionGroups = next((item for item in [dict_handler.get('s'),
+                dict_handler.get('solutionGroups')] if item is not None),
                              None)
+            targetResources = next(
+                (item for item in [dict_handler.get('t'), dict_handler.get('targetResources')] if item is not None),
+                None)
+            all_rules = next(
+                (item for item in [dict_handler.get('a'), dict_handler.get('all_rules')] if item is not None),
+                None)
 
-        if solutionGroup:
-            resp = lxca_rest().set_compositeResults(self.con.get_url(), self.con.get_session(), solutionGroup)
+        if all_rules or solutionGroups or targetResources:
+            resp = lxca_rest().set_compositeResults(self.con.get_url(),
+                    self.con.get_session(), solutionGroups, targetResources, all_rules)
         else:
-            resp = lxca_rest().get_compositeResults(self.con.get_url(), self.con.get_session(), id)
+            resp = lxca_rest().get_compositeResults(self.con.get_url(),
+                    self.con.get_session(), id, query_solutionGroups)
         py_obj = json.loads(resp.text)
         return py_obj
