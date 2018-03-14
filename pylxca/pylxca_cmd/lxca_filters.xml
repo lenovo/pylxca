@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML file for Chassis Filter -->
+<filters>
+	<chassis name="default">
+		<Name>name</Name>
+		<FQDN>FQDN</FQDN>
+		<Chassis_Location name="location" type="object">
+			<Location>location</Location>
+			<Rack>rack</Rack>
+			<Room>room</Room>
+		</Chassis_Location>
+		<Contact>contact</Contact>
+		<Type>type</Type>
+		<HealthState>overallHealthState</HealthState>
+		<AccessState>accessState</AccessState>
+		<MachineType>machineType</MachineType>
+		<Model>model</Model>
+		<SerialNumber>serialNumber</SerialNumber>
+		<Description>description</Description>
+		<CMMs name="cmms" type="object">
+			<CMM_Name>name</CMM_Name>
+		</CMMs>		
+		<URI>uri</URI>
+		<UUID>uuid</UUID>
+		<ManagerName>managerName</ManagerName>
+		<ManagerUUID>managerUuid</ManagerUUID>
+		<ipAddresses>ipAddresses</ipAddresses>
+		<hostname>hostname</hostname>
+		<productId>productId</productId>
+		<productName>productName</productName>
+		<bladeSlots>bladeSlots</bladeSlots>
+		<manufacturer>manufacturer</manufacturer>
+		<activationKeys>activationKeys</activationKeys>
+	</chassis>
+	<chassis name="compute">
+		<Name>name</Name>
+		<FQDN>FQDN</FQDN>
+		<Contact>contact</Contact>
+		<Type>type</Type>
+		<HealthState>overallHealthState</HealthState>
+		<AccessState>accessState</AccessState>
+		<MachineType>machineType</MachineType>
+		<Model>model</Model>
+		<SerialNumber>serialNumber</SerialNumber>
+		<Description>description</Description>
+	</chassis>
+	<nodes name="default">
+		<Name>name</Name>	
+		<FQDN>FQDN</FQDN>
+		<UUID>uuid</UUID>
+		<location type="object">
+			<Location>location</Location>
+			<Rack>rack</Rack>
+			<Room>room</Room>
+		</location>
+		<Contact>contact</Contact>
+		<Type>type</Type>
+		<HealthState>overallHealthState</HealthState>
+		<AccessState>accessState</AccessState>
+		<MachineType>machineType</MachineType>
+		<Model>model</Model>
+		<serialNumber>serialNumber</serialNumber>
+	</nodes>
+	<switches name="default">
+        <Name>name</Name>
+        <FQDN>FQDN</FQDN>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+		<UUID>uuid</UUID>
+    </switches>
+	<switches name="rack_switch_port">
+		<elapsedTimeMillisecs>elapsedTimeMillisecs</elapsedTimeMillisecs>
+		<portDataSetTimestamp>portDataSetTimestamp</portDataSetTimestamp>
+        <Ports name="ports" type="object">
+            <configuredStatus>configuredStatus</configuredStatus>
+			<interfaceIndex>interfaceIndex</interfaceIndex>
+			<operationalStatus>operationalStatus</operationalStatus>
+			<peerMacAddress>peerMacAddress</peerMacAddress>
+			<Port>port</Port>
+            <PortName>portName</PortName>
+			<portSpeed>portSpeed</portSpeed>
+			<portState>portState</portState>
+			<PVID>PVID</PVID>
+			<tagPVID>tagPVID</tagPVID>
+			<vLAN>vLAN</vLAN>
+        </Ports>
+		<uri>uri</uri>
+		<UUID>uuid</UUID>
+	</switches>
+	<switches name="flex_switch_port">
+		<SwitchID>SwitchID</SwitchID>
+        <vlans name="vlans" type="object">
+            <ports>ports</ports>
+			<VLANID>VLANID</VLANID>
+			<management>management</management>
+			<vports>vports</vports>
+			<mode>mode</mode>
+        </vlans>
+	</switches>
+	<switches name="rack_switch_port_response">
+		<result>result</result>
+		<Messages name="messages" type="object">
+            <statusCode>statusCode</statusCode>
+			<statusDescription>statusDescription</statusDescription>
+        </Messages>
+	</switches>
+	<fans name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </fans>
+    <powersupplies name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </powersupplies>
+    <fanmuxes name="default">
+        <Name>name</Name>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </fanmuxes>
+    <cmms name="default">
+        <Name>name</Name>
+		<UUID>uuid</UUID>
+        <location type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+        <Contact>contact</Contact>
+        <Type>type</Type>
+        <HealthState>overallHealthState</HealthState>
+        <AccessState>accessState</AccessState>
+        <MachineType>machineType</MachineType>
+        <Model>model</Model>
+    </cmms>
+    <scalablesystem name="default">
+        <complexID>complexID</complexID>
+        <nodeCount>nodeCount</nodeCount>
+        <location name="location" type="object">
+            <Location>location</Location>
+            <Rack>rack</Rack>
+            <Room>room</Room>
+        </location>
+		<partitions name="partition" type="object">
+            <nodes name="nodes" type="object">
+                <Name>name</Name>
+                <Type>type</Type>
+            </nodes>
+        </partitions>
+    </scalablesystem>
+    <discover name="default">
+    	<Progress>progress</Progress>
+		<rackswitchList name="rackswitchList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<status>status</status>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </rackswitchList>
+		<Chassis_List name="chassisList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<name>name</name>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </Chassis_List>
+		<serverList name="serverList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </serverList>
+    </discover>
+    <discover name="job">
+    	<Progress>progress</Progress>
+		<rackswitchList name="rackswitchList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<status>status</status>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </rackswitchList>
+		<Chassis_List name="chassisList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<name>name</name>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </Chassis_List>
+		<serverList name="serverList" type="object">
+            <Name>name</Name>
+            <IPAddresses>ipAddresses</IPAddresses>
+            <machineType>machineType</machineType>
+			<hostname>hostname</hostname>
+			<managementPorts name="managementPorts" type="object">
+				<port>port</port>
+				<enabled>enabled</enabled>
+				<protocol>protocol</protocol>
+			</managementPorts>
+			<UUID>uuid</UUID>
+        </serverList>
+    </discover>
+    <manage name="default">
+    	<Progress>progress</Progress>
+		<Results name="results" type="object">
+            <progress>progress</progress>
+			<messageParameters>messageParameters</messageParameters>
+			<Description>resultLongDescription</Description>
+            <result>result</result>
+			<status name="status" type="object">
+				<state>state</state>
+			</status>
+        </Results>
+    </manage>
+    <unmanage name="default">
+    	<Progress>progress</Progress>
+		<Results name="results" type="object">
+            <progress>progress</progress>
+            <result>result</result>l
+        </Results>
+    </unmanage>
+	<jobs name="default">
+    	<JOB_ID>id</JOB_ID>
+		<Status name="status" type="object">
+            <State>state</State>
+            <Percentage>percentage</Percentage>l
+        </Status>
+		<UUID>uuid</UUID>
+    </jobs>
+	<users name="default">
+		<userName>userName</userName>
+    	<activeSessions>activeSessions</activeSessions>
+		<description>description</description>
+		<id>id</id>
+		<State>state</State>
+    </users>
+	<lxcalog name="default">
+		<componentID>componentID</componentID>
+    	<eventID>eventID</eventID>
+		<msg>msg</msg>
+		<timeStamp>timeStamp</timeStamp>
+		<severity>severity</severity>
+    </lxcalog>
+	<ffdc name="default">
+		<Result>result</Result>
+		<messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>
+        </messages>
+    </ffdc>
+    <updatepolicy name="default">
+		<PolicyID>id</PolicyID>
+		<PolicyName>name</PolicyName>
+		<Description>description</Description>
+		<Details name="details" type="object">
+			<BaseVersion>baseVersion</BaseVersion>
+			<Build>build</Build>
+			<Components name="components" type="object">
+				<ComponentName>name</ComponentName>
+				<type>type</type>
+			</Components>
+		</Details>
+    </updatepolicy>
+    <updatepolicy name="chassis">
+			<chassis>chassis</chassis>
+    </updatepolicy>
+    <updatepolicy name="cmms">
+		<cmms name="cmms" type="object">
+			<endpointCompliant>endpointCompliant</endpointCompliant>
+			<policyName>policyName</policyName>
+			<uuid>uuid</uuid>
+		</cmms>
+    </updatepolicy>
+	<updatepolicy name="job">
+		<result name="result" type="object">
+			<endpointCompliant>endpointCompliant</endpointCompliant>
+			<status>status</status>
+			<targetFirmware name="targetFirmware" type="object">
+				<compliant>compliant</compliant>
+				<Build>build</Build>
+				<ComponentName>name</ComponentName>
+				<fixid>fixid</fixid>
+			</targetFirmware>
+			<uuid>uuid</uuid>
+		</result>
+		<status>status</status>
+    </updatepolicy>
+    <updatepolicy name="firmware">
+        <policies name="policies" type="object">
+			<PolicyID>id</PolicyID>
+			<PolicyName>name</PolicyName>
+            <Description>description</Description>
+			<Details name="details" type="object">
+				<BaseVersion>baseVersion</BaseVersion>
+				<Build>build</Build>
+				<Components name="components" type="object">
+					<ComponentName>name</ComponentName>
+					<type>type</type>
+				</Components>
+			</Details>
+		</policies>
+    </updatepolicy>
+    <updaterepo name="default">
+		<importDir>importDir</importDir>
+		<publicKeys>publicKeys</publicKeys>
+		<lastRefreshed>lastRefreshed</lastRefreshed>
+    </updaterepo>
+    <updaterepo name="supportedMts">
+		<supportedMts name="supportedMts" type="object">
+			<category>category</category>
+			<comp>comp</comp>
+			<displayType>displayType</displayType>
+			<name>name</name>
+			<supportDownload>supportDownload</supportDownload>
+			<type>type</type>
+		</supportedMts>
+    </updaterepo>
+    <updaterepo name="size">
+		<size name="size" type="object">
+			<allotment>allotment</allotment>
+			<freeSpace>freeSpace</freeSpace>
+			<usedSpace>usedSpace</usedSpace>
+		</size>
+    </updaterepo>
+	<updaterepo name="updatesByMt">
+		<updatesByMt name="updatesByMt" type="object">
+			<progress>progress</progress>
+			<state>state</state>
+			<InformationFirmwareUpdate name="updates" type="object">
+				<MachineType>mt</MachineType>
+				<updates name="updates" type="object">
+					<buildNumber>buildNumber</buildNumber>
+					<comp>comp</comp>
+					<fixid>fixid</fixid>
+				</updates>
+			</InformationFirmwareUpdate>
+		</updatesByMt>
+    </updaterepo>
+	<updaterepo name="updatesByMt">
+		<updatesByMt name="updatesByMt" type="object">
+			<InformationFirmwareUpdate name="updates" type="object">
+				<MachineType>mt</MachineType>
+				<updates name="updates" type="object">
+					<buildNumber>buildNumber</buildNumber>
+					<comp>comp</comp>
+					<fixid>fixid</fixid>
+				</updates>
+			</InformationFirmwareUpdate>
+		</updatesByMt>
+    </updaterepo>
+    <updaterepo name="updatesByMtByComp">
+		<updatesByMtByComp>updatesByMtByComp</updatesByMtByComp>
+    </updaterepo>
+    <updaterepo name="updates">
+		<updates>updates</updates>
+    </updaterepo>
+	<updaterepo name="action_result">
+		<result>result</result>
+		<taskid>taskid</taskid>
+		<jobid>jobid</jobid>
+    </updaterepo>
+
+	<updatecomp name="default">
+			<Result>result</Result>
+			<Response_Message name="messages" type="object">
+				<ID>id</ID>
+				<Explanation>explanation</Explanation>
+				<Recovery_Message>recovery</Recovery_Message>
+				<Response_Text>text</Response_Text>
+			</Response_Message >
+    </updatecomp>
+	<updatecomp name="status">
+		<UpdateStatusMetrics name="UpdateStatusMetrics" type="object">
+			<TotalJobsInProgress>TotalJobsInProgress</TotalJobsInProgress>
+			<TotalJobs>TotalJobs</TotalJobs>
+		</UpdateStatusMetrics >
+		<DeviceList name="DeviceList" type="object">
+			<CMMList name="CMMList" type="object">
+				<UpdateStatus name="UpdateStatus" type="object">
+					<CMMUpdatePhase>Phase</CMMUpdatePhase>
+					<CMMUpdateState>State</CMMUpdateState>
+				</UpdateStatus >
+			</CMMList >
+			<ServerList name="ServerList" type="object">
+				<Components name="Components" type="object">
+					<UpdateStatus name="UpdateStatus" type="object">
+						<ServerUpdatePhase>Phase</ServerUpdatePhase>
+						<ServerUpdateState>State</ServerUpdateState>
+					</UpdateStatus >
+				</Components >	
+			</ServerList >
+			<StorageList  name="StorageList" type="object">
+				<UpdateStatus name="UpdateStatus" type="object">
+					<StorageUpdatePhase>Phase</StorageUpdatePhase>
+					<StorageUpdateState>State</StorageUpdateState>
+				</UpdateStatus >
+			</StorageList  >
+			<SwitchList name="SwitchList" type="object">
+				<UpdateStatus name="UpdateStatus" type="object">
+					<SwitchUpdatePhase>Phase</SwitchUpdatePhase>
+					<SwitchUpdateState>State</SwitchUpdateState>
+				</UpdateStatus >
+			</SwitchList >
+		</DeviceList >
+    </updatecomp>
+	<configprofiles name="default">
+			<Identifier>identifier</Identifier>
+			<Label>label</Label>
+			<Profile_List name="items" type="object">
+				<ID>id</ID>
+				<ProfileName>profileName</ProfileName>
+				<ProfileStatus>profileStatus</ProfileStatus>
+				<ServerName>serverName</ServerName>
+				<UUID>uuid</UUID>
+				<TemplateID>templateID</TemplateID>
+				<templateName>templateName</templateName>
+				<AddressPresent>addressPresent</AddressPresent>
+				<BayId>bayId</BayId>
+				<ChassisName>chassisName</ChassisName>
+				<managementPatternPresent>managementPatternPresent</managementPatternPresent>
+				<rackID>rackID</rackID>
+			</Profile_List >
+    </configprofiles>
+	<configprofiles name="id">
+			<ID>ID</ID>
+			<DisplayId>displayId</DisplayId>
+			<Name>name</Name>
+			<DisplayName>displayName</DisplayName>
+			<TemplateId>templateId</TemplateId>
+			<ServerTemplateId>serverTemplateId</ServerTemplateId>
+    </configprofiles>
+	<configpatterns name="default">
+			<Identifier>identifier</Identifier>
+			<Patterns_List name="items" type="object">
+				<ID>id</ID>
+				<InUse>inUse</InUse>
+				<formFactor>formFactor</formFactor>
+				<name>name</name>
+				<nodeType>nodeType</nodeType>
+				<type>type</type>
+				<referencedBy>referencedBy</referencedBy>
+				<uri>uri</uri>
+				<userDefined>userDefined</userDefined>
+			</Patterns_List >
+    </configpatterns>
+	<configpatterns name="status">
+			<Patterns_List name="items" type="object">
+				<activationStatus>activationStatus</activationStatus>
+				<serverProfileName>serverProfileName</serverProfileName>
+				<configStatus>configStatus</configStatus>
+			</Patterns_List >
+    </configpatterns>
+
+	<configtargets name="default">
+			<Identifier>identifier</Identifier>
+			<Target_List name="items" type="object">
+				<UUID>uuid</UUID>
+				<firmwareLevel>firmwareLevel</firmwareLevel>
+				<Children name="children" type="object">
+					<DeployableServers name="ites" type="object">	
+						<UUID>id</UUID>
+						<IPS>ips</IPS>
+						<Name>name</Name>
+						<Profile>profile</Profile>
+						<Type>type</Type>
+						<DeployCompatibility name="deployCompatibility" type="object">
+							<Status>status</Status>
+							<PowerStatus>powerStatus</PowerStatus>
+						</DeployCompatibility >
+					</DeployableServers >
+				</Children >
+			</Target_List >
+    </configtargets>
+</filters>

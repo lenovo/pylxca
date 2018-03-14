@@ -1,0 +1,54 @@
+#!/usr/bin/env python 
+'''
+@since: 15 Sep 2015
+@author: Prashant Bhosale <pbhosale@lenovo.com>, Girish Kumar <gkumar1@lenovo.com>
+@license: Lenovo License
+@copyright: Lenovo Copyright
+@organization: Lenovo Group Ltd
+@summary: The main script for PYLXCA Tool, It creates a shell and accept raw input to process it.
+
+'''
+
+import os, time, code
+import signal, time, sys
+
+from pylxca import __version__
+from pylxca.pylxca_cmd import lxca_ishell
+from pylxca.pylxca_cmd.lxca_pyshell import *
+
+class Application(object):
+    def __init__(self): 
+        self.client = None
+
+    def run(self,api_mode):
+        if api_mode and "api" in api_mode :
+            set_interactive()
+        else:
+            global __version__
+            shell = lxca_ishell.InteractiveShell(banner="Welcome to LXCA Command Shell v" + __version__ , prompt="PyLXCA >> ")
+            shell.run()
+
+def handle_ctrl_c(signum, frame):
+    # restore the original signal handler as otherwise evil things will happen
+    # in raw_input when CTRL+C is pressed, and our signal handler is not re-entrant
+    signal.signal(signal.SIGINT, original_sigint)
+    print ('\nKeyboardInterrupt: Press ctrl+D to exit')
+    
+    # restore the exit gracefully handler here
+    signal.signal(signal.SIGINT, handle_ctrl_c)
+
+
+def main():
+    
+    api_mode = None
+    if len(sys.argv) > 1:
+        api_mode = sys.argv[1]
+    
+    app = Application()
+    app.run(api_mode)
+
+
+if __name__ == "__main__":
+    original_sigint = signal.getsignal(signal.SIGINT)
+    signal.signal(signal.SIGINT, handle_ctrl_c)
+    main()
