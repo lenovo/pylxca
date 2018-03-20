@@ -28,9 +28,7 @@ class lxcaAdapter(HTTPAdapter):
 
                                        maxsize=maxsize,
 
-                                       block=block,
-
-                                       assert_hostname='localhost')
+                                       block=block)
 
 
 class Error(Exception):
