@@ -83,21 +83,21 @@ API Reference
 -------------
 
 PyLXCA command reference is available at 
-http://ralfss30.labs.lenovo.com:8120/help/topic/com.lenovo.lxca.doc/pycli_overview.html
+http://sysmgt.lenovofiles.com/help/topic/com.lenovo.lxca.doc/pycli_overview.html?cp=1_23_1
 
 
 Example
 ------------
 
 python lxca_shell
-connect -l https://10.241.106.216 -u USERID --noverify
-connect -l https://10.241.106.216 -u USERID
+connect -l https://<LXCA IPAddress> -u <LXCA User> --noverify
+connect -l https://<LXCA IPAddress> -u <LXCA User>
 
 Example to call lxca_cmd pytohn module from python script or Ansible module
 
 from pylxca.pylxca_cmd.lxca_pyshell import *
 pyshell()
-con1 = connect("https://10.241.106.216","USERID","CME44ibm","True")
+con1 = connect("https://<LXCA IPAddress>",<LXCA User>,<LXCA Password>,"True")
 
 Several sample scripts are also available to help you to quickly begin using the PYLXCA 
 command-line interface (CLI) to manage endpoints. 
