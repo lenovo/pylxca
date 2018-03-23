@@ -264,5 +264,18 @@
 	  "filter="
     ],
     "Retrieve hardware and management-server events in the events log."
+  ],
+  "storedcredentials": [
+    "i:u:p:d:h",
+    [
+	  "con=",
+	  "id=",
+      "user_name=",
+      "password=",
+      "description=",
+      "deleteId="
+    ],
+    "Retrieve and update stored credentials on lxca."
   ]
+
 }

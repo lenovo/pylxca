@@ -1620,3 +1620,104 @@ class lxca_rest(object):
             raise re
 
         return resp
+
+    def get_storedcredentials(self,url, session, id):
+        """
+        Get stored credential details
+        :param url:
+        :param session:
+        :param id:
+        :return:
+        """
+        url = url + '/storedCredentials'
+
+        if id:
+            url = url + '/' + id
+
+        try:
+            resp = session.get(url, verify=False, timeout=3)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def post_storedcredentials(self, url, session, user_name, password, description):
+        """
+        Add new credentials to store
+        :param url:
+        :param session:
+        :param user_name:
+        :param password:
+        :param description:
+        :return:
+        """
+        resp = None
+        url = url + '/storedCredentials'
+
+        try:
+            payload = dict()
+            payload['userName'] = user_name
+            payload['password'] = password
+            payload['description'] = description
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def put_storedcredentials(self, url, session, id, user_name, password, description):
+        """
+        Update already stored credential with specified id
+        :param url:
+        :param session:
+        :param id:
+        :param user_name:
+        :param password:
+        :param description:
+        :return:
+        """
+        resp = None
+        url = url + '/storedCredentials'
+
+        if id:
+            url = url + '/' + id
+        else:
+            raise Exception("Invalid Arguments, id is mandatory for put operation only")
+
+        if not password or not password:
+            raise Exception("Invalid Arguments, userName and password are mandatory for put operation only")
+
+        try:
+            payload = dict()
+            payload['userName'] = user_name
+            payload['password'] = password
+            payload['description'] = description
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            raise re
+
+        return resp
+
+    def delete_storedcredentials(self,url, session, deleteId):
+        """
+        delete stored credential with specified id.
+        :param url:
+        :param session:
+        :param deleteId:
+        :return:
+        """
+        url = url + '/storedCredentials'
+
+        if id:
+            url = url + '/' + deleteId
+
+        try:
+            resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp

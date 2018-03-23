@@ -58,7 +58,8 @@ def set_interactive():
           "tasks": tasks,
           "manifests": manifests,
           "osimages": osimages,
-          "resourcegroups": resourcegroups, 
+          "resourcegroups": resourcegroups,
+          "storedcredentials": storedcredentials,
           "help": help}
     ns.update()
     global __version__
@@ -1564,6 +1565,56 @@ def compositeResults(*args, **kwargs):
     keylist = ['con', 'id', 'query_solutionGroups', 'solutionGroups', 'targetResources', 'all_rules']
     optional_keylist = ['con', 'id','query_solutionGroups',  'solutionGroups','targetResources','all_rules']
     mutually_exclusive_keys = ['id','query_solutionGroups', 'solutionGroups','targetResources','all_rules']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
+
+def storedcredentials(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get and set complaince rules on Lenovo XClarity Administrator
+    run this function as
+
+    data_dictionary = managementserver( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con', 'id', 'user_name', 'description', 'password', 'deleteId']
+
+@param
+    The parameters for this command are as follows
+    id          Stored credential id of stored credential
+    user_name    user name
+    password    password
+    description description of user credential
+    deleteid    id to be deleted
+
+@example
+    rep = storedcredentials(con1)
+    rep = storedcredentials(con1, id='955')
+    rep = storedcredentials(con1,u='admin1', p='admin1', d='description of stored credentials')
+    rep = storedcredentials(con1, deleteId='954')
+    rep = storedcredentials(con1,i='955', u='admin1', p='admin1', d='description of stored credentials for admin')
+
+    '''
+    global shell_obj
+    command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    # some paramters don't have short options
+    long_short_key_map = { 'id':'i', 'user_name':'u',
+            'description':'d', 'password':'p'}
+
+    keylist = ['con', 'id', 'user_name', 'description', 'password', 'deleteId']
+    optional_keylist = ['con', 'id', 'user_name', 'description', 'password', 'deleteId']
+    mutually_exclusive_keys = ['id', 'deleteId']
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,

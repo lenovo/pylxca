@@ -780,3 +780,25 @@ class compositeResults(InteractiveCommand):
     """
     complaince compositeresult get and update on LXCA
     """
+
+class storedcredentials(InteractiveCommand):
+    """
+        storedcredentials get and update on LXCA
+
+    USAGE:
+        storedcredentials -h
+        storedcredentials [-u <admin>] [-p <password>] [-d <description>] [-v <view filter name>]
+
+    OPTIONS:
+        -h        This option displays command usage information
+        -i  --id      stored credential id
+        -u, --userName     user name
+        -p, --password    password
+        -d, --description detail about user
+            --deleteId    credential id to be deleted
+        -v, --view    view filter name
+
+    """
+
+###############################################################################
+

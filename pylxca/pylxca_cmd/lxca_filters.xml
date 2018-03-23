@@ -536,4 +536,10 @@
 				</Children >
 			</Target_List >
     </configtargets>
+	<storedcredentials name="default">
+		<userName>userName</userName>
+		<description>description</description>
+		<id>id</id>
+    </storedcredentials>
+
 </filters>
