@@ -792,7 +792,7 @@ class storedcredentials(InteractiveCommand):
     OPTIONS:
         -h        This option displays command usage information
         -i  --id      stored credential id
-        -u, --userName     user name
+        -u, --user_name     user name
         -p, --password    password
         -d, --description detail about user
             --deleteId    credential id to be deleted
