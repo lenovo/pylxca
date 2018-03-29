@@ -1416,6 +1416,7 @@ def osimages(*args, **kwargs):
 
     con = None
     param_dict = {}
+    param_dict = kwargs
 
     command_name = sys._getframe().f_code.co_name
 
