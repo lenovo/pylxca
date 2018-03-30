@@ -965,7 +965,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         user_name = None
         description = None
         password = None
-        deleteId = None
+        delete_id = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -980,18 +980,22 @@ class lxca_api(with_metaclass(Singleton, object)):
             password = next(
                 (item for item in [dict_handler.get('p'), dict_handler.get('password')] if item is not None),
                 None)
-            deleteId = next(
-                (item for item in [dict_handler.get('deleteId')] if item is not None),
+            delete_id = next(
+                (item for item in [dict_handler.get('delete_id')] if item is not None),
                 None)
 
-        if deleteId:
-            resp = lxca_rest().delete_storedcredentials(self.con.get_url(), self.con.get_session(), deleteId)
-        elif id and user_name and password:
+        if delete_id:
+            resp = lxca_rest().delete_storedcredentials(self.con.get_url(), self.con.get_session(), delete_id)
+            resp = json.loads(resp.text)
+        elif id and (user_name or password or description):
             resp = lxca_rest().put_storedcredentials(self.con.get_url(), self.con.get_session(), id, user_name, password, description)
+            resp = json.loads(resp.text)
         elif user_name and password:
             resp = lxca_rest().post_storedcredentials(self.con.get_url(), self.con.get_session(), user_name, password, description)
+            py_obj = json.loads(resp.text)
+            resp = {'storedcredentialsList': py_obj['response']}
         else:
             resp = lxca_rest().get_storedcredentials(self.con.get_url(), self.con.get_session(), id)
-        py_obj = json.loads(resp.text)
-        py_obj = {'storedcredentialsList': py_obj['response']}
-        return py_obj
+            py_obj = json.loads(resp.text)
+            resp = {'storedcredentialsList': py_obj['response']}
+        return resp

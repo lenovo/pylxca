@@ -1714,18 +1714,18 @@ class lxca_rest(object):
 
         return resp
 
-    def delete_storedcredentials(self,url, session, deleteId):
+    def delete_storedcredentials(self, url, session, delete_id):
         """
         delete stored credential with specified id.
         :param url:
         :param session:
-        :param deleteId:
+        :param delete_id:
         :return:
         """
         url = url + '/storedCredentials'
 
         if id:
-            url = url + '/' + delete
+            url = url + '/' + delete_id
 
         try:
             resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)

@@ -800,7 +800,7 @@ class storedcredentials(InteractiveCommand):
         -u, --user_name     user name
         -p, --password    password
         -d, --description detail about user
-            --deleteId    credential id to be deleted
+            --delete_id    credential id to be deleted
         -v, --view    view filter name
 
     """

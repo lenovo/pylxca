@@ -1594,7 +1594,7 @@ def storedcredentials(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con', 'id', 'user_name', 'description', 'password', 'deleteId']
+        keylist = ['con', 'id', 'user_name', 'description', 'password', 'delete_id']
 
 @param
     The parameters for this command are as follows
@@ -1602,13 +1602,13 @@ def storedcredentials(*args, **kwargs):
     user_name    user name
     password    password
     description description of user credential
-    deleteid    id to be deleted
+    delete_id    id to be deleted
 
 @example
     rep = storedcredentials(con1)
     rep = storedcredentials(con1, id='955')
     rep = storedcredentials(con1,u='admin1', p='admin1', d='description of stored credentials')
-    rep = storedcredentials(con1, deleteId='954')
+    rep = storedcredentials(con1, delete_id='954')
     rep = storedcredentials(con1,i='955', u='admin1', p='admin1', d='description of stored credentials for admin')
 
     '''
@@ -1621,9 +1621,9 @@ def storedcredentials(*args, **kwargs):
     long_short_key_map = { 'id':'i', 'user_name':'u',
             'description':'d', 'password':'p'}
 
-    keylist = ['con', 'id', 'user_name', 'description', 'password', 'deleteId']
-    optional_keylist = ['con', 'id', 'user_name', 'description', 'password', 'deleteId']
-    mutually_exclusive_keys = ['id', 'deleteId']
+    keylist = ['con', 'id', 'user_name', 'description', 'password', 'delete_id']
+    optional_keylist = ['con', 'id', 'user_name', 'description', 'password', 'delete_id']
+    mutually_exclusive_keys = ['id', 'delete_id']
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,

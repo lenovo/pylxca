@@ -274,7 +274,7 @@
       "user_name=",
       "password=",
       "description=",
-      "deleteId="
+      "delete_id="
     ],
     "Retrieve and update stored credentials on lxca."
   ]
