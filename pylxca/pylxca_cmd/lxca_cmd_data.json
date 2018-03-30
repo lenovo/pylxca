@@ -124,7 +124,7 @@
     "Retrieve and manage job information"
   ],
   "manage": [
-    "i:u:p:r:j:f:v:h",
+    "i:u:p:r:j:f:v:s:h",
     [
 	  "con=",
       "ip=",
@@ -133,6 +133,7 @@
 	  "rpw=",
       "job=",
       "force=",
+      "storedcredential_id=",
       "view="
     ],
     "Manage the endpoint."

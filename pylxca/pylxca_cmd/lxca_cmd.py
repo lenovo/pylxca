@@ -442,6 +442,9 @@ class manage(InteractiveCommand):
         manage  -i <IP Address of endpoint> -u <user ID to access the endpoint>
                 -p <current password to access the endpoint> [-r <recovery password for the endpoint>]
                 [-f <Force Manage (True/False)>]
+        manage  -i <IP Address of endpoint> -s <stored credential ID> [-r <recovery password for the endpoint>]
+                [-f <Force Manage (True/False)>]
+
         manage  -j <job ID> [-v <view filter name>]
 
     OPTIONS:
@@ -451,6 +454,7 @@ class manage(InteractiveCommand):
         -r, --rpw       The recovery password to be used for the endpoint.
         -j, --job       Job ID of existing manage request
         -f, --force     Force Manage Boolean flag
+        -s  --storedcredential_id  stored credential id
         -v, --view      view filter name
     """
     def handle_output(self, out_obj):
@@ -788,6 +792,7 @@ class storedcredentials(InteractiveCommand):
     USAGE:
         storedcredentials -h
         storedcredentials [-u <admin>] [-p <password>] [-d <description>] [-v <view filter name>]
+        storedcredentials [-u <Stored Credential Id>] [-u <admin>] [-p <password>] [-d <description>] [-v <view filter name>]
 
     OPTIONS:
         -h        This option displays command usage information

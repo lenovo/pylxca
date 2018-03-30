@@ -518,7 +518,7 @@ def manage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ip','user','pw','rpw','job','force']
+        keylist = ['con','ip','user','pw','rpw','job','force', 'storedcredential_id']
 
 @param
     The parameters for this command are as follows 
@@ -530,7 +530,8 @@ def manage(*args, **kwargs):
         rpw      The recovery password to be used for the endpoint.
         force     force manage
         job       Job ID of existing manage request
-        
+        storedcredential_id    Store Crendential Id to be used for device manage operation
+                        if this is provided user is not required
         Note : mp, type and epuuid parameters are dedpriciated and only kept for backword compatibility. 
 
 @example 
@@ -540,7 +541,15 @@ def manage(*args, **kwargs):
     or with named variable it can be represented as
     
         jobid = manage(con= con1,ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",True)
-            
+        jobid = manage(con1, i="10.243.4.16", u='USERID', p='Purley44LEN', r='Purley55LEN', f='True')
+
+        Using storedcredential id for Rackswitch
+        jobid = manage(i='10.240.157.111', s='402', f='True')
+
+        Using storedcredential id for Rackswitch Server
+        jobid = manage(con1, i="10.243.4.16", r='Purley55LEN', s='404', f='True')
+
+
     For Getting Maangement job status
         
         manage_data = manage(con=con1,job=jobid)
@@ -551,11 +560,11 @@ def manage(*args, **kwargs):
     param_dict = {}
     con = None
 
-    long_short_key_map = {'ip': 'i', 'user':'u', 'pw':'p', 'rpw':'r', 'job': 'j', 'force':'f'}
-    keylist = ['con','ip','user','pw','rpw','job','force']
-    optional_keylist = ['con', 'ip','user','pw','rpw','job','force']
+    long_short_key_map = {'ip': 'i', 'user':'u', 'pw':'p', 'rpw':'r', 'job': 'j', 'force':'f', 'storedcredential_id':'s'}
+    keylist = ['con','ip', 'user', 'pw', 'rpw', 'job', 'force', 'storedcredential_id']
+    optional_keylist = ['con', 'ip','user','pw','rpw','job','force', 'storedcredential_id']
     mutually_exclusive_keys = ['ip', 'job']
-    mandatory_options_list = {'ip':['user','pw'], 'job':[]}
+    mandatory_options_list = {'job':[]}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
@@ -1418,7 +1427,7 @@ def osimages(*args, **kwargs):
 
     con = None
     param_dict = {}
-
+    param_dict = kwargs
     command_name = sys._getframe().f_code.co_name
 
     long_short_key_map = {'osimages_info':'i'}

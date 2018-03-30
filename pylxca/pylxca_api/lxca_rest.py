@@ -258,11 +258,13 @@ class lxca_rest(object):
             raise re
         return resp
 
-    def do_manage(self,url, session, ip_addr,user,pw,rpw,force,jobid):
+    def do_manage(self,url, session, ip_addr,user,pw,rpw,force,jobid, storedcredential_id):
         try:
+            orig_url = url
             #All input arguments ip_add, user, pw, rpw and mp are mandatory
             # if ip_addr and user and pw and mp:
-            if ip_addr and user and pw:
+            if ip_addr and \
+                    (( user and pw) or (storedcredential_id)):
                 url = url + '/manageRequest'
 
                 payload = list()
@@ -317,10 +319,21 @@ class lxca_rest(object):
                             param_dict["forceManage"] = False
 
                 security_Descriptor = { }
-                security_Descriptor['managedAuthEnabled'] = True
-                security_Descriptor['managedAuthSupported'] = False
-                param_dict['securityDescriptor'] = security_Descriptor
+                if storedcredential_id:
+                    security_Descriptor['managedAuthEnabled'] = False
+                    security_Descriptor['managedAuthSupported'] = False
+                    cred = self.get_storedcredentials(orig_url, session, storedcredential_id)
+                    cred_resp = json.loads(cred.text)
+                    storedCredentials = {}
+                    storedCredentials['id'] = storedcredential_id
+                    storedCredentials['userName'] = cred_resp['response']['userName']
+                    storedCredentials['description'] = cred_resp['response']['description']
+                    security_Descriptor['storedCredentials'] = storedCredentials
+                else:
+                    security_Descriptor['managedAuthEnabled'] = True
+                    security_Descriptor['managedAuthSupported'] = False
 
+                param_dict['securityDescriptor'] = security_Descriptor
                 payload = [param_dict]
 
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
@@ -1686,7 +1699,7 @@ class lxca_rest(object):
         else:
             raise Exception("Invalid Arguments, id is mandatory for put operation only")
 
-        if not password or not password:
+        if not user_name or not password:
             raise Exception("Invalid Arguments, userName and password are mandatory for put operation only")
 
         try:
@@ -1712,7 +1725,7 @@ class lxca_rest(object):
         url = url + '/storedCredentials'
 
         if id:
-            url = url + '/' + deleteId
+            url = url + '/' + delete
 
         try:
             resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)
