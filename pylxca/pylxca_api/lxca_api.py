@@ -113,7 +113,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             logger.error("Exception AttributeError %s Occurred while calling REST API for object %s" %(re, object_name))
             raise re
         except Exception as re:
-            logger.error("Exception %s Occurred while calling REST API for object %s" %(re, object_name))
+            logger.error("Exception: %s  %s Occurred while calling REST API for object %s" %(type(re), str(re), object_name))
             raise re
         return None
     
@@ -289,7 +289,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
-            py_obj = {'fanmuxesList':py_obj["fanmuxes"]}
+            py_obj = {'fanmuxesList':py_obj["fanMuxes"]}
         else:
             resp = lxca_rest().get_fanmux(self.con.get_url(),self.con.get_session(),uuid)
             py_obj = json.loads(resp.text)

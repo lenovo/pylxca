@@ -52,6 +52,7 @@ class lxca_connection(object):
         self.session = None
         #self.verify_callback = verify_callback
         #os.environ['REQUESTS_CA_BUNDLE'] = os.path.join('/etc/ssl/certs/','ca-certificates.crt')
+
         if verify_callback:
             self.verify_callback = os.environ['REQUESTS_CA_BUNDLE']
         else:
@@ -83,10 +84,10 @@ class lxca_connection(object):
             r = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback, timeout = 3)
             r.raise_for_status()
         except ConnectionError as e:
-            logger.debug("Connection Exception: Exception = %s", e)
+            logger.debug("Connection Exception as ConnectionError: Exception = %s", e)
             return False
         except requests.exceptions.HTTPError as e:
-            logger.debug("Connection Exception: Exception = %s", e.response.text)
+            logger.debug("Connection Exception as HttpError: Exception = %s", e.response.text)
             return False
         except Exception as e:
             logger.debug("Connection Exception: Exception = %s", e)
