@@ -295,6 +295,12 @@ class lxca_rest(object):
                         param_dict["managementPorts"] = disc_resp_py_obj[key][0]["managementPorts"]
                         #Fetch Type value from Response
                         param_dict["type"] = disc_resp_py_obj[key][0]["type"]
+
+                        if param_dict["type"] == "Rack-Tower Server":
+                        # Fetch ManagementProcessor value from Response
+                            param_dict["managementProcessor"] = disc_resp_py_obj[key][0]["managementProcessor"]
+                            param_dict['server-type'] = "Rack-Tower Server"
+
                         #Fetch UUID value from  Response
                         param_dict["uuid"] = disc_resp_py_obj[key][0]["uuid"]
                         
