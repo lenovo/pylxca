@@ -957,7 +957,7 @@ class lxca_api(with_metaclass(Singleton, object)):
 
     def get_set_storedcredentials(self, dict_handler=None):
         """
-        Stored credential api handler
+        Stored credential api handler call rest api
         :param dict_handler:
         :return:
         """

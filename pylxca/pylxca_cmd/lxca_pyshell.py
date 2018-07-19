@@ -886,7 +886,6 @@ def updaterepo(*args, **kwargs):
     out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
-
 def updatecomp(*args, **kwargs):
     '''
 

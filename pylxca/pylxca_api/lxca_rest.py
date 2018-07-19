@@ -920,7 +920,6 @@ class lxca_rest(object):
             logger.error("Exception occured: %s",re)
             raise re
 
-
     def do_updatecomp_all(self, url, session, action, mode,dev_list):
         try:
             url = url + '/updatableComponents'

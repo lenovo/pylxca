@@ -52,7 +52,6 @@ class lxca_connection(object):
         self.session = None
         #self.verify_callback = verify_callback
         #os.environ['REQUESTS_CA_BUNDLE'] = os.path.join('/etc/ssl/certs/','ca-certificates.crt')
-
         if verify_callback:
             self.verify_callback = os.environ['REQUESTS_CA_BUNDLE']
         else:
