@@ -91,7 +91,7 @@ class disconnect(InteractiveCommand):
         disconnect -h | --help
         disconnect
     """
-    def handle_no_input(self):
+    def handle_no_input(self, con_obj = None):
         api = pylxca.pylxca_api.lxca_api()
         if api.disconnect() == True:
             self.sprint("Connection with LXCA closed successfully " )

@@ -47,7 +47,7 @@ if sys.version_info[:1] == (2,):
         classifiers         = [
             "Development Status :: 3 - Alpha",
             "Topic :: Utilities",
-            "License :: Lenovo License",
+            "License :: License :: OSI Approved :: Apache Software License ",
         ],
     )
 else:

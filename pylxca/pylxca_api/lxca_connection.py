@@ -130,7 +130,11 @@ class lxca_connection(object):
         self.user = None
         self.passwd = None
         self.debug = False
-        self.session.close()
+        try:
+            self.session.close()
+        except Exception as e:
+            logger.debug("Connection with invalid session = %s", e)
+            raise Exception("Invalid connection: Connection is not Initialized")
         self.session = None
 
     def ping(self, host):

@@ -111,7 +111,21 @@ def disconnect(*args, **kwargs):
 @summary:
     Use this function to disconnect from Lenovo XClarity Administrator
     run this function as  
-        disconnect()  
+        disconnect()
+
+
+     it also reset internal current connection to original connection this is used in api version
+     to retain origianal connection if we are disconnecting other than current connection
+
+     i.e
+     con1 = connect(...)
+     con2 = connect(...)
+     con3 = connect(...)
+     con4 = connect(...)  current internal connection is con4
+
+     disconnect(con2)  will keep current connection to con4
+     disconnect(con4) or disconnect() will set current connection to None
+
 
 @param
     The parameters for this command are as follows
@@ -121,20 +135,23 @@ def disconnect(*args, **kwargs):
 @example 
     disconnect()
     '''
-
     global shell_obj
+
     command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    long_short_key_map = {}
     keylist = ['con']
-    if len(args) == 0 and len(kwargs) == 0:
-        return
-    
-    for i in range(len(args)):
-        #print args[i]
-        kwargs[keylist[i]]= args[i]
-    
-    con = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    
-    return con 
+    optional_keylist = ['con']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map,  mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def cmms(*args, **kwargs):
     '''
