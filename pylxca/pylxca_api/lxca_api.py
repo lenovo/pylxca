@@ -163,6 +163,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         :param dict_handler:  orig_con have original connection before call of disconnect()
         :return:
         """
+        resp = False
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
 
@@ -171,7 +172,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             if self.con !=  dict_handler['orig_con']:
                 reset_conn_to_orig = True
         try:
-            self.con.disconnect()
+            resp = self.con.disconnect()
         except Exception as e:
             if reset_conn_to_orig:
                 self.con = dict_handler['orig_con']
@@ -180,7 +181,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             self.con = dict_handler['orig_con']
         else:
             self.con = None
-        return True
+        return resp
 
     def get_log_level(self, dict_handler=None):
         lvl = None
