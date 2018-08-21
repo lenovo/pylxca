@@ -929,6 +929,7 @@ def updatecomp(*args, **kwargs):
     mode    Indicates when to activate the update. This can be one of the following values.
                 immediate - Uses Immediate Activaton mode when applying firmware updates to the selected endpoints.
                 delayed - Uses Delayed Activaton mode when applying firmware updates to the selected endpoints.
+                prioritized. Firmware updates on the baseboard management controller are activated immediately
 
     action  The action to take. This can be one of the following values.
                 apply - Applies the associated firmware to the submitted components.
