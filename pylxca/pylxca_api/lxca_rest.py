@@ -847,7 +847,7 @@ class lxca_rest(object):
                 
                 url= url + "?action=" + action
                 
-                if not mode  == None and mode == "immediate" or mode == "delayed" :
+                if not mode  == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url= url + "&activationMode=" + mode
                 else:
                     raise Exception("Invalid argument mode")
@@ -927,7 +927,7 @@ class lxca_rest(object):
             if action == "apply" or action == "cancelApply":
                 url = url + "?action=" + action
 
-                if not mode == None and mode == "immediate" or mode == "delayed":
+                if not mode == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url = url + "&activationMode=" + mode
                 else:
                     raise Exception("Invalid argument mode")
