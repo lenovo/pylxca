@@ -33,7 +33,7 @@ setup(
     author              = "Girish Kumar, Prashant Bhosle",
     author_email        = "gkumar1@lenovo.com, pbhosle@lenovo.com",
     description         = ("It is tool/api to connect LXCA from command line"),
-    license             = "LENOVO",
+    license             = "Apache License 2.0",
     keywords            = "PYLXCA",
     url                 = "http://www.lenovo.com",
     packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
@@ -46,6 +46,6 @@ setup(
     classifiers         = [
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
-        "License :: Lenovo License",
+        "License :: OSI Approved :: Apache Software License",
     ],
 )
