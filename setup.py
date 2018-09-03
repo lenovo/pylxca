@@ -47,7 +47,7 @@ if sys.version_info[:1] == (2,):
         classifiers         = [
             "Development Status :: 3 - Alpha",
             "Topic :: Utilities",
-            "License :: License :: OSI Approved :: Apache Software License ",
+            "License :: Apache License 2.0 ",
         ],
     )
 else:
@@ -69,6 +69,6 @@ else:
         classifiers=[
             "Development Status :: 3 - Alpha",
             "Topic :: Utilities",
-            "License :: Lenovo License",
+            "License :: Apache License 2.0",
         ],
     )
