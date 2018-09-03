@@ -34,7 +34,7 @@ if sys.version_info[:1] == (2,):
         author              = "Girish Kumar, Prashant Bhosle",
         author_email        = "gkumar1@lenovo.com, pbhosle@lenovo.com",
         description         = ("It is tool/api to connect LXCA from command line"),
-        license             = "LENOVO",
+        license             = "Apache License 2.0",
         keywords            = "PYLXCA",
         url                 = "http://www.lenovo.com",
         packages            = ['pylxca','pylxca.pylxca_api','pylxca.pylxca_cmd'],
@@ -47,7 +47,7 @@ if sys.version_info[:1] == (2,):
         classifiers         = [
             "Development Status :: 3 - Alpha",
             "Topic :: Utilities",
-            "License :: Lenovo License",
+            "License :: OSI Approved :: Apache Software License",
         ],
     )
 else:
@@ -57,7 +57,7 @@ else:
         author="Girish Kumar, Prashant Bhosle",
         author_email="gkumar1@lenovo.com, pbhosle@lenovo.com",
         description=("It is tool/api to connect LXCA from command line"),
-        license="LENOVO",
+        license             = "Apache License 2.0",
         keywords="PYLXCA",
         url="http://www.lenovo.com",
         packages=['pylxca', 'pylxca.pylxca_api', 'pylxca.pylxca_cmd'],
@@ -69,6 +69,6 @@ else:
         classifiers=[
             "Development Status :: 3 - Alpha",
             "Topic :: Utilities",
-            "License :: Lenovo License",
+            "License :: OSI Approved :: Apache Software License",
         ],
     )
