@@ -100,8 +100,10 @@
     "Get/set log level of Python LXCA"
   ],
   "disconnect": [
-    "h",
-    [],
+    "c:h",
+    [
+      "con="
+    ],
     "Disconnect LXCA"
   ],
   "ostream": [

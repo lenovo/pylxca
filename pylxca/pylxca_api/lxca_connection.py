@@ -125,12 +125,28 @@ class lxca_connection(object):
         '''
         session Disconnection
         '''
+        result = False
+        try:
+            delete_url = self.url + '/sessions'
+            resp = self.session.delete(delete_url, verify=False, timeout=3)
+            py_obj = json.loads(resp.text)
+            logger.debug("Deleted session on lxca = %s", py_obj)
+            result = True
+        except Exception as e:
+            logger.debug("Unable to delete session on lxca = %s", e)
+            raise ConnectionError("Invalid connection: Connection is not Initialized")
+
         self.url = None
         self.user = None
         self.passwd = None
         self.debug = False
-        self.session.close()
+        try:
+            self.session.close()
+        except Exception as e:
+            logger.debug("Connection with invalid session = %s", e)
+            raise Exception("Invalid connection: Connection is not Initialized")
         self.session = None
+        return result
 
     def ping(self, host):
         """
