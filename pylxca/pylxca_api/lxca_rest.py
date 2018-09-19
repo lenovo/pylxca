@@ -1271,7 +1271,8 @@ class lxca_rest(object):
         session     = kwargs['session']
         # url         = baseurl + '/osImages'
         url         = ''
-        kwargs      = {key: kwargs[key] for key in kwargs if key not in ['url', 'session']}
+        kwargs.pop("url", None)
+        kwargs.pop("session", None)
 
         if not osimages_info and ('id' not in kwargs or 'fileName' not in kwargs):
             url = baseurl + '/osImages'
@@ -1308,7 +1309,8 @@ class lxca_rest(object):
         baseurl     = kwargs['url']
         session     = kwargs['session']
         url         = baseurl + '/osImages'
-        kwargs      = {key: kwargs[key] for key in kwargs if key not in ['url', 'session']}
+        kwargs.pop("url", None)
+        kwargs.pop("session", None)
         payload     = dict()
         # print "i'm in lxca_rest, set_osimage args,kwargs", args, kwargs
 

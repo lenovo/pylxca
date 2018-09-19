@@ -50,6 +50,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         
         self.con = None
         self.func_dict = {'connect':self.connect,
+                          'disconnect':self.disconnect,
                           'chassis':self.get_chassis,
                           'nodes':self.get_nodes,
                           'switches':self.get_switches,
@@ -89,12 +90,16 @@ class lxca_api(with_metaclass(Singleton, object)):
             # If Any connection is establibshed
             if con == None and self.con and isinstance(self.con,lxca_connection):
                 con = self.con
-                
+
+            if object_name  == "disconnect":
+                dict_handler['orig_con'] = self.con
+
             if object_name  != "connect":
                 if con and isinstance(con,lxca_connection): 
                     self.con = con
                 else:
                     raise ConnectionError("Invalid Connection Object")
+
 
             return self.func_dict[object_name](dict_handler)
         except ConnectionError as re:
@@ -140,13 +145,44 @@ class lxca_api(with_metaclass(Singleton, object)):
             self.con = None
             return self.con
     
-    def disconnect( self ):
+    def disconnect( self, dict_handler=None):
+        """
+            this method perform disconnect operation
+             it also reset current connection to original connection this is used in api version
+             to retain origianal connection if we are disconnecting other than current connection
+
+             i.e
+             con1 = connect(...)
+             con2 = connect(...)
+             con3 = connect(...)
+             con4 = connect(...)
+
+             disconnect(con2)  will keep current connection to con4
+             disconnect(con4) or disconnect() will set current connection to None
+
+        :param dict_handler:  orig_con have original connection before call of disconnect()
+        :return:
+        """
+        resp = False
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        self.con.disconnect()
-        self.con = None
-        return True
-    
+
+        reset_conn_to_orig = False
+        if dict_handler and dict_handler.has_key("orig_con"):
+            if self.con !=  dict_handler['orig_con']:
+                reset_conn_to_orig = True
+        try:
+            resp = self.con.disconnect()
+        except Exception as e:
+            if reset_conn_to_orig:
+                self.con = dict_handler['orig_con']
+            raise
+        if reset_conn_to_orig:
+            self.con = dict_handler['orig_con']
+        else:
+            self.con = None
+        return resp
+
     def get_log_level(self, dict_handler=None):
         lvl = None
         if dict_handler:
