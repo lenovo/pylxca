@@ -513,7 +513,7 @@ class ffdc(InteractiveCommand):
     Retrieve and Manage information about ffdc
 
     USAGE:
-        ffdc [-u <UUID of the target endpoint>]
+        ffdc -u <UUID of the target endpoint>
     
     OPTIONS:
         -u, --uuid    <UUID of the target endpoint>
