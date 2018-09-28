@@ -1379,6 +1379,11 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
                 me_key, str(mutually_exclusive_keys)))
                 raise AttributeError("Invalid command invocation")
             me_key_found = True
+
+    if not set(keylist).issuperset(set(kwargs.keys())):
+        logger.error(" Invalid Input args: %s unsupported argument passed" % list(set(kwargs.keys()).difference(set(keylist))))
+        raise ValueError("Invalid Input Arguments")
+
     return con
 
 def osimages(*args, **kwargs):
@@ -1447,6 +1452,7 @@ def osimages(*args, **kwargs):
     con = None
     param_dict = {}
     param_dict = kwargs
+    kwargs = {}     # this is required  to avoid invalid argument error in _validate_param
     command_name = sys._getframe().f_code.co_name
 
     long_short_key_map = {'osimages_info':'i'}
