@@ -1035,9 +1035,10 @@ def ffdc(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        uuid    UUID of the target endpoint
+        uuid    UUID of the target endpoint this is manadatory parameter
 
-@example 
+@example
+    ffdc(con = lxca_con, uuid='UUID of endpoint")
 
     '''
     global shell_obj
