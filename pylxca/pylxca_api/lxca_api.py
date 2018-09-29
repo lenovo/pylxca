@@ -186,7 +186,7 @@ class lxca_api(with_metaclass(Singleton, object)):
     def get_log_level(self, dict_handler=None):
         lvl = None
         if dict_handler:
-            lvl =  dict_handler['l'] or dict_handler['lvl']
+            lvl = next((item for item in [dict_handler.get('l') , dict_handler.get('lvl')] if item is not None),None)
         if lvl == None:
             lvl = lxca_rest().get_log_level()
         else:

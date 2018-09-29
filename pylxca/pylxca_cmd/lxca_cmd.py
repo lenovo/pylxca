@@ -115,7 +115,7 @@ class log(InteractiveCommand):
     """
     def handle_no_input(self,con_obj = None):
         api = pylxca.pylxca_api.lxca_api()
-        self.sprint("Current Log Level is set to " + str(logging.getLevelName(api.get_log_level())))
+        self.sprint("Current Log Level is set to " + str(api.get_log_level()))
         message = """
 Possible Log Levels, Please use following values to set desired log level. 
 
@@ -132,7 +132,7 @@ Possible Log Levels, Please use following values to set desired log level.
     def handle_output(self, out_obj):
         api = pylxca.pylxca_api.lxca_api()
         if out_obj == True:
-            self.sprint("Current Log Level is set to " + logging.getLevelName(api.get_log_level()))
+            self.sprint("Current Log Level is set to " + api.get_log_level())
         else:
             self.sprint("Fail to set Log Level")
         message = """

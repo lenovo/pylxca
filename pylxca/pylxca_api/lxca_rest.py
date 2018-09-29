@@ -225,10 +225,13 @@ class lxca_rest(object):
 
     def get_log_level(self):
         logger.debug("Current Log Level is: " + str(logger.getEffectiveLevel()))
-        return logger.getEffectiveLevel()
+        return logging.getLevelName(logger.getEffectiveLevel())
 
     def set_log_level(self,log_value):
         logger.setLevel(log_value)
+        for handler in logger.handlers:
+            handler.setLevel(log_value)
+        logger.debug("Current Log Level is: " + str(logger.getEffectiveLevel()))
         return
 
     def do_discovery(self,url, session, ip_addr,jobid):

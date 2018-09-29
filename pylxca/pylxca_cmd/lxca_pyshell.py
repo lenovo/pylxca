@@ -1070,25 +1070,40 @@ def log(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con','filter']
+        keylist = ['con','lvl']
 
 @param
     The parameters for this command are as follows
 
-        filter  filter for the event
+        lvl  log level to be set
+        Possible Log Levels, Please use following values to set desired log level.
+
+        DEBUG:        Detailed information, typically of interest only when diagnosing problems.
+        INFO:        Confirmation that things are working as expected.
+        WARNING:    An indication that something unexpected happened, or indicative of some problem in the near future.
+        ERROR:        Due to a more serious problem, the software has not been able to perform some function.
+        CRITICAL:    A serious error, indicating that the program itself may be unable to continue running.
 
 @example
 
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['lvl']
 
-    for i in range(len(args)):
-        kwargs[keylist[i]] = args[i]
+    param_dict = {}
+    con = None
 
-    ch = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    long_short_key_map = {'lvl':'l'}
+    keylist = ['con','lvl']
+    optional_keylist = ['con', 'lvl']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def lxcalog(*args, **kwargs):
     '''
