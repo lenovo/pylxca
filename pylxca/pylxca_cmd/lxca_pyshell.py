@@ -1395,8 +1395,9 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
                 raise AttributeError("Invalid command invocation")
             me_key_found = True
 
-    if not set(keylist).issuperset(set(kwargs.keys())):
-        logger.error(" Invalid Input args: %s unsupported argument passed" % list(set(kwargs.keys()).difference(set(keylist))))
+    if not set(keylist + long_short_key_map.values()).issuperset(set(kwargs.keys())):
+        logger.error(" Invalid Input args: %s unsupported argument passed"
+                     % list(set(kwargs.keys()).difference(set(keylist + long_short_key_map.values()))))
         raise ValueError("Invalid Input Arguments")
 
     return con
