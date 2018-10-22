@@ -581,6 +581,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         try:
             if jobid:
                 py_obj = json.loads(resp.text)
+                py_obj = {'jobsList': [py_obj]}
                 return py_obj
             if canceljobid or deletejobid:
                 return resp
