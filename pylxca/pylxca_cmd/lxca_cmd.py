@@ -175,7 +175,7 @@ Possible ostream levels, Please use following values to set desired stdout level
         self.sprint(message)
         return 
        
-    def handle_input(self, dict_handler):
+    def handle_input(self, dict_handler, con_obj = None):
         lvl = None
         if dict_handler:
             lvl =  dict_handler['l'] or dict_handler['lvl']
