@@ -34,6 +34,41 @@ def callback(encoder):
     #logger.debug("Callback called with data length %d" % (encoder.bytes_read))
     pass
 
+
+def _validate_combination(input_dict, valid_list):
+    '''
+    This function validate input combinations
+    :param input_dict:  input dict of parameters
+    :param valid_list:  valid combination of parameters list
+    :return: if True returns True and choosed combination of parameter
+             on failure return false and suggested_combination of parameters
+    '''
+
+    # remove None and empty string and len zero lists
+    for k in input_dict.keys():
+        if input_dict[k] == None or len(input_dict[k]) == 0:
+            input_dict.pop(k)
+
+    input_key_set = set(input_dict.keys())
+    # if len(input_key_set) == 0:
+    #    print "invalid input: no input"
+
+    for comb in valid_list:
+        comb_set = set(comb)
+        if input_key_set == comb_set:
+            return True, comb
+
+    # Check for suggestion
+    logger.error("Possible suggested valid input :")
+    suggested_combination = ""
+    for comb in valid_list:
+        comb_set = set(comb)
+        if len(input_key_set & comb_set) > 0:
+            logger.error("%s:" %str(comb))
+            suggested_combination += str(comb)
+
+    return False, suggested_combination
+
 class lxca_rest(object):
     '''
     classdocs
@@ -1057,15 +1092,55 @@ class lxca_rest(object):
 
         return resp
 
+    def _validate_uuids(self, uuids):
+        uuids_list = uuids.split(",")
+        for uuid in uuids_list:
+            if len(uuid) < 16:
+                raise Exception("Invalid Arguments, uuid : %s" %uuid)
 
-    def do_configpatterns(self, url, session, patternid, includeSettings, endpoint, restart, etype, pattern_update_dict):
+
+
+    def do_configpatterns(self, url, session, id, includeSettings, endpoint, restart, etype, pattern_update_dict):
+        input_dict = {}
+        input_dict['id'] = id
+        input_dict['includeSettings'] = includeSettings
+        input_dict['endpoint'] = endpoint
+        input_dict['restart'] = restart
+        input_dict['type'] = etype
+        input_dict['pattern_update_dict'] = pattern_update_dict
+
+        valid_arg_combination = [[], ['id'], ['id', 'includeSettings'],
+                                 ['id', 'endpoint', 'restart', 'type'],
+                                 ['pattern_update_dict']]
+
+        valid, combination = _validate_combination(input_dict, valid_arg_combination)
+        if not valid:
+            raise Exception("Invalid Missing Arguments %s" %str(combination))
+
         resp = None
         url = url + '/patterns'
-        
-        if patternid:
-            url = url + '/' + patternid
+
+        if endpoint:
+            self._validate_uuids(endpoint)
+
+        if etype != None:
+            if etype.lower() not in ['node', 'rack', 'tower', 'flex']:
+                raise Exception("Invalid Arguments, type Try: ['node', 'rack', 'tower', 'flex']")
+
+        if restart != None:
+            if restart not in ['defer', 'immediate', 'pending']:
+                raise Exception("Invalid Arguments, restart Try: ['defer', 'immediate', 'pending']")
+
+        if id != None:
+            if len(id) == 0:
+                raise Exception("Invalid Argument, id ")
+            elif id.isdigit():
+                raise Exception("Invalid Argument, id is not Numeric ")
+
+            url = url + '/' + id
             if includeSettings:
                 url = url + '/includeSettings'
+
         try:
             if endpoint and restart and etype:
                 param_dict = dict()
@@ -1077,7 +1152,6 @@ class lxca_rest(object):
                 
                 param_dict['restart'] = restart
                 
-                payload = dict()
                 payload = param_dict
                 resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             elif pattern_update_dict:
@@ -1552,7 +1626,7 @@ class lxca_rest(object):
     def put_method(self, url, session, payload, **kwargs):
         resp = None
         try:
-            resp = session.put(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp = session.put(url, data = json.dumps(payload), verify=False, timeout=60)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
