@@ -178,7 +178,7 @@ Possible ostream levels, Please use following values to set desired stdout level
     def handle_input(self, dict_handler, con_obj = None):
         lvl = None
         if dict_handler:
-            lvl =  dict_handler['l'] or dict_handler['lvl']
+            lvl = next((item for item in [dict_handler.get('l') , dict_handler.get('lvl')] if item is not None),None)
             return self.shell.ostream.set_lvl(int(lvl))
         return False
         
