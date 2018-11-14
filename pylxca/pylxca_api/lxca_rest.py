@@ -1134,7 +1134,7 @@ class lxca_rest(object):
         if id != None:
             if len(id) == 0:
                 raise Exception("Invalid Argument, id ")
-            elif id.isdigit():
+            elif not id.isdigit():
                 raise Exception("Invalid Argument, id is not Numeric ")
 
             url = url + '/' + id
