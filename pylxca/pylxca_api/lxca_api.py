@@ -186,7 +186,7 @@ class lxca_api(with_metaclass(Singleton, object)):
     def get_log_level(self, dict_handler=None):
         lvl = None
         if dict_handler:
-            lvl =  dict_handler['l'] or dict_handler['lvl']
+            lvl = next((item for item in [dict_handler.get('l') , dict_handler.get('lvl')] if item is not None),None)
         if lvl == None:
             lvl = lxca_rest().get_log_level()
         else:
@@ -581,6 +581,8 @@ class lxca_api(with_metaclass(Singleton, object)):
         try:
             if jobid:
                 py_obj = json.loads(resp.text)
+                py_obj = {'jobsList': [py_obj]}
+                return py_obj
             if canceljobid or deletejobid:
                 return resp
             else:

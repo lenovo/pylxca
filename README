@@ -104,8 +104,6 @@ command-line interface (CLI) to manage endpoints.
 The sample scripts are location in the following directory:
 lib/python2.7/site-packages/pylxca-1.0-py2.7.egg/pylxca\test
 
-
 License
 -------
-
 Apache Software License (http://www.apache.org/licenses/LICENSE-2.0)

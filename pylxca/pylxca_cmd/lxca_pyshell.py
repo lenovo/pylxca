@@ -928,6 +928,7 @@ def updatecomp(*args, **kwargs):
     mode    Indicates when to activate the update. This can be one of the following values.
                 immediate - Uses Immediate Activaton mode when applying firmware updates to the selected endpoints.
                 delayed - Uses Delayed Activaton mode when applying firmware updates to the selected endpoints.
+                prioritized. Firmware updates on the baseboard management controller are activated immediately
 
     action  The action to take. This can be one of the following values.
                 apply - Applies the associated firmware to the submitted components.
@@ -1033,9 +1034,10 @@ def ffdc(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
-        uuid    UUID of the target endpoint
+        uuid    UUID of the target endpoint this is manadatory parameter
 
-@example 
+@example
+    ffdc(con = lxca_con, uuid='UUID of endpoint")
 
     '''
     global shell_obj
@@ -1067,25 +1069,40 @@ def log(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con','filter']
+        keylist = ['con','lvl']
 
 @param
     The parameters for this command are as follows
 
-        filter  filter for the event
+        lvl  log level to be set
+        Possible Log Levels, Please use following values to set desired log level.
+
+        DEBUG:        Detailed information, typically of interest only when diagnosing problems.
+        INFO:        Confirmation that things are working as expected.
+        WARNING:    An indication that something unexpected happened, or indicative of some problem in the near future.
+        ERROR:        Due to a more serious problem, the software has not been able to perform some function.
+        CRITICAL:    A serious error, indicating that the program itself may be unable to continue running.
 
 @example
 
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
-    keylist = ['lvl']
 
-    for i in range(len(args)):
-        kwargs[keylist[i]] = args[i]
+    param_dict = {}
+    con = None
 
-    ch = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    return ch
+    long_short_key_map = {'lvl':'l'}
+    keylist = ['con','lvl']
+    optional_keylist = ['con', 'lvl']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    return out_obj
 
 def lxcalog(*args, **kwargs):
     '''
@@ -1376,6 +1393,12 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
                 me_key, str(mutually_exclusive_keys)))
                 raise AttributeError("Invalid command invocation")
             me_key_found = True
+
+    if not set(keylist + long_short_key_map.values()).issuperset(set(kwargs.keys())):
+        logger.error(" Invalid Input args: %s unsupported argument passed"
+                     % list(set(kwargs.keys()).difference(set(keylist + long_short_key_map.values()))))
+        raise ValueError("Invalid Input Arguments")
+
     return con
 
 def osimages(*args, **kwargs):
@@ -1444,6 +1467,7 @@ def osimages(*args, **kwargs):
     con = None
     param_dict = {}
     param_dict = kwargs
+    kwargs = {}     # this is required  to avoid invalid argument error in _validate_param
     command_name = sys._getframe().f_code.co_name
 
     long_short_key_map = {'osimages_info':'i'}

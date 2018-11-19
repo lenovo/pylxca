@@ -225,10 +225,13 @@ class lxca_rest(object):
 
     def get_log_level(self):
         logger.debug("Current Log Level is: " + str(logger.getEffectiveLevel()))
-        return logger.getEffectiveLevel()
+        return logging.getLevelName(logger.getEffectiveLevel())
 
     def set_log_level(self,log_value):
         logger.setLevel(log_value)
+        for handler in logger.handlers:
+            handler.setLevel(log_value)
+        logger.debug("Current Log Level is: " + str(logger.getEffectiveLevel()))
         return
 
     def do_discovery(self,url, session, ip_addr,jobid):
@@ -847,7 +850,7 @@ class lxca_rest(object):
                 
                 url= url + "?action=" + action
                 
-                if not mode  == None and mode == "immediate" or mode == "delayed" :
+                if not mode  == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url= url + "&activationMode=" + mode
                 else:
                     raise Exception("Invalid argument mode")
@@ -926,7 +929,7 @@ class lxca_rest(object):
             if action == "apply" or action == "cancelApply":
                 url = url + "?action=" + action
 
-                if not mode == None and mode == "immediate" or mode == "delayed":
+                if not mode == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url = url + "&activationMode=" + mode
                 else:
                     raise Exception("Invalid argument mode")
@@ -1273,7 +1276,6 @@ class lxca_rest(object):
         url         = ''
         kwargs.pop("url", None)
         kwargs.pop("session", None)
-
         if not osimages_info and ('id' not in kwargs or 'fileName' not in kwargs):
             url = baseurl + '/osImages'
         if 'hostPlatforms' in osimages_info:
