@@ -1549,7 +1549,8 @@ class lxca_rest(object):
     def put_method(self, url, session, payload, **kwargs):
         resp = None
         try:
-            resp = session.put(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp = session.put(url, data = json.dumps(payload), verify=False,
+                               timeout=60)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
