@@ -782,7 +782,6 @@ class lxca_rest(object):
                     resp = session.post(url, data = monitor, headers={'Content-Type': monitor.content_type}, verify=False, timeout=6000)
                     return resp
 
-
             if not action == None \
                     and action == "acquire":
                 url = url + "?action=acquire"
@@ -799,7 +798,7 @@ class lxca_rest(object):
                     and action == "refresh":
                 url = url + "?action=refresh"
                 payload = {}
-                payload['mts'] = 'lxca'
+                payload['mts'] = ['lxca']
                 resp = session.post(url, data=json.dumps(payload), verify=False, timeout=3)
                 return resp
 
