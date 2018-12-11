@@ -766,11 +766,11 @@ class lxca_rest(object):
                                          'type': file_type_dict[os.path.splitext(os.path.basename(file))[-1]]
                                      } for index, file in enumerate(file_list)]
                     payload = {'files' : payload_files}
-
                     resp = session.post(url, data=json.dumps(payload), verify=False, timeout=120)
                     return resp
 
                 else :
+                    url = url.replace('/managementServer/updates', '/files/managementServer/updates')
                     url = url + "?action=import&jobid=" + jobid
                     m = MultipartEncoder(
                         fields=[('uploadedfile[]', (os.path.basename(file),
@@ -782,11 +782,9 @@ class lxca_rest(object):
                     resp = session.post(url, data = monitor, headers={'Content-Type': monitor.content_type}, verify=False, timeout=6000)
                     return resp
 
-
             if not action == None \
                     and action == "acquire":
-                # implement delete
-
+                url = url + "?action=acquire"
                 payload = {}
                 if fixids:
                     fixids_list = fixids.split(",")
@@ -798,23 +796,20 @@ class lxca_rest(object):
 
             if not action == None \
                     and action == "refresh":
-                # implement delete
-
+                url = url + "?action=refresh"
                 payload = {}
-                payload['mts'] = 'lxca'
+                payload['mts'] = ['lxca']
                 resp = session.post(url, data=json.dumps(payload), verify=False, timeout=3)
                 return resp
 
             if not action == None \
                     and action == "delete":
                 # implement delete
-
                 if fixids:
                     url = url + "/" + fixids
                 else:
                     raise Exception("Invalid argument key action: delete requires fixids ")
 
-                #url = url + "&key=removeMetadata"
                 resp = session.delete(url,  verify=False, timeout=3)
                 return resp
 
