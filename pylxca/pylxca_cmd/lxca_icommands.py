@@ -9,7 +9,7 @@ implementation for all command classes
 '''
 
 import sys,getopt,os,json,logging, traceback
-
+import argparse
 from pylxca.pylxca_api import lxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
@@ -37,8 +37,19 @@ class InteractiveCommand(object):
         return self.command_data[self.__class__.__name__][1]
 
     def get_short_desc(self):
-        return self.command_data[self.__class__.__name__][2]
-    
+        return self.command_data[self.__class__.__name__]['description']
+
+    def get_argparse_options(self):
+        arg_list = self.command_data[self.__class__.__name__]['cmd_args']
+        parser = argparse.ArgumentParser(prog=self.get_name(), description=self.get_short_desc())
+        for opt in arg_list:
+            cmd_args = opt[0]["args"]
+            cmd_args_list = cmd_args.split(",")
+            cmd_args_tuple = tuple(cmd_args_list)
+            cmd_dict = opt[0]["opt_dict"]
+            parser.add_argument(*cmd_args_tuple, **cmd_dict)
+        return parser
+
     def invalid_input_err(self):
         self.sprint("Invalid Input ")
         self.sprint("for help type command -h")
@@ -92,8 +103,11 @@ class InteractiveCommand(object):
         con_obj = None
         
         try:
-            opts, argv = getopt.getopt(args, self.get_char_options(), self.get_long_options())
-        except getopt.GetoptError as e:
+            #opts, argv = getopt.getopt(args, self.get_char_options(), self.get_long_options())
+            parser = self.get_argparse_options()
+            namespace = parser.parse_args(args)
+            opts = vars(namespace)
+        except SystemExit:
             self.invalid_input_err()
             return
         except AttributeError as e:
@@ -102,13 +116,14 @@ class InteractiveCommand(object):
             message = "Check getopt short and long options  %s" % (formatted)
             raise RuntimeError(message, tb)
 
+        '''
         for opt, arg in opts:
             if '-h' in opt:
                 self.sprint(self.__doc__)
                 return
             if 'con' in opt:
                 con_obj = arg
-        
+        '''
         out_obj = None
         opt_dict = None
         view_filter = "default"
@@ -117,10 +132,11 @@ class InteractiveCommand(object):
             if not opts:
                 out_obj = self.handle_no_input(con_obj)
             else:
-                opt_dict = self.parse_args(opts, argv)
-                out_obj = self.handle_input(opt_dict,con_obj)
-                if opt_dict:
-                    view_filter = next((item for item in [opt_dict.get('v') , opt_dict.get('view')] if item is not None),'default')
+                #opt_dict = self.parse_args(opts, argv)
+
+                out_obj = self.handle_input(opts,con_obj)
+                if opts:
+                    view_filter = next((item for item in [opts.get('v') , opts.get('view')] if item is not None),'default')
         
             if out_obj:
                 if isinstance(out_obj, dict):

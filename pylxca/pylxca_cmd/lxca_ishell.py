@@ -11,6 +11,7 @@ feature and accepts raw input from command line
 import re,sys,os,traceback
 import itertools
 import logging
+import shlex
 from platform import python_version
 
 from pylxca.pylxca_cmd import lxca_cmd
@@ -231,7 +232,8 @@ class InteractiveShell(object):
         args = []
 
         # Split the input to allow for quotes option values
-        re_args = re.findall('\-\-\S+\=\"[^\"]*\"|\S+', command_args)
+        #re_args = re.findall('\-\-\S+\=\"[^\"]*\"|\S+', command_args)
+        re_args = shlex.split(command_args)
         #re_args = re.findall('\-\-\S+|\-\S+|\S+[\s*\w+]*', command_args)
         # Parse args if present
         for i in range(0, len(re_args)):

@@ -35,11 +35,14 @@ class connect(InteractiveCommand):
     """
     def handle_command(self, opts, args):
         try:
-            opts, argv = getopt.getopt(args, self.get_char_options(), self.get_long_options())
-        except getopt.GetoptError as e:
+            parser = self.get_argparse_options()
+            namespace = parser.parse_args(args)
+        except SystemExit as e:
             self.invalid_input_err()
+            print str(e)
             return
-        
+
+        '''
         for opt, arg in opts:
             if '-h' in opt:
                 self.sprint (self.__doc__)
@@ -50,7 +53,9 @@ class connect(InteractiveCommand):
             return
         
         opt_dict = self.parse_args(opts, argv)
-        if "pw" not in opt_dict:
+        '''
+        opt_dict = vars(namespace)
+        if opt_dict.get('pw', None) == None:
             opt_dict ['pw'] = getpass("Enter Password: ")
         
         out_obj = None

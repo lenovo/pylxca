@@ -6,10 +6,15 @@ import re
 import shlex
 
 class FakeGit(object):
-
+    '''
+    Help for fakegit class
+    '''
     def __init__(self):
+        '''
+        Help for init of fake git
+        '''
         parser = argparse.ArgumentParser(
-            description='Pretends to be git',
+            description=__doc__,
             usage='''git <command> [<args>]
 
 The most commonly used git commands are:
@@ -61,6 +66,10 @@ The most commonly used git commands are:
             getattr(self, args.command)()
             """
     def commit(self, args):
+        '''
+        Help for commit overridden
+        '''
+
         parser = argparse.ArgumentParser(
             description='Record changes to the repository')
         # prefixing the argument with -- means it's optional
@@ -71,6 +80,9 @@ The most commonly used git commands are:
         print 'Running git commit, amend=%s' % args.amend
 
     def fetch(self, args):
+        '''
+                Help for fetch overridden
+        '''
         parser = argparse.ArgumentParser(
             description='Download objects and refs from another repository')
         # NOT prefixing the argument with -- means it's not optional
