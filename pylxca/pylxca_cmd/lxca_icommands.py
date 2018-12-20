@@ -40,14 +40,27 @@ class InteractiveCommand(object):
         return self.command_data[self.__class__.__name__]['description']
 
     def get_argparse_options(self):
-        arg_list = self.command_data[self.__class__.__name__]['cmd_args']
         parser = argparse.ArgumentParser(prog=self.get_name(), description=self.get_short_desc())
-        for opt in arg_list:
-            cmd_args = opt[0]["args"]
-            cmd_args_list = cmd_args.split(",")
-            cmd_args_tuple = tuple(cmd_args_list)
-            cmd_dict = opt[0]["opt_dict"]
-            parser.add_argument(*cmd_args_tuple, **cmd_dict)
+        arg_list = self.command_data[self.__class__.__name__].get('cmd_args', None)
+        if arg_list:
+            for opt in arg_list:
+                cmd_args = opt[0]["args"]
+                cmd_args_list = cmd_args.split(",")
+                cmd_args_tuple = tuple(cmd_args_list)
+                cmd_dict = opt[0]["opt_dict"]
+                parser.add_argument(*cmd_args_tuple, **cmd_dict)
+
+        # Add mutually exclusive args if any specified
+        arg_list = self.command_data[self.__class__.__name__].get('mutually_exclusive_args', None)
+        if arg_list:
+            group = parser.add_mutually_exclusive_group()
+            for opt in arg_list:
+                cmd_args = opt[0]["args"]
+                cmd_args_list = cmd_args.split(",")
+                cmd_args_tuple = tuple(cmd_args_list)
+                cmd_dict = opt[0]["opt_dict"]
+                group.add_argument(*cmd_args_tuple, **cmd_dict)
+
         return parser
 
     def invalid_input_err(self):
@@ -107,8 +120,9 @@ class InteractiveCommand(object):
             parser = self.get_argparse_options()
             namespace = parser.parse_args(args)
             opts = vars(namespace)
-        except SystemExit:
+        except SystemExit as e:
             self.invalid_input_err()
+            print str(e)
             return
         except AttributeError as e:
             extype, ex, tb = sys.exc_info()

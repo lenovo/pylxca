@@ -10,6 +10,7 @@
 import sys, getopt
 import logging, traceback
 from getpass import getpass
+import json
 
 import pylxca.pylxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
@@ -748,7 +749,16 @@ class tasks(InteractiveCommand):
     """
 
 ###############################################################################
-
+    def get_argparse_options(self):
+        try:
+            parser = super(tasks, self).get_argparse_options()
+            parser.add_argument('-u','--updateList', type=json.loads,
+                                help= 'List of dict of change, required with action update')
+        except SystemExit as e:
+            self.invalid_input_err()
+            print str(e)
+            return
+        return parser
 
 class resourcegroups(InteractiveCommand):
     """
