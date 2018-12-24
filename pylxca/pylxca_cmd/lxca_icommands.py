@@ -14,6 +14,7 @@ from pylxca.pylxca_api import lxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from pylxca.pylxca_cmd import lxca_view
+import textwrap
 
 cmd_data_json_file   = "lxca_cmd_data.json"
 pylxca_cmd_data   = os.path.join(os.getenv('PYLXCA_CMD_PATH'), cmd_data_json_file)
@@ -30,17 +31,27 @@ class InteractiveCommand(object):
     def get_name(self):
         return self.__class__.__name__
     
-    def get_char_options(self):
-        return self.command_data[self.__class__.__name__][0]
+    def get_help_option(self):
+        return self.command_data[self.__class__.__name__].get('add_help', True)
     
-    def get_long_options(self):
-        return self.command_data[self.__class__.__name__][1]
+    def get_additional_detail(self):
+        epilog = self.command_data[self.__class__.__name__].get('additional_detail', [])
+        epilog = "\r\n ".join(epilog)
+        epilog = textwrap.dedent(epilog)
+        return epilog
 
     def get_short_desc(self):
         return self.command_data[self.__class__.__name__]['description']
 
+    def cmd1(self, args):
+        print('cmd1', args)
+
     def get_argparse_options(self):
-        parser = argparse.ArgumentParser(prog=self.get_name(), description=self.get_short_desc())
+        parser = argparse.ArgumentParser(prog=self.get_name(), description=self.get_short_desc(),
+                                         formatter_class=argparse.RawDescriptionHelpFormatter,
+                                         epilog=self.get_additional_detail(),
+                                         add_help=self.get_help_option())
+
         arg_list = self.command_data[self.__class__.__name__].get('cmd_args', None)
         if arg_list:
             for opt in arg_list:
@@ -60,6 +71,23 @@ class InteractiveCommand(object):
                 cmd_args_tuple = tuple(cmd_args_list)
                 cmd_dict = opt[0]["opt_dict"]
                 group.add_argument(*cmd_args_tuple, **cmd_dict)
+
+        # Add subcommand if any specified
+        subcmd_list = self.command_data[self.__class__.__name__].get('subcmd', None)
+        if subcmd_list:
+            sub_parser = parser.add_subparsers()
+            for subcmd in subcmd_list:
+                sub_cmd_name = subcmd['name']
+                subcmd_args_list = subcmd['subcmd_args']
+                parser_internal = sub_parser.add_parser(sub_cmd_name)
+                parser_internal.required = True
+                parser_internal.set_defaults(func=self.cmd1)
+                for opt in subcmd_args_list:
+                    cmd_args = opt[0]["args"]
+                    cmd_args_list = cmd_args.split(",")
+                    cmd_args_tuple = tuple(cmd_args_list)
+                    cmd_dict = opt[0]["opt_dict"]
+                    parser_internal.add_argument(*cmd_args_tuple, **cmd_dict)
 
         return parser
 
@@ -120,9 +148,11 @@ class InteractiveCommand(object):
             parser = self.get_argparse_options()
             namespace = parser.parse_args(args)
             opts = vars(namespace)
+        except argparse.ArgumentError as e:
+            print(str(e))
+            return
         except SystemExit as e:
-            self.invalid_input_err()
-            print str(e)
+            print(str(e))
             return
         except AttributeError as e:
             extype, ex, tb = sys.exc_info()

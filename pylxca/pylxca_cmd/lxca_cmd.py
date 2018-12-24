@@ -11,6 +11,7 @@ import sys, getopt
 import logging, traceback
 from getpass import getpass
 import json
+import argparse
 
 import pylxca.pylxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
@@ -38,9 +39,11 @@ class connect(InteractiveCommand):
         try:
             parser = self.get_argparse_options()
             namespace = parser.parse_args(args)
-        except SystemExit as e:
+        except argparse.ArgumentError as e:
             self.invalid_input_err()
-            print str(e)
+            return
+        except SystemExit as e:
+            # -h and --help land here
             return
 
         '''
@@ -755,8 +758,6 @@ class tasks(InteractiveCommand):
             parser.add_argument('-u','--updateList', type=json.loads,
                                 help= 'List of dict of change, required with action update')
         except SystemExit as e:
-            self.invalid_input_err()
-            print str(e)
             return
         return parser
 

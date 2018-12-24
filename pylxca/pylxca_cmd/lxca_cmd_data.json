@@ -1,18 +1,23 @@
 {
 	"connect": {
 		"description": "connect to LXCA",
+        "additional_detail": ["it could be multiline",
+                              "additional line1",
+                              "additional line2 "] ,
 		"cmd_args": [
 			[{
 					"args": "-l,--url",
 					"opt_dict": {
-						"help": "Url of lxca"
+						"help": "Url of lxca",
+                        "required": true
 					}
 				}
 			],
 			[{
 					"args": "-u,--user",
 					"opt_dict": {
-						"help": "user of lxca"
+						"help": "user of lxca",
+                        "required": true
 					}
 				}
 			],
@@ -27,9 +32,9 @@
 					"args": "--noverify",
 					"opt_dict": {
 						"help": "Verify certificate",
-                        "const": true,
+                        "const": false,
                         "nargs": "?",
-                        "default": true
+                        "default": false
                     }
 				}
 			]
@@ -50,45 +55,48 @@
 		]
 	},
 
-	"nodes":
-    {
-		"description": "get nodes from LXCA",
-		"cmd_args":	[
-		[{
-				"args": "-v,--view",
-				"opt_dict": {
-					"help": "view for interactive shell"
-				}
-			}
-		],
-
-		[{
-				"args": "-s,--status",
-				"opt_dict": {
-					"help": "list nodes with status",
-					"choices": ["managed", "unmanaged"]
-				}
-			}
-		]
+	"nodes": {
+      "description": "get nodes from LXCA",
+      "cmd_args": [
+        [
+          {
+            "args": "-v,--view",
+            "opt_dict": {
+              "help": "view for interactive shell"
+            }
+          }
         ],
-		"mutually_exclusive_args":	[
-
-		[{
-				"args": "-u,--uuid",
-				"opt_dict": {
-					"help": "uuid of device"
-				}
-			}
-		],
-		[{
-				"args": "-c,--chassis",
-				"opt_dict": {
-					"help": "uuid of chassis"
-				}
-			}
-		]
-	]
-
+        [
+          {
+            "args": "-s,--status",
+            "opt_dict": {
+              "help": "list nodes with status",
+              "choices": [
+                "managed",
+                "unmanaged"
+              ]
+            }
+          }
+        ]
+      ],
+      "mutually_exclusive_args": [
+        [
+          {
+            "args": "-u,--uuid",
+            "opt_dict": {
+              "help": "uuid of device"
+            }
+          }
+        ],
+        [
+          {
+            "args": "-c,--chassis",
+            "opt_dict": {
+              "help": "uuid of chassis"
+            }
+          }
+        ]
+      ]
     },
 
       "chassis":
@@ -180,6 +188,82 @@
           }
         ]
       ]
-    }
+    },
+
+  "manage": {
+	"description": "manage device on LXCA",
+    "add_help": true,
+	"subcmd": [
+       {
+			"name": "manage_device",
+			"subcmd_args": [
+              [{
+                            "args": "-v,--view",
+                            "opt_dict": {
+                                "help": "view for interactive shell"
+                            }
+                        }
+              ],
+
+              [{
+						"args": "-i,--ip",
+						"opt_dict": {
+							"help": "ip of Device"
+						}
+					}
+				],
+				[{
+						"args": "-u,--user",
+						"opt_dict": {
+							"help": "device user"
+						}
+					}
+				],
+				[{
+						"args": "-p,--pw",
+						"opt_dict": {
+							"help": "device passw0rd"
+						}
+					}
+				],
+				[{
+						"args": "-r,--rpw",
+						"opt_dict": {
+							"help": "device restore passw0rd"
+						}
+					}
+				],
+				[{
+						"args": "-f,--force",
+						"opt_dict": {
+							"help": "Force manage"
+						}
+					}
+				]
+			]
+		},
+
+		{
+				"name": "manage_job_status",
+				"subcmd_args": [
+                    [{
+                                    "args": "-v,--view",
+                                    "opt_dict": {
+                                        "help": "view for interactive shell"
+                                    }
+                                }
+                      ],
+
+					[{
+							"args": "-j,--job",
+							"opt_dict": {
+								"help": "ip of Device"
+							}
+						}
+					]
+				]
+		}
+		]
+	}
 }
 

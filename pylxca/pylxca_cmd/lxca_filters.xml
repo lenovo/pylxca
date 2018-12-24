@@ -284,6 +284,9 @@
 			</status>
         </Results>
     </manage>
+    <manage name="job">
+    	<job>job</job>
+    </manage>
     <unmanage name="default">
     	<Progress>progress</Progress>
 		<Results name="results" type="object">
