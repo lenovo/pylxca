@@ -196,6 +196,7 @@
 	"subcmd": [
        {
 			"name": "manage_device",
+            "help": "Manage discovered device",
 			"subcmd_args": [
               [{
                             "args": "-v,--view",
@@ -245,6 +246,7 @@
 
 		{
 				"name": "manage_job_status",
+			    "help": "Get manage job status",
 				"subcmd_args": [
                     [{
                                     "args": "-v,--view",

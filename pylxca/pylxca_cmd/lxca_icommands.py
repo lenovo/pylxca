@@ -75,11 +75,12 @@ class InteractiveCommand(object):
         # Add subcommand if any specified
         subcmd_list = self.command_data[self.__class__.__name__].get('subcmd', None)
         if subcmd_list:
-            sub_parser = parser.add_subparsers()
+            sub_parser = parser.add_subparsers(dest='positional_arguments')
+            sub_parser.required = True
             for subcmd in subcmd_list:
                 sub_cmd_name = subcmd['name']
                 subcmd_args_list = subcmd['subcmd_args']
-                parser_internal = sub_parser.add_parser(sub_cmd_name)
+                parser_internal = sub_parser.add_parser(sub_cmd_name, help=subcmd['help'])
                 parser_internal.required = True
                 parser_internal.set_defaults(func=self.cmd1)
                 for opt in subcmd_args_list:

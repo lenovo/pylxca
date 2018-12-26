@@ -90,7 +90,7 @@ def connect(*args, **kwargs):
         noverify     flag to indicate to not verify server certificate
 
 @example 
-    con1 = connect( con = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
+    con1 = connect( url = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
