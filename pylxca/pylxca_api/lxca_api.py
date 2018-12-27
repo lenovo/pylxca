@@ -802,8 +802,8 @@ class lxca_api(with_metaclass(Singleton, object)):
                 includeChildren = 'true'
             action = next((item for item in [dict_handler.get('action')] if item is not None), None)
             updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
-            if updateList:
-                updateList = updateList['taskList']
+            #if updateList:
+            #    updateList = updateList['taskList']
 
 
         if job_uuid and action in ['cancel', 'delete']:

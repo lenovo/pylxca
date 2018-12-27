@@ -1,3 +1,28 @@
+import ast
+
+updateList = '[{"jobUID":"9","percentage":50}]'
+
+rep = ast.literal_eval(updateList)
+
+print rep
+
+'''
+import argparse
+import argparse_actions
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Custom Actions')
+    parser.add_argument('ip',
+    action=argparse_actions.ProperIpFormatAction)
+    try:
+        args = parser.parse_args()
+        print 'IP is properly formatted: {0}'.format(args.ip)
+    except argparse_actions.InvalidIp as e:
+        print 'IP is invalid: {0}'.format(e.ip)
+# This will display similar output:
+# print e
+
+
+
 import argparse
 
 def cmd1(args):
@@ -29,7 +54,7 @@ else:
 
 
 
-'''
+
 If you add parent parser in subparser for parent add_help has to be false
 
 

@@ -300,9 +300,11 @@ class InteractiveShell(object):
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err
-        
-        
-    
+
+        except SystemExit as err:
+            self.sprint("Exception occurred while parsing command.")
+            raise Exception("Invalid argument")
+
     """
     TODO:
     def auto_complete(self, text, state):

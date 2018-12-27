@@ -15,7 +15,7 @@ from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from pylxca.pylxca_cmd import lxca_view
 import textwrap
-
+import ast
 cmd_data_json_file   = "lxca_cmd_data.json"
 pylxca_cmd_data   = os.path.join(os.getenv('PYLXCA_CMD_PATH'), cmd_data_json_file)
 
@@ -48,7 +48,7 @@ class InteractiveCommand(object):
 
     def _preprocess_argparse_dict(self, cmd_dict):
         try:
-            replace_with = {"int": int, "bool": bool, "json.loads":json.loads}
+            replace_with = {"int": int, "bool": bool, "json.loads":json.loads, "ast.literal_eval":ast.literal_eval}
             if 'type' in cmd_dict:
                 if cmd_dict['type'] in replace_with.keys():
                     cmd_dict['type'] = replace_with[cmd_dict['type']]
@@ -121,7 +121,7 @@ class InteractiveCommand(object):
             return
         except SystemExit as e:
             print(str(e))
-            return
+            raise(e)
         except AttributeError as e:
             #TODO  move this some where
             extype, ex, tb = sys.exc_info()
@@ -166,15 +166,12 @@ class InteractiveCommand(object):
         
         con_obj = None
 
-        opts = self.parse_args(args)
-        '''
-        for opt, arg in opts:
-            if '-h' in opt:
-                self.sprint(self.__doc__)
-                return
-            if 'con' in opt:
-                con_obj = arg
-        '''
+        try:
+            opts = self.parse_args(args)
+        except SystemExit as e:
+            # ignore this as we need to continue on shell
+            return
+
         out_obj = None
         opt_dict = None
         view_filter = "default"
