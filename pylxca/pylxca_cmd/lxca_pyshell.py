@@ -578,7 +578,7 @@ def manage(*args, **kwargs):
     con = None
 
     long_short_key_map = {'ip': 'i', 'user':'u', 'pw':'p', 'rpw':'r', 'job': 'j', 'force':'f', 'storedcredential_id':'s'}
-    keylist = ['con','ip', 'user', 'pw', 'rpw', 'job', 'force', 'storedcredential_id']
+    keylist = ['con','sub_cmd', 'ip', 'user', 'pw', 'rpw', 'job', 'force', 'storedcredential_id']
     optional_keylist = ['con', 'ip','user','pw','rpw','job','force', 'storedcredential_id']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {'job':[]}

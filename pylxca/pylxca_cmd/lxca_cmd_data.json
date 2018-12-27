@@ -186,6 +186,15 @@
 			  "choices": ["cancel", "update", "delete"]
             }
           }
+        ],
+        [
+          {
+            "args": "-u,--updateList",
+            "opt_dict": {
+              "help": "List of dict of change, required with action update",
+			  "type": "json.loads"
+            }
+          }
         ]
       ]
     },
@@ -259,7 +268,8 @@
 					[{
 							"args": "-j,--job",
 							"opt_dict": {
-								"help": "ip of Device"
+								"help": "ip of Device",
+								"type": "int"
 							}
 						}
 					]

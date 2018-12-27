@@ -241,7 +241,7 @@ class InteractiveShell(object):
         try:
             return command.handle_command(opts=opts, args=args)
         except Exception as err:
-            logger.error("Exception occurred while processing command.")
+            logger.error("Exception occurred while processing command %s " %str(err))
         return
     
     # TODO: We should remove this, All API level code should give call to handle_input_dict rather
@@ -257,13 +257,16 @@ class InteractiveShell(object):
         command = self.commands[command_name]
 
         opts = {}
-        args = {}
+        args_dict = {}
        
         for item in kwargs['kwargs']:
-            args['--' + item] = kwargs['kwargs'][item]
-        
+            args_dict['--' + item] = kwargs['kwargs'][item]
+
+        args_list = list(args)
+
+        args_list = args_list + list(itertools.chain(*list(args_dict.items())))
         try:
-            return command.handle_command(opts=opts, args=list(itertools.chain(*list(args.items()))))
+            return command.handle_command(opts=opts, args=args_list)
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err
@@ -281,7 +284,18 @@ class InteractiveShell(object):
         command = self.commands[command_name]
         
         try:
-            #return command.handle_command(param_dict,con)
+            args_list = []
+            args_dict = {}
+            if 'sub_cmd' in param_dict:
+                sub_cmd = param_dict['sub_cmd']
+                param_dict.pop('sub_cmd')
+                args_list.append(sub_cmd)
+
+            for item in param_dict:
+                args_dict['--' + item] = param_dict[item]
+
+            args_list = args_list + list(itertools.chain(*list(args_dict.items())))
+            param_dict = command.parse_args(args_list)
             return command.handle_input(param_dict, con)
         except Exception as err:
             self.sprint("Exception occurred while processing command.")

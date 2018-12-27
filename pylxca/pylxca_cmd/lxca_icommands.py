@@ -46,6 +46,14 @@ class InteractiveCommand(object):
     def cmd1(self, args):
         print('cmd1', args)
 
+    def _preprocess_argparse_dict(self, cmd_dict):
+        try:
+            replace_with = {"int": int, "bool": bool, "json.loads":json.loads}
+            if 'type' in cmd_dict:
+                if cmd_dict['type'] in replace_with.keys():
+                    cmd_dict['type'] = replace_with[cmd_dict['type']]
+        except Exception as err:
+            raise("Error while preprocessing  argparse dict for type replacement")
     def get_argparse_options(self):
         parser = argparse.ArgumentParser(prog=self.get_name(), description=self.get_short_desc(),
                                          formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -59,6 +67,7 @@ class InteractiveCommand(object):
                 cmd_args_list = cmd_args.split(",")
                 cmd_args_tuple = tuple(cmd_args_list)
                 cmd_dict = opt[0]["opt_dict"]
+                self._preprocess_argparse_dict(cmd_dict)
                 parser.add_argument(*cmd_args_tuple, **cmd_dict)
 
         # Add mutually exclusive args if any specified
@@ -70,6 +79,7 @@ class InteractiveCommand(object):
                 cmd_args_list = cmd_args.split(",")
                 cmd_args_tuple = tuple(cmd_args_list)
                 cmd_dict = opt[0]["opt_dict"]
+                self._preprocess_argparse_dict(cmd_dict)
                 group.add_argument(*cmd_args_tuple, **cmd_dict)
 
         # Add subcommand if any specified
@@ -88,6 +98,7 @@ class InteractiveCommand(object):
                     cmd_args_list = cmd_args.split(",")
                     cmd_args_tuple = tuple(cmd_args_list)
                     cmd_dict = opt[0]["opt_dict"]
+                    self._preprocess_argparse_dict(cmd_dict)
                     parser_internal.add_argument(*cmd_args_tuple, **cmd_dict)
 
         return parser
@@ -100,12 +111,23 @@ class InteractiveCommand(object):
     def sprint(self,str):
         if self.shell: self.shell.sprint(str)
         
-    def parse_args(self, opts, argv):
-        opt_dict = {}
-        
-        for opt, arg in opts:
-            opt_dict[opt.strip('-')] = arg
-        
+    def parse_args(self, args):
+        try:
+            parser = self.get_argparse_options()
+            namespace = parser.parse_args(args)
+            opt_dict = vars(namespace)
+        except argparse.ArgumentError as e:
+            print(str(e))
+            return
+        except SystemExit as e:
+            print(str(e))
+            return
+        except AttributeError as e:
+            #TODO  move this some where
+            extype, ex, tb = sys.exc_info()
+            formatted = traceback.format_exception_only(extype, ex)[-1]
+            message = "Check getopt short and long options  %s" % (formatted)
+            raise RuntimeError(message, tb)
         return opt_dict
 
     def handle_no_input(self,con_obj):
@@ -140,27 +162,11 @@ class InteractiveCommand(object):
     def handle_output(self, py_obj):
         return
     
-    def handle_command(self, opts, args):
+    def handle_command(self,  opts, args):
         
         con_obj = None
-        
-        try:
-            #opts, argv = getopt.getopt(args, self.get_char_options(), self.get_long_options())
-            parser = self.get_argparse_options()
-            namespace = parser.parse_args(args)
-            opts = vars(namespace)
-        except argparse.ArgumentError as e:
-            print(str(e))
-            return
-        except SystemExit as e:
-            print(str(e))
-            return
-        except AttributeError as e:
-            extype, ex, tb = sys.exc_info()
-            formatted = traceback.format_exception_only(extype, ex)[-1]
-            message = "Check getopt short and long options  %s" % (formatted)
-            raise RuntimeError(message, tb)
 
+        opts = self.parse_args(args)
         '''
         for opt, arg in opts:
             if '-h' in opt:

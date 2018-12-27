@@ -36,6 +36,8 @@ class connect(InteractiveCommand):
 
     """
     def handle_command(self, opts, args):
+
+        '''
         try:
             parser = self.get_argparse_options()
             namespace = parser.parse_args(args)
@@ -46,7 +48,7 @@ class connect(InteractiveCommand):
             # -h and --help land here
             return
 
-        '''
+
         for opt, arg in opts:
             if '-h' in opt:
                 self.sprint (self.__doc__)
@@ -58,7 +60,7 @@ class connect(InteractiveCommand):
         
         opt_dict = self.parse_args(opts, argv)
         '''
-        opt_dict = vars(namespace)
+        opt_dict = self.parse_args(args)
         if opt_dict.get('pw', None) == None:
             opt_dict ['pw'] = getpass("Enter Password: ")
         
@@ -752,15 +754,6 @@ class tasks(InteractiveCommand):
     """
 
 ###############################################################################
-    def get_argparse_options(self):
-        try:
-            parser = super(tasks, self).get_argparse_options()
-            parser.add_argument('-u','--updateList', type=json.loads,
-                                help= 'List of dict of change, required with action update')
-        except SystemExit as e:
-            return
-        return parser
-
 class resourcegroups(InteractiveCommand):
     """
     create Group of Resources
