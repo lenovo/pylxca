@@ -254,7 +254,8 @@ class lxca_api(with_metaclass(Singleton, object)):
             port_name = next((item for item in [dict_handler.get('ports')] if item is not None),None)
             action = next((item for item in [dict_handler.get('action')] if item is not None),
                              None)
-            if "ports" in dict_handler: list_port = True
+            #if "ports" in dict_handler: list_port = True
+            if port_name: list_port = True
 
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)

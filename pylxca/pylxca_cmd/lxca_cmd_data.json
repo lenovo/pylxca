@@ -1,15 +1,14 @@
 {
 	"connect": {
-		"description": "connect to LXCA",
-        "additional_detail": ["it could be multiline",
-                              "additional line1",
-                              "additional line2 "] ,
+		"description": "Connect to LXCA",
+		"additional_detail": ["The following example connects to the Lenovo XClarity Administrator server using the HTTPS address 192.0.2.0 and user ID USER1.",
+			"connect --url https://192.0.2.0 --user USER1 --noverify"],
 		"cmd_args": [
 			[{
 					"args": "-l,--url",
 					"opt_dict": {
 						"help": "Url of lxca",
-                        "required": true
+						"required": true
 					}
 				}
 			],
@@ -17,7 +16,7 @@
 					"args": "-u,--user",
 					"opt_dict": {
 						"help": "user of lxca",
-                        "required": true
+						"required": true
 					}
 				}
 			],
@@ -32,20 +31,19 @@
 					"args": "--noverify",
 					"opt_dict": {
 						"help": "Verify certificate",
-                        "const": false,
-                        "nargs": "?",
-                        "default": false
-                    }
+						"const": false,
+						"nargs": "?",
+						"default": false
+					}
 				}
 			]
 		]
 	},
 
-  	"disconnect": {
-		"description": "disconnect session from LXCA",
+	"disconnect": {
+		"description": "Disconnect session from LXCA",
 		"cmd_args": [
-			[
-				{
+			[{
 					"args": "-c,--con",
 					"opt_dict": {
 						"help": "connection object"
@@ -56,214 +54,478 @@
 	},
 
 	"nodes": {
-      "description": "get nodes from LXCA",
-      "cmd_args": [
-        [
-          {
-            "args": "-v,--view",
-            "opt_dict": {
-              "help": "view for interactive shell"
-            }
-          }
-        ],
-        [
-          {
-            "args": "-s,--status",
-            "opt_dict": {
-              "help": "list nodes with status",
-              "choices": [
-                "managed",
-                "unmanaged"
-              ]
-            }
-          }
-        ]
-      ],
-      "mutually_exclusive_args": [
-        [
-          {
-            "args": "-u,--uuid",
-            "opt_dict": {
-              "help": "uuid of device"
-            }
-          }
-        ],
-        [
-          {
-            "args": "-c,--chassis",
-            "opt_dict": {
-              "help": "uuid of chassis"
-            }
-          }
-        ]
-      ]
-    },
-
-      "chassis":
-      {
-		"description": "get chassis from LXCA",
-		"cmd_args":[
-		[{
-				"args": "-v,--view",
-				"opt_dict": {
-					"help": "view for interactive shell"
+		"description": "Get nodes inventory",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
 				}
-			}
+			],
+			[{
+					"args": "-s,--status",
+					"opt_dict": {
+						"help": "list nodes with status",
+						"choices": [
+							"managed",
+							"unmanaged"
+						]
+					}
+				}
+			]
 		],
-
-		[{
-				"args": "-u,--uuid",
-				"opt_dict": {
-					"help": "uuid of device"
+		"mutually_exclusive_args": [
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "uuid of device"
+					}
 				}
-			}
-		],
-		[{
-				"args": "-s,--status",
-				"opt_dict": {
-					"help": "list nodes with status",
-					"choices": ["managed", "unmanaged"]
+			],
+			[{
+					"args": "-c,--chassis",
+					"opt_dict": {
+						"help": "uuid of chassis"
+					}
 				}
-			}
+			]
 		]
-	]},
+	},
+
+	"chassis": {
+		"description": "Get chassis inventory",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			],
+
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "uuid of device"
+					}
+				}
+			],
+			[{
+					"args": "-s,--status",
+					"opt_dict": {
+						"help": "list nodes with status",
+						"choices": ["managed", "unmanaged"]
+					}
+				}
+			]
+		]
+	},
 
 	"cmms": {
-      "description": "get cmms from LXCA",
-      "cmd_args": [
-        [
-          {
-            "args": "-u,--uuid",
-            "opt_dict": {
-              "help": "uuid of device"
-            }
-          }
-        ],
-        [
-          {
-            "args": "-c,--chassis",
-            "opt_dict": {
-              "help": "uuid of chassis"
-            }
-          }
-        ]
-      ]
-    },
+		"description": "Get cmms inventory",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			]
+		],
+		"mutually_exclusive_args": [
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "uuid of device"
+					}
+				}
+			],
+			[{
+					"args": "-c,--chassis",
+					"opt_dict": {
+						"help": "uuid of chassis"
+					}
+				}
+			]
+		]
+	},
+
+	"fans": {
+		"description": "Get fans inventory",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			]
+		],
+		"mutually_exclusive_args": [
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "uuid of device"
+					}
+				}
+			],
+			[{
+					"args": "-c,--chassis",
+					"opt_dict": {
+						"help": "uuid of chassis"
+					}
+				}
+			]
+		]
+	},
+
+	"fanmuxes": {
+		"description": "Get fanmuxes inventory",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			]
+		],
+		"mutually_exclusive_args": [
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "uuid of device"
+					}
+				}
+			],
+			[{
+					"args": "-c,--chassis",
+					"opt_dict": {
+						"help": "uuid of chassis"
+					}
+				}
+			]
+		]
+	},
+
+	"powersupplies": {
+		"description": "Get Power Supply inventory",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			]
+		],
+		"mutually_exclusive_args": [
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "uuid of device"
+					}
+				}
+			],
+			[{
+					"args": "-c,--chassis",
+					"opt_dict": {
+						"help": "uuid of chassis"
+					}
+				}
+			]
+		]
+	},
+
+	"scalablesystem": {
+		"description": "Get Scalable Complex System inventory",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			],
+			[{
+					"args": "-i,--id",
+					"opt_dict": {
+						"help": "Scalable Complex Id"
+					}
+				}
+			],
+			[{
+					"args": "-t,--type",
+					"opt_dict": {
+						"help": "Scalable Complex type",
+						"choices": [
+							"flex",
+							"rackserver"
+						]
+					}
+				}
+			]
+		]
+	},
+
+	"switches": {
+		"description": "Get switches inventory",
+		"additional_detail": ["The following example returns inventory data for all Flex System switches in the specified chassis.",
+			"switches -c B8106786386411E19AE3EF8BCD385476",
+			"The following example enables a port on the specified switch.",
+			"switches -u A5678986386411E19AE3EF8BCF385743 --ports Ethernet1/1 --action enable"],
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			],
+			[{
+					"args": "-p,--ports",
+					"opt_dict": {
+						"help": "ports of switch, empty ports list all ports of specific uuid switch"
+					}
+				}
+			],
+			[{
+					"args": "-a,--action",
+					"opt_dict": {
+						"help": "specifies action to take on specified ports",
+						"choices": [
+							"enable",
+							"disable"
+						]
+					}
+				}
+			]
+
+		],
+		"mutually_exclusive_args": [
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "uuid of device"
+					}
+				}
+			],
+			[{
+					"args": "-c,--chassis",
+					"opt_dict": {
+						"help": "uuid of chassis"
+					}
+				}
+			]
+		]
+	},
+
+	"discover": {
+		"description": "Retrieve a list of devices discovered by SLP discovery.",
+		"additional_detail": ["The following example discovers devices with the specified IP addresses.",
+			"discover -i 2.222.22.22,3.333.33.33",
+			"The following example retrieves status information about the specified discovery job.",
+			"discover -j 22"],
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
+				}
+			],
+			[{
+					"args": "-i,--ip",
+					"opt_dict": {
+						"help": "ip of device"
+					}
+				}
+			],
+			[{
+					"args": "-j,--job",
+					"opt_dict": {
+						"help": "job id"
+					}
+				}
+			]
+
+		]
+	},
+
+	"log": {
+		"description": "Get/set log level of Python LXCA",
+		"cmd_args": [
+			[{
+					"args": "-l,--lvl",
+					"opt_dict": {
+						"help": "set log level"
+					}
+				}
+			]
+		]
+	},
+
+	"lxcalog": {
+		"description": "Retrieve hardware and management-server events in the events log.",
+		"cmd_args": [
+			[{
+					"args": "-f,--filter",
+					"opt_dict": {
+						"help": "set log level"
+					}
+				}
+			]
+		]
+	},
+
+	"ostream": {
+		"description": "Set ostream level of PYLXCA Interactive Shell",
+		"cmd_args": [
+			[{
+					"args": "-l,--lvl",
+					"opt_dict": {
+						"help": "set log level"
+					}
+				}
+			]
+		]
+	},
+
+	"users": {
+		"description": "Retrieve information about user account of Lenovo XClarity Administrator.",
+		"cmd_args": [
+			[{
+					"args": "-i,--id",
+					"opt_dict": {
+						"help": "Id of User"
+					}
+				}
+			]
+		]
+	},
+
+	"ffdc": {
+		"description": "Collect and export the first failure data capture (FFDC) data for a specific managed endpoint (CMM, server, storage node, or switch).",
+		"cmd_args": [
+			[{
+					"args": "-u,--uuid",
+					"opt_dict": {
+						"help": "Specifies the UUID of a device",
+						"required": true
+					}
+				}
+			]
+		]
+	},
 
 	"tasks": {
-      "description": "get tasks detail from LXCA",
-      "cmd_args": [
-      [{
-				"args": "-v,--view",
-				"opt_dict": {
-					"help": "view for interactive shell"
+		"description": "get tasks detail from LXCA",
+		"cmd_args": [
+			[{
+					"args": "-v,--view",
+					"opt_dict": {
+						"help": "view for interactive shell"
+					}
 				}
-			}
-		],
+			],
 
-        [
-          {
-            "args": "-j,--jobUID",
-            "opt_dict": {
-              "help": "task Id of task"
-            }
-          }
-        ],
-        [
-          {
-            "args": "-c,--children",
-            "opt_dict": {
-              "help": "include children details",
-			  "default" : false
-            }
-          }
-        ],
-        [
-          {
-            "args": "-a,--action",
-            "opt_dict": {
-              "help": "action to perform",
-			  "choices": ["cancel", "update", "delete"]
-            }
-          }
-        ],
-        [
-          {
-            "args": "-u,--updateList",
-            "opt_dict": {
-              "help": "List of dict of change, required with action update",
-			  "type": "ast.literal_eval"
-            }
-          }
-        ]
-      ]
-    },
-
-  "manage": {
-	"description": "manage device on LXCA",
-    "add_help": true,
-	"subcmd": [
-       {
-			"name": "manage_device",
-            "help": "Manage discovered device",
-			"subcmd_args": [
-              [{
-                            "args": "-v,--view",
-                            "opt_dict": {
-                                "help": "view for interactive shell"
-                            }
-                        }
-              ],
-
-              [{
-						"args": "-i,--ip",
-						"opt_dict": {
-							"help": "ip of Device"
-						}
+			[{
+					"args": "-j,--jobUID",
+					"opt_dict": {
+						"help": "task Id of task"
 					}
-				],
-				[{
-						"args": "-u,--user",
-						"opt_dict": {
-							"help": "device user"
-						}
+				}
+			],
+			[{
+					"args": "-c,--children",
+					"opt_dict": {
+						"help": "include children details",
+						"default": false
 					}
-				],
-				[{
-						"args": "-p,--pw",
-						"opt_dict": {
-							"help": "device passw0rd"
-						}
+				}
+			],
+			[{
+					"args": "-a,--action",
+					"opt_dict": {
+						"help": "action to perform",
+						"choices": ["cancel", "update", "delete"]
 					}
-				],
-				[{
-						"args": "-r,--rpw",
-						"opt_dict": {
-							"help": "device restore passw0rd"
-						}
+				}
+			],
+			[{
+					"args": "-u,--updateList",
+					"opt_dict": {
+						"help": "List of dict of change, required with action update",
+						"type": "ast.literal_eval"
 					}
-				],
-				[{
-						"args": "-f,--force",
-						"opt_dict": {
-							"help": "Force manage"
-						}
-					}
-				]
+				}
 			]
-		},
+		]
+	},
 
-		{
-				"name": "manage_job_status",
-			    "help": "Get manage job status",
+	"manage": {
+		"description": "manage device on LXCA",
+		"add_help": true,
+		"subcmd": [{
+				"name": "manage_device",
+				"help": "Manage discovered device",
 				"subcmd_args": [
-                    [{
-                                    "args": "-v,--view",
-                                    "opt_dict": {
-                                        "help": "view for interactive shell"
-                                    }
-                                }
-                      ],
+					[{
+							"args": "-v,--view",
+							"opt_dict": {
+								"help": "view for interactive shell"
+							}
+						}
+					],
+
+					[{
+							"args": "-i,--ip",
+							"opt_dict": {
+								"help": "ip of Device"
+							}
+						}
+					],
+					[{
+							"args": "-u,--user",
+							"opt_dict": {
+								"help": "device user"
+							}
+						}
+					],
+					[{
+							"args": "-p,--pw",
+							"opt_dict": {
+								"help": "device passw0rd"
+							}
+						}
+					],
+					[{
+							"args": "-r,--rpw",
+							"opt_dict": {
+								"help": "device restore passw0rd"
+							}
+						}
+					],
+					[{
+							"args": "-f,--force",
+							"opt_dict": {
+								"help": "Force manage"
+							}
+						}
+					]
+				]
+			}, {
+				"name": "manage_job_status",
+				"help": "Get manage job status",
+				"subcmd_args": [
+					[{
+							"args": "-v,--view",
+							"opt_dict": {
+								"help": "view for interactive shell"
+							}
+						}
+					],
 
 					[{
 							"args": "-j,--job",
@@ -274,8 +536,7 @@
 						}
 					]
 				]
-		}
+			}
 		]
 	}
 }
-
