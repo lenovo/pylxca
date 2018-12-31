@@ -563,13 +563,6 @@
 							}
 						],
 						[{
-								"args": "-u,--user",
-								"opt_dict": {
-									"help": "device user"
-								}
-							}
-						],
-						[{
 								"args": "-p,--pw",
 								"opt_dict": {
 									"help": "device passw0rd"
@@ -583,13 +576,7 @@
 								}
 							}
 						],
-						[{
-								"args": "-s,--storedcredential_id",
-								"opt_dict": {
-									"help": "device storedcredential id"
-								}
-							}
-						],
+
                         [{
 								"args": "-f,--force",
 								"opt_dict": {
@@ -597,7 +584,24 @@
 								}
 							}
 						]
-					]
+					],
+					"mutually_exclusive_args": [
+						[{
+								"args": "-u,--user",
+								"opt_dict": {
+									"help": "device user"
+								}
+							}
+						],
+                        [{
+								"args": "-s,--storedcredential_id",
+								"opt_dict": {
+									"help": "device storedcredential id"
+								}
+							}
+						]
+                    ]
+
 				}, {
 					"name": "manage_job_status",
 					"help": "Get manage job status",

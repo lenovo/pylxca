@@ -104,6 +104,18 @@ class InteractiveCommand(object):
                     self._preprocess_argparse_dict(cmd_dict)
                     parser_internal.add_argument(*cmd_args_tuple, **cmd_dict)
 
+                # Add mutually exclusive args if any specified
+                arg_list = subcmd.get('mutually_exclusive_args', None)
+                if arg_list:
+                    group = parser_internal.add_mutually_exclusive_group()
+                    for opt in arg_list:
+                        cmd_args = opt[0]["args"]
+                        cmd_args_list = cmd_args.split(",")
+                        cmd_args_tuple = tuple(cmd_args_list)
+                        cmd_dict = opt[0]["opt_dict"]
+                        self._preprocess_argparse_dict(cmd_dict)
+                        group.add_argument(*cmd_args_tuple, **cmd_dict)
+
         return parser
 
     def invalid_input_err(self):
