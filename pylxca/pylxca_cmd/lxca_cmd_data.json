@@ -464,79 +464,164 @@
 		]
 	},
 
-	"manage": {
-		"description": "manage device on LXCA",
-		"add_help": true,
-		"subcmd": [{
-				"name": "manage_device",
-				"help": "Manage discovered device",
-				"subcmd_args": [
-					[{
-							"args": "-v,--view",
-							"opt_dict": {
-								"help": "view for interactive shell"
-							}
-						}
-					],
+	"unmanage": {
+      "description": "Unmanage device on LXCA",
+      "additional_detail": ["The following example unmanages a device with a specific IP address.",
+                            "unmanage unmanage_device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower Server"],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "unmanage_device",
+          "additional_detail": ["The following example unmanages a device with a specific IP address.",
+                            "unmanage unmanage_device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower Server"],
+          "help": "Unmanage managed device",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-i,--ip",
+                "opt_dict": {
+                  "help": "Specifies a set of properties for one or more devices to be unmanaged"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--force",
+                "opt_dict": {
+                  "help": "Force manage"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "unmanage_job_status",
+          "additional_detail": ["The following example get status of unmanages job with id 12.",
+                                "unmanage unmanage_job_status –j 12"],
 
-					[{
-							"args": "-i,--ip",
-							"opt_dict": {
-								"help": "ip of Device"
-							}
-						}
-					],
-					[{
-							"args": "-u,--user",
-							"opt_dict": {
-								"help": "device user"
-							}
-						}
-					],
-					[{
-							"args": "-p,--pw",
-							"opt_dict": {
-								"help": "device passw0rd"
-							}
-						}
-					],
-					[{
-							"args": "-r,--rpw",
-							"opt_dict": {
-								"help": "device restore passw0rd"
-							}
-						}
-					],
-					[{
-							"args": "-f,--force",
-							"opt_dict": {
-								"help": "Force manage"
-							}
-						}
-					]
-				]
-			}, {
-				"name": "manage_job_status",
-				"help": "Get manage job status",
-				"subcmd_args": [
-					[{
-							"args": "-v,--view",
-							"opt_dict": {
-								"help": "view for interactive shell"
-							}
-						}
-					],
+          "help": "Get unmanage job status",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-j,--job",
+                "opt_dict": {
+                  "help": "job id of unmanage job",
+                  "type": "int"
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    },
 
-					[{
-							"args": "-j,--job",
-							"opt_dict": {
-								"help": "ip of Device",
-								"type": "int"
+		"manage": {
+			"description": "manage device on LXCA",
+            "additional_detail": ["The following example manages a device using a user account.",
+                                  "manage manage_device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
+                                  "The following example manages a device using a stored-credential account.",
+                                  "manage manage_device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
+			"add_help": true,
+			"subcmd": [{
+					"name": "manage_device",
+                    "additional_detail": ["The following example manages a device using a user account.",
+                                  "manage manage_device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
+                                  "The following example manages a device using a stored-credential account.",
+                                  "manage manage_device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
+
+					"help": "Manage discovered device",
+					"subcmd_args": [
+						[{
+								"args": "-v,--view",
+								"opt_dict": {
+									"help": "view for interactive shell"
+								}
 							}
-						}
+						],
+
+						[{
+								"args": "-i,--ip",
+								"opt_dict": {
+									"help": "ip of Device"
+								}
+							}
+						],
+						[{
+								"args": "-u,--user",
+								"opt_dict": {
+									"help": "device user"
+								}
+							}
+						],
+						[{
+								"args": "-p,--pw",
+								"opt_dict": {
+									"help": "device passw0rd"
+								}
+							}
+						],
+						[{
+								"args": "-r,--rpw",
+								"opt_dict": {
+									"help": "device restore passw0rd"
+								}
+							}
+						],
+						[{
+								"args": "-s,--storedcredential_id",
+								"opt_dict": {
+									"help": "device storedcredential id"
+								}
+							}
+						],
+                        [{
+								"args": "-f,--force",
+								"opt_dict": {
+									"help": "Force manage"
+								}
+							}
+						]
 					]
-				]
-			}
-		]
+				}, {
+					"name": "manage_job_status",
+					"help": "Get manage job status",
+                    "additional_detail": ["The following example returns information about a specific management job.",
+                                          "manage manage_job_status -j 4"],
+					"subcmd_args": [
+						[{
+								"args": "-v,--view",
+								"opt_dict": {
+									"help": "view for interactive shell"
+								}
+							}
+						],
+
+						[{
+								"args": "-j,--job",
+								"opt_dict": {
+									"help": "job id of manage job",
+									"type": "int"
+								}
+							}
+						]
+					]
+				}
+			]
+		}
 	}
-}

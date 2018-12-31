@@ -34,11 +34,14 @@ class InteractiveCommand(object):
     def get_help_option(self):
         return self.command_data[self.__class__.__name__].get('add_help', True)
     
-    def get_additional_detail(self):
-        epilog = self.command_data[self.__class__.__name__].get('additional_detail', [])
-        epilog = "\r\n ".join(epilog)
+    def _process_epilog(self, str_list):
+        epilog = "\r\n ".join(str_list)
         epilog = textwrap.dedent(epilog)
         return epilog
+
+    def get_additional_detail(self):
+        epilog = self.command_data[self.__class__.__name__].get('additional_detail', [])
+        return self._process_epilog(epilog)
 
     def get_short_desc(self):
         return self.command_data[self.__class__.__name__]['description']
@@ -90,7 +93,7 @@ class InteractiveCommand(object):
             for subcmd in subcmd_list:
                 sub_cmd_name = subcmd['name']
                 subcmd_args_list = subcmd['subcmd_args']
-                parser_internal = sub_parser.add_parser(sub_cmd_name, help=subcmd['help'])
+                parser_internal = sub_parser.add_parser(sub_cmd_name, help=subcmd['help'], epilog=self._process_epilog(subcmd['additional_detail']))
                 parser_internal.required = True
                 parser_internal.set_defaults(func=self.cmd1)
                 for opt in subcmd_args_list:

@@ -628,8 +628,8 @@ def unmanage(*args, **kwargs):
     con = None
 
     long_short_key_map = {'ip': 'i', 'job': 'j', 'force': 'f'}
-    keylist = ['con','ip','force','job']
-    optional_keylist = ['con', 'ip','force','job']
+    keylist = ['con', 'sub_cmd', 'ip', 'force', 'job']
+    optional_keylist = ['con', 'ip', 'force', 'job']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {}
 
