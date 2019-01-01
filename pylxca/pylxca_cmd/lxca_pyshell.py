@@ -535,12 +535,13 @@ def manage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ip','user','pw','rpw','job','force', 'storedcredential_id']
+        keylist = ['con','sub_cmd','ip','user','pw','rpw','job','force', 'storedcredential_id']
 
 @param
     The parameters for this command are as follows 
     
         con      Connection Object to Lenovo XClarity Administrator
+        sub_cmd
         ip       One or more IP addresses for each endpoint to be managed.
         user     user ID to access the endpoint
         pw       The current password to access the endpoint.
@@ -601,11 +602,11 @@ def unmanage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','ip','force','job']
+        keylist = ['con','sub_cmd','ip','force','job']
 
 @param
     The parameters for this command are as follows 
-    
+        sub_cmd
         ip          one or more endpoints to be unmanaged.
                     This is comma separated list of multiple endpoints, each endpoint should
                     contain endpoint information separated by semicolon.
@@ -653,11 +654,11 @@ def configpatterns(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict]
+        keylist = ['con','sub_cmd','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict]
 
 @param
     The parameters for this command are as follows 
-    
+        sub_cmd     list, apply, import , status
         id          The unique ID that was assigned when the server pattern was created
         
         endpoint    List of one or more UUIDs for the target servers,If a target is an empty bay,
@@ -670,9 +671,9 @@ def configpatterns(*args, **kwargs):
         
         type        Type of the server, It can be one of the following
                       flex -  Flex System Placeholder chassis empty bays
-                      Node
-                      Rack
-                      Tower
+                      node
+                      rack
+                      tower
 
         pattern_update_dict  dictionary of category_pattern to import.
 
@@ -688,8 +689,8 @@ def configpatterns(*args, **kwargs):
     param_dict = {}
     con = None
     # some of them don't have short options
-    long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r', 'type': 't', 'name': 'n','status':'s'}
-    keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
+    long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r', 'type': 't', 'name': 'n','status':'s', 'pattern_update_dict':'p'}
+    keylist = ['con', 'sub_cmd', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
     optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
     mandatory_options_list = {'id': [], 'pattern_update_dict': [],

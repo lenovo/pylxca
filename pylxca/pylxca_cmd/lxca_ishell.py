@@ -66,8 +66,8 @@ class InteractiveShell(object):
             if args[0] not in self.commands:
                 self.sprint('No help available for unknown command "%s"' % args[0])
                 return
-            
-            self.sprint(self.commands[args[0]].__doc__)
+
+            self.commands[args[0]].get_argparse_options().print_help()
 
         def do_command_summary(self):
             """

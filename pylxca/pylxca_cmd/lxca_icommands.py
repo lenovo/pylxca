@@ -39,12 +39,54 @@ class InteractiveCommand(object):
         epilog = textwrap.dedent(epilog)
         return epilog
 
+    def _validate_combination(self, input_dict, valid_list):
+        '''
+        This function validate input combinations
+        :param input_dict:  input dict of parameters
+        :param valid_list:  valid combination of parameters list
+        :return: if True returns True and choosed combination of parameter
+                 on failure return false and suggested_combination of parameters
+        '''
+
+        # remove None and empty string and len zero lists
+        # create copy dict
+        copy_input_dict = {}
+        for k in input_dict.keys():
+            if k not in ['func', 'view','positional_arguments']:
+                if not (input_dict[k] == None or len(input_dict[k]) == 0):
+                    copy_input_dict[k] = input_dict[k]
+
+        input_key_set = set(copy_input_dict.keys())
+        # if len(input_key_set) == 0:
+        #    print "invalid input: no input"
+
+        for comb in valid_list:
+            comb_set = set(comb)
+            if input_key_set.issuperset(comb_set):
+                return True, comb
+
+        # Check for suggestion
+        suggested_combination = ""
+        for comb in valid_list:
+            comb_set = set(comb)
+            if len(input_key_set & comb_set) > 0:
+                suggested_combination += str(comb)
+
+        return False, suggested_combination
+
     def get_additional_detail(self):
         epilog = self.command_data[self.__class__.__name__].get('additional_detail', [])
         return self._process_epilog(epilog)
 
     def get_short_desc(self):
         return self.command_data[self.__class__.__name__]['description']
+
+    def post_parsing_validation(self, opts):
+        valid_combination = self.command_data[self.__class__.__name__].get('valid_combination', [])
+        if valid_combination:
+            valid, combination = self._validate_combination(opts, valid_combination)
+            if not valid:
+                raise Exception("Invalid Missing Arguments %s" % str(combination))
 
     def cmd1(self, args):
         print('cmd1', args)
@@ -125,17 +167,20 @@ class InteractiveCommand(object):
     
     def sprint(self,str):
         if self.shell: self.shell.sprint(str)
-        
+
+
     def parse_args(self, args):
         try:
             parser = self.get_argparse_options()
             namespace = parser.parse_args(args)
             opt_dict = vars(namespace)
+            self.post_parsing_validation(opt_dict)
         except argparse.ArgumentError as e:
             print(str(e))
             return
         except SystemExit as e:
             print(str(e))
+            parser.print_help()
             raise(e)
         except AttributeError as e:
             #TODO  move this some where

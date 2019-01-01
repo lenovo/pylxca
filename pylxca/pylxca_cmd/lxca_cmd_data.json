@@ -334,7 +334,9 @@
 						"help": "view for interactive shell"
 					}
 				}
-			],
+			]
+          ],
+        "mutually_exclusive_args": [
 			[{
 					"args": "-i,--ip",
 					"opt_dict": {
@@ -401,7 +403,14 @@
 						"help": "Id of User"
 					}
 				}
-			]
+			],
+            [{
+                    "args": "-v,--view",
+                    "opt_dict": {
+                        "help": "view for interactive shell"
+                    }
+                }
+            ]
 		]
 	},
 
@@ -467,13 +476,13 @@
 	"unmanage": {
       "description": "Unmanage device on LXCA",
       "additional_detail": ["The following example unmanages a device with a specific IP address.",
-                            "unmanage unmanage_device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower Server"],
+                            "unmanage device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower Server"],
       "add_help": true,
       "subcmd": [
         {
-          "name": "unmanage_device",
+          "name": "device",
           "additional_detail": ["The following example unmanages a device with a specific IP address.",
-                            "unmanage unmanage_device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower Server"],
+                            "unmanage device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower Server"],
           "help": "Unmanage managed device",
           "subcmd_args": [
             [
@@ -503,9 +512,9 @@
           ]
         },
         {
-          "name": "unmanage_job_status",
+          "name": "job_status",
           "additional_detail": ["The following example get status of unmanages job with id 12.",
-                                "unmanage unmanage_job_status –j 12"],
+                                "unmanage job_status –j 12"],
 
           "help": "Get unmanage job status",
           "subcmd_args": [
@@ -534,16 +543,19 @@
 		"manage": {
 			"description": "manage device on LXCA",
             "additional_detail": ["The following example manages a device using a user account.",
-                                  "manage manage_device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
+                                  "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
                                   "The following example manages a device using a stored-credential account.",
-                                  "manage manage_device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
+                                  "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
 			"add_help": true,
+            "valid_combination": [["ip", "user","pw"],
+                                  ["ip", "storedcredential_id"],
+                                  ["job"]],
 			"subcmd": [{
-					"name": "manage_device",
+					"name": "device",
                     "additional_detail": ["The following example manages a device using a user account.",
-                                  "manage manage_device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
+                                  "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
                                   "The following example manages a device using a stored-credential account.",
-                                  "manage manage_device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
+                                  "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
 
 					"help": "Manage discovered device",
 					"subcmd_args": [
@@ -558,7 +570,8 @@
 						[{
 								"args": "-i,--ip",
 								"opt_dict": {
-									"help": "ip of Device"
+									"help": "ip of Device",
+                                    "required": true
 								}
 							}
 						],
@@ -603,10 +616,10 @@
                     ]
 
 				}, {
-					"name": "manage_job_status",
+					"name": "job_status",
 					"help": "Get manage job status",
                     "additional_detail": ["The following example returns information about a specific management job.",
-                                          "manage manage_job_status -j 4"],
+                                          "manage job_status -j 4"],
 					"subcmd_args": [
 						[{
 								"args": "-v,--view",
@@ -620,12 +633,210 @@
 								"args": "-j,--job",
 								"opt_dict": {
 									"help": "job id of manage job",
-									"type": "int"
+									"type": "int",
+                                    "required": true
 								}
 							}
 						]
 					]
 				}
 			]
-		}
-	}
+		},
+	"configtargets": {
+		"description": "Retrieve a list of deployable target systems according to their\n\t\t\tserver pattern and profile.",
+		"cmd_args": [
+			[{
+					"args": "-i,--id",
+					"opt_dict": {
+						"help": "Specifies the UUID of a device",
+						"required": true
+					}
+				}
+			],
+            [{
+                    "args": "-v,--view",
+                    "opt_dict": {
+                        "help": "view for interactive shell"
+                    }
+                }
+            ]
+		]
+	},
+  	"configpatterns": {
+      "description": "Retrieve information and deploy all server and category patterns that have been defined in the Lenovo XClarity Administrator",
+      "additional_detail": ["Config patterns "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "list",
+          "additional_detail": ["The following example returns information about all server patterns.",
+                                "configpatterns list",
+                                "The following example returns information about a specific server pattern.",
+                                "configpatterns list -i 48"],
+          "help": "list server config patterns and details",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-i,--id",
+                "opt_dict": {
+                  "help": "Specifies the ID of the server pattern. If an ID is not specified, all server patterns are returned"
+                }
+              }
+            ],
+            [
+              {
+                "args": "--includeSettings",
+                "opt_dict": {
+                  "help": "Include details of category patterns that are reference by the server pattern"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "apply",
+          "additional_detail": ["The following example apply pattern to endpoint",
+                                "configpatterns apply --id 65 --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart pending --type node",
+                                "configpatterns apply --name From_abcdef --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart pending --type node"],
+
+          "help": "Apply config pattern to device",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-e,--endpoint",
+                "opt_dict": {
+                  "help": "Specifies the UUIDs of one or more target servers. If a target is an empty bay, specify the location ID; otherwise, specify the server UUID",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-r,--restart",
+                "opt_dict": {
+                  "help": "Identifies when to activate the configurations",
+                  "required": true,
+                  "choices": [
+                      "defer",
+                      "immediate",
+                      "pending"
+                  ]
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--type",
+                "opt_dict": {
+                  "help": "Type of the server",
+                  "required": true,
+                  "choices": [
+                      "node",
+                      "rack",
+                      "tower",
+                      "flex"
+                  ]
+                }
+              }
+            ]
+          ],
+          "mutually_exclusive_args": [
+              [{
+                      "args": "-i,--id",
+                      "opt_dict": {
+                          "help": "Config Pattern Id"
+                      }
+                  }
+              ],
+              [{
+                      "args": "-n,--name",
+                      "opt_dict": {
+                          "help": "Config Pattern Name"
+                      }
+                  }
+              ]
+          ]
+        },
+        {
+          "name": "import",
+          "additional_detail": ["The following example import system category pattern",
+                                "configpatterns import -p '{\"template_type\":\"SystemInfo\",\"template\":{\"contact\":\"contact\",\"description\":\"Pattern created by test API\",\"location\":\"location\",\"name\":\"Learned-System_Info-99\",\"systemName\":{\"autogen\":\"Disable\",\"hyphenChecked\":false},\"type\":\"SystemInfo\",\"uri\":\"/config/template/61\",\"userDefined\":true}}'"],
+          "help": "import server and category config patterns to Lxca",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-p,--pattern_update_dict",
+                "opt_dict": {
+                  "help": "Pattern dict",
+                  "required": true,
+                  "type": "json.loads"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "status",
+          "additional_detail": ["The following example get config status",
+                                "configpatterns status -e B918EDCA1B5F11E2803EBECB82710ADE "],
+
+          "help": "check config status of endpoint",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-e,--endpoint",
+                "opt_dict": {
+                  "help": "uuid of server",
+                  "required": true,
+                  "type": "json.loads"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-s,--status",
+                "opt_dict": {
+                  "help": "Status set to true",
+                  "type": "bool",
+                  "default": true
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    }
+
+}
