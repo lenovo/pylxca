@@ -130,12 +130,14 @@ class InteractiveCommand(object):
         # Add subcommand if any specified
         subcmd_list = self.command_data[self.__class__.__name__].get('subcmd', None)
         if subcmd_list:
-            sub_parser = parser.add_subparsers(dest='positional_arguments')
+            sub_parser = parser.add_subparsers(dest='subcmd')
             sub_parser.required = True
             for subcmd in subcmd_list:
                 sub_cmd_name = subcmd['name']
                 subcmd_args_list = subcmd['subcmd_args']
-                parser_internal = sub_parser.add_parser(sub_cmd_name, help=subcmd['help'], epilog=self._process_epilog(subcmd['additional_detail']))
+                parser_internal = sub_parser.add_parser(sub_cmd_name,
+                                                        formatter_class=argparse.RawDescriptionHelpFormatter,
+                                                        help=subcmd['help'], epilog=self._process_epilog(subcmd['additional_detail']))
                 parser_internal.required = True
                 parser_internal.set_defaults(func=self.cmd1)
                 for opt in subcmd_args_list:
@@ -180,7 +182,8 @@ class InteractiveCommand(object):
             return
         except SystemExit as e:
             print(str(e))
-            parser.print_help()
+            if not ( '-h' in args):
+                parser.print_help()
             raise(e)
         except AttributeError as e:
             #TODO  move this some where

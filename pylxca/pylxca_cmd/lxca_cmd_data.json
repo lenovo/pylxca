@@ -837,6 +837,526 @@
           ]
         }
       ]
+    },
+   	"configprofiles": {
+      "description": "The configprofiles command retrieves information about one or more server profiles.",
+      "additional_detail": ["Config profiles "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "list",
+          "additional_detail": ["The following example returns information about all server profiles.",
+                                "configprofiles list",
+                                "The following example returns information about a specific server profiles.",
+                                "configprofiles list -i 48"],
+          "help": "list server profiles and details",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-i,--id",
+                "opt_dict": {
+                  "help": "Specifies the ID of the server profiles. If an ID is not specified, all server profiles are returned"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "rename",
+          "additional_detail": ["The following example rename server profiles.",
+                                "configprofiles rename -i 48 -n modified_profile"],
+          "help": "rename server profile name",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-i,--id",
+                "opt_dict": {
+                  "help": "Specifies the ID of the server profiles.",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-n,--name",
+                "opt_dict": {
+                  "help": "Specifies the new name of the server profiles.",
+                  "required": true
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "activate",
+          "additional_detail": ["The following example activate server profile on endpoint",
+                                "configprofiles apply --id 65 --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart defer"],
+          "help": "Activate server profile on endpoint",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [{
+                "args": "-i,--id",
+                "opt_dict": {
+                    "help": "Config profile Id",
+                    "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-e,--endpoint",
+                "opt_dict": {
+                  "help": "Specifies the UUIDs of one or more target servers. If a target is an empty bay, specify the location ID; otherwise, specify the server UUID",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-r,--restart",
+                "opt_dict": {
+                  "help": "Identifies when to activate the profile",
+                  "required": true,
+                  "choices": [
+                      "defer",
+                      "immediate"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "unassign",
+          "additional_detail": ["The following example unassign config profile",
+                                "configprofiles --id 65"],
+          "help": "unassign config profile",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [{
+                "args": "-i,--id",
+                "opt_dict": {
+                    "help": "Config profile Id",
+                    "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-p,--powerdown",
+                "opt_dict": {
+                  "help": "Identifies whether to power off the server",
+                  "type": "bool"
+                }
+              }
+            ],
+            [{
+                "args": "--resetimm",
+                "opt_dict": {
+                    "help": "Identifies whether to reset the baseboard management controller.",
+                    "type": "bool"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--force",
+                "opt_dict": {
+                  "help": "Identifies whether to force profile deactivation",
+                  "type": "bool"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "delete",
+          "additional_detail": ["The following example delete config profile",
+                                "configprofiles delete -id 65"],
+
+          "help": "delete config profile",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [{
+                "args": "-i,--id",
+                "opt_dict": {
+                    "help": "Config profile Id",
+                    "required": true
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    },
+
+    "updaterepo": {
+      "description": "The updaterepo command retrieves information about firmware updates in the firmware-updates repository",
+      "additional_detail": ["Update repository examples "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "query",
+          "additional_detail": ["The following example returns information about all firmware updates by machine type.",
+                                "updaterepo query -k updatesByMt"],
+          "help": "Query firmware update repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-k,--key",
+                "opt_dict": {
+                  "help": "Returns specific information about the firmware update",
+                  "required": true,
+                  "choices": [
+                    "supportedMts",
+                    "size",
+                    "lastRefreshed",
+                    "importDir",
+                    "publicKeys",
+                    "updates",
+                    "updatesByMt",
+                    "updatesByMtByComp"
+                  ]
+                }
+              }
+            ],
+            [
+              {
+                "args": "-m,--mt",
+                "opt_dict": {
+                  "help": "Specifies a list of machine types, separated by a comma"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-s,--scope",
+                "opt_dict": {
+                  "help": "Specifies the scope of the operation, Can be specified for (updates/updatesByMt)",
+                  "choices": [
+                    "all",
+                    "latest"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "read",
+          "additional_detail": ["The following example read firmware updates from repository.",
+                                "updaterepo read"],
+          "help": "Reloads the repository files by clearing the information in cache and retrieving the list of firmware-update file from the repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "acquire",
+          "additional_detail": ["The following example download firmware updates",
+                                "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+          "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [{
+                "args": "-m,--mt",
+                "opt_dict": {
+                    "help": "List of machine types for which firmware updates are to be refreshed or downloaded",
+                    "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--fixids",
+                "opt_dict": {
+                  "help": "List of firmware-update and UXSP IDs to be downloaded",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-s,--scope",
+                "opt_dict": {
+                  "help": "Specifies the scope of the operation",
+                  "default": "payloads",
+                  "choices": [
+                      "payloads"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "refresh",
+          "additional_detail": ["The following example refresh firmware updates repository",
+                                "updaterepo refresh --mt 7903 --scope all "],
+          "help": "Retrieves information about the latest available firmware updates from the Lenovo XClarity Support website, and stores the information to the updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [{
+                "args": "-m,--mt",
+                "opt_dict": {
+                    "help": "List of machine types for which firmware updates are to be refreshed",
+                    "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-s,--scope",
+                "opt_dict": {
+                  "help": "Specifies the scope of the operation",
+                  "choices": [
+                      "all",
+                      "latest"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "delete",
+          "additional_detail": ["The following example delete firmware updates",
+                                "updaterepo delete -id 65"],
+          "help": "Deletes the specified firmware updates and UXSPs from the updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--fixids",
+                "opt_dict": {
+                  "help": "List of firmware-update and UXSP IDs to be delete",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--type",
+                "opt_dict": {
+                  "help": "Specifies the scope of the operation",
+                  "default": "payloads",
+                  "choices": [
+                      "all",
+                      "payloads"
+                  ]
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    "updatepolicy": {
+      "description": "The updatepolicy command retrieves detailed information about firmware-compliance policies and assigns a compliance policy to a specific device",
+      "additional_detail": ["for subcommand detail type", "updatepolicy list -h "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "list",
+          "additional_detail": ["The following example returns information about all updatepolicy.",
+                                "updaterepo list"],
+          "help": "list all updatepolicies",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "query",
+          "additional_detail": ["The following example retrieve information about firmware that is applicable to each managed device",
+                                "updatepolicy query --info FIRMWARE"],
+          "help": "Get update policy info based on info",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-i,--info",
+                "opt_dict": {
+                  "help": "Get infromation about applicable firmware, persisted result and compliance policies",
+                  "choices": [
+                    "FIRMWARE",
+                    "RESULT",
+                    "NAMELIST"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "assign",
+          "additional_detail": ["The following example download firmware updates",
+                                "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+          "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [{
+                "args": "-p,--policy",
+                "opt_dict": {
+                    "help": "update policy name",
+                    "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-u,--uuid",
+                "opt_dict": {
+                  "help": "Device uuid ",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--type",
+                "opt_dict": {
+                  "help": "device type",
+                  "choices": [
+                    "CMM",
+                    "IOSwitch",
+                    "RACKSWITCH",
+                    "STORAGE",
+                    "SERVER"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "status",
+          "additional_detail": ["The following example refresh Check compliant with the assigned compliance policy",
+                                "updatepolicy status -j 12"],
+          "help": "Retrieves information about compliant status",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [{
+                "args": "-j,--job",
+                "opt_dict": {
+                    "help": "Job Id or task Id returned by assign policy",
+                    "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-u,--uuid",
+                "opt_dict": {
+                  "help": "Device uuid "
+                }
+              }
+            ]
+          ]
+        }
+      ]
     }
+
+
 
 }

@@ -60,10 +60,15 @@ class connect(InteractiveCommand):
         
         opt_dict = self.parse_args(opts, argv)
         '''
-        opt_dict = self.parse_args(args)
-        if opt_dict.get('pw', None) == None:
-            opt_dict ['pw'] = getpass("Enter Password: ")
-        
+
+        try:
+            opt_dict = self.parse_args(args)
+            if opt_dict.get('pw', None) == None:
+                opt_dict ['pw'] = getpass("Enter Password: ")
+        except SystemExit as e:
+            # ignore this as we need to continue on shell
+            return
+
         out_obj = None
         
         try:

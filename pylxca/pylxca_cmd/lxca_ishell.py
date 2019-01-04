@@ -286,10 +286,10 @@ class InteractiveShell(object):
         try:
             args_list = []
             args_dict = {}
-            if 'sub_cmd' in param_dict:
-                sub_cmd = param_dict['sub_cmd']
-                param_dict.pop('sub_cmd')
-                args_list.append(sub_cmd)
+            if 'subcmd' in param_dict:
+                subcmd = param_dict['subcmd']
+                param_dict.pop('subcmd')
+                args_list.append(subcmd)
 
             for item in param_dict:
                 args_dict['--' + item] = param_dict[item]

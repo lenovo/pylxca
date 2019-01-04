@@ -565,7 +565,7 @@ class lxca_rest(object):
             logger.error("Exception occured: %s",re)
             raise re
 
-    def get_updatepolicy(self, url, session, info,  jobid):
+    def get_updatepolicy(self, url, session, info,  jobid, uuid):
         url = url + '/compliancePolicies'
         try:
             if info in ["FIRMWARE", "RESULTS", "NAMELIST"]:
@@ -582,7 +582,7 @@ class lxca_rest(object):
                 url = url + "/compareResult"
                 payload = dict()
                 payload["jobid"] = jobid
-
+                payload["uuid"] = uuid
                 resp = session.get(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
@@ -627,7 +627,6 @@ class lxca_rest(object):
             compliance_list = []
             compliance_list.append(policy_dict)
             payload['compliance'] = compliance_list
-            logger.debug("Reached till before post call")
 
             resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()

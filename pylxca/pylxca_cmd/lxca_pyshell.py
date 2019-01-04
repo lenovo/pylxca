@@ -535,13 +535,13 @@ def manage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','sub_cmd','ip','user','pw','rpw','job','force', 'storedcredential_id']
+        keylist = ['con','subcmd','ip','user','pw','rpw','job','force', 'storedcredential_id']
 
 @param
     The parameters for this command are as follows 
     
         con      Connection Object to Lenovo XClarity Administrator
-        sub_cmd
+        subcmd
         ip       One or more IP addresses for each endpoint to be managed.
         user     user ID to access the endpoint
         pw       The current password to access the endpoint.
@@ -579,7 +579,7 @@ def manage(*args, **kwargs):
     con = None
 
     long_short_key_map = {'ip': 'i', 'user':'u', 'pw':'p', 'rpw':'r', 'job': 'j', 'force':'f', 'storedcredential_id':'s'}
-    keylist = ['con','sub_cmd', 'ip', 'user', 'pw', 'rpw', 'job', 'force', 'storedcredential_id']
+    keylist = ['con','subcmd', 'ip', 'user', 'pw', 'rpw', 'job', 'force', 'storedcredential_id']
     optional_keylist = ['con', 'ip','user','pw','rpw','job','force', 'storedcredential_id']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {'job':[]}
@@ -602,11 +602,11 @@ def unmanage(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','sub_cmd','ip','force','job']
+        keylist = ['con','subcmd','ip','force','job']
 
 @param
     The parameters for this command are as follows 
-        sub_cmd
+        subcmd
         ip          one or more endpoints to be unmanaged.
                     This is comma separated list of multiple endpoints, each endpoint should
                     contain endpoint information separated by semicolon.
@@ -629,7 +629,7 @@ def unmanage(*args, **kwargs):
     con = None
 
     long_short_key_map = {'ip': 'i', 'job': 'j', 'force': 'f'}
-    keylist = ['con', 'sub_cmd', 'ip', 'force', 'job']
+    keylist = ['con', 'subcmd', 'ip', 'force', 'job']
     optional_keylist = ['con', 'ip', 'force', 'job']
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {}
@@ -654,11 +654,11 @@ def configpatterns(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','sub_cmd','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict]
+        keylist = ['con','subcmd','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict]
 
 @param
     The parameters for this command are as follows 
-        sub_cmd     list, apply, import , status
+        subcmd     list, apply, import , status
         id          The unique ID that was assigned when the server pattern was created
         
         endpoint    List of one or more UUIDs for the target servers,If a target is an empty bay,
@@ -688,9 +688,10 @@ def configpatterns(*args, **kwargs):
 
     param_dict = {}
     con = None
+
     # some of them don't have short options
     long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r', 'type': 't', 'name': 'n','status':'s', 'pattern_update_dict':'p'}
-    keylist = ['con', 'sub_cmd', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
+    keylist = ['con', 'subcmd', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
     optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
     mandatory_options_list = {'id': [], 'pattern_update_dict': [],
@@ -716,17 +717,16 @@ def configprofiles(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
+        keylist = ['con', 'subcmd', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'force']
 
 @param
     The parameters for this command are as follows 
-    
+        subcmd      list, rename, activate, unassign, delete
         id          The unique ID that was assigned when the server profile was created
         name        profile name
         endpoint    endpoint  UUID of the server or location id for flex system
         restart     restart server to activate profile ( immediate / defer )
-        delete      True for delete id
-        unassign    unassign specified id
+
                     options for unassign
         powerdown   powerdown server
         resetIMM    reset IMM
@@ -741,13 +741,12 @@ def configprofiles(*args, **kwargs):
     param_dict = {}
     con = None
     # some of keys don't have short option
-    long_short_key_map = {'id': 'i', 'name': 'n', 'endpoint': 'e', 'restart': 'r', 'delete': 'd', 'unassign': 'u',
+    long_short_key_map = {'id': 'i', 'name': 'n', 'endpoint': 'e', 'restart': 'r',
                           'powerdown':'p', 'force':'f'}
-    keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
-    optional_keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'delete', 'unassign', 'powerdown', 'resetimm', 'force']
+    keylist = ['con', 'subcmd', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'force']
+    optional_keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'force']
     mutually_exclusive_keys = []
-    mandatory_options_list = {'id': [], 'endpoint': ['restart'], 'delete': ['id'],
-                              'unassign': ['id']}
+    mandatory_options_list = {'id': [], 'endpoint': ['restart']}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
@@ -803,11 +802,11 @@ def updatepolicy(*args, **kwargs):
     
     Where KeyList is as follows
         
-        keylist = ['con','info','job','uuid',policy','Type']
+        keylist = ['con', 'subcmd', 'info','job','uuid',policy','Type']
 
 @param
     The parameters for this command are as follows 
-
+    subcmd  list,query, assign , status
     info    Specifies the type of information to return. This can be one of the following values:
                 FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
                 RESULTS- Returns persisted compare result for servers to which a compliance policy is assigned
@@ -834,7 +833,7 @@ def updatepolicy(*args, **kwargs):
     param_dict = {}
     con = None
     long_short_key_map = {'info': 'i','job': 'j', 'uuid': 'u', 'policy': 'p', 'type': 't'}
-    keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
+    keylist = ['con', 'subcmd', 'info', 'job', 'uuid', 'policy','type']
     optional_keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
@@ -861,6 +860,16 @@ def updaterepo(*args, **kwargs):
 @param
     The parameters for this command are as follows 
     
+
+    subcmd    The action to take. This can be one of the following values.
+                query - Get  info using key parameter
+                read - Reloads the repository files. The clears the update information in cache and reads the update file again from the repository.
+                refresh - Retrieves information about the latest available firmware updates from the Lenovo Support website,
+                         and stores the information to the firmware-updates repository.
+                acquire - Downloads the specified firmware updates from Lenovo Support website, and stores the updates to the firmware-updates repository.
+                delete - Deletes the specified firmware updates from the firmware-updates repository.
+                export.not supported
+
     key    Returns the specified type of update. This can be one of the following values.
                 supportedMts - Returns a list of supported machine types
                 size - Returns the repository size
@@ -871,20 +880,14 @@ def updaterepo(*args, **kwargs):
                 updatesByMt - Returns information about firmware updates for the specified machine type
                 updatesByMtByComp - Returns the update component names for the specified machine type
 
-    action    The action to take. This can be one of the following values.
-                read - Reloads the repository files. The clears the update information in cache and reads the update file again from the repository.
-                refresh - Retrieves information about the latest available firmware updates from the Lenovo Support website,
-                         and stores the information to the firmware-updates repository.
-                acquire - Downloads the specified firmware updates from Lenovo Support website, and stores the updates to the firmware-updates repository.
-                delete - Deletes the specified firmware updates from the firmware-updates repository.
-                export.not supported
 
      mt        comma separated machine types
      scope     scope of operation
      fixids    comma separated fixids
      type      filetype for PUT opertaion
 @example 
-
+     rep = updaterepo(con, "query", k="size")
+     rep = updaterepo(con, subcmd = "read")
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
@@ -892,10 +895,10 @@ def updaterepo(*args, **kwargs):
     param_dict = {}
     con = None
 
-    long_short_key_map = {'key': 'k', 'action': 'a', 'mt': 'm', 'scope': 's', 'fixids': 'f', 'type':'t'}
-    keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
-    optional_keylist = ['con', 'key', 'action', 'mt', 'scope', 'fixids', 'type']
-    mutually_exclusive_keys = ['key','action']
+    long_short_key_map = {'key': 'k', 'mt': 'm', 'scope': 's', 'fixids': 'f', 'type':'t'}
+    keylist = ['con', 'subcmd', 'key', 'mt', 'scope', 'fixids', 'type']
+    optional_keylist = ['con', 'key', 'mt', 'scope', 'fixids', 'type']
+    mutually_exclusive_keys = []
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
