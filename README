@@ -1,3 +1,11 @@
+<p align="center"><a href="https://www3.lenovo.com/us/en/data-center/software/systems-management/xclarity/" target="_blank" rel="noopener noreferrer"><img width="200" src="https://www3.lenovo.com/medias/lenovo-systems-software-management-xclarity-intro.png?context=bWFzdGVyfHJvb3R8NjY0OXxpbWFnZS9wbmd8aDI2L2hlMS85NDQ4OTkwODAxOTUwLnBuZ3xjZTdiOWJhNDViMTVhMjJjNTFiMWRmNzlhMDFkYzRmN2NkNGJjMzk1NTUxN2ZhYjExYWU1MDJlYmUyNGJkYjIw" alt="Lenovo Xclarity Logo"></a></p>
+
+Python xClarity Client
+===
+
+[![Build Status](https://travis-ci.org/lenovo/xclarity_client.svg)](https://travis-ci.org/lenovo/pylxca)
+
+
 What is PyLXCA?
 ---------------
 PyLXCA is Python based interface for Lenovo xClarity Administration APIs.
