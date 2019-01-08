@@ -554,23 +554,24 @@ def manage(*args, **kwargs):
 
 @example 
 
-        jobid = manage(con=con1,ip="10.243.6.68",user="USERID",pw="PASSW0RD",rpw="PASSW0RD")
-    
+        jobid = manage(con=con1, subcmd='device', ip="10.243.6.68",user="USERID",pw="PASSW0RD",rpw="PASSW0RD")
+        jobid = manage(con=con1, subcmd='device', ip="10.243.6.68",storedcredintail_id="12")
+
     or with named variable it can be represented as
     
-        jobid = manage(con= con1,ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",True)
-        jobid = manage(con1, i="10.243.4.16", u='USERID', p='Purley44LEN', r='Purley55LEN', f='True')
+        jobid = manage(con= con1, subcmd='device', ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",True)
+        jobid = manage(con1, subcmd='device', i="10.243.4.16", u='USERID', p='Purley44LEN', r='Purley55LEN', f='True')
 
         Using storedcredential id for Rackswitch
-        jobid = manage(i='10.240.157.111', s='402', f='True')
+        jobid = manage(con=con1, subcmd='device', i='10.240.157.111', s='402', f='True')
 
         Using storedcredential id for Rackswitch Server
-        jobid = manage(con1, i="10.243.4.16", r='Purley55LEN', s='404', f='True')
+        jobid = manage(con=con1, subcmd='device',i="10.243.4.16", r='Purley55LEN', s='404', f='True')
 
 
     For Getting Maangement job status
         
-        manage_data = manage(con=con1,job=jobid)
+        jobid = manage(con=con1, subcmd='job_status', job="12")
     '''
     global shell_obj
     command_name = sys._getframe().f_code.co_name
@@ -682,6 +683,36 @@ def configpatterns(*args, **kwargs):
 
 @example 
 
+    list  all configpatterns
+        rep = configpatterns(con, subcmd = 'list')
+
+    list particular configpattern
+        rep = configpatterns(con, subcmd = 'list', id="53")
+
+    list particular configpattern with includeSettings
+        rep = configpatterns(con, subcmd = 'list', id="53", includeSettings="True")
+
+    import SystemInfo category pattern
+
+        py_dict = {
+            "template_type": "SystemInfo",
+            "template": {
+                "contact": "contact",
+                "description": "Pattern created by testAPI",
+                "location": "location",
+                "name": "Learned-System_Info-19",
+                "systemName": {
+                    "autogen": "Disable",
+                    "hyphenChecked": False
+                },
+                "type": "SystemInfo",
+                "uri": "/config/template/61",
+                "userDefined": True
+            }
+        }
+        import json
+        my_json = json.dumps(py_dict)
+        rep = configpatterns(con_lxca, 'import', pattern_update_dict = my_json )
     '''    
     global shell_obj
     command_name = sys._getframe().f_code.co_name
@@ -694,8 +725,8 @@ def configpatterns(*args, **kwargs):
     keylist = ['con', 'subcmd', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
     optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
-    mandatory_options_list = {'id': [], 'pattern_update_dict': [],
-                              'includeSettings': ['id']}
+    mandatory_options_list = {'id': [], 'pattern_update_dict': []}
+    #                          'includeSettings': ['id']}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                         param_dict, *args, **kwargs)
@@ -921,11 +952,11 @@ def updatecomp(*args, **kwargs):
 
     USAGE:
 
-        keylist = ['con','query','mode','action','cmm','switch','server','storage','dev_list']
+        keylist = ['con','subcmd', 'query','mode','action','cmm','switch','server','storage','dev_list']
 
 @param
     The parameters for this command are as follows
-
+    subcmd  info|apply
     query   The data to return. This can be one of the following values.
                 components - Returns a list of devices and components that can be updated.
                 status - Returns the status and progress of firmware updates. This is the default value

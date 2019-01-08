@@ -430,7 +430,12 @@
 
 	"tasks": {
 		"description": "get tasks detail from LXCA",
-		"cmd_args": [
+        "valid_combination": {"global":[[],["jobUID"], ["jobUID","children"],
+                                        ["jobUID", "action"],
+                                        ["action", "updateList"]
+                                        ]
+          },
+        "cmd_args": [
 			[{
 					"args": "-v,--view",
 					"opt_dict": {
@@ -449,8 +454,7 @@
 			[{
 					"args": "-c,--children",
 					"opt_dict": {
-						"help": "include children details",
-						"default": false
+						"help": "include children details"
 					}
 				}
 			],
@@ -547,9 +551,15 @@
                                   "The following example manages a device using a stored-credential account.",
                                   "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
 			"add_help": true,
-            "valid_combination": [["ip", "user","pw"],
-                                  ["ip", "storedcredential_id"],
-                                  ["job"]],
+            "valid_combination": {"device":[["ip", "user","pw"],
+                                            ["ip", "user","pw", "rpw"],
+                                            ["ip", "user","pw", "force"],
+                                            ["ip", "user","pw", "rpw", "force"],
+                                            ["ip", "storedcredential_id", "rpw"],
+                                            ["ip", "storedcredential_id", "rpw", "force"],
+                                            ["ip", "storedcredential_id"]
+            ],
+                                  "job_status":[["job"]]},
 			"subcmd": [{
 					"name": "device",
                     "additional_detail": ["The following example manages a device using a user account.",
@@ -666,6 +676,13 @@
       "description": "Retrieve information and deploy all server and category patterns that have been defined in the Lenovo XClarity Administrator",
       "additional_detail": ["Config patterns "],
       "add_help": true,
+      "valid_combination": {
+            "list": [[], ["id"], ["id", "includeSettings"]],
+            "apply": [["id", "endpoint", "restart", "type"]],
+            "import": [["pattern_update_dict"]],
+            "status": [["endpoint"]]
+        },
+
       "subcmd": [
         {
           "name": "list",
@@ -829,7 +846,6 @@
                 "args": "-s,--status",
                 "opt_dict": {
                   "help": "Status set to true",
-                  "type": "bool",
                   "default": true
                 }
               }
@@ -863,7 +879,8 @@
               {
                 "args": "-i,--id",
                 "opt_dict": {
-                  "help": "Specifies the ID of the server profiles. If an ID is not specified, all server profiles are returned"
+                  "help": "Specifies the ID of the server profiles. If an ID is not specified, all server profiles are returned",
+                  "type": "int"
                 }
               }
             ]
@@ -888,6 +905,7 @@
                 "args": "-i,--id",
                 "opt_dict": {
                   "help": "Specifies the ID of the server profiles.",
+                  "type": "int",
                   "required": true
                 }
               }
@@ -921,6 +939,7 @@
                 "args": "-i,--id",
                 "opt_dict": {
                     "help": "Config profile Id",
+                    "type": "int",
                     "required": true
                 }
               }
@@ -967,6 +986,7 @@
                 "args": "-i,--id",
                 "opt_dict": {
                     "help": "Config profile Id",
+                    "type": "int",
                     "required": true
                 }
               }
@@ -975,16 +995,14 @@
               {
                 "args": "-p,--powerdown",
                 "opt_dict": {
-                  "help": "Identifies whether to power off the server",
-                  "type": "bool"
+                  "help": "Identifies whether to power off the server"
                 }
               }
             ],
             [{
                 "args": "--resetimm",
                 "opt_dict": {
-                    "help": "Identifies whether to reset the baseboard management controller.",
-                    "type": "bool"
+                    "help": "Identifies whether to reset the baseboard management controller."
                 }
               }
             ],
@@ -992,8 +1010,7 @@
               {
                 "args": "-f,--force",
                 "opt_dict": {
-                  "help": "Identifies whether to force profile deactivation",
-                  "type": "bool"
+                  "help": "Identifies whether to force profile deactivation"
                 }
               }
             ]
@@ -1355,7 +1372,325 @@
           ]
         }
       ]
+    },
+    "updatecomp": {
+      "description": "The updatecomp command updates firmware on a specific device, and retrieves the status and progress of firmware updates and firmware repository",
+      "additional_detail": ["for subcommand detail type", "updatecomp info -h "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "info",
+          "additional_detail": ["The following example returns information about all updateable components.",
+                                "updatecomp info -q components",
+                                "The following example returns the status and progress of firmware updates and firmware-updates repository.",
+                                "updatecomp info -q status"],
+          "help": "list all updateable components , update firmware status",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-q,--query",
+                "opt_dict": {
+                  "help": "Information about updateable components or Firmware update result status",
+                  "choices": [
+                    "components",
+                    "status"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "apply",
+          "additional_detail": ["The following example applies a firmware update on a storage device and immediate activates the update",
+                                "updatecomp apply -a immediate -t 8BFBADCC33CB11E499F740F2E9903640; lnvgy_fw_storage_1.1.1;Controller A",
+                                "The following example powers off a server and a storage system.",
+                                "updatecomp -apply a power –s 9AEDACCC56SD23F346A852D2D2354865;powerOff –t 8BFBADCC33CB11E499F740F2E9903640;powerOff"],
+          "help": "Apply firmware update to devices",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-a,--action",
+                "opt_dict": {
+                  "help": "action to be performed on firmware update",
+                  "choices": [
+                    "apply",
+                    "cancelapply",
+                    "power"
+                  ]
+                }
+              }
+            ],
+            [
+              {
+                "args": "-m,--mode",
+                "opt_dict": {
+                  "help": "Indicates when to activate the update",
+                  "choices": [
+                    "immediate",
+                    "delayed",
+                    "prioritized"
+                  ]
+                }
+              }
+            ],
+            [
+              {
+                "args": "-c,--cmm",
+                "opt_dict": {
+                  "help": "cmms details for update firmware"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-s,--server",
+                "opt_dict": {
+                  "help": "cmms details for update firmware"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--storage",
+                "opt_dict": {
+                  "help": "storage details for update firmware"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-w,--switch",
+                "opt_dict": {
+                  "help": "switch details for update firmware"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-l,--dev_list",
+                "opt_dict": {
+                  "help": "details of all devices for update firmware"
+                }
+              }
+            ]
+
+          ]
+        }
+      ]
+    },
+    "managementserver": {
+      "description": "The managementserver command retrieve information about all updates in the management-server updates repository",
+      "additional_detail": ["managementserver subcmd detail ",
+        "managementserver query -h "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "query",
+          "additional_detail": ["The following example returns information Returns the repository size (in bytes).",
+                                "managementserver query -k size"],
+          "help": "Retrieve information about all updates in the management-server updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-k,--key",
+                "opt_dict": {
+                  "help": "Returns specific information about the firmware update",
+                  "required": true,
+                  "choices": [
+                    "all",
+                    "currentVersion",
+                    "size",
+                    "importDir",
+                    "history",
+                    "updates",
+                    "updateDate"]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "query_fixids",
+          "additional_detail": ["The following example returns information about all firmware updates by machine type.",
+                                "updaterepo query -k updatesByMt"],
+          "help": "Retrieve information or the readme or change history file for a specific update in the management-server updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--fixids",
+                "opt_dict": {
+                  "help": "fixids ",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-k,--key",
+                "opt_dict": {
+                  "help": "Returns specific information about the firmware update",
+                  "choices": [
+                    "all",
+                    "actions",
+                    "keys",
+                    "filetypes",
+                    "updates"
+                  ]
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--type",
+                "opt_dict": {
+                  "help": "Specifies a list of file types",
+                  "choices": [
+                    "changeHistory",
+                    "readme"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "acquire",
+          "additional_detail": ["The following example download firmware updates",
+                                "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+          "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--fixids",
+                "opt_dict": {
+                  "help": "List of firmware-update and UXSP IDs to be downloaded",
+                  "required": true
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "refresh",
+          "additional_detail": ["The following example refresh firmware updates repository",
+                                "updaterepo refresh --mt 7903 --scope all "],
+          "help": "Retrieves information about the latest available firmware updates from the Lenovo XClarity Support website, and stores the information to the updates repository",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "delete",
+          "additional_detail": ["The following example delete fixdis from update repository",
+                                "managementserver delete --fixids lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch"],
+          "help": "Deletes the specified fixids",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--fixids",
+                "opt_dict": {
+                  "help": "fixids to be deleted",
+                  "required": true
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "import",
+          "additional_detail": ["Create job for import local files to managementserver ",
+                                "managementserver import --files /home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt",
+                                "Create import local files to managementserver ",
+                                "managementserver import -j 12 --files /home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt"],
+          "help": "Import files to management server ",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "--files",
+                "opt_dict": {
+                  "help": "files to import, comma separated files",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-j,--jobid",
+                "opt_dict": {
+                  "help": "import jobid"
+                }
+              }
+            ]
+
+          ]
+        }
+      ]
     }
+
 
 
 

@@ -39,7 +39,7 @@ class InteractiveCommand(object):
         epilog = textwrap.dedent(epilog)
         return epilog
 
-    def _validate_combination(self, input_dict, valid_list):
+    def _validate_combination(self, input_dict, valid_dict):
         '''
         This function validate input combinations
         :param input_dict:  input dict of parameters
@@ -48,21 +48,27 @@ class InteractiveCommand(object):
                  on failure return false and suggested_combination of parameters
         '''
 
+        try:
+            if 'subcmd' in input_dict:
+                valid_list = valid_dict[input_dict['subcmd']]
+            else:
+                valid_list = valid_dict['global']
+        except Exception as e:
+            raise Exception("Error in getting valid_list")
+
         # remove None and empty string and len zero lists
         # create copy dict
         copy_input_dict = {}
         for k in input_dict.keys():
-            if k not in ['func', 'view','positional_arguments']:
-                if not (input_dict[k] == None or len(input_dict[k]) == 0):
+            if k not in ['func', 'view','subcmd']:
+                if not (input_dict[k] == None or (isinstance(input_dict[k], list) and len(input_dict[k]) == 0)):
                     copy_input_dict[k] = input_dict[k]
 
         input_key_set = set(copy_input_dict.keys())
-        # if len(input_key_set) == 0:
-        #    print "invalid input: no input"
 
         for comb in valid_list:
             comb_set = set(comb)
-            if input_key_set.issuperset(comb_set):
+            if input_key_set == comb_set:
                 return True, comb
 
         # Check for suggestion
@@ -82,7 +88,8 @@ class InteractiveCommand(object):
         return self.command_data[self.__class__.__name__]['description']
 
     def post_parsing_validation(self, opts):
-        valid_combination = self.command_data[self.__class__.__name__].get('valid_combination', [])
+        valid_combination = self.command_data[self.__class__.__name__].get('valid_combination', None)
+
         if valid_combination:
             valid, combination = self._validate_combination(opts, valid_combination)
             if not valid:
@@ -93,7 +100,7 @@ class InteractiveCommand(object):
 
     def _preprocess_argparse_dict(self, cmd_dict):
         try:
-            replace_with = {"int": int, "bool": bool, "json.loads":json.loads, "ast.literal_eval":ast.literal_eval}
+            replace_with = {"int": int, "boolean": bool, "json.loads":json.loads, "ast.literal_eval":ast.literal_eval}
             if 'type' in cmd_dict:
                 if cmd_dict['type'] in replace_with.keys():
                     cmd_dict['type'] = replace_with[cmd_dict['type']]
@@ -170,7 +177,6 @@ class InteractiveCommand(object):
     def sprint(self,str):
         if self.shell: self.shell.sprint(str)
 
-
     def parse_args(self, args):
         try:
             parser = self.get_argparse_options()
@@ -182,8 +188,8 @@ class InteractiveCommand(object):
             return
         except SystemExit as e:
             print(str(e))
-            if not ( '-h' in args):
-                parser.print_help()
+            # if not ( '-h' in args):
+            #     parser.print_help()
             raise(e)
         except AttributeError as e:
             #TODO  move this some where

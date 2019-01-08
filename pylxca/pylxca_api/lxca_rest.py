@@ -1100,6 +1100,7 @@ class lxca_rest(object):
 
 
     def do_configpatterns(self, url, session, id, includeSettings, endpoint, restart, etype, pattern_update_dict):
+        '''
         input_dict = {}
         input_dict['id'] = id
         input_dict['includeSettings'] = includeSettings
@@ -1116,6 +1117,7 @@ class lxca_rest(object):
         if not valid:
             raise Exception("Invalid Missing Arguments %s" %str(combination))
 
+        '''
         resp = None
         url = url + '/patterns'
 
