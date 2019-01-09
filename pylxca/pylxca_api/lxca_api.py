@@ -746,6 +746,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = json.loads(resp.text)
         except AttributeError as ValueError:
             return resp
+        py_obj['dummy']={'status':[]}
         return py_obj
 
     def do_updatecomp( self, dict_handler = None ):

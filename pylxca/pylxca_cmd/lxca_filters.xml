@@ -1,11 +1,49 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- XML file for Chassis Filter -->
 <filters>
+    <managementserver name="default">
+		<importDir>importDir</importDir>
+		<updatedDate>updatedDate</updatedDate>
+    </managementserver>
+    <managementserver name="size">
+		<size name="size" type="object">
+			<allotment>allotment</allotment>
+			<freeSpace>freeSpace</freeSpace>
+		</size>
+    </managementserver>
+    <managementserver name="updates">
+		<updates name="updates" type="object">
+			<applied>applied</applied>
+			<buildNumber>buildNumber</buildNumber>
+			<fixid>fixid</fixid>
+			<status>status</status>
+
+		</updates>
+    </managementserver>
+    <managementserver name="history">
+		<history name="history" type="object">
+			<description>description</description>
+			<buildNumber>buildNumber</buildNumber>
+			<detailInfo>detailInfo</detailInfo>
+			<fileName>fileName</fileName>
+
+		</history>
+    </managementserver>
+    <managementserver name="result">
+		<jobid>jobid</jobid>
+		<result>result</result>
+		<errorMsg name="errorMsg" type="object">
+			<result>result</result>
+		</errorMsg>
+    </managementserver>
+
 	<tasks name="default">
+		<complete>complete</complete>
 		<jobUID>jobUID</jobUID>
-		<children name="children" type="object">
-			<summary>summary</summary>
-		</children>
+		<Tasks_List name="children" type="object">
+			<jobUID>jobUID</jobUID>
+			<status>status</status>
+		</Tasks_List>
 	</tasks>
 
 	<chassis name="default">

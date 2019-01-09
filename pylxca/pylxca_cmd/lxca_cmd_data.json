@@ -1557,7 +1557,9 @@
               {
                 "args": "-l,--dev_list",
                 "opt_dict": {
-                  "help": "details of all devices for update firmware"
+                  "help": "details of all devices for update firmware, json input",
+                  "type": "json.loads"
+
                 }
               }
             ]
@@ -1607,8 +1609,8 @@
         },
         {
           "name": "query_fixids",
-          "additional_detail": ["The following example returns information about all firmware updates by machine type.",
-                                "updaterepo query -k updatesByMt"],
+          "additional_detail": ["The following example returns information  all info about fixid.",
+                                "managementserver query_fixids -f ibm_fw_imm2_1aoo78j-6.20_anyos_noarch -k all"],
           "help": "Retrieve information or the readme or change history file for a specific update in the management-server updates repository",
           "subcmd_args": [
             [
@@ -1659,8 +1661,8 @@
         },
         {
           "name": "acquire",
-          "additional_detail": ["The following example download firmware updates",
-                                "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+          "additional_detail": ["The following example download updates",
+                                "managementserver acquire --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
           "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
           "subcmd_args": [
             [
@@ -1684,9 +1686,9 @@
         },
         {
           "name": "refresh",
-          "additional_detail": ["The following example refresh firmware updates repository",
-                                "updaterepo refresh --mt 7903 --scope all "],
-          "help": "Retrieves information about the latest available firmware updates from the Lenovo XClarity Support website, and stores the information to the updates repository",
+          "additional_detail": ["The following example refresh management server repository",
+                                "managementserver refresh"],
+          "help": "Retrieves information about the latest available updates from the Lenovo XClarity Support website, and stores the information to the management server updates repository",
           "subcmd_args": [
             [
               {

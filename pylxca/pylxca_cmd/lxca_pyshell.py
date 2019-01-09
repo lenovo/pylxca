@@ -61,6 +61,7 @@ def set_interactive():
           "osimages": osimages,
           "resourcegroups": resourcegroups,
           "storedcredentials": storedcredentials,
+          "managementserver": managementserver,
           "help": help}
     ns.update()
     global __version__
@@ -1593,7 +1594,7 @@ def managementserver(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con', 'key', 'fixids', 'type', 'action', 'files','jobid']
+        keylist = ['con', 'subcmd', 'key', 'fixids', 'type', 'action', 'files','jobid']
 
 @param
     The parameters for this command are as follows
@@ -1634,7 +1635,7 @@ def managementserver(*args, **kwargs):
     long_short_key_map = {'key': 'k', 'fixids': 'f',
                           'type': 't', 'action': 'a', 'jobid': 'j'}
 
-    keylist = ['con', 'key', 'fixids', 'type', 'action', 'files', 'jobid']
+    keylist = ['con', 'subcmd', 'key', 'fixids', 'type', 'action', 'files', 'jobid']
     optional_keylist = ['con', 'key', 'fixids',
                         'type', 'action', 'files', 'jobid']
     mutually_exclusive_keys = ['key', 'action']
