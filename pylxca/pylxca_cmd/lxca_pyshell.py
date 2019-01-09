@@ -3,30 +3,31 @@
 @author: Prashant Bhosale <pbhosale@lenovo.com>, Girish Kumar <gkumar1@lenovo.com>
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
-@organization: Lenovo 
+@organization: Lenovo
 @summary: This module provides scriptable interfaces and scriptable python shell.
 '''
 
-import os, time,code
-import signal, logging, sys
-import traceback
+import code
+import logging
+import sys
 
 from pylxca import __version__
 from pylxca.pylxca_cmd import lxca_ishell
 from pylxca.pylxca_cmd.lxca_cmd import fanmuxes
 
-#shell is a global variable
-shell_obj = None
-logger = logging.getLogger(__name__)
+# shell is a global variable
+SHELL_OBJ = None
+LOGGER = logging.getLogger(__name__)
 
 
 def pyshell(shell=lxca_ishell.InteractiveShell()):
     '''
     @summary: this method provides scriptable python shell
     '''
-    global shell_obj
-    shell_obj = shell
-    shell_obj.set_ostream_to_null()
+    global SHELL_OBJ
+    SHELL_OBJ = shell
+    SHELL_OBJ.set_ostream_to_null()
+
 
 def set_interactive():
     '''
@@ -63,26 +64,24 @@ def set_interactive():
           "help": help}
     ns.update()
     global __version__
-    code.interact('Interactive Python Shell for Lenovo XClarity Administrator v' + __version__ + '\nType "dir()" or "help(lxca command object)" for more information.', local=ns)
+    code.interact('Interactive Python Shell for Lenovo XClarity Administrator v' + __version__ +
+                  '\nType "dir()" or "help(lxca command object)" for more information.', local=ns)
 
 
 def connect(*args, **kwargs):
-
     '''
 
 @summary:
     Use this function to connect to Lenovo XClarity Administrator
-    run this function as  
-    
+    run this function as
     con_variable = connect( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
-        keylist = ['url','user','pw','noverify']
+
+        keylist = ['url', 'user', 'pw', 'noverify']
 
 @param
-    The parameters for this command are as follows 
-    
+    The parameters for this command are as follows
         con          Connection Object to Lenovo XClarity Administrator
         url          url to Lenovo XClarity Administrator Example. https://a.b.c.d
         user         User Id to Authenticate Lenovo XClarity Administrator
@@ -92,26 +91,27 @@ def connect(*args, **kwargs):
 @example 
     con1 = connect( url = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
-    keylist = ['url','user','pw','noverify']
+    keylist = ['url', 'user', 'pw', 'noverify']
     if len(args) == 0 and len(kwargs) == 0:
         return
-    
-    for i in range(len(args)):
-        kwargs[keylist[i]]= args[i]
-    
-    con = shell_obj.handle_input_args(command_name, args=args, kwargs=kwargs)
-    
-    return con 
-def disconnect(*args, **kwargs):
 
+    for i in range(len(args)):
+        kwargs[keylist[i]] = args[i]
+
+    con = SHELL_OBJ.handle_input_args(command_name, args=args, kwargs=kwargs)
+
+    return con
+
+
+def disconnect(*args, **kwargs):
     '''
 
 @summary:
     Use this function to disconnect from Lenovo XClarity Administrator
-    run this function as  
-        disconnect()
+    run this function as
+    disconnect()
 
 
      it also reset internal current connection to original connection this is used in api version
@@ -129,13 +129,13 @@ def disconnect(*args, **kwargs):
 
 @param
     The parameters for this command are as follows
-        
+
         con      Connection Object to Lenovo XClarity Administrator
-    
+
 @example 
     disconnect()
     '''
-    global shell_obj
+    global SHELL_OBJ
 
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
@@ -147,11 +147,13 @@ def disconnect(*args, **kwargs):
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map,  mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def cmms(*args, **kwargs):
     '''
@@ -159,38 +161,39 @@ def cmms(*args, **kwargs):
 @summary:
     Use this function to get CMMs information
     run this function as  
-    
+
     data_dictionary = cmms( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
-        keylist = ['con','uuid','chassis']
+
+        keylist = ['con', 'uuid', 'chassis']
 
 @param
     The parameters for this command are as follows 
-    
+
     con       Connection Object to Lenovo XClarity Administrator
     uuid      cmm uuid
     chassis   chassis uuid  
 
 @example 
-    cmm_list = cmms( con = con1 ,uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57', pw = 'Password', noverify = "True")
+    cmm_list = cmms( con = con1, uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57')
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
     long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
-    keylist = ['con','uuid','chassis']
-    optional_keylist = ['con', 'uuid','chassis']
-    mutually_exclusive_keys = ['uuid','chassis']
+    keylist = ['con', 'uuid', 'chassis']
+    optional_keylist = ['con', 'uuid', 'chassis']
+    mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map,  mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -200,40 +203,42 @@ def chassis(*args, **kwargs):
 @summary:
     Use this function to get Chassis information
     run this function as  
-    
+
     data_dictionary = chassis( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
-        keylist = ['con','uuid','status']
+
+        keylist = ['con', 'uuid', 'status']
 
 @param
     The parameters for this command are as follows 
-    
+
     con        Connection Object to Lenovo XClarity Administrator
     uuid       chassis uuid
     status     chassis manage status (managed/unmanaged)
-    
+
 
 @example 
-    
+    chassis_list = chassis( con = con1, uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57')
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
     long_short_key_map = {'uuid': 'u', 'status': 's'}
-    keylist = ['con','uuid','status']
-    optional_keylist = ['con', 'uuid','status']
+    keylist = ['con', 'uuid', 'status']
+    optional_keylist = ['con', 'uuid', 'status']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map,  mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def fans(*args, **kwargs):
     '''
@@ -241,64 +246,24 @@ def fans(*args, **kwargs):
 @summary:
     Use this function to get fans information
     run this function as  
-    
+
     data_dictionary = fans( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
-        keylist = ['con','uuid','chassis']
+
+        keylist = ['con', 'uuid', 'chassis']
 
 @param
     The parameters for this command are as follows 
-    
+
     con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of fan
     chassis       chassis uuid
-    
+
 @example 
-    
+    fans_list = fans( con = con1, uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57')
     '''
-    global shell_obj
-    command_name = sys._getframe().f_code.co_name
-    param_dict = {}
-    con = None
-
-    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
-    keylist = ['con','uuid','chassis']
-    optional_keylist = ['con', 'uuid','chassis']
-    mutually_exclusive_keys = ['uuid','chassis']
-    mandatory_options_list = {}
-
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                          param_dict, *args, **kwargs)
-
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
-    return out_obj
-
-def fanmuxes(*args, **kwargs):
-    '''
-
-@summary:
-    Use this function to get fanmuxes information
-    run this function as  
-    
-    data_dictionary = fanmuxes( key1 = 'val1', key2 = 'val2', ...)
-    
-    Where KeyList is as follows
-        
-        keylist = ['con','uuid','chassis']
-
-@param
-    The parameters for this command are as follows 
-    
-    con           Connection Object to Lenovo XClarity Administrator
-    uuid          uuid of fanmux
-    chassis       chassis uuid
-    
-@example 
-    
-    '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
@@ -309,10 +274,53 @@ def fanmuxes(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+    return out_obj
+
+
+def fanmuxes(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to get fanmuxes information
+    run this function as  
+
+    data_dictionary = fanmuxes( key1 = 'val1', key2 = 'val2', ...)
+
+    Where KeyList is as follows
+
+        keylist = ['con','uuid','chassis']
+
+@param
+    The parameters for this command are as follows 
+
+    con           Connection Object to Lenovo XClarity Administrator
+    uuid          uuid of fanmux
+    chassis       chassis uuid
+
+@example 
+
+    '''
+    global SHELL_OBJ
+    command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
+    keylist = ['con', 'uuid', 'chassis']
+    optional_keylist = ['con', 'uuid', 'chassis']
+    mutually_exclusive_keys = ['uuid', 'chassis']
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -322,40 +330,42 @@ def nodes(*args, **kwargs):
 @summary:
     Use this function to get nodes information
     run this function as  
-    
+
     data_dictionary = nodes( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','uuid','chassis','status']
 
 @param
     The parameters for this command are as follows 
-    
+
     con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of node
     chassis       chassis uuid
     status        nodes manage status (managed/unmanaged)
-    
+
 @example 
-    
+
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
-    long_short_key_map = {'uuid':'u' , 'chassis':'c', 'status':'s'}
-    keylist = ['con','uuid','chassis','status']
-    optional_keylist = ['con', 'uuid', 'chassis','status']
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c', 'status': 's'}
+    keylist = ['con', 'uuid', 'chassis', 'status']
+    optional_keylist = ['con', 'uuid', 'chassis', 'status']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def switches(*args, **kwargs):
     '''
@@ -363,42 +373,45 @@ def switches(*args, **kwargs):
 @summary:
     Use this function to get switches information
     run this function as  
-    
+
     data_dictionary = switches( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','uuid','chassis','ports','action']
 
 @param
     The parameters for this command are as follows 
-    
+
     con      Connection Object to Lenovo XClarity Administrator
     uuid          uuid of switch
     chassis       chassis uuid
     ports         empty ports string list all ports for uuid, comma separated ports
     action        enable/disable ports
-    
+
 @example 
-    
+
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
-    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}  # other parameter don't have short option
+    # other parameter don't have short option
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c'}
     keylist = ['con', 'uuid', 'chassis', 'ports', 'action']
     optional_keylist = ['con', 'uuid', 'chassis', 'ports', 'action']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def powersupplies(*args, **kwargs):
     '''
@@ -406,24 +419,24 @@ def powersupplies(*args, **kwargs):
 @summary:
     Use this function to get powersupplies information
     run this function as  
-    
+
     data_dictionary = powersupplies( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','uuid','chassis']
 
 @param
     The parameters for this command are as follows 
-    
+
     con      Connection Object to Lenovo XClarity Administrator
     uuid          uuid of power supply
     chassis       chassis uuid
-    
+
 @example 
-    
+
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
@@ -433,11 +446,13 @@ def powersupplies(*args, **kwargs):
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def scalablesystem(*args, **kwargs):
     '''
@@ -445,40 +460,42 @@ def scalablesystem(*args, **kwargs):
 @summary:
     Use this function to get scalablesystem information
     run this function as  
-    
+
     data_dictionary = scalablesystem( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','id','type']
 
 @param
     The parameters for this command are as follows 
-    
+
     con      Connection Object to Lenovo XClarity Administrator
     id        scalable complex id
     type      type (flex/rackserver)
 
 @example 
-    
+
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
     long_short_key_map = {'id': 'i', 'type': 't'}
-    keylist = ['con','id','type']
-    optional_keylist = ['con', 'id','type']
+    keylist = ['con', 'id', 'type']
+    optional_keylist = ['con', 'id', 'type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def discover(*args, **kwargs):
     '''
@@ -486,43 +503,45 @@ def discover(*args, **kwargs):
 @summary:
     Use this function to discover endpoint from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = discover( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','ip','job']
 
 @param
     The parameters for this command are as follows 
-    
+
     con    Connection Object to Lenovo XClarity Administrator
     ip     One or more IP addresses for each endpoint to be discovered.
     job    Job ID of discover request
 
 
 @example
- 
+
     For Getting Maangement job status
-        
+
         job_data = discover(con=con1,job=jobid)
-            
+
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
     long_short_key_map = {'ip': 'i', 'job': 'j'}
-    keylist = ['con','ip','job']
-    optional_keylist = ['con', 'ip','job']
-    mutually_exclusive_keys = ['ip','job']
+    keylist = ['con', 'ip', 'job']
+    optional_keylist = ['con', 'ip', 'job']
+    mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def manage(*args, **kwargs):
     '''
@@ -530,16 +549,16 @@ def manage(*args, **kwargs):
 @summary:
     Use this function to manage endpoint from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = manage( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','subcmd','ip','user','pw','rpw','job','force', 'storedcredential_id']
 
 @param
     The parameters for this command are as follows 
-    
+
         con      Connection Object to Lenovo XClarity Administrator
         subcmd
         ip       One or more IP addresses for each endpoint to be managed.
@@ -558,7 +577,7 @@ def manage(*args, **kwargs):
         jobid = manage(con=con1, subcmd='device', ip="10.243.6.68",storedcredintail_id="12")
 
     or with named variable it can be represented as
-    
+
         jobid = manage(con= con1, subcmd='device', ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",True)
         jobid = manage(con1, subcmd='device', i="10.243.4.16", u='USERID', p='Purley44LEN', r='Purley55LEN', f='True')
 
@@ -570,25 +589,29 @@ def manage(*args, **kwargs):
 
 
     For Getting Maangement job status
-        
+
         jobid = manage(con=con1, subcmd='job_status', job="12")
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
-    long_short_key_map = {'ip': 'i', 'user':'u', 'pw':'p', 'rpw':'r', 'job': 'j', 'force':'f', 'storedcredential_id':'s'}
-    keylist = ['con','subcmd', 'ip', 'user', 'pw', 'rpw', 'job', 'force', 'storedcredential_id']
-    optional_keylist = ['con', 'ip','user','pw','rpw','job','force', 'storedcredential_id']
+    long_short_key_map = {'ip': 'i', 'user': 'u', 'pw': 'p',
+                          'rpw': 'r', 'job': 'j', 'force': 'f', 'storedcredential_id': 's'}
+    keylist = ['con', 'subcmd', 'ip', 'user', 'pw',
+               'rpw', 'job', 'force', 'storedcredential_id']
+    optional_keylist = ['con', 'ip', 'user', 'pw',
+                        'rpw', 'job', 'force', 'storedcredential_id']
     mutually_exclusive_keys = ['ip', 'job']
-    mandatory_options_list = {'job':[]}
+    mandatory_options_list = {'job': []}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -598,11 +621,11 @@ def unmanage(*args, **kwargs):
 @summary:
     Use this function to unmanage endpoint from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','subcmd','ip','force','job']
 
 @param
@@ -624,7 +647,7 @@ def unmanage(*args, **kwargs):
 @example 
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
@@ -635,10 +658,11 @@ def unmanage(*args, **kwargs):
     mutually_exclusive_keys = ['ip', 'job']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -648,28 +672,28 @@ def configpatterns(*args, **kwargs):
 @summary:
     Use this function to Retrieve information and deploy all server and category patterns
             that have been defined in the Lenovo XClarity Administrator
-            
+
     run this function as  
-    
+
     data_dictionary = configpatterns( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','subcmd','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict]
 
 @param
     The parameters for this command are as follows 
         subcmd     list, apply, import , status
         id          The unique ID that was assigned when the server pattern was created
-        
+
         endpoint    List of one or more UUIDs for the target servers,If a target is an empty bay,
                       specify the location ID; otherwise, specify the server UUID
-        
+
         restart     When to activate the configurations. This can be one of the following values:
                       defer - Activate IMM settings but do not restart the server.
                       immediate - Activate all settings and restart the server immediately.
                       pending - Manually activate the server profile and restart the server.
-        
+
         type        Type of the server, It can be one of the following
                       flex -  Flex System Placeholder chassis empty bays
                       node
@@ -713,25 +737,29 @@ def configpatterns(*args, **kwargs):
         import json
         my_json = json.dumps(py_dict)
         rep = configpatterns(con_lxca, 'import', pattern_update_dict = my_json )
-    '''    
-    global shell_obj
+    '''
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
     # some of them don't have short options
-    long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r', 'type': 't', 'name': 'n','status':'s', 'pattern_update_dict':'p'}
-    keylist = ['con', 'subcmd', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
-    optional_keylist = ['con', 'id', 'includeSettings', 'endpoint', 'restart', 'type', 'pattern_update_dict', 'name', 'status']
+    long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r',
+                          'type': 't', 'name': 'n', 'status': 's', 'pattern_update_dict': 'p'}
+    keylist = ['con', 'subcmd', 'id', 'includeSettings', 'endpoint',
+               'restart', 'type', 'pattern_update_dict', 'name', 'status']
+    optional_keylist = ['con', 'id', 'includeSettings', 'endpoint',
+                        'restart', 'type', 'pattern_update_dict', 'name', 'status']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
     mandatory_options_list = {'id': [], 'pattern_update_dict': []}
     #                          'includeSettings': ['id']}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
-                        param_dict, *args, **kwargs)
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -741,13 +769,13 @@ def configprofiles(*args, **kwargs):
 @summary:
     Use this function to Retrieve information server configuration profiles
             that have been defined in the Lenovo XClarity Administrator
-    
+
     run this function as  
-    
+
     data_dictionary = configprofiles( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con', 'subcmd', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'force']
 
 @param
@@ -766,23 +794,26 @@ def configprofiles(*args, **kwargs):
 @example 
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
     # some of keys don't have short option
     long_short_key_map = {'id': 'i', 'name': 'n', 'endpoint': 'e', 'restart': 'r',
-                          'powerdown':'p', 'force':'f'}
-    keylist = ['con', 'subcmd', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'force']
-    optional_keylist = ['con', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'force']
+                          'powerdown': 'p', 'force': 'f'}
+    keylist = ['con', 'subcmd', 'id', 'name', 'endpoint',
+               'restart', 'powerdown', 'resetimm', 'force']
+    optional_keylist = ['con', 'id', 'name', 'endpoint',
+                        'restart', 'powerdown', 'resetimm', 'force']
     mutually_exclusive_keys = []
     mandatory_options_list = {'id': [], 'endpoint': ['restart']}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -792,11 +823,11 @@ def configtargets(*args, **kwargs):
 @summary:
     Use this function to get config pattern targets from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = configtargets( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','id']
 
 @param
@@ -806,21 +837,23 @@ def configtargets(*args, **kwargs):
 @example 
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
     long_short_key_map = {'id': 'i'}
-    keylist = ['con','id']
+    keylist = ['con', 'id']
     optional_keylist = ['con']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def updatepolicy(*args, **kwargs):
     '''
@@ -828,11 +861,11 @@ def updatepolicy(*args, **kwargs):
 @summary:
     Use this function to read Firmwar update Policy from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = updatepolicy( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con', 'subcmd', 'info','job','uuid',policy','Type']
 
 @param
@@ -858,22 +891,25 @@ def updatepolicy(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
-    long_short_key_map = {'info': 'i','job': 'j', 'uuid': 'u', 'policy': 'p', 'type': 't'}
-    keylist = ['con', 'subcmd', 'info', 'job', 'uuid', 'policy','type']
-    optional_keylist = ['con', 'info', 'job', 'uuid', 'policy','type']
+    long_short_key_map = {'info': 'i', 'job': 'j',
+                          'uuid': 'u', 'policy': 'p', 'type': 't'}
+    keylist = ['con', 'subcmd', 'info', 'job', 'uuid', 'policy', 'type']
+    optional_keylist = ['con', 'info', 'job', 'uuid', 'policy', 'type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def updaterepo(*args, **kwargs):
     '''
@@ -881,16 +917,16 @@ def updaterepo(*args, **kwargs):
 @summary:
     Use this function to get repository info from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = updaterepo( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
-        keylist = ['con','key']
+
+        keylist = ['con', 'subcmd', 'key', 'mt', 'scope', 'fixids', 'type']
 
 @param
     The parameters for this command are as follows 
-    
+
 
     subcmd    The action to take. This can be one of the following values.
                 query - Get  info using key parameter
@@ -919,23 +955,27 @@ def updaterepo(*args, **kwargs):
 @example 
      rep = updaterepo(con, "query", k="size")
      rep = updaterepo(con, subcmd = "read")
+     rep = updaterepo(con_lxca, subcmd = "read")
+     rep = updaterepo(con_lxca, subcmd = "acquire", mt="7903")
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
-    long_short_key_map = {'key': 'k', 'mt': 'm', 'scope': 's', 'fixids': 'f', 'type':'t'}
+    long_short_key_map = {'key': 'k', 'mt': 'm',
+                          'scope': 's', 'fixids': 'f', 'type': 't'}
     keylist = ['con', 'subcmd', 'key', 'mt', 'scope', 'fixids', 'type']
     optional_keylist = ['con', 'key', 'mt', 'scope', 'fixids', 'type']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -978,7 +1018,8 @@ def updatecomp(*args, **kwargs):
     dev_list  - update all updateable components
             For action = apply/cancelApply, Device information should contain following data separated by comma
                 UUID - UUID of the device
-                Fixid - Firmware-update ID of the target package to be applied to the component. If not provided assigned policy would be used.
+                Fixid - Firmware-update ID of the target package to be applied to the component.
+                         If not provided assigned policy would be used.
                 Component - Component name
 
             For action = power, Device information should contain following data separated by comma
@@ -994,15 +1035,17 @@ def updatecomp(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
     long_short_key_map = {'query': 'q', 'mode': 'm', 'action': 'a', 'cmm': 'c', 'switch': 'w', 'server': 's',
                           'storage': 't', 'dev_list': 'l'}
-    keylist = ['con', 'query', 'mode', 'action', 'cmm', 'switch', 'server', 'storage', 'dev_list']
-    optional_keylist = ['con', 'query', 'mode', 'action', 'cmm', 'switch', 'server', 'storage', 'dev_list']
+    keylist = ['con', 'query', 'mode', 'action', 'cmm',
+               'switch', 'server', 'storage', 'dev_list']
+    optional_keylist = ['con', 'query', 'mode', 'action',
+                        'cmm', 'switch', 'server', 'storage', 'dev_list']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1010,7 +1053,7 @@ def updatecomp(*args, **kwargs):
                           mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -1020,37 +1063,39 @@ def users(*args, **kwargs):
 @summary:
     Use this function to get users data from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = users( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','id']
 
 @param
     The parameters for this command are as follows 
-    
+
         id    unique ID of the user to be retrieved
 
 @example 
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
-    long_short_key_map = {'id':'i'}
-    keylist = ['con','id']
+    long_short_key_map = {'id': 'i'}
+    keylist = ['con', 'id']
     optional_keylist = ['con', 'id']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def ffdc(*args, **kwargs):
     '''
@@ -1058,39 +1103,40 @@ def ffdc(*args, **kwargs):
 @summary:
     Use this function to Collect and export specific endpoint data 
         from Lenovo XClarity Administrator
-    
+
     run this function as  
-    
+
     data_dictionary = ffdc( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','uuid']
 
 @param
     The parameters for this command are as follows 
-    
+
         uuid    UUID of the target endpoint this is manadatory parameter
 
 @example
     ffdc(con = lxca_con, uuid='UUID of endpoint")
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
-    long_short_key_map = {'uuid':'u'}
-    keylist = ['con','uuid']
+    long_short_key_map = {'uuid': 'u'}
+    keylist = ['con', 'uuid']
     optional_keylist = ['con', 'uuid']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -1122,23 +1168,25 @@ def log(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
-    long_short_key_map = {'lvl':'l'}
-    keylist = ['con','lvl']
+    long_short_key_map = {'lvl': 'l'}
+    keylist = ['con', 'lvl']
     optional_keylist = ['con', 'lvl']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def lxcalog(*args, **kwargs):
     '''
@@ -1146,38 +1194,40 @@ def lxcalog(*args, **kwargs):
 @summary:
     Use this function to get Lenovo XClarity Administrator LOG information
     run this function as  
-    
+
     data_dictionary = lxcalog( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','filter']
 
 @param
     The parameters for this command are as follows 
-    
+
         filter  filter for the event
 
 @example 
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
-    long_short_key_map = {'filter':'f'}
-    keylist = ['con','filter']
+    long_short_key_map = {'filter': 'f'}
+    keylist = ['con', 'filter']
     optional_keylist = ['con', 'filter']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def jobs(*args, **kwargs):
     '''
@@ -1185,16 +1235,16 @@ def jobs(*args, **kwargs):
 @summary:
     Use this function to get jobs information from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = jobs( key1 = 'val1', key2 = 'val2', ...)
-    
+
     Where KeyList is as follows
-        
+
         keylist = ['con','id','uuid','state','cancel','delete']
 
 @param
     The parameters for this command are as follows 
-    
+
         id=         job id
         uuid=       uuid of endpoint for which jobs should be retrieved
         state=      job state to retrieve jobs in specified state.
@@ -1213,23 +1263,26 @@ def jobs(*args, **kwargs):
 @example 
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
-    long_short_key_map = {'id': 'i', 'uuid':'u', 'state':'s','cancel':'c', 'delete':'d'}
-    keylist = ['con','id','uuid','state','cancel','delete']
-    optional_keylist = ['con', 'id','uuid','state','cancel','delete']
-    mutually_exclusive_keys = ['id','cancel','delete']
+    long_short_key_map = {'id': 'i', 'uuid': 'u',
+                          'state': 's', 'cancel': 'c', 'delete': 'd'}
+    keylist = ['con', 'id', 'uuid', 'state', 'cancel', 'delete']
+    optional_keylist = ['con', 'id', 'uuid', 'state', 'cancel', 'delete']
+    mutually_exclusive_keys = ['id', 'cancel', 'delete']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def manifests(*args, **kwargs):
     '''
@@ -1237,40 +1290,41 @@ def manifests(*args, **kwargs):
 @summary:
     Use this function to send solution manifest to and retreive manifests from Lenovo XClarity Administrator
     run this function as  
-    
+
     data_dictionary = manifests( conn_handle, input_args_dictionary{key,value} )
-    
+
     Where KeyList is as follows
-        
+
         keylist = [id','file']
 
 @param
     The parameters for this command are as follows 
-    
+
         id=         solution id
         file=       path to manifest file
 
 @example 
 
     '''
-    global shell_obj
+    global SHELL_OBJ
 
     command_name = sys._getframe().f_code.co_name
 
     param_dict = {}
     con = None
 
-    long_short_key_map = {'id':'i', 'file':'f'}
+    long_short_key_map = {'id': 'i', 'file': 'f'}
     keylist = ['con', 'id', 'file']
     optional_keylist = ['con', 'file']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
-    #return out_obj
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+    # return out_obj
     return True
 
 
@@ -1299,7 +1353,7 @@ def tasks(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     con = None
     param_dict = {}
 
@@ -1308,16 +1362,18 @@ def tasks(*args, **kwargs):
     param_dict = {}
     con = None
 
-    long_short_key_map = {'jobUID':'j','children':'c','action':'a', 'updateList':'u'}
-    keylist = ['con','jobUID','children','action', 'updateList']
-    optional_keylist = ['con', 'jobUID','children','action', 'updateList']
+    long_short_key_map = {'jobUID': 'j', 'children': 'c',
+                          'action': 'a', 'updateList': 'u'}
+    keylist = ['con', 'jobUID', 'children', 'action', 'updateList']
+    optional_keylist = ['con', 'jobUID', 'children', 'action', 'updateList']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -1354,27 +1410,30 @@ def resourcegroups(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     con = None
     param_dict = {}
 
     command_name = sys._getframe().f_code.co_name
 
-    long_short_key_map = {'uuid':'u', 'name':'n','description':'d','type':'t','solutionVPD':'s',
-                          'members':'m','criteria':'c'}
+    long_short_key_map = {'uuid': 'u', 'name': 'n', 'description': 'd', 'type': 't', 'solutionVPD': 's',
+                          'members': 'm', 'criteria': 'c'}
 
-    keylist = ['con','uuid','name','description','type','solutionVPD','members','criteria']
-    optional_keylist = ['con', 'uuid','name','description','type','solutionVPD','members','criteria']
+    keylist = ['con', 'uuid', 'name', 'description',
+               'type', 'solutionVPD', 'members', 'criteria']
+    optional_keylist = ['con', 'uuid', 'name', 'description',
+                        'type', 'solutionVPD', 'members', 'criteria']
     mutually_exclusive_keys = []
-    mandatory_options_list = {'uuid':[],'name':['type']}
+    mandatory_options_list = {'uuid': [], 'name': ['type']}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
-def _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys, param_dict, *args, **kwargs):
+def _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                    mutually_exclusive_keys, param_dict, *args, **kwargs):
     '''
      this function will create param_dict and con from args and kwargs, param_dict will have only long options for keys,
      it will convert short option to long option key and finally validate parameters
@@ -1402,45 +1461,49 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
             if value != None:
                 param_dict[key] = value
         elif key not in optional_keylist:
-            logger.error(" Invalid Input args %s is not in optional list %s" %(key, str(mandatory_options_list)))
+            LOGGER.error(" Invalid Input args %s is not in optional list %s" % (
+                key, str(mandatory_options_list)))
             raise ValueError("Invalid Input Arguments")
 
         if key == 'con':
             if key in param_dict:
                 con = param_dict.pop(key)
 
-    #if not con:
+    # if not con:
     #    raise AttributeError("Invalid command invocation: Connection Object missing.")
 
-    logger.debug(" Parameter dict %s " %str(param_dict))
+    LOGGER.debug(" Parameter dict %s " % str(param_dict))
 
     me_key_found = False
     for me_key in list(param_dict.keys()):
         # Checking mandatory option_list presence
         if me_key in list(mandatory_options_list.keys()):
             if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
-                logger.error(" Invalid command invocation %s of mandatory list %s is not in arguments parovided" % (me_key, str(mandatory_options_list)))
+                LOGGER.error(" Invalid command invocation %s of mandatory list %s is not in arguments parovided" % (
+                    me_key, str(mandatory_options_list)))
                 raise AttributeError("Invalid command invocation")
 
         # Checking mutually exclusive key presense
         if me_key in mutually_exclusive_keys:
             if me_key_found:
-                logger.error(" Invalid command invocation %s of mutual exclusive list %s " % (
-                me_key, str(mutually_exclusive_keys)))
+                LOGGER.error(" Invalid command invocation %s of mutual exclusive list %s " % (
+                    me_key, str(mutually_exclusive_keys)))
                 raise AttributeError("Invalid command invocation")
             me_key_found = True
 
     if not set(keylist + long_short_key_map.values()).issuperset(set(kwargs.keys())):
-        logger.error(" Invalid Input args: %s unsupported argument passed"
+        LOGGER.error(" Invalid Input args: %s unsupported argument passed"
                      % list(set(kwargs.keys()).difference(set(keylist + long_short_key_map.values()))))
         raise ValueError("Invalid Input Arguments")
 
     return con
 
+
 def osimages(*args, **kwargs):
     '''
     @summary:
-        Use this function to retrieve information about, delete, and import OS images, OS-image profiles, device driver, and boot-options files.
+        Use this function to retrieve information about, delete, and import OS images,
+         OS-image profiles, device driver, and boot-options files.
         data_dictionary = osimages(input_args, key=values )
 
         Where KeyList is as follows
@@ -1481,7 +1544,7 @@ def osimages(*args, **kwargs):
         osimages(fileName='foo')    : shows osimages for fileName='foo'
     '''
 
-    global shell_obj
+    global SHELL_OBJ
     # #con = None
     # param_dict = {}
     # command_name = sys._getframe().f_code.co_name
@@ -1499,24 +1562,25 @@ def osimages(*args, **kwargs):
     # ch = shell_obj.handle_input_dict(command_name, con, kwargs)
     #  return ch
 
-
     con = None
     param_dict = {}
     param_dict = kwargs
     kwargs = {}     # this is required  to avoid invalid argument error in _validate_param
     command_name = sys._getframe().f_code.co_name
 
-    long_short_key_map = {'osimages_info':'i'}
+    long_short_key_map = {'osimages_info': 'i'}
     keylist = ['con', 'osimages_info']
     optional_keylist = ['con', 'osimages_info']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def managementserver(*args, **kwargs):
     '''
@@ -1545,8 +1609,10 @@ def managementserver(*args, **kwargs):
 
     action    The action to take. This can be one of the following values.
                 apply   - install a management-server update.
-                refresh - Retrieves information (metadata) about the latest available management-server updates from the Lenovo XClarity Support website.
-                acquire - Downloads the specified management-server update packages from the Lenovo XClarity Support website.
+                refresh - Retrieves information (metadata) about the latest available management-server updates
+                          from the Lenovo XClarity Support website.
+                acquire - Downloads the specified management-server update packages from
+                          the Lenovo XClarity Support website.
                 delete  - Use the DELETE method to delete update packages. - removeMetadata not supported
                 import  - import fixids files
 
@@ -1559,24 +1625,28 @@ def managementserver(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
     # some paramters don't have short options
-    long_short_key_map = {'key':'k', 'fixids':'f', 'type':'t', 'action':'a','jobid':'j'}
+    long_short_key_map = {'key': 'k', 'fixids': 'f',
+                          'type': 't', 'action': 'a', 'jobid': 'j'}
 
-    keylist = ['con', 'key', 'fixids', 'type', 'action', 'files','jobid']
-    optional_keylist = ['con', 'key', 'fixids', 'type', 'action', 'files', 'jobid']
-    mutually_exclusive_keys = ['key','action']
+    keylist = ['con', 'key', 'fixids', 'type', 'action', 'files', 'jobid']
+    optional_keylist = ['con', 'key', 'fixids',
+                        'type', 'action', 'files', 'jobid']
+    mutually_exclusive_keys = ['key', 'action']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
 
 def rules(*args, **kwargs):
     '''
@@ -1598,23 +1668,24 @@ def rules(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
     # some paramters don't have short options
-    long_short_key_map = { 'id':'i', 'rule':'r'}
+    long_short_key_map = {'id': 'i', 'rule': 'r'}
 
-    keylist = ['con', 'id',  'rule']
-    optional_keylist = ['con', 'id',  'rule']
-    mutually_exclusive_keys = ['id','rule']
+    keylist = ['con', 'id', 'rule']
+    optional_keylist = ['con', 'id', 'rule']
+    mutually_exclusive_keys = ['id', 'rule']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -1638,24 +1709,28 @@ def compositeResults(*args, **kwargs):
 @example
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
     # some paramters don't have short options
-    long_short_key_map = { 'id':'i', 'query_solutionGroups':'q',
-            'solutionGroups':'s', 'targetResources':'t', 'all_rules':'a'}
+    long_short_key_map = {'id': 'i', 'query_solutionGroups': 'q',
+                          'solutionGroups': 's', 'targetResources': 't', 'all_rules': 'a'}
 
-    keylist = ['con', 'id', 'query_solutionGroups', 'solutionGroups', 'targetResources', 'all_rules']
-    optional_keylist = ['con', 'id','query_solutionGroups',  'solutionGroups','targetResources','all_rules']
-    mutually_exclusive_keys = ['id','query_solutionGroups', 'solutionGroups','targetResources','all_rules']
+    keylist = ['con', 'id', 'query_solutionGroups',
+               'solutionGroups', 'targetResources', 'all_rules']
+    optional_keylist = ['con', 'id', 'query_solutionGroups',
+                        'solutionGroups', 'targetResources', 'all_rules']
+    mutually_exclusive_keys = ['id', 'query_solutionGroups',
+                               'solutionGroups', 'targetResources', 'all_rules']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -1688,22 +1763,25 @@ def storedcredentials(*args, **kwargs):
     rep = storedcredentials(con1,i='955', u='admin1', p='admin1', d='description of stored credentials for admin')
 
     '''
-    global shell_obj
+    global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
     # some paramters don't have short options
-    long_short_key_map = { 'id':'i', 'user_name':'u',
-            'description':'d', 'password':'p'}
+    long_short_key_map = {'id': 'i', 'user_name': 'u',
+                          'description': 'd', 'password': 'p'}
 
-    keylist = ['con', 'id', 'user_name', 'description', 'password', 'delete_id']
-    optional_keylist = ['con', 'id', 'user_name', 'description', 'password', 'delete_id']
+    keylist = ['con', 'id', 'user_name',
+               'description', 'password', 'delete_id']
+    optional_keylist = ['con', 'id', 'user_name',
+                        'description', 'password', 'delete_id']
     mutually_exclusive_keys = ['id', 'delete_id']
     mandatory_options_list = {}
 
-    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = shell_obj.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj

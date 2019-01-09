@@ -476,7 +476,79 @@
 			]
 		]
 	},
-
+	"rules": {
+		"description": "Retrieve information about user account of Lenovo XClarity Administrator.",
+		"cmd_args": [
+			[{
+					"args": "-i,--id",
+					"opt_dict": {
+						"help": "Id of User"
+					}
+				}
+			],
+			[{
+					"args": "-r,--rule",
+					"opt_dict": {
+						"help": "rule"
+					}
+				}
+			],
+            [{
+                    "args": "-v,--view",
+                    "opt_dict": {
+                        "help": "view for interactive shell"
+                    }
+                }
+            ]
+		]
+	},
+	"compositeResults": {
+		"description": "Retrieve information about user account of Lenovo XClarity Administrator.",
+		"cmd_args": [
+			[{
+					"args": "-i,--id",
+					"opt_dict": {
+						"help": "Id of User"
+					}
+				}
+			],
+			[{
+					"args": "-q,--query_solutionGroups",
+					"opt_dict": {
+						"help": "rule"
+					}
+				}
+			],
+			[{
+					"args": "-s,--solutionGroups",
+					"opt_dict": {
+						"help": "rule"
+					}
+				}
+			],
+			[{
+					"args": "-t,--targetResources",
+					"opt_dict": {
+						"help": "rule"
+					}
+				}
+			],
+			[{
+					"args": "-a,--all_rules",
+					"opt_dict": {
+						"help": "rule"
+					}
+				}
+			],
+            [{
+                    "args": "-v,--view",
+                    "opt_dict": {
+                        "help": "view for interactive shell"
+                    }
+                }
+            ]
+		]
+	},
 	"unmanage": {
       "description": "Unmanage device on LXCA",
       "additional_detail": ["The following example unmanages a device with a specific IP address.",
@@ -543,115 +615,114 @@
         }
       ]
     },
+    "manage": {
+        "description": "manage device on LXCA",
+        "additional_detail": ["The following example manages a device using a user account.",
+                              "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
+                              "The following example manages a device using a stored-credential account.",
+                              "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
+        "add_help": true,
+        "valid_combination": {"device":[["ip", "user","pw"],
+                                        ["ip", "user","pw", "rpw"],
+                                        ["ip", "user","pw", "force"],
+                                        ["ip", "user","pw", "rpw", "force"],
+                                        ["ip", "storedcredential_id", "rpw"],
+                                        ["ip", "storedcredential_id", "rpw", "force"],
+                                        ["ip", "storedcredential_id"]
+        ],
+                              "job_status":[["job"]]},
+        "subcmd": [{
+                "name": "device",
+                "additional_detail": ["The following example manages a device using a user account.",
+                              "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
+                              "The following example manages a device using a stored-credential account.",
+                              "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
 
-		"manage": {
-			"description": "manage device on LXCA",
-            "additional_detail": ["The following example manages a device using a user account.",
-                                  "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
-                                  "The following example manages a device using a stored-credential account.",
-                                  "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
-			"add_help": true,
-            "valid_combination": {"device":[["ip", "user","pw"],
-                                            ["ip", "user","pw", "rpw"],
-                                            ["ip", "user","pw", "force"],
-                                            ["ip", "user","pw", "rpw", "force"],
-                                            ["ip", "storedcredential_id", "rpw"],
-                                            ["ip", "storedcredential_id", "rpw", "force"],
-                                            ["ip", "storedcredential_id"]
-            ],
-                                  "job_status":[["job"]]},
-			"subcmd": [{
-					"name": "device",
-                    "additional_detail": ["The following example manages a device using a user account.",
-                                  "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
-                                  "The following example manages a device using a stored-credential account.",
-                                  "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
+                "help": "Manage discovered device",
+                "subcmd_args": [
+                    [{
+                            "args": "-v,--view",
+                            "opt_dict": {
+                                "help": "view for interactive shell"
+                            }
+                        }
+                    ],
 
-					"help": "Manage discovered device",
-					"subcmd_args": [
-						[{
-								"args": "-v,--view",
-								"opt_dict": {
-									"help": "view for interactive shell"
-								}
-							}
-						],
+                    [{
+                            "args": "-i,--ip",
+                            "opt_dict": {
+                                "help": "ip of Device",
+                                "required": true
+                            }
+                        }
+                    ],
+                    [{
+                            "args": "-p,--pw",
+                            "opt_dict": {
+                                "help": "device passw0rd"
+                            }
+                        }
+                    ],
+                    [{
+                            "args": "-r,--rpw",
+                            "opt_dict": {
+                                "help": "device restore passw0rd"
+                            }
+                        }
+                    ],
 
-						[{
-								"args": "-i,--ip",
-								"opt_dict": {
-									"help": "ip of Device",
-                                    "required": true
-								}
-							}
-						],
-						[{
-								"args": "-p,--pw",
-								"opt_dict": {
-									"help": "device passw0rd"
-								}
-							}
-						],
-						[{
-								"args": "-r,--rpw",
-								"opt_dict": {
-									"help": "device restore passw0rd"
-								}
-							}
-						],
-
-                        [{
-								"args": "-f,--force",
-								"opt_dict": {
-									"help": "Force manage"
-								}
-							}
-						]
-					],
-					"mutually_exclusive_args": [
-						[{
-								"args": "-u,--user",
-								"opt_dict": {
-									"help": "device user"
-								}
-							}
-						],
-                        [{
-								"args": "-s,--storedcredential_id",
-								"opt_dict": {
-									"help": "device storedcredential id"
-								}
-							}
-						]
+                    [{
+                            "args": "-f,--force",
+                            "opt_dict": {
+                                "help": "Force manage"
+                            }
+                        }
                     ]
+                ],
+                "mutually_exclusive_args": [
+                    [{
+                            "args": "-u,--user",
+                            "opt_dict": {
+                                "help": "device user"
+                            }
+                        }
+                    ],
+                    [{
+                            "args": "-s,--storedcredential_id",
+                            "opt_dict": {
+                                "help": "device storedcredential id"
+                            }
+                        }
+                    ]
+                ]
 
-				}, {
-					"name": "job_status",
-					"help": "Get manage job status",
-                    "additional_detail": ["The following example returns information about a specific management job.",
-                                          "manage job_status -j 4"],
-					"subcmd_args": [
-						[{
-								"args": "-v,--view",
-								"opt_dict": {
-									"help": "view for interactive shell"
-								}
-							}
-						],
+            }, {
+                "name": "job_status",
+                "help": "Get manage job status",
+                "additional_detail": ["The following example returns information about a specific management job.",
+                                      "manage job_status -j 4"],
+                "subcmd_args": [
+                    [{
+                            "args": "-v,--view",
+                            "opt_dict": {
+                                "help": "view for interactive shell"
+                            }
+                        }
+                    ],
 
-						[{
-								"args": "-j,--job",
-								"opt_dict": {
-									"help": "job id of manage job",
-									"type": "int",
-                                    "required": true
-								}
-							}
-						]
-					]
-				}
-			]
-		},
+                    [{
+                            "args": "-j,--job",
+                            "opt_dict": {
+                                "help": "job id of manage job",
+                                "type": "int",
+                                "required": true
+                            }
+                        }
+                    ]
+                ]
+            }
+        ]
+    },
 	"configtargets": {
 		"description": "Retrieve a list of deployable target systems according to their\n\t\t\tserver pattern and profile.",
 		"cmd_args": [
@@ -856,7 +927,7 @@
     },
    	"configprofiles": {
       "description": "The configprofiles command retrieves information about one or more server profiles.",
-      "additional_detail": ["Config profiles "],
+      "additional_detail": ["For Sub Command help", "configprofiles list -h"],
       "add_help": true,
       "subcmd": [
         {
@@ -1046,7 +1117,7 @@
 
     "updaterepo": {
       "description": "The updaterepo command retrieves information about firmware updates in the firmware-updates repository",
-      "additional_detail": ["Update repository examples "],
+      "additional_detail": ["For Sub Command help", "updaterepo query -h"],
       "add_help": true,
       "subcmd": [
         {

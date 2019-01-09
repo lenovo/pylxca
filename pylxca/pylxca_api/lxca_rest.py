@@ -35,40 +35,6 @@ def callback(encoder):
     pass
 
 
-def _validate_combination(input_dict, valid_list):
-    '''
-    This function validate input combinations
-    :param input_dict:  input dict of parameters
-    :param valid_list:  valid combination of parameters list
-    :return: if True returns True and choosed combination of parameter
-             on failure return false and suggested_combination of parameters
-    '''
-
-    # remove None and empty string and len zero lists
-    for k in input_dict.keys():
-        if input_dict[k] == None or len(input_dict[k]) == 0:
-            input_dict.pop(k)
-
-    input_key_set = set(input_dict.keys())
-    # if len(input_key_set) == 0:
-    #    print "invalid input: no input"
-
-    for comb in valid_list:
-        comb_set = set(comb)
-        if input_key_set == comb_set:
-            return True, comb
-
-    # Check for suggestion
-    logger.error("Possible suggested valid input :")
-    suggested_combination = ""
-    for comb in valid_list:
-        comb_set = set(comb)
-        if len(input_key_set & comb_set) > 0:
-            logger.error("%s:" %str(comb))
-            suggested_combination += str(comb)
-
-    return False, suggested_combination
-
 class lxca_rest(object):
     '''
     classdocs
@@ -80,10 +46,7 @@ class lxca_rest(object):
             url = url + "/" + uuid
 
         if status:
-            if status == "managed" or status == "unmanaged":
-                url = url + "?status=" + status
-            else:
-                raise Exception("Invalid argument 'status'")
+            url = url + "?status=" + status
         else:
             url = url + "?status=managed"
 
@@ -102,10 +65,7 @@ class lxca_rest(object):
             url = url + '/' + uuid
 
         if status:
-            if status == "managed" or status == "unmanaged":
-                url = url + "?status=" + status
-            else:
-                raise Exception("Invalid argument 'status'")
+            url = url + "?status=" + status
 
         try:
             resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
@@ -166,7 +126,7 @@ class lxca_rest(object):
 
         payload = {
                        "action":"enable",
-                        "ports":[]
+                       "ports":[]
                 }
         uuid_list = port_name.split(",")
         payload["action"] = action
@@ -640,14 +600,8 @@ class lxca_rest(object):
     def get_updaterepo(self, url, session, key, mt, scope):
         url = url + '/updateRepositories/firmware'
         try:
-            if not key  == None \
-                    and key == "supportedMts" or key == "size" \
-                    or key == "lastRefreshed" or key == "importDir" \
-                    or key == "publicKeys" or key == "updates" \
-                    or key == "updatesByMt" or key == "updatesByMtByComp":
+            if key:
                 url= url + "?key=" + key
-            else:
-                raise Exception("Invalid argument key")
 
             if mt:
                 url = url + "&mt=" + mt
@@ -672,13 +626,7 @@ class lxca_rest(object):
     def put_updaterepo(self, url, session, action , fixids, mt, type, scope):
         url = url + '/updateRepositories/firmware'
         try:
-            if not action  == None \
-                    and action == "read" or action == "refresh" \
-                    or action == "acquire" or action == "delete":
-                    #or key == "export"
-                url= url + "?action=" + action
-            else:
-                raise Exception("Invalid argument key action: " + action)
+            url= url + "?action=" + action
 
             if type:
                 if type.lower() in ["all", "payloads"]:
@@ -742,20 +690,13 @@ class lxca_rest(object):
                 url = url + "/" + fixids
 
                 if key:
-                    if key not in ['all', 'actions', 'keys', 'filetypes', 'updates']:
-                        raise Exception("Invalid Arguments, Try: with keys ['all', 'actions', 'keys', 'filetypes', 'updates']")
                     if key not in ['all']:
                         url = url + "?key=" + key
                 elif type:
-                    if type not in ['changeHistory', 'readme']:
-                        raise Exception("Invalid Arguments, Try: with type ['changeHistory', 'readme']")
                     url = url + "?type=" + type
 
             else:
                 if key:
-                    if key not in ['all', 'currentVersion', 'size', 'importDir', 'history', 'updates', 'updateDate']:
-                        raise Exception(
-                            "Invalid Arguments, Try: with keys ['all', 'currentVersion', 'size', 'importDir', 'history', 'updates', 'updateDate']")
                     if key not in ['all']:
                         url = url + "?key=" + key
 
@@ -1123,14 +1064,6 @@ class lxca_rest(object):
 
         if endpoint:
             self._validate_uuids(endpoint)
-
-        if etype != None:
-            if etype.lower() not in ['node', 'rack', 'tower', 'flex']:
-                raise Exception("Invalid Arguments, type Try: ['node', 'rack', 'tower', 'flex']")
-
-        if restart != None:
-            if restart not in ['defer', 'immediate', 'pending']:
-                raise Exception("Invalid Arguments, restart Try: ['defer', 'immediate', 'pending']")
 
         if id != None:
             if len(id) == 0:
