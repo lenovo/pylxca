@@ -631,7 +631,7 @@ def unmanage(*args, **kwargs):
 
 @param
     The parameters for this command are as follows 
-        subcmd
+        subcmd      device \ job_status
         ip          one or more endpoints to be unmanaged.
                     This is comma separated list of multiple endpoints, each endpoint should
                     contain endpoint information separated by semicolon.
@@ -646,7 +646,8 @@ def unmanage(*args, **kwargs):
         job         Job ID of unmanage request
 
 @example 
-
+    endpoint = '10.240.195.39;D31C76F0302503B50010D21DE03A0523;Rack-Tower'
+    unmanage(con_lxca, subcmd=device, i=endpoint)
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
@@ -680,13 +681,13 @@ def configpatterns(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con','subcmd','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict]
+        keylist = ['con','subcmd','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict, name, status]
 
 @param
     The parameters for this command are as follows 
         subcmd     list, apply, import , status
         id          The unique ID that was assigned when the server pattern was created
-
+        name        name of pattern , this is used for apply
         endpoint    List of one or more UUIDs for the target servers,If a target is an empty bay,
                       specify the location ID; otherwise, specify the server UUID
 
@@ -792,8 +793,9 @@ def configprofiles(*args, **kwargs):
         resetIMM    reset IMM
         force       force unassign operation
 
-@example 
-
+@example
+    rep = configprofiles(con_lxca, 'list')
+    rep = configprofiles(con_lxca, 'list','3')
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
@@ -1349,10 +1351,12 @@ def tasks(*args, **kwargs):
     jobUID          uuid of job
     children        result will include children if True
     action          cancel/update
-    updateList      required for update action
+    updateList      required for update action , string containing list of update
 
 @example
-
+    update_list = [{"jobUID":"9","percentage":50}]
+    str_u = str(update_list)
+    rep = tasks(con_lxca, a = 'update', u = str_u)
     '''
     global SHELL_OBJ
     con = None

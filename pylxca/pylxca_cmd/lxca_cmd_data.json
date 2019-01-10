@@ -430,6 +430,10 @@
 
 	"tasks": {
 		"description": "get tasks detail from LXCA",
+        "additional_detail": ["Example List all tasks ",
+                              "tasks",
+                              "Update task id 9 with percentage 50",
+                              "tasks -a update -u '[{\"jobUID\":\"9\",\"percentage\":50}]'"],
         "valid_combination": {"global":[[],["jobUID"], ["jobUID","children"],
                                         ["jobUID", "action"],
                                         ["action", "updateList"]
@@ -749,9 +753,9 @@
       "add_help": true,
       "valid_combination": {
             "list": [[], ["id"], ["id", "includeSettings"]],
-            "apply": [["id", "endpoint", "restart", "type"]],
+            "apply": [["id", "endpoint", "restart", "type"], ["name", "endpoint", "restart", "type"]],
             "import": [["pattern_update_dict"]],
-            "status": [["endpoint"]]
+            "status": [["endpoint", "status"]]
         },
 
       "subcmd": [
@@ -907,8 +911,7 @@
                 "args": "-e,--endpoint",
                 "opt_dict": {
                   "help": "uuid of server",
-                  "required": true,
-                  "type": "json.loads"
+                  "required": true
                 }
               }
             ],

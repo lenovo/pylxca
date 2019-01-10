@@ -929,7 +929,7 @@ class lxca_rest(object):
         url = url + '/profiles'
         
         if profileid:
-            url = url + '/' + profileid
+            url = url + '/' + str(profileid)
 
         try:
             resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
@@ -943,7 +943,7 @@ class lxca_rest(object):
         url = url + '/profiles'
 
         if profileid:
-            url = url + '/' + profileid
+            url = url + '/' + str(profileid)
         else:
             raise Exception("Invalid argument ")
 
@@ -961,7 +961,7 @@ class lxca_rest(object):
         url = url + '/profiles'
 
         if profileid:
-            url = url + '/' + profileid
+            url = url + '/' + str(profileid)
         else:
             raise Exception("Invalid argument ")
 
@@ -984,7 +984,7 @@ class lxca_rest(object):
         url = url + '/profiles'
 
         if profileid:
-            url = url + '/' + profileid
+            url = url + '/' + str(profileid)
 
         try:
             resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)
@@ -998,7 +998,7 @@ class lxca_rest(object):
         url = url + '/profiles/unassign'
 
         if profileid:
-            url = url + '/' + profileid
+            url = url + '/' + str(profileid)
         else:
             raise Exception("Invalid argument, profile id is required for unassign ")
 
