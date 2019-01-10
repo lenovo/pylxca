@@ -728,7 +728,7 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         if dict_handler:
             key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
-            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None),
+            action = next((item for item in [dict_handler.get('subcmd')] if item is not None),
                           None)
             fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None),
                           None)

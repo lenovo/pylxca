@@ -1628,6 +1628,10 @@ def managementserver(*args, **kwargs):
      jobid     jobid for import
      files     files to be imported with fullpath and comma separated
 @example
+    TO import files
+    rep = managementserver(con_lxca, subcmd='import', files='/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt')
+    rep = managementserver(con_lxca, subcmd='import', j=rep['jobid'], files='/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt')
+
 
     '''
     global SHELL_OBJ
@@ -1746,7 +1750,7 @@ def storedcredentials(*args, **kwargs):
     Use this function to get and set complaince rules on Lenovo XClarity Administrator
     run this function as
 
-    data_dictionary = managementserver( key1 = 'val1', key2 = 'val2', ...)
+    data_dictionary = storedcredentials( key1 = 'val1', key2 = 'val2', ...)
 
     Where KeyList is as follows
 

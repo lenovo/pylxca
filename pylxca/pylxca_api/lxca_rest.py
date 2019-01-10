@@ -746,6 +746,7 @@ class lxca_rest(object):
                     return resp
 
                 else :
+                    url = url.replace('/managementServer/updates', '/files/managementServer/updates')
                     url = url + "?action=import&jobid=" + jobid
                     m = MultipartEncoder(
                         fields=[('uploadedfile[]', (os.path.basename(file),
