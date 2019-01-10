@@ -272,7 +272,7 @@ class InteractiveShell(object):
             raise err
             
     # TODO: We should rename this to handle_api_params
-    def handle_input_dict(self, command_name,con, param_dict):
+    def handle_input_dict(self, command_name,con, param_dict, use_argparse = True):
         # Show message when no command
         if not command_name:
             return
@@ -282,28 +282,34 @@ class InteractiveShell(object):
             return
 
         command = self.commands[command_name]
-        
+
+        if use_argparse:
+            try:
+                args_list = []
+                args_dict = {}
+                if 'subcmd' in param_dict:
+                    subcmd = param_dict['subcmd']
+                    param_dict.pop('subcmd')
+                    args_list.append(subcmd)
+
+                for item in param_dict:
+                    args_dict['--' + item] = param_dict[item]
+
+                args_list = args_list + list(itertools.chain(*list(args_dict.items())))
+                param_dict = command.parse_args(args_list)
+            except SystemExit as err:
+                self.sprint("Exception occurred while parsing command.")
+                raise Exception("Invalid argument")
+            except Exception as err:
+                self.sprint("Exception occurred while parsing api input.")
+                raise err
+
         try:
-            args_list = []
-            args_dict = {}
-            if 'subcmd' in param_dict:
-                subcmd = param_dict['subcmd']
-                param_dict.pop('subcmd')
-                args_list.append(subcmd)
-
-            for item in param_dict:
-                args_dict['--' + item] = param_dict[item]
-
-            args_list = args_list + list(itertools.chain(*list(args_dict.items())))
-            param_dict = command.parse_args(args_list)
             return command.handle_input(param_dict, con)
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err
 
-        except SystemExit as err:
-            self.sprint("Exception occurred while parsing command.")
-            raise Exception("Invalid argument")
 
     """
     TODO:

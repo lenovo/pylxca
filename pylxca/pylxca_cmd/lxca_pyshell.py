@@ -1433,7 +1433,7 @@ def resourcegroups(*args, **kwargs):
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
-    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
     return out_obj
 
 
@@ -1583,7 +1583,7 @@ def osimages(*args, **kwargs):
                           mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
     return out_obj
 
 
@@ -1690,7 +1690,7 @@ def rules(*args, **kwargs):
                           mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
     return out_obj
 
 
@@ -1735,7 +1735,7 @@ def compositeResults(*args, **kwargs):
                           mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
     return out_obj
 
 

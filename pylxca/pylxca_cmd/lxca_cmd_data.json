@@ -1220,7 +1220,7 @@
               {
                 "args": "-f,--fixids",
                 "opt_dict": {
-                  "help": "List of firmware-update and UXSP IDs to be downloaded",
+                  "help": "List of firmware-update to be downloaded",
                   "required": true
                 }
               }
@@ -1279,7 +1279,7 @@
           "name": "delete",
           "additional_detail": ["The following example delete firmware updates",
                                 "updaterepo delete -id 65"],
-          "help": "Deletes the specified firmware updates and UXSPs from the updates repository",
+          "help": "Deletes the specified firmware updates  from the updates repository",
           "subcmd_args": [
             [
               {
@@ -1293,7 +1293,7 @@
               {
                 "args": "-f,--fixids",
                 "opt_dict": {
-                  "help": "List of firmware-update and UXSP IDs to be delete",
+                  "help": "List of firmware-update IDs to be delete",
                   "required": true
                 }
               }
@@ -1680,7 +1680,7 @@
               {
                 "args": "-f,--fixids",
                 "opt_dict": {
-                  "help": "List of firmware-update and UXSP IDs to be downloaded",
+                  "help": "List of firmware-update IDs to be downloaded",
                   "required": true
                 }
               }
