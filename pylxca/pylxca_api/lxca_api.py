@@ -254,7 +254,8 @@ class lxca_api(with_metaclass(Singleton, object)):
             port_name = next((item for item in [dict_handler.get('ports')] if item is not None),None)
             action = next((item for item in [dict_handler.get('action')] if item is not None),
                              None)
-            if "ports" in dict_handler: list_port = True
+            #if "ports" in dict_handler: list_port = True
+            if port_name: list_port = True
 
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
@@ -510,8 +511,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         profilename = None
         endpoint = None
         restart = None
-        delete = None
-        unassign = None
+        subcmd = None
         powerdown = None
         resetimm = None
         force = None
@@ -527,10 +527,8 @@ class lxca_api(with_metaclass(Singleton, object)):
                 (item for item in [dict_handler.get('e'), dict_handler.get('endpoint')] if item is not None), None)
             restart = next((item for item in [dict_handler.get('r'), dict_handler.get('restart')] if item is not None),
                            None)
-            delete = next((item for item in [dict_handler.get('d'), dict_handler.get('delete')] if item is not None),
+            subcmd = next((item for item in [dict_handler.get('subcmd')] if item is not None),
                            None)
-            unassign = next((item for item in [dict_handler.get('u'), dict_handler.get('unassign')] if item is not None),
-                          None)
             powerdown = next((item for item in [dict_handler.get('p'), dict_handler.get('powerdown')] if item is not None),
                 None)
             resetimm = next(
@@ -539,15 +537,15 @@ class lxca_api(with_metaclass(Singleton, object)):
             force = next((item for item in [dict_handler.get('f'), dict_handler.get('force')] if item is not None),
                          None)
 
-        if profilename:
+        if subcmd == 'rename' and profilename:
             resp = lxca_rest().put_configprofiles(self.con.get_url(), self.con.get_session(), profileid, profilename)
-        elif endpoint and restart:
+        elif subcmd == 'activate' and endpoint and restart:
             resp = lxca_rest().post_configprofiles(self.con.get_url(), self.con.get_session(), profileid, endpoint, restart)
-        elif profileid and delete and delete.lower() == 'true':
+        elif subcmd == 'delete' and profileid:
                 resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
-        elif profileid and unassign and unassign.lower() == 'true':
+        elif subcmd == 'unassign' and profileid:
                 resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, force)
-        else:
+        elif subcmd == 'list':
             resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 
         try:
@@ -673,7 +671,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         if policy:
             resp = lxca_rest().post_updatepolicy(self.con.get_url(), self.con.get_session(), policy, type, uuid)
         else:
-            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, jobid)
+            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, jobid, uuid)
 
         try:
             py_obj = json.loads(resp.text)
@@ -696,7 +694,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         
         if dict_handler:
             key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
-            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None), None)
+            action = next((item for item in [dict_handler.get('subcmd')] if item is not None), None)
             mt = next((item for item in [dict_handler.get('m'), dict_handler.get('mt')] if item is not None), None)
             scope = next((item for item in [dict_handler.get('s'), dict_handler.get('scope')] if item is not None), None)
             fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None), None)
@@ -730,7 +728,7 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         if dict_handler:
             key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
-            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None),
+            action = next((item for item in [dict_handler.get('subcmd')] if item is not None),
                           None)
             fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None),
                           None)
@@ -748,6 +746,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = json.loads(resp.text)
         except AttributeError as ValueError:
             return resp
+        py_obj['dummy']={'status':[]}
         return py_obj
 
     def do_updatecomp( self, dict_handler = None ):
@@ -790,6 +789,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         includeChildren = False
         action = None
         status = None
+        cmd_updateList = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -801,7 +801,9 @@ class lxca_api(with_metaclass(Singleton, object)):
                 includeChildren = 'true'
             action = next((item for item in [dict_handler.get('action')] if item is not None), None)
             updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
-            #state = next((item for item in [dict_handler.get('state')] if item is not None), None)
+            #if updateList:
+            #    updateList = updateList['taskList']
+
 
         if job_uuid and action in ['cancel', 'delete']:
             resp = lxca_rest().put_tasks(self.con.get_url(), self.con.get_session(), job_uuid, action)

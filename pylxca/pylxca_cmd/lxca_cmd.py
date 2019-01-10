@@ -10,6 +10,8 @@
 import sys, getopt
 import logging, traceback
 from getpass import getpass
+import json
+import argparse
 
 import pylxca.pylxca_api
 from pylxca.pylxca_api.lxca_rest import HTTPError
@@ -34,12 +36,19 @@ class connect(InteractiveCommand):
 
     """
     def handle_command(self, opts, args):
+
+        '''
         try:
-            opts, argv = getopt.getopt(args, self.get_char_options(), self.get_long_options())
-        except getopt.GetoptError as e:
+            parser = self.get_argparse_options()
+            namespace = parser.parse_args(args)
+        except argparse.ArgumentError as e:
             self.invalid_input_err()
             return
-        
+        except SystemExit as e:
+            # -h and --help land here
+            return
+
+
         for opt, arg in opts:
             if '-h' in opt:
                 self.sprint (self.__doc__)
@@ -50,9 +59,16 @@ class connect(InteractiveCommand):
             return
         
         opt_dict = self.parse_args(opts, argv)
-        if "pw" not in opt_dict:
-            opt_dict ['pw'] = getpass("Enter Password: ")
-        
+        '''
+
+        try:
+            opt_dict = self.parse_args(args)
+            if opt_dict.get('pw', None) == None:
+                opt_dict ['pw'] = getpass("Enter Password: ")
+        except SystemExit as e:
+            # ignore this as we need to continue on shell
+            return
+
         out_obj = None
         
         try:
@@ -743,8 +759,6 @@ class tasks(InteractiveCommand):
     """
 
 ###############################################################################
-
-
 class resourcegroups(InteractiveCommand):
     """
     create Group of Resources
