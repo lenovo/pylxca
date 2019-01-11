@@ -414,6 +414,54 @@
 		]
 	},
 
+  	"storedcredentials": {
+		"description": "Retrieve and update stored credentials on lxca.",
+		"cmd_args": [
+			[{
+					"args": "-i,--id",
+					"opt_dict": {
+						"help": "Specifies the ID of the stored-credential"
+					}
+				}
+			],
+            [{
+					"args": "-u,--user_name",
+					"opt_dict": {
+						"help": "Specifies a user name of the stored-credential account"
+					}
+				}
+			],
+            [{
+					"args": "-d,--description",
+					"opt_dict": {
+						"help": "Specifies the description of the stored-credential account"
+					}
+				}
+			],
+            [{
+					"args": "-p,--password",
+					"opt_dict": {
+						"help": "Specifies the password of the stored-credential account"
+					}
+				}
+			],
+            [{
+					"args": "--delete_id",
+					"opt_dict": {
+						"help": "Deletes the specified stored-credential account"
+					}
+				}
+			],
+            [{
+                    "args": "-v,--view",
+                    "opt_dict": {
+                        "help": "view for interactive shell"
+                    }
+                }
+            ]
+		]
+	},
+
 	"ffdc": {
 		"description": "Collect and export the first failure data capture (FFDC) data for a specific managed endpoint (CMM, server, storage node, or switch).",
 		"cmd_args": [
@@ -1766,8 +1814,6 @@
         }
       ]
     }
-
-
 
 
 }
