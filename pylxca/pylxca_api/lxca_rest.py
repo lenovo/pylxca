@@ -894,7 +894,7 @@ class lxca_rest(object):
             raise re
 
 
-    def do_updatecomp_all(self, url, session, action, mode,dev_list):
+    def do_updatecomp_all(self, url, session, action, mode, dev_list):
         try:
             url = url + '/updatableComponents'
             if action == "apply" or action == "cancelApply":
@@ -907,9 +907,9 @@ class lxca_rest(object):
             else:
                 raise Exception("Invalid argument action")
 
-            payload = dict()
-            payload["DeviceList"] = dev_list
-            payload_data = json.dumps(payload)
+            #payload = dict()
+            #payload["DeviceList"] = dev_list
+            payload_data = json.dumps(dev_list)
             logger.debug("Update Firmware payload: " + str(payload_data))
 
             resp = session.put(url, data=payload_data, verify=False, timeout=REST_TIMEOUT)
