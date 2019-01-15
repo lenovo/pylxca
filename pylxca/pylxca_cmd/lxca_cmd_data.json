@@ -1119,6 +1119,13 @@
                 }
               }
             ],
+            [{
+                "args": "--resetswitch",
+                "opt_dict": {
+                    "help": "Identifies whether to reset the switch internal port settings to default values"
+                }
+              }
+            ],
             [
               {
                 "args": "-f,--force",

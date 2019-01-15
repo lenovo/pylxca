@@ -514,6 +514,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         subcmd = None
         powerdown = None
         resetimm = None
+        resetswitch = None
         force = None
 
         if not self.con:
@@ -534,6 +535,10 @@ class lxca_api(with_metaclass(Singleton, object)):
             resetimm = next(
                 (item for item in [dict_handler.get('resetimm')] if item is not None),
                 None)
+            resetswitch = next(
+                (item for item in [dict_handler.get('resetswitch')] if item is not None),
+                None)
+
             force = next((item for item in [dict_handler.get('f'), dict_handler.get('force')] if item is not None),
                          None)
 
@@ -544,7 +549,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif subcmd == 'delete' and profileid:
                 resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
         elif subcmd == 'unassign' and profileid:
-                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, force)
+                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, resetswitch, force)
         elif subcmd == 'list':
             resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 

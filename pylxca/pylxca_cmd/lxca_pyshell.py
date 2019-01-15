@@ -778,7 +778,7 @@ def configprofiles(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con', 'subcmd', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'force']
+        keylist = ['con', 'subcmd', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'resetswitch', 'force']
 
 @param
     The parameters for this command are as follows 
@@ -790,7 +790,8 @@ def configprofiles(*args, **kwargs):
 
                     options for unassign
         powerdown   powerdown server
-        resetIMM    reset IMM
+        resetimm    reset IMM
+        resetswitch  Identifies whether to reset the switch internal port settings to default values
         force       force unassign operation
 
 @example
@@ -806,9 +807,9 @@ def configprofiles(*args, **kwargs):
     long_short_key_map = {'id': 'i', 'name': 'n', 'endpoint': 'e', 'restart': 'r',
                           'powerdown': 'p', 'force': 'f'}
     keylist = ['con', 'subcmd', 'id', 'name', 'endpoint',
-               'restart', 'powerdown', 'resetimm', 'force']
+               'restart', 'powerdown', 'resetimm', 'resetswitch', 'force']
     optional_keylist = ['con', 'id', 'name', 'endpoint',
-                        'restart', 'powerdown', 'resetimm', 'force']
+                        'restart', 'powerdown', 'resetimm', 'resetswitch', 'force']
     mutually_exclusive_keys = []
     mandatory_options_list = {'id': [], 'endpoint': ['restart']}
 

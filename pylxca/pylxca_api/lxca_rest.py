@@ -989,7 +989,7 @@ class lxca_rest(object):
 
         return resp
 
-    def unassign_configprofiles(self, url, session, profileid, powerdown, resetimm, force):
+    def unassign_configprofiles(self, url, session, profileid, powerdown, resetimm, resetswitch, force):
         url = url + '/profiles/unassign'
 
         if profileid:
@@ -1008,6 +1008,12 @@ class lxca_rest(object):
                 payload['resetIMM'] = True
             else:
                 payload['resetIMM'] = False
+        if resetswitch:
+            if resetimm.lower() == "true":
+                payload['resetSwitch'] = True
+            else:
+                payload['resetSwitch'] = False
+
 
         if force:
             if isinstance(force, bool):
