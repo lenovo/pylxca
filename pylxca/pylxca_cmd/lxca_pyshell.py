@@ -748,11 +748,11 @@ def configpatterns(*args, **kwargs):
 
     # some of them don't have short options
     long_short_key_map = {'id': 'i', 'endpoint': 'e', 'restart': 'r',
-                          'type': 't', 'name': 'n', 'status': 's', 'pattern_update_dict': 'p'}
+                          'type': 't', 'name': 'n', 'pattern_update_dict': 'p'}
     keylist = ['con', 'subcmd', 'id', 'includeSettings', 'endpoint',
-               'restart', 'type', 'pattern_update_dict', 'name', 'status']
+               'restart', 'type', 'pattern_update_dict', 'name']
     optional_keylist = ['con', 'id', 'includeSettings', 'endpoint',
-                        'restart', 'type', 'pattern_update_dict', 'name', 'status']
+                        'restart', 'type', 'pattern_update_dict', 'name']
     mutually_exclusive_keys = ['id', 'pattern_update_dict']
     mandatory_options_list = {'id': [], 'pattern_update_dict': []}
     #                          'includeSettings': ['id']}

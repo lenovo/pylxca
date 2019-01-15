@@ -803,7 +803,7 @@
             "list": [[], ["id"], ["id", "includeSettings"]],
             "apply": [["id", "endpoint", "restart", "type"], ["name", "endpoint", "restart", "type"]],
             "import": [["pattern_update_dict"]],
-            "status": [["endpoint", "status"]]
+            "status": [["endpoint"]]
         },
 
       "subcmd": [
@@ -960,15 +960,6 @@
                 "opt_dict": {
                   "help": "uuid of server",
                   "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-s,--status",
-                "opt_dict": {
-                  "help": "Status set to true",
-                  "default": true
                 }
               }
             ]
