@@ -1046,7 +1046,7 @@ def updatecomp(*args, **kwargs):
     con = None
     long_short_key_map = {'query': 'q', 'mode': 'm', 'action': 'a', 'cmm': 'c', 'switch': 'w', 'server': 's',
                           'storage': 't', 'dev_list': 'l'}
-    keylist = ['con', 'query', 'mode', 'action', 'cmm',
+    keylist = ['con', 'subcmd', 'query', 'mode', 'action', 'cmm',
                'switch', 'server', 'storage', 'dev_list']
     optional_keylist = ['con', 'query', 'mode', 'action',
                         'cmm', 'switch', 'server', 'storage', 'dev_list']
