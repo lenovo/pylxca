@@ -810,8 +810,11 @@ class lxca_api(with_metaclass(Singleton, object)):
             #    updateList = updateList['taskList']
 
 
-        if job_uuid and action in ['cancel', 'delete']:
+        if job_uuid and action in ['cancel']:
             resp = lxca_rest().put_tasks(self.con.get_url(), self.con.get_session(), job_uuid, action)
+            py_obj = resp.status_code
+        elif action in ['delete']:
+            resp = lxca_rest().delete_tasks(self.con.get_url(), self.con.get_session(), job_uuid)
             py_obj = resp.status_code
         elif action in ['update']:
             resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)

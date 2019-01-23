@@ -1163,7 +1163,7 @@ class lxca_rest(object):
 
     def put_tasks(self, url, session, job_uuid, action):
         '''
-        Handle action delete and cancel
+        Handle action cancel
         '''
 
         url = url + '/tasks'
@@ -1179,6 +1179,22 @@ class lxca_rest(object):
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp
+
+    def delete_tasks(self, url, session, job_uuid):
+        '''
+        Handle action delete
+        '''
+
+        url = url + '/tasks/'+job_uuid
+
+        try:
+            resp = resp = session.delete(url, verify=False, timeout=5)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
 
     def put_tasks_update(self, url, session, updated_dict):
         '''
