@@ -801,9 +801,7 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         if dict_handler:
             job_uuid = next((item for item in [ dict_handler.get('jobUID')] if item is not None), None)
-            includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "false")
-            if includeChildren != "false":
-                includeChildren = 'true'
+            includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "true")
             action = next((item for item in [dict_handler.get('action')] if item is not None), None)
             updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
             #if updateList:
@@ -819,12 +817,8 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif action in ['update']:
             resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)
             py_obj = resp.status_code
-        elif job_uuid:
-            resp = lxca_rest().get_tasks_list(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
-            py_obj = json.loads(resp.text)
-            py_obj = {'TaskList': py_obj[:]}
         else:
-            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session())
+            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
             py_obj = json.loads(resp.text)
             py_obj = {'TaskList': py_obj[:]}
         return py_obj

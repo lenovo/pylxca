@@ -1135,23 +1135,14 @@ class lxca_rest(object):
     
         return resp  
 
-    def get_tasks(self,url, session):
+    def get_tasks(self,url, session, job_uid, includeChildren):
         url = url + '/tasks'
 
-        try:
-            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
-            resp.raise_for_status()
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-        return resp
+        if job_uid:
+            url = url + '/' + job_uid
 
-    def get_tasks_list(self,url, session, job_uuid, includeChildren):
-        url = url + '/tasks'
-
-        if job_uuid:
-            url = url + '/' + job_uuid
-            url = url + '?includeChildren=' + includeChildren
+        if includeChildren.lower() == 'false':
+            url = url + '?compact=true'
 
         try:
             resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
