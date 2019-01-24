@@ -682,6 +682,7 @@
                                         ["ip", "user","pw", "rpw", "force"],
                                         ["ip", "storedcredential_id", "rpw"],
                                         ["ip", "storedcredential_id", "rpw", "force"],
+			                            ["ip", "storedcredential_id", "force"],
                                         ["ip", "storedcredential_id"]
         ],
                               "job_status":[["job"]]},
