@@ -1034,9 +1034,36 @@ def updatecomp(*args, **kwargs):
                     CMM: reset
                     Storage:powerOff,powerCycleSoft
 
-
-
 @example
+Applying firmware update to server
+endpoint = "38B1DC62084411E88C7A0A94EF4EC2EF,lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch,LXPM Diagnostic Software"
+rep = updatecomp(con, 'apply', action='apply', mode='immediate', server=endpoint)
+
+Applying firmware update using dev_list json format
+
+dev_list = {
+   "DeviceList": [{
+      "ServerList": [{
+         "UUID": "38B1DC62084411E88C7A0A94EF4EC2EF",
+         "Components": [{
+            "Fixid": "lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch",
+            "Component": "LXPM Diagnostic Software"
+         }]
+      }]
+   },
+   {
+      "CMMList": []
+   },
+   {
+      "SwitchList": []
+   },
+   {
+      "StorageList": []
+   }]
+}
+
+dev_json = json.dumps(dev_list)
+rep = updatecomp(con, 'apply', action='apply', mode='immediate', dev_list=dev_json)
 
     '''
     global SHELL_OBJ

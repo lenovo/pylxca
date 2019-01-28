@@ -1534,9 +1534,12 @@
         {
           "name": "apply",
           "additional_detail": ["The following example applies a firmware update on a storage device and immediate activates the update",
-                                "updatecomp apply -a immediate -t 8BFBADCC33CB11E499F740F2E9903640; lnvgy_fw_storage_1.1.1;Controller A",
+                                "updatecomp apply -a apply -m immediate -t 8BFBADCC33CB11E499F740F2E9903640,lnvgy_fw_storage_1.1.1,Controller A",
                                 "The following example powers off a server and a storage system.",
-                                "updatecomp -apply a power –s 9AEDACCC56SD23F346A852D2D2354865;powerOff –t 8BFBADCC33CB11E499F740F2E9903640;powerOff"],
+                                "updatecomp apply -a power -m immediate –s 9AEDACCC56SD23F346A852D2D2354865,powerOff –t 8BFBADCC33CB11E499F740F2E9903640,powerOff",
+		  						"The following example applies firmware update on server using dev_list json format",
+			  					"updatecomp apply -a apply -m immediate --dev_list '{\"DeviceList\": [{\"ServerList\": [{\"UUID\": \"38B1DC62084411E88C7A0A94EF4EC2EF\", \"Components\": [{\"Fixid\": \"lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch\", \"Component\":\"LXPM Diagnostic Software\"}]}]},{\"CMMList\": []},{\"SwitchList\": []},{\"StorageList\": []}]}'"
+		  ],
           "help": "Apply firmware update to devices",
           "subcmd_args": [
             [
