@@ -589,5 +589,135 @@
 		<description>description</description>
 		<id>id</id>
     </storedcredentials>
+	<osimages name="default">
+		<result>result</result>
+		<softwareFiles name="softwareFiles" type="object">
+				<description>description</description>
+				<name>name</name>
+				<os>os</os>
+				<osrelease>osrelease</osrelease>
+        </softwareFiles >
+        <installScriptFiles name="installScriptFiles" type="object">
+				<description>description</description>
+				<name>name</name>
+                <type>type</type>
+                <os>os</os>
+                <id>id</id>
+        </installScriptFiles >
+		<supportedImages name="supportedImages" type="object">
+				<displayName>displayName</displayName>
+				<name>name</name>
+                <type>type</type>
+                <id>id</id>
+        </supportedImages >
+        <bundleFiles name="bundleFiles" type="object">
+				<description>description</description>
+				<name>name</name>
+                <type>type</type>
+                <os>os</os>
+                <id>id</id>
+        </bundleFiles >
 
+    </osimages>
+	<osimages name="globalsettings">
+		<result>result</result>
+		<globalSetting name="globalSetting" type="object">
+            <credentials name="credentials" type="object">
+				<name>name</name>
+				<type>type</type>
+            </credentials >
+        </globalSetting>
+		<licenseKeys name="licenseKeys" type="object">
+            <win2012r1 name="win2012r1" type="object">
+				<dataCenterLicenseKey>dataCenterLicenseKey</dataCenterLicenseKey>
+				<standardLicenseKey>standardLicenseKey</standardLicenseKey>
+            </win2012r1 >
+             <win2012r2 name="win2012r2" type="object">
+				<dataCenterLicenseKey>dataCenterLicenseKey</dataCenterLicenseKey>
+				<standardLicenseKey>standardLicenseKey</standardLicenseKey>
+            </win2012r2 >
+            <win2016r1 name="win2016r1" type="object">
+				<dataCenterLicenseKey>dataCenterLicenseKey</dataCenterLicenseKey>
+				<standardLicenseKey>standardLicenseKey</standardLicenseKey>
+            </win2016r1 >
+            <win2019r1 name="win2019r1" type="object">
+				<dataCenterLicenseKey>dataCenterLicenseKey</dataCenterLicenseKey>
+				<standardLicenseKey>standardLicenseKey</standardLicenseKey>
+            </win2019r1 >
+        </licenseKeys>
+    </osimages>
+	<osimages name="hostsettings">
+		<result>result</result>
+		<hosts name="hosts" type="object">
+            <uuid>uuid</uuid>
+            <storageSettings name="storageSettings" type="object">
+				<targetDevice>targetDevice</targetDevice>
+            </storageSettings >
+            <networkSettings name="networkSettings" type="object">
+				<dns2>dns2</dns2>
+                <dns1>dns1</dns1>
+                <hostname>hostname</hostname>
+                <vlanId>vlanId</vlanId>
+                <selectedMAC>selectedMAC</selectedMAC>
+                <gateway>gateway</gateway>
+                <subnetMask>subnetMask</subnetMask>
+                <mtu>mtu</mtu>
+                <prefixLength>prefixLength</prefixLength>
+                <ipAddress>ipAddress</ipAddress>
+            </networkSettings >
+        </hosts>
+    </osimages>
+
+	<osimages name="result">
+		<result>result</result>
+         <messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>
+        </messages >
+    </osimages>
+	<osimages name="hostplatforms">
+		<result>result</result>
+        <imagesWithoutWinPERemoved>imagesWithoutWinPERemoved</imagesWithoutWinPERemoved>
+        <incompatibleImagesRemoved>incompatibleImagesRemoved</incompatibleImagesRemoved>
+        <isAuthorized>isAuthorized</isAuthorized>
+        <availableImages>availableImages</availableImages>
+
+        <messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>
+        </messages >
+
+    </osimages>
+	<osimages name="import_job">
+		<result>result</result>
+        <jobId>jobId</jobId >
+         <messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>
+        </messages >
+    </osimages>
+	<osimages name="remotefileservers">
+		<result>result</result>
+         <serverList name="serverList" type="object">
+            <protocol>protocol</protocol>
+            <address>address</address>
+            <port>port</port>
+            <displayName>displayName</displayName>
+            <serverId>serverId</serverId>
+            <username>username</username>
+        </serverList >
+    </osimages>
+    <osimages name="remotefileservers_id">
+		<result>result</result>
+        <messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>
+        </messages >
+        <protocol>protocol</protocol>
+        <address>address</address>
+        <port>port</port>
+        <displayName>displayName</displayName>
+        <serverId>serverId</serverId>
+        <username>username</username>
+    </osimages>
 </filters>
