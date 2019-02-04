@@ -831,8 +831,8 @@ class lxca_api(with_metaclass(Singleton, object)):
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            sol_id = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
-            filepath = next((item for item in [dict_handler.get  ('f') , dict_handler.get('file')] if item is not None),None)
+            sol_id = next((item for item in [dict_handler.get('i') , dict_handler.get('id')] if item is not None),None)
+            filepath = next((item for item in [dict_handler.get('f') , dict_handler.get('file')] if item is not None),None)
                         
         resp = lxca_rest().get_set_manifests(self.con.get_url(),self.con.get_session(),sol_id,filepath)
         
@@ -872,46 +872,65 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         '''
         get_method  = True
+        id = None
+        action = None
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        # parsing dict_handler to fetch args, kwargs
-        osimages_info = ()
-        if 'osimages_info' in dict_handler:
-            osimages_info = (dict_handler['osimages_info'],)
-            dict_handler.pop('osimages_info')
-        kwargs = dict_handler
 
-        putmethod_keylist = ['imageType','jobId', 'putid', 'deleteid']
-        for key in list(kwargs.keys()):
-            if key in putmethod_keylist:
-                get_method = False
-                break
-        # parsing args for putId,postId,deleteId: refer osImages/<id>
-        if 'postid' in osimages_info or 'putid' in osimages_info or 'deleteid' in osimages_info:
-            get_method = False
-        if 'remoteFileServers' in osimages_info and kwargs:
-            get_method = False
-            if 'id' in kwargs and list(kwargs.keys()).__len__() == 1:
-                get_method = True
-        if 'hostPlatforms' in osimages_info and kwargs:
-            get_method = False
-        if 'globalSettings' in osimages_info and kwargs:
-            get_method = False
-        if 'osdeployment' in osimages_info:
-            get_method = False
+        if dict_handler:
+            osimages_info = next((item for item in [dict_handler.get('subcmd')] if item is not None), None)
+            imageType = next((item for item in [dict_handler.get('t'), dict_handler.get('imagetype')] if item is not None), None)
+            id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None), None)
+            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None), None)
 
-        if get_method:
-            # get methods calls refer above docstring
-            resp = lxca_rest().get_osimage(osimages_info, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
-        else:
-            resp = lxca_rest().set_osimage(osimages_info, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
+            kwargs = next((item for item in [dict_handler.get('o'),
+                                             dict_handler.get('osimages_dict')] if item is not None), None)
+
+        if 'list' in osimages_info:
+            resp = lxca_rest().list_osimage(self.con.get_url(), self.con.get_session())
+        elif 'globalsettings' in osimages_info :
+            resp = lxca_rest().osimage_globalsettings(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'hostsettings' in osimages_info :
+            if action:
+                if action in ['update']:
+                    if not 'hosts' in kwargs:
+                        raise Exception("Invalid argument: hosts detail is missing")
+                    resp = lxca_rest().update_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs['hosts'])
+                elif action in ['create']:
+                    if not 'hosts' in kwargs:
+                        raise Exception("Invalid argument: hosts detail is missing")
+                    resp = lxca_rest().create_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs['hosts'])
+                elif action in ['delete']:
+                    resp = lxca_rest().delete_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs)
+            else:
+                resp = lxca_rest().list_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'hostplatforms' in osimages_info :
+            resp = lxca_rest().osimage_hostplatforms(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'import' in osimages_info:
+            if not kwargs:
+                kwargs = {}
+            kwargs['imageType'] = imageType
+            resp = lxca_rest().osimage_import(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'remotefileservers' in osimages_info:
+            if not kwargs:
+                kwargs = {}
+            resp = lxca_rest().osimage_remotefileservers(self.con.get_url(), self.con.get_session(), kwargs)
+
+        elif 'delete' in osimages_info:
+            if not kwargs:
+                kwargs = {}
+            kwargs['id'] = id
+            resp = lxca_rest().osimage_delete(self.con.get_url(), self.con.get_session(), kwargs)
+
         try:
             py_obj = json.loads(resp._content)
             return py_obj
-        except AttributeError as ValueError:
+        except ValueError as err:
+            logger.error("Exception: Non json response: %s" %(str(err)))
+            return resp
+        except AttributeError as err:
             return resp
         return py_obj
-
 
     def get_set_resourcegroups(self, dict_handler = None):
         '''

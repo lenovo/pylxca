@@ -1486,6 +1486,8 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
         short_key = long_short_key_map.get(key)
         if (key in list(kwargs.keys())):
             param_dict[key] = kwargs[key]
+        elif key in param_dict:
+            continue
         elif short_key and (short_key in list(kwargs.keys())):
             param_dict[key] = kwargs[short_key]
 
@@ -1541,40 +1543,104 @@ def osimages(*args, **kwargs):
 
         Where KeyList is as follows
 
-            keylist = [fileName, Id, profile,remoteFileServer,imageType,jobId, ...]
+            keylist = [con, subcmd, o]
 
     @param
+        subcmd  list | globalsettings
 
-        - osimages(hostplatforms)
-        - osimages(hostplatforms, **kwargs)
-
-        - osimages(osdeployment, items=[])
-        - osimages(osdeployment, action=<>,mac=<>,nodeName=<>)
-
-        - osimages(connection)
-
-        - osimages(globalSettings)
-        - osimages(globalSettings, **kwargs)
-
-        - osimages()
-        - osimages(imageType=<DUD,BOOT,OS,OSPROFILE>)
-
-        - osimages(fileName=<>)
-
-        - osimages(id=<>)
-        - osimages(id=<>, **kwargs)
-
-        - osimages(jobid = <>)
-
-        - osimages(remoteFileServers)
-        - osimages(remoteFileServers, **kwargs)
-
-        - osimages(remoteFileServers, id=<>)
-        - osimages(remoteFileServers, putId/deleteId=<>, **kwargs)
     @example
-        osimage()                   : shows osimages
-        osimage(imageType='BOOT')   : POST osimage with imageType='BOOT'
-        osimages(fileName='foo')    : shows osimages for fileName='foo'
+        list all osimages info
+        osimages(con, subcmd='list')
+
+        delete osimages with ids
+        osimages(con, subcmd='delete', id='i1,i2')
+        rep = osimages(con_lxca, 'delete', i='20190131054310_trail.py')
+        List all globalsettings
+        osimages(con, subcmd = 'globalsettings')
+
+        Set Linux default passw0rd using globalsettings
+        change_linux_password = {
+	"activeDirectory": {
+		"allDomains": [],
+		"defaultDomain": "labs.lenovo.com"
+	},
+	"credentials": [{
+			"name": "root",
+			"password": "Test1234",
+			"passwordChanged": True,
+			"type": "LINUX"
+		}, {
+			"type": "WINDOWS",
+			"name": "Administrator",
+			"password": None,
+			"passwordChanged": False
+		}
+	],
+	"ipAssignment": "dhcpv4",
+	"isVLANMode": False,
+	"licenseKeys": {
+		"win2012r1": {
+			"dataCenterLicenseKey": "",
+			"standardLicenseKey": "",
+		},
+		"win2012r2": {
+			"dataCenterLicenseKey": "",
+			"standardLicenseKey": ""
+		},
+		"win2016r1": {
+			"dataCenterLicenseKey": "",
+			"standardLicenseKey": ""
+		},
+		"win2019r1": {
+			"dataCenterLicenseKey": "",
+			"standardLicenseKey": ""
+		}
+	}
+}
+
+json_string = json.dumps(change_linux_password)
+print json_string
+
+rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
+
+
+    Remote file server list
+    rep = osimages(con_lxca, subcmd = 'remotefileservers')
+
+    Create remote file server entry for ftp server
+
+    rep = osimages(con_lxca, subcmd = 'remotefileservers',
+			   osimages_dict ='{"username":"guest", "password":"Passw0rd",
+			    "protocol":"FTP", "port": 21, "address":"10.243.2.207", "displayName": "new_ftp_207" }')
+
+    Update remote file server
+    rep = osimages(con_lxca, subcmd = 'remotefileservers',
+                   osimages_dict ='{"putid": "1", "protocol":"FTP", "port": 21,
+                    "address":"10.243.2.207", "displayName": "new_ftp_207" }')
+
+    Delete remote file server
+    rep = osimages(con_lxca, subcmd = 'remotefileservers', osimages_dict ='{"deleteid": "1"}')
+
+
+    Import local files of imagetype (UNATTEND, CUSTOM_CONFIG, SCRIPT, OS)
+    rep = osimages(con_lxca, subcmd='import', imagetype='UNATTEND')
+    print rep
+    file_dict = { "jobId":rep["jobId"], "imageName":"SLES", "os":"sles", "description":"SLES_config_file", "file": "/home/naval/sles_unattended.xml" }
+    rep = osimages(con_lxca, subcmd='import', imagetype='UNATTEND', osimages_dict = json.dumps(file_dict))
+
+    get all hostSettings
+    rep = osimages(con_lxca, 'hostsettings')
+
+    create hostsettings entry
+    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A1445C6FDBAA11E6A87F86E06E3AFFFF', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.9.79'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A122FB03FF4011E68D9BA32E3A66DDDD', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.9.87'}}]}
+    host_settings_json = json.dumps(host_settings_dict)
+    rep = osimages(con_lxca, 'hostsettings', action='create', osimages_dict = host_settings_json)
+
+    update hostSettings entry
+    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A1445C6FDBAA11E6A87F86E06E3AFFFF', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.25.25'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A122FB03FF4011E68D9BA32E3A66DDDD', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.26.26'}}]}
+    host_settings_json = json.dumps(host_settings_dict)
+    rep = osimages(con_lxca, 'hostsettings', update="True", action='update', osimages_dict = host_settings_json)
+
     '''
 
     global SHELL_OBJ
@@ -1601,9 +1667,9 @@ def osimages(*args, **kwargs):
     kwargs = {}     # this is required  to avoid invalid argument error in _validate_param
     command_name = sys._getframe().f_code.co_name
 
-    long_short_key_map = {'osimages_info': 'i'}
-    keylist = ['con', 'osimages_info']
-    optional_keylist = ['con', 'osimages_info']
+    long_short_key_map = {}
+    keylist = ['con', 'subcmd']
+    optional_keylist = ['con']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
@@ -1611,7 +1677,7 @@ def osimages(*args, **kwargs):
                           mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 

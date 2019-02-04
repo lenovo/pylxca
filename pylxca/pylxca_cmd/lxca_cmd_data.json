@@ -1817,6 +1817,242 @@
           ]
         }
       ]
+    },
+    "osimages": {
+      "description": "The osiamges command retrieve information about all osimage and deploy functionality",
+      "additional_detail": ["osimages subcmd detail ",
+        "osimages list -h "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "list",
+          "additional_detail": ["The following example returns list of osimages.",
+                                "osiamges list"],
+          "help": "Retrieve information about all osimages",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "globalsettings",
+          "additional_detail": ["The following example returns information  about globalsettings.",
+                                "osimages globalsettings -v globalsettings",
+                                "The following example set Linux default password",
+                                "osimages globalsettings --osimages_dict '{\"ipAssignment\": \"dhcpv4\", \"credentials\": [{\"passwordChanged\": true, \"password\": \"Test1234\", \"type\": \"LINUX\", \"name\": \"root\"}, {\"passwordChanged\": false, \"password\": null, \"type\": \"WINDOWS\", \"name\": \"Administrator\"}], \"licenseKeys\": {\"win2019r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2016r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r2\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}}, \"isVLANMode\": false, \"activeDirectory\": {\"defaultDomain\": \"labs.lenovo.com\", \"allDomains\": []}}' -v result"
+          ],
+          "help": "Retrieve or modify global operating-system deployment settings. Global settings serve as defaults settings when operating systems are deployed.",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-o,--osimages_dict",
+                "opt_dict": {
+                  "help": "osimages globalsetting details, json string",
+                  "type": "json.loads"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "hostsettings",
+          "additional_detail": [
+            "The following example list all host settings",
+            "osimages hostsettings -v hostsettings",
+            "The following example create host settings",
+            "osimages hostsetttings --action create --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"A1445C6FDBAA11E6A87F86E06E3ACCCC\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"10.240.0.10\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"10.243.0.1\", u\"subnetMask\": u\"255.255.240.0\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"10.243.27.27\"}}]}' -v result",
+            "The following example update host settings",
+            "osimages hostsetttings --action update --update True --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"A1445C6FDBAA11E6A87F86E06E3ACCCC\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"10.240.0.10\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"10.243.0.1\", u\"subnetMask\": u\"255.255.240.0\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"10.243.27.27\"}}]}' -v result",
+            "delete host Setting with uuid ",
+            "osimages hostsettings --action delete -o '{\"uuid\": \"A1445C6FDBAA11E6A87F86E06E3AFFFF\"}' -v result"
+          ],
+          "help": "Retrieve information about the network and storage settings for all servers, and create or modify the network and storage settings for one or more servers",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-a,--action",
+                "opt_dict": {
+                  "help": "following host setting action",
+                  "choices": ["create", "update", "delete"]
+                }
+              }
+            ],
+            [
+              {
+                "args": "-o,--osimages_dict",
+                "opt_dict": {
+                  "help": "Remote file server options, json string",
+                  "type": "json.loads"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "hostplatforms",
+          "additional_detail": ["The following example list downloaded osimages",
+                                "osimages hostplatforms",
+                                "This example deploy os to device specified by uuid",
+                                "osimages hostplatforms --osimages_dict '{\"networkSettings\":{\"dns1\": \"10.240.0.10\",\"dns2\":\"10.240.0.11\",\"gateway\":\"10.240.28.1\",\"ipAddress\":\"10.240.29.226\",\"mtu\":1500,\"prefixLength\":64,\"selectedMac\":\"AUTO\",\"subnetMask\":\"255.255.252.0\",\"vlanId\":521},\"selectedImage\":\"rhels7.3|rhels7.3-x86_64-install-Minimal\",\"storageSettings\":{\"targetDevice\":\"localdisk\"},\"uuid\":\"B918EDCA1B5F11E2803EBECB82710ADE\"}'"
+          ],
+          "help": " Retrieve information about the host platforms and deploy operating-system images to the host platforms as a job",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-o,--osimages_dict",
+                "opt_dict": {
+                  "help": "osimages deploy details, json string",
+                  "type": "json.loads"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "import",
+          "additional_detail": ["The following example create import job for image type OS",
+                                "osimages import -t OS -v import_job",
+                                "The following example import OS image from remote server",
+                                "osimages import -t OS -o '{\"jobId\":26,\"os\":\"rhels\",\"imageName\":\"fixed\",\"path\":\"iso/rhel73.iso\",\"serverId\":\"1\"}' -v result",
+                                "For local import of file run below two command one by one",
+                                "The following example create import job for image type SCRIPT",
+                                "osimages import -t SCRIPT -v import_job",
+                                "The following example import OS image from remote server",
+                                "osimages import -t OS -o '{\"jobId\":26,\"os\":\"rhels\",\"imageName\":\"Test\",\"file\":\"/home/naval/test.py\"}' -v result",
+                                "For local import of file run below two command one by one",
+                                "The following example create import job for image type SCRIPT",
+                                "osimages import -t OS -v import_job",
+                                "The following example import OS image from remote server",
+                                "osimages import -t OS -o '{\"osrelease\":\"7.6\",\"os\":\"rhels\", \"description\":\"rhel 76 iso\", \"imageName\":\"RHEL76\",\"file\":\"/home/naval/osimage_test/RHEL-7.6-20181010.0-Server-x86_64-dvd1.iso\", \"jobId\":87}' -v result"
+                               ],
+          "help": "Import OS images and scripts from remote server to LXCA",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--imagetype",
+                "opt_dict": {
+                  "help": "Image type to import",
+                  "required": true,
+                  "choices": [
+                    "BUNDLE", "BUNDLESIG", "BOOT", "DUD", "OS", "OSPROFILE", "SCRIPT", "CUSTOM_CONFIG", "UNATTEND"
+                  ]
+                }
+              }
+            ],
+
+            [
+              {
+                "args": "-o,--osimages_dict",
+                "opt_dict": {
+                  "help": "osimages import details, json string",
+                  "type": "json.loads"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "remotefileservers",
+          "additional_detail": [
+            "The following example list all remote file servers",
+            "osimages remotefileservers -v remotefileserver",
+            "The following example specifig remote file servers",
+            "osimages remotefileservers -v remotefileservers -o '{\"id\": \"1\"}' -v remotefileservers_id",
+            "Create remote file server entry for FTP server",
+            "osimages remotefileservers -o '{\"username\": \"guest\", \"password\": \"password\",  \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"10.211.2.243\",\"protocol\":\"FTP\"}' -v remotefileservers",
+            "Update remote file server entry",
+            "osimages remotefileservers -o '{\"putid\": \"1\", \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"10.211.2.243\",\"protocol\":\"FTP\"}' -v result",
+            "delete remote file server entry",
+            "osimages remotefileservers -o '{\"deleteid\": \"1\"}' -v result"
+
+          ],
+          "help": "Retrieve information about all remote file-server profiles or to create or modify a remote file-server profile",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-o,--osimages_dict",
+                "opt_dict": {
+                  "help": "Remote file server options, json string",
+                  "type": "json.loads"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "delete",
+          "additional_detail": [
+            "The following example delete osimages with id's",
+            "osimages delete -i 20190131054310_trail.py"
+          ],
+          "help": "Delete osimages from LXCA",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-i,--id",
+                "opt_dict": {
+                  "help": "osimages id's to delete comma separated",
+                  "required": true
+                }
+              }
+            ]
+          ]
+        }
+      ]
     }
 
 
