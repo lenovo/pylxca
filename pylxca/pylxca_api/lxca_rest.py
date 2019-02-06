@@ -53,7 +53,7 @@ class lxca_rest(object):
             url = url + "?status=managed"
 
         try:
-            resp = session.get(url,verify=False,timeout=3)
+            resp = session.get(url,verify=False,timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -627,7 +627,7 @@ class lxca_rest(object):
                 else:
                     raise Exception("Invalid argument scope: " + scope)
 
-            resp = session.get(url,verify=False, timeout=3)
+            resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -693,7 +693,7 @@ class lxca_rest(object):
             if action == "acquire":
                 payload['type'] = "latest"
 
-            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=3)
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -725,7 +725,7 @@ class lxca_rest(object):
                     if key not in ['all']:
                         url = url + "?key=" + key
 
-            resp = session.get(url,verify=False, timeout=3)
+            resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
             return resp
 
@@ -746,7 +746,7 @@ class lxca_rest(object):
                     payload['fixids'] = [fixids]
                 else:
                     raise Exception("Invalid argument apply requires fixids")
-                resp = session.put(url, data=json.dumps(payload), verify=False, timeout=3)
+                resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 return resp
             # Creations of Import job POST
             if not action == None and action == "import":
@@ -766,7 +766,7 @@ class lxca_rest(object):
                                          'type': file_type_dict[os.path.splitext(os.path.basename(file))[-1]]
                                      } for index, file in enumerate(file_list)]
                     payload = {'files' : payload_files}
-                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout=120)
+                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout=2*REST_TIMEOUT)
                     return resp
 
                 else :
@@ -779,7 +779,7 @@ class lxca_rest(object):
                                  ) for file in file_list]
                     )
                     monitor = MultipartEncoderMonitor(m, callback)
-                    resp = session.post(url, data = monitor, headers={'Content-Type': monitor.content_type}, verify=False, timeout=6000)
+                    resp = session.post(url, data = monitor, headers={'Content-Type': monitor.content_type}, verify=False, timeout=100 *  REST_TIMEOUT)
                     return resp
 
             if not action == None \
@@ -791,7 +791,7 @@ class lxca_rest(object):
                     payload['fixids'] = fixids_list
                 else:
                     raise Exception("Invalid argument key action: acquire requires fixids ")
-                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=3)
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 return resp
 
             if not action == None \
@@ -799,7 +799,7 @@ class lxca_rest(object):
                 url = url + "?action=refresh"
                 payload = {}
                 payload['mts'] = ['lxca']
-                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=3)
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 return resp
 
             if not action == None \
@@ -810,7 +810,7 @@ class lxca_rest(object):
                 else:
                     raise Exception("Invalid argument key action: delete requires fixids ")
 
-                resp = session.delete(url,  verify=False, timeout=3)
+                resp = session.delete(url,  verify=False, timeout=REST_TIMEOUT)
                 return resp
 
         except HTTPError as re:
@@ -1294,7 +1294,7 @@ class lxca_rest(object):
 
         try:
             # print "I'm in lxca_rest get_osimage, url=", url
-            resp = session.get(url, verify=False, timeout=3)    ## It raises HTTPError here
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1362,7 +1362,7 @@ class lxca_rest(object):
                     else:
                         url = url + "%s=%s&" %(k,v)
                 url = url.rstrip('&')
-                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=600)
+                resp = session.post(url, data=json.dumps(payload), verify=False, timeout=20 * REST_TIMEOUT)
                 return resp
             else:    # local case
                 for k,v in  list(kwargs.items()):
@@ -1379,7 +1379,7 @@ class lxca_rest(object):
                     #'name':(None,'uploadedfile'),
                     'uploadedfile': ('trail.py', open('/home/naval/trail.py', 'rb'),'text/plain')}
                 #files = {'file': ('trail.py', open('/home/naval/trail.py', 'r'), 'text/plain')}
-                resp = session.post(url, files=files, verify=False, timeout=600)
+                resp = session.post(url, files=files, verify=False, timeout=20 * REST_TIMEOUT)
                 return resp
         # postcall for remoteFileServers DONE
         if 'remoteFileServers' in osimages_info and 'putid' not in kwargs and 'deleteid' not in kwargs:
@@ -1536,7 +1536,7 @@ class lxca_rest(object):
     def get_method(self, url, session, **kwargs):
         resp = None
         try:
-            resp = session.get(url,verify=False, timeout=3)    ## It raises HTTPError here
+            resp = session.get(url,verify=False, timeout=REST_TIMEOUT)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1547,7 +1547,7 @@ class lxca_rest(object):
         resp = None
         try:
             resp = session.put(url, data = json.dumps(payload), verify=False,
-                               timeout=60)    ## It raises HTTPError here
+                               timeout=REST_TIMEOUT)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1557,7 +1557,7 @@ class lxca_rest(object):
     def delete_method(self,url, session, payload, **kwargs):
         resp = None
         try:
-            resp = session.delete(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp = session.delete(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1567,7 +1567,7 @@ class lxca_rest(object):
     def post_method(self,url, session, payload, **kwargs):
         resp = None
         try:
-            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=3)    ## It raises HTTPError here
+            resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)    ## It raises HTTPError here
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1581,7 +1581,7 @@ class lxca_rest(object):
             url = url + '/' + id
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1653,7 +1653,7 @@ class lxca_rest(object):
             url = url + '/' + id
 
         try:
-            resp = session.get(url, verify=False, timeout=3)
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
