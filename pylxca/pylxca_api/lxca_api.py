@@ -937,7 +937,7 @@ class lxca_api(with_metaclass(Singleton, object)):
     
         '''
         
-        uuid = name = desc = type = solutionVPD = members = criteria = None
+        subcmd=uuid = name = desc = type = solutionVPD = members = criteria = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -951,9 +951,40 @@ class lxca_api(with_metaclass(Singleton, object)):
             solutionVPD = next((item for item in [dict_handler.get('s') , dict_handler.get('solutionVPD')] if item is not None),None)
             members = next((item for item in [dict_handler.get('m') , dict_handler.get('members')] if item is not None),None)
             criteria = next((item for item in [dict_handler.get('c') , dict_handler.get('criteria')] if item is not None),None)
-            
-        resp = lxca_rest().get_set_resourcegroups(self.con.get_url(),self.con.get_session(),uuid,name,desc,type,solutionVPD,members,criteria)
-        
+            subcmd = next(
+                (item for item in [dict_handler.get('subcmd')] if item is not None), None)
+
+        if 'list' in subcmd:
+            resp = lxca_rest().list_resourcegroups(self.con.get_url(), self.con.get_session(), uuid)
+        elif 'criteriaproperties' in subcmd:
+            resp = lxca_rest().criteriaproperties_resourcegroups(self.con.get_url(), self.con.get_session())
+            py_obj = json.loads(resp.text)
+            py_obj = {'propertiesList': py_obj}
+            return py_obj
+        elif 'delete' in subcmd:
+            resp = lxca_rest().delete_resourcegroups(self.con.get_url(), self.con.get_session(), uuid)
+            if resp.status_code == 200:
+                return "Deleted Successfully"
+        elif 'create' in subcmd:
+            if 'dynamic' in type:
+                resp = lxca_rest().dynamic_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name, desc,
+                                                  type, criteria)
+            elif 'solution' in type:
+                resp = lxca_rest().solution_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
+                                                           desc, type, solutionVPD, members, criteria)
+            else:
+                raise Exception("Invalid argument: Type supported are dynamic and solution")
+        elif 'update' in subcmd:
+            if 'dynamic' in type:
+                resp = lxca_rest().dynamic_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
+                                                          desc,
+                                                          type, criteria)
+            elif 'solution' in type:
+                resp = lxca_rest().solution_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
+                                                           desc, type, solutionVPD, members, criteria)
+            else:
+                raise Exception("Invalid argument: Type supported are dynamic and solution")
+
         try:
             py_obj = json.loads(resp.text)
         except AttributeError as ValueError:

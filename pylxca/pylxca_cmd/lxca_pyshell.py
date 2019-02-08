@@ -1441,6 +1441,51 @@ def resourcegroups(*args, **kwargs):
         "criteria":[]
 
 @example
+    list all resourcegroups
+    rep = resourcegroups(con_lxca, 'list')
+
+    list criteria properties for dynamic groups
+    rep = resourcegroups(con_lxca, 'criteriaproperties')
+
+    For creating dynamic group
+    criteria = {
+				u'parent': u'root',
+				u'value': None,
+				u'criteria': [{
+						u'operator': u'contains',
+						u'value': u'test',
+						u'property': u'hostname',
+						u'id': u'1001',
+						u'parent': u'lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2'
+					}
+				],
+				u'operator': u'AND',
+				u'property': None,
+				u'id': u'root'
+			}
+
+    criteria_json = json.dumps(criteria)
+    print criteria_json
+    rep = resourcegroups(con_lxca, 'create', n="TEST_DYNAMIC", d="TRIAL_GROUP", t='dynamic', c=criteria_json)
+
+    Updating dynamic group
+    rep = resourcegroups(con_lxca, 'update', u="5C5AB42D94C6A719BEF2A375", n="R1_GROUP", d="TRIAL_GROUP modified", t='dynamic', c=criteria_json)
+
+    Delete resouregroup
+    rep = resourcegroups(con_lxca, 'delete', u="5C5BC6EA90F54D074FC7BC0D")
+
+    Create solution group supported for api only for uhm
+    solutionVPD = {
+               'id': '59A54997C18DCF0594A8CCD1',
+               'machineType': 'TESTMTM',
+               'model': 'TESTMODEL',
+               'serialNumber': 'TESTSERIAL',
+               'manufacturer': 'LENOVO'}
+    members = []
+    criteria = []
+
+    rep = resourcegroups(con_lxca, 'create', n="TEST_solution", d="Test_GROUP", t='solution', s=solutionVPD, m=members, c=criteria)
+
 
     '''
     global SHELL_OBJ
@@ -1452,7 +1497,7 @@ def resourcegroups(*args, **kwargs):
     long_short_key_map = {'uuid': 'u', 'name': 'n', 'description': 'd', 'type': 't', 'solutionVPD': 's',
                           'members': 'm', 'criteria': 'c'}
 
-    keylist = ['con', 'uuid', 'name', 'description',
+    keylist = ['con', 'subcmd', 'uuid', 'name', 'description',
                'type', 'solutionVPD', 'members', 'criteria']
     optional_keylist = ['con', 'uuid', 'name', 'description',
                         'type', 'solutionVPD', 'members', 'criteria']
@@ -1461,7 +1506,12 @@ def resourcegroups(*args, **kwargs):
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
-    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
+
+    if 'type' in param_dict:
+        if 'solution' in param_dict['type']:
+            out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
+    else:
+        out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
 
 
@@ -1627,6 +1677,13 @@ rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
     print rep
     file_dict = { "jobId":rep["jobId"], "imageName":"SLES", "os":"sles", "description":"SLES_config_file", "file": "/home/naval/sles_unattended.xml" }
     rep = osimages(con_lxca, subcmd='import', imagetype='UNATTEND', osimages_dict = json.dumps(file_dict))
+
+    import BUNDLE and BUNDLESIG done with single jobid and imagename should be same as basename of files
+    rep = osimages(con_lxca, subcmd='import', imagetype='BUNDLE')
+    file_dict = {"jobId":rep["jobId"], "imageName":"bundle_win2016_20180926153236.zip", "file": "/home/naval/osimage_test/bundle_win2016_20180926153236.zip"}
+    rep1 = osimages(con_lxca, subcmd='import', imagetype='BUNDLE', osimages_dict = json.dumps(file_dict))
+    file_dict = { "jobId":rep["jobId"], "imageName":"bundle_win2016_20180926153236.zip.asc", "file": "/home/naval/osimage_test/bundle_win2016_20180926153236.zip.asc"}
+    rep2 = osimages(con_lxca, subcmd='import', imagetype='BUNDLESIG', osimages_dict = json.dumps(file_dict))
 
     get all hostSettings
     rep = osimages(con_lxca, 'hostsettings')

@@ -1233,7 +1233,74 @@ class lxca_rest(object):
 
 #################
 
-    def get_set_resourcegroups(self, url, session, uuid, name, desc, type, solutionVPD, members, criteria):
+    def list_resourcegroups(self, url, session, uuid):
+        url = url + '/resourceGroups'
+
+        try:
+
+            if uuid:
+                # If it is modify group request
+                url = url + '/' + uuid
+
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def criteriaproperties_resourcegroups(self, url, session):
+        url = url + '/resourceGroups/criteriaProperties'
+
+        try:
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def delete_resourcegroups(self, url, session, uuid):
+        url = url + '/resourceGroups'
+
+        try:
+            url = url + '/' + uuid
+            resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def dynamic_resourcegroups(self, url, session, uuid, name, desc, type, criteria):
+        resp = None
+        url = url + '/resourceGroups'
+
+        try:
+
+            param_dict = dict()
+            param_dict['name'] = name
+            param_dict['description'] = desc
+            param_dict['type'] = type
+            param_dict['criteria'] = criteria
+
+            if uuid:
+                # If it is modify group request
+                param_dict['uuid'] = uuid
+                resp = session.put(url, data=json.dumps(param_dict), verify=False, timeout=REST_TIMEOUT)
+                resp.raise_for_status()
+                return resp
+            elif name:
+                resp = session.post(url, data=json.dumps(param_dict), verify=False, timeout=REST_TIMEOUT)
+                resp.raise_for_status()
+                return resp
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+    def solution_resourcegroups(self, url, session, uuid, name, desc, type, solutionVPD, members, criteria):
+        resp = None
         url = url + '/resourceGroups'
 
         try:
@@ -1276,11 +1343,9 @@ class lxca_rest(object):
                 resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 return resp
-             
-            # Default case for get operation   
-            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
-            resp.raise_for_status()
+
         except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp
     

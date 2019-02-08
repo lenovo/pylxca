@@ -720,4 +720,38 @@
         <serverId>serverId</serverId>
         <username>username</username>
     </osimages>
+    <resourcegroups name="default">
+		<uuid>uuid</uuid>
+		<name>name</name>
+		<description>description</description>
+		<healthStatus>healthStatus</healthStatus>
+        <criteria name="criteria" type="object">
+            <parent>parent</parent>
+            <value>value</value>
+            <operator>operator</operator>
+            <property>property</property>
+            <id>id</id>
+            <criteria name="criteria" type="object">
+                <parent>parent</parent>
+                <value>value</value>
+                <operator>operator</operator>
+                <property>property</property>
+                <id>id</id>
+            </criteria >
+        </criteria >
+    </resourcegroups>
+    <resourcegroups name="criteriaproperties">
+		<label>label</label>
+		<property>property</property>
+        <operators name="operators" type="object">
+            <label>label</label>
+        </operators >
+        <input name="input" type="object">
+            <type>type</type>
+            <values>values</values>
+        </input >
+    </resourcegroups>
+
+
+
 </filters>
