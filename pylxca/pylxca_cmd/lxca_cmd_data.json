@@ -1947,14 +1947,21 @@
                                 "For local import of file run below two command one by one",
                                 "The following example create import job for image type SCRIPT",
                                 "osimages import -t SCRIPT -v import_job",
-                                "The following example import OS image from remote server",
-                                "osimages import -t OS -o '{\"jobId\":26,\"os\":\"rhels\",\"imageName\":\"Test\",\"file\":\"/home/naval/test.py\"}' -v result",
+                                "The following example import OS image from local",
+                                "osimages import -t SCRIPT -o '{\"jobId\":26,\"os\":\"rhels\", \"description\":\"rhel test script\",\"imageName\":\"Test\",\"file\":\"/home/naval/test.py\"}' -v result",
                                 "For local import of file run below two command one by one",
-                                "The following example create import job for image type SCRIPT",
+                                "The following example create import job for image type OS",
                                 "osimages import -t OS -v import_job",
-                                "The following example import OS image from remote server",
-                                "osimages import -t OS -o '{\"osrelease\":\"7.6\",\"os\":\"rhels\", \"description\":\"rhel 76 iso\", \"imageName\":\"RHEL76\",\"file\":\"/home/naval/osimage_test/RHEL-7.6-20181010.0-Server-x86_64-dvd1.iso\", \"jobId\":87}' -v result"
-                               ],
+                                "The following example import OS image from Local",
+                                "osimages import -t OS -o '{\"osrelease\":\"7.6\",\"os\":\"rhels\", \"description\":\"rhel 76 iso\", \"imageName\":\"RHEL76\",\"file\":\"/home/naval/osimage_test/RHEL-7.6-20181010.0-Server-x86_64-dvd1.iso\", \"jobId\":87}' -v result",
+                                "For local import of BUNDLE and BUNDLESIG file run below three command one by one",
+                                "The following example create import job for image type BUNDLE use it for upload of BUNDLE and BUNDLESIG",
+                                "osimages import -t BUNDLE -v import_job",
+                                "The following example import BUNDLE image from Local",
+                                "osimages import -t BUNDLE -o '{\"imageName\":\"bundle_win2016_20180926153236.zip\",\"file\":\"home/naval/osimage_test/bundle_win2016_20180926153236.zip\", \"jobId\":87}' -v result",
+                                "The following example import BUNDLESIG image from Local",
+                                "osimages import -t BUNDLESIG -o '{\"imageName\":\"bundle_win2016_20180926153236.zip.asc\",\"file\":\"home/naval/osimage_test/bundle_win2016_20180926153236.zip.asc\", \"jobId\":87}' -v result"
+          ],
           "help": "Import OS images and scripts from remote server to LXCA",
           "subcmd_args": [
             [
@@ -2053,7 +2060,204 @@
           ]
         }
       ]
-    }
+    },
+    "resourcegroups": {
+      "description": "The osiamges command retrieve information about all resource groups and create update and delete dynamic resource group ",
+      "additional_detail": ["resourcegroups subcmd detail ",
+        "resourcegroups list -h "],
+      "add_help": true,
+      "subcmd": [
+        {
+          "name": "list",
+          "additional_detail": ["The following example returns list of resourcegroups.",
+                                "resourcegroups list"],
+          "help": "Retrieve information about all resource groups",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-u,--uuid",
+                "opt_dict": {
+                  "help": "resource group uuid"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "delete",
+          "additional_detail": [
+            "The following example delete resource group with uuid",
+            "resourcegroups delete -u FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+          ],
+          "help": "Delete resource group from LXCA",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-u,--uuid",
+                "opt_dict": {
+                  "help": "resource group uuid's to delete",
+                  "required": true
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "criteriaproperties",
+          "additional_detail": [
+            "The following example retrieve inventory properties",
+            "resourcegroups criteriaproperties -v criteriaproperties"
+          ],
+          "help": "Retrieve inventory properties that you can use to specify criteria for dynamic resource groups",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "create",
+          "additional_detail": [
+            "The following example create resource group",
+            "resourcegroups create -n R1_GROUP -d GROUP_DESCRIPTION -t dynamic -c '{\"parent\": \"root\", \"value\": null, \"criteria\": [{\"operator\": \"contains\", \"property\": \"hostname\", \"parent\": \"lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2\", \"id\": \"1001\", \"value\": \"test\"}], \"operator\": \"AND\", \"property\": null, \"id\": \"root\"}'"
+          ],
+          "help": "Create dynamic resource group on LXCA",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-n,--name",
+                "opt_dict": {
+                  "help": "resource group name",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-d,--description",
+                "opt_dict": {
+                  "help": "resource group description",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-c,--criteria",
+                "opt_dict": {
+                  "help": "resource group criteria",
+                  "required": true,
+                  "type": "json.loads"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--type",
+                "opt_dict": {
+                  "help": "resource group type, required for create",
+                  "choices": ["dynamic"],
+                  "required": true
+                }
+              }
+            ]
+          ]
+        },
+        {
+          "name": "update",
+          "additional_detail": [
+            "The following example update resource group",
+            "resourcegroups update -u 5C5AB42D94C6A719BEF2A375 -n R1_GROUP -d GROUP_DESCRIPTION -t dynamic -c '{\"parent\": \"root\", \"value\": null, \"criteria\": [{\"operator\": \"contains\", \"property\": \"hostname\", \"parent\": \"lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2\", \"id\": \"1001\", \"value\": \"test\"}], \"operator\": \"AND\", \"property\": null, \"id\": \"root\"}'"
+          ],
+          "help": "Update dynamic resource group on LXCA",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-u,--uuid",
+                "opt_dict": {
+                  "help": "resource group uuid's required for update"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-n,--name",
+                "opt_dict": {
+                  "help": "resource group name",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-d,--description",
+                "opt_dict": {
+                  "help": "resource group description",
+                  "required": true
+                }
+              }
+            ],
+            [
+              {
+                "args": "-c,--criteria",
+                "opt_dict": {
+                  "help": "resource group criteria",
+                  "required": true,
+                  "type": "json.loads"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-t,--type",
+                "opt_dict": {
+                  "help": "resource group type, required for create",
+                  "choices": ["dynamic"],
+                  "required": true
+                }
+              }
+            ]
+          ]
+        }
+      ]
+  }
 
 
 }
