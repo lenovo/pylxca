@@ -63,6 +63,15 @@
 					}
 				}
 			],
+			[
+				{
+					"args": "-l,--loc",
+					"opt_dict": {
+						"help": "information about location in rack",
+						"type": "json.loads"
+					}
+				}
+			],
 			[{
 					"args": "-s,--status",
 					"opt_dict": {
