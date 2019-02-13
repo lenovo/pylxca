@@ -135,7 +135,7 @@ class lxca_rest(object):
         payload["ports"] = uuid_list
 
         try:
-            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
@@ -743,7 +743,7 @@ class lxca_rest(object):
                                          'type': file_type_dict[os.path.splitext(os.path.basename(file))[-1]]
                                      } for index, file in enumerate(file_list)]
                     payload = {'files' : payload_files}
-                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout=120)
+                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout= 2 * REST_TIMEOUT)
                     return resp
 
                 else :
@@ -1165,7 +1165,7 @@ class lxca_rest(object):
 
         payload = {'action':action, 'list':job_list}
         try:
-            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1180,7 +1180,7 @@ class lxca_rest(object):
         url = url + '/tasks/'+job_uuid
 
         try:
-            resp = resp = session.delete(url, verify=False, timeout=5)
+            resp = resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1199,7 +1199,7 @@ class lxca_rest(object):
         payload = updated_dict
 
         try:
-            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=5)
+            resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1536,7 +1536,7 @@ class lxca_rest(object):
                         else:
                             url = url + "%s=%s&" %(k,v)
                     url = url.rstrip('&')
-                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout=900) # 15 minutes
+                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout=100 * REST_TIMEOUT) # 100 minutes
                     return resp
                 else:    # local case
                     if not kwargs['file']:
@@ -1749,7 +1749,9 @@ class lxca_rest(object):
                 elif kwargs['imageType'] in ['BUNDLE', 'BUNDLESIG']:
                     if set(['jobId', 'imageName', 'imageType']).difference(set(kwargs.keys())):
                         raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType']")
-
+                    ext = os.path.splitext(os.path.basename(kwargs['imageName']))[-1]
+                    if not (ext in ['.zip','.asc']):
+                        raise Exception("Invalid Arguments, Try:imageName extension with ['.asc','.zip'")
                 if kwargs['imageType'] in ['BOOT', 'DUD'] and 'osrelease' not in kwargs :
                     raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType','os','osrelease]")
                 if 'serverId' in kwargs:
