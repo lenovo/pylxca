@@ -354,9 +354,9 @@ def nodes(*args, **kwargs):
     param_dict = {}
     con = None
 
-    long_short_key_map = {'uuid': 'u', 'chassis': 'c', 'status': 's'}
-    keylist = ['con', 'uuid', 'chassis', 'status']
-    optional_keylist = ['con', 'uuid', 'chassis', 'status']
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c', 'status': 's', 'loc': 'l'}
+    keylist = ['con', 'uuid', 'chassis', 'status', 'loc']
+    optional_keylist = ['con', 'uuid', 'chassis', 'status', 'loc']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 

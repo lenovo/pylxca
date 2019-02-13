@@ -77,6 +77,24 @@ class lxca_rest(object):
             raise re
         return resp
 
+    def set_nodes(self, url, session, uuid, loc):
+        url = url + '/nodes'
+
+        if uuid:
+            url = url + '/' + uuid + '?synchronous=false'
+
+        try:
+            payload = dict()
+            payload['location'] = loc
+
+            resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
+
     def get_switches(self,url, session, uuid):
         url = url + '/switches'
 
