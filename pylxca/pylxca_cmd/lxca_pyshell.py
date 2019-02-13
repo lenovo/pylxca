@@ -336,7 +336,7 @@ def nodes(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con','uuid','chassis','status']
+        keylist = ['con','uuid','chassis','status', 'modify']
 
 @param
     The parameters for this command are as follows 
@@ -345,18 +345,21 @@ def nodes(*args, **kwargs):
     uuid          uuid of node
     chassis       chassis uuid
     status        nodes manage status (managed/unmanaged)
+    modify        JSON object of modifyable node properties
 
 @example 
 
+    nodes(uuid="FAA6E3D494E511E6A0739B91ED670CE8",modify='{"location":{"location": "new location", "rack": "rack 5","lowestRackUnit": 3}}')
+    
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
-    long_short_key_map = {'uuid': 'u', 'chassis': 'c', 'status': 's', 'loc': 'l'}
-    keylist = ['con', 'uuid', 'chassis', 'status', 'loc']
-    optional_keylist = ['con', 'uuid', 'chassis', 'status', 'loc']
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c', 'status': 's', 'modify': 'm'}
+    keylist = ['con', 'uuid', 'chassis', 'status', 'modify']
+    optional_keylist = ['con', 'uuid', 'chassis', 'status', 'modify']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 

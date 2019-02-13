@@ -65,9 +65,9 @@
 			],
 			[
 				{
-					"args": "-l,--loc",
+					"args": "-m,--modify",
 					"opt_dict": {
-						"help": "information about location in rack",
+						"help": "modify node properties",
 						"type": "json.loads"
 					}
 				}

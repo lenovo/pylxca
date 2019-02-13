@@ -77,7 +77,7 @@ class lxca_rest(object):
             raise re
         return resp
 
-    def set_nodes(self, url, session, uuid, loc):
+    def set_nodes(self, url, session, uuid, modify):
         url = url + '/nodes'
 
         if uuid:
@@ -85,7 +85,7 @@ class lxca_rest(object):
 
         try:
             payload = dict()
-            payload['location'] = loc
+            payload = modify
 
             resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
