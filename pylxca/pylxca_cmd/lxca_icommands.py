@@ -184,10 +184,8 @@ class InteractiveCommand(object):
             opt_dict = vars(namespace)
             self.post_parsing_validation(opt_dict)
         except argparse.ArgumentError as e:
-            return
+            raise(e)
         except SystemExit as e:
-            # if not ( '-h' in args):
-            #     parser.print_help()
             raise(e)
         except AttributeError as e:
             #TODO  move this some where
