@@ -1560,8 +1560,6 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
     # if not con:
     #    raise AttributeError("Invalid command invocation: Connection Object missing.")
 
-    LOGGER.debug(" Parameter dict %s " % str(param_dict))
-
     me_key_found = False
     for me_key in list(param_dict.keys()):
         # Checking mandatory option_list presence
