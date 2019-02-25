@@ -5,10 +5,10 @@ import subprocess
 
 if len(sys.argv) < 2 :
 	print ("Building Repository")
-	subprocess.call(sys.executable + " setup.py sdist bdist_wheel bdist_egg --exclude-source-file",shell = True)
-	print ("Done")
+	ret = subprocess.call(sys.executable + " setup.py sdist bdist_wheel bdist_egg --exclude-source-file",shell = True)
+	print ("Done ", ret)
 	print ("Build drop location is: ",  os.getcwd() + "/dist")
 elif sys.argv[1] == "clean":
-	subprocess.call(sys.executable + " setup.py clean --all",shell = True)
-	print ("Done")
-sys.exit()
+	ret = subprocess.call(sys.executable + " setup.py clean --all",shell = True)
+	print ("Done ", ret)
+sys.exit(ret)
