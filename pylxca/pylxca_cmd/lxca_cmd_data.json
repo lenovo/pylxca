@@ -1651,6 +1651,31 @@
           ]
         },
         {
+          "name": "apply",
+          "additional_detail": ["The following example Installs the specified management-server updates",
+                                "managementserver apply --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch -v result"],
+          "help": "Installs the specified management-server updates",
+          "subcmd_args": [
+            [
+              {
+                "args": "-v,--view",
+                "opt_dict": {
+                  "help": "view for interactive shell"
+                }
+              }
+            ],
+            [
+              {
+                "args": "-f,--fixids",
+                "opt_dict": {
+                  "help": "Firmware-update ID to be installed",
+                  "required": true
+                }
+              }
+            ]
+          ]
+        },
+        {
           "name": "acquire",
           "additional_detail": ["The following example download updates",
                                 "managementserver acquire --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],

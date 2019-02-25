@@ -1597,7 +1597,23 @@ def osimages(*args, **kwargs):
             keylist = [con, subcmd, o]
 
     @param
-        subcmd  list | globalsettings
+        subcmd
+            list                Retrieve information about all osimages
+            globalsettings      Retrieve or modify global operating-system deployment
+                                settings. Global settings serve as defaults settings
+                                when operating systems are deployed.
+            hostsettings        Retrieve information about the network and storage
+                                settings for all servers, and create or modify the
+                                network and storage settings for one or more servers
+            hostplatforms       Retrieve information about the host platforms and
+                                deploy operating-system images to the host platforms
+                                as a job
+            import              Import OS images and scripts from remote server to
+                                LXCA
+            remotefileservers   Retrieve information about all remote file-server
+                                profiles or to create or modify a remote file-server
+                                profile
+            delete              Delete osimages from LXCA
 
     @example
         list all osimages info
@@ -1754,6 +1770,22 @@ def managementserver(*args, **kwargs):
 
 @param
     The parameters for this command are as follows
+    subcmd
+        query               Retrieve information about all updates in the
+                            management-server updates repository
+        query_fixids        Retrieve information or the readme or change history
+                            file for a specific update in the management-server
+                            updates repository
+        apply               install a management-server update.
+        acquire             Downloads the specified firmware updates from Lenovo
+                            XClarity Support website, and stores the updates to
+                            the updates repository
+        refresh             Retrieves information about the latest available
+                            firmware updates from the Lenovo XClarity Support
+                            website, and stores the information to the updates
+                            repository
+        delete              Deletes the specified fixids - removeMetadata not supported
+        import              Import files to management server
 
     key    Returns the specified type of update. This can be one of the following values.
                 all. Returns all information. This is the default value.
@@ -1763,15 +1795,6 @@ def managementserver(*args, **kwargs):
                 size. Returns the repository size (in bytes).
                 updates. Returns information about all updates packages.
                 updatedDate. Returns the date when the last update was performed.
-
-    action    The action to take. This can be one of the following values.
-                apply   - install a management-server update.
-                refresh - Retrieves information (metadata) about the latest available management-server updates
-                          from the Lenovo XClarity Support website.
-                acquire - Downloads the specified management-server update packages from
-                          the Lenovo XClarity Support website.
-                delete  - Use the DELETE method to delete update packages. - removeMetadata not supported
-                import  - import fixids files
 
      fixids    comma separated fixids
      type      Type for Get with fixids
@@ -1793,12 +1816,12 @@ def managementserver(*args, **kwargs):
 
     # some paramters don't have short options
     long_short_key_map = {'key': 'k', 'fixids': 'f',
-                          'type': 't', 'action': 'a', 'jobid': 'j'}
+                          'type': 't', 'jobid': 'j'}
 
-    keylist = ['con', 'subcmd', 'key', 'fixids', 'type', 'action', 'files', 'jobid']
+    keylist = ['con', 'subcmd', 'key', 'fixids', 'type', 'files', 'jobid']
     optional_keylist = ['con', 'key', 'fixids',
-                        'type', 'action', 'files', 'jobid']
-    mutually_exclusive_keys = ['key', 'action']
+                        'type', 'files', 'jobid']
+    mutually_exclusive_keys = []
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
