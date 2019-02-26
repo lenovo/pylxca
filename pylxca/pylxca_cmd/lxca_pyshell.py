@@ -1819,7 +1819,7 @@ def managementserver(*args, **kwargs):
                           'type': 't', 'jobid': 'j'}
 
     keylist = ['con', 'subcmd', 'key', 'fixids', 'type', 'files', 'jobid']
-    optional_keylist = ['con', 'key', 'fixids',
+    optional_keylist = ['con', 'subcmd', 'key', 'fixids',
                         'type', 'files', 'jobid']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
