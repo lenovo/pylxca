@@ -1510,9 +1510,12 @@ def resourcegroups(*args, **kwargs):
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
+    LOGGER.debug("resourcegroups %s" %str(param_dict))
     if 'type' in param_dict:
         if 'solution' in param_dict['type']:
             out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
+        else:
+            out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     else:
         out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
@@ -1577,7 +1580,7 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
                 raise AttributeError("Invalid command invocation")
             me_key_found = True
 
-    if not set(keylist + long_short_key_map.values()).issuperset(set(kwargs.keys())):
+    if not set(keylist + list(long_short_key_map.values())).issuperset(set(kwargs.keys())):
         LOGGER.error(" Invalid Input args: %s unsupported argument passed"
                      % list(set(kwargs.keys()).difference(set(keylist + long_short_key_map.values()))))
         raise ValueError("Invalid Input Arguments")
@@ -1819,7 +1822,7 @@ def managementserver(*args, **kwargs):
                           'type': 't', 'jobid': 'j'}
 
     keylist = ['con', 'subcmd', 'key', 'fixids', 'type', 'files', 'jobid']
-    optional_keylist = ['con', 'subcmd', 'key', 'fixids',
+    optional_keylist = ['con', 'key', 'fixids',
                         'type', 'files', 'jobid']
     mutually_exclusive_keys = []
     mandatory_options_list = {}

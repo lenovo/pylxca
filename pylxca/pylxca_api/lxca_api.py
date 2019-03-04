@@ -168,7 +168,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             raise ConnectionError("Connection is not Initialized.")
 
         reset_conn_to_orig = False
-        if dict_handler and dict_handler.has_key("orig_con"):
+        if dict_handler and ("orig_con" in dict_handler):
             if self.con !=  dict_handler['orig_con']:
                 reset_conn_to_orig = True
         try:
