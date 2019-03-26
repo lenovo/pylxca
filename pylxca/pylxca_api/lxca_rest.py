@@ -713,7 +713,7 @@ class lxca_rest(object):
                     if key not in ['all']:
                         url = url + "?key=" + key
                 elif type:
-                    url = url + "?type=" + type
+                    url = url + "?filetype=" + type
 
             else:
                 if key:

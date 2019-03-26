@@ -1625,7 +1625,7 @@
               {
                 "args": "-k,--key",
                 "opt_dict": {
-                  "help": "Returns specific information about the firmware update",
+                  "help": "Returns specific information about the management server update, mutually exclusive with type",
                   "choices": [
                     "all",
                     "actions",
@@ -1640,7 +1640,7 @@
               {
                 "args": "-t,--type",
                 "opt_dict": {
-                  "help": "Specifies a list of file types",
+                  "help": "Specifies a list of file types, mutually exclusive with key, if key is specified this is ignored ",
                   "choices": [
                     "changeHistory",
                     "readme"

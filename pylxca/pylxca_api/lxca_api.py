@@ -744,12 +744,10 @@ class lxca_api(with_metaclass(Singleton, object)):
             type = next((item for item in [dict_handler.get('t'), dict_handler.get('type')] if item is not None), None)
             jobid = next((item for item in [dict_handler.get('j'), dict_handler.get('jobid')] if item is not None), None)
             files = next((item for item in [dict_handler.get('files')] if item is not None),       None)
-        if key:
+        if key or type:
             resp = lxca_rest().get_managementserver(self.con.get_url(), self.con.get_session(), key, fixids, type)
         elif action:
             resp = lxca_rest().set_managementserver(self.con.get_url(), self.con.get_session(), action, files, jobid, fixids)
-        else:
-            resp = lxca_rest().get_managementserver(self.con.get_url(), self.con.get_session(), key, fixids, type)
 
         try:
             py_obj = json.loads(resp.text)
