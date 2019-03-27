@@ -1716,7 +1716,7 @@ rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
     update hostSettings entry
     host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A1445C6FDBAA11E6A87F86E06E3AFFFF', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.25.25'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A122FB03FF4011E68D9BA32E3A66DDDD', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.26.26'}}]}
     host_settings_json = json.dumps(host_settings_dict)
-    rep = osimages(con_lxca, 'hostsettings', update="True", action='update', osimages_dict = host_settings_json)
+    rep = osimages(con_lxca, 'hostsettings', action='update', osimages_dict = host_settings_json)
 
     '''
 
