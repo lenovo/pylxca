@@ -168,7 +168,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             raise ConnectionError("Connection is not Initialized.")
 
         reset_conn_to_orig = False
-        if dict_handler and dict_handler.has_key("orig_con"):
+        if dict_handler and ("orig_con" in dict_handler):
             if self.con !=  dict_handler['orig_con']:
                 reset_conn_to_orig = True
         try:
@@ -226,6 +226,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
+            modify = next((item for item in [dict_handler.get('m'), dict_handler.get('modify')] if item is not None), None)
             status = next((item for item in [dict_handler.get('s') , dict_handler.get('status')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
             
@@ -233,6 +234,9 @@ class lxca_api(with_metaclass(Singleton, object)):
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,status)
             py_obj = json.loads(resp.text)
             py_obj = {'nodesList':py_obj["nodes"]}
+        if uuid and modify:
+            resp = lxca_rest().set_nodes(self.con.get_url(), self.con.get_session(), uuid, modify)
+            py_obj = json.loads(resp.text)
         else:
             resp = lxca_rest().get_nodes(self.con.get_url(),self.con.get_session(),uuid,status)
             py_obj = json.loads(resp.text)
@@ -254,7 +258,8 @@ class lxca_api(with_metaclass(Singleton, object)):
             port_name = next((item for item in [dict_handler.get('ports')] if item is not None),None)
             action = next((item for item in [dict_handler.get('action')] if item is not None),
                              None)
-            if "ports" in dict_handler: list_port = True
+            #if "ports" in dict_handler: list_port = True
+            if port_name: list_port = True
 
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
@@ -464,7 +469,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         restart = None
         etype = None
         pattern_update_dict = None
-        status = None
+        subcmd = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -478,7 +483,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             restart = next((item for item in [dict_handler.get  ('r') , dict_handler.get('restart')] if item is not None),None)
             etype = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
             pattern_update_dict = next((item for item in [dict_handler.get('pattern_update_dict')] if item is not None), None)
-            status = next((item for item in [dict_handler.get('s'), dict_handler.get('status')] if item is not None), None)
+            subcmd = next((item for item in [dict_handler.get('subcmd')] if item is not None), None)
         if patternname and not patternid:
             # get all patterns and get id from name
             resp = lxca_rest().do_configpatterns(self.con.get_url(), self.con.get_session(), None, None,
@@ -490,7 +495,7 @@ class lxca_api(with_metaclass(Singleton, object)):
                     break
             if not patternid:
                 raise Exception("Pattern Name %s not found" %patternname)
-        if status:
+        if subcmd == 'status':
             resp = lxca_rest().get_configstatus(self.con.get_url(), self.con.get_session(), endpoint)
         else:
             resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid, includeSettings, endpoint, restart, etype, pattern_update_dict)
@@ -510,10 +515,10 @@ class lxca_api(with_metaclass(Singleton, object)):
         profilename = None
         endpoint = None
         restart = None
-        delete = None
-        unassign = None
+        subcmd = None
         powerdown = None
         resetimm = None
+        resetswitch = None
         force = None
 
         if not self.con:
@@ -527,27 +532,29 @@ class lxca_api(with_metaclass(Singleton, object)):
                 (item for item in [dict_handler.get('e'), dict_handler.get('endpoint')] if item is not None), None)
             restart = next((item for item in [dict_handler.get('r'), dict_handler.get('restart')] if item is not None),
                            None)
-            delete = next((item for item in [dict_handler.get('d'), dict_handler.get('delete')] if item is not None),
+            subcmd = next((item for item in [dict_handler.get('subcmd')] if item is not None),
                            None)
-            unassign = next((item for item in [dict_handler.get('u'), dict_handler.get('unassign')] if item is not None),
-                          None)
             powerdown = next((item for item in [dict_handler.get('p'), dict_handler.get('powerdown')] if item is not None),
                 None)
             resetimm = next(
                 (item for item in [dict_handler.get('resetimm')] if item is not None),
                 None)
+            resetswitch = next(
+                (item for item in [dict_handler.get('resetswitch')] if item is not None),
+                None)
+
             force = next((item for item in [dict_handler.get('f'), dict_handler.get('force')] if item is not None),
                          None)
 
-        if profilename:
+        if subcmd == 'rename' and profilename:
             resp = lxca_rest().put_configprofiles(self.con.get_url(), self.con.get_session(), profileid, profilename)
-        elif endpoint and restart:
+        elif subcmd == 'activate' and endpoint and restart:
             resp = lxca_rest().post_configprofiles(self.con.get_url(), self.con.get_session(), profileid, endpoint, restart)
-        elif profileid and delete and delete.lower() == 'true':
+        elif subcmd == 'delete' and profileid:
                 resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
-        elif profileid and unassign and unassign.lower() == 'true':
-                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, force)
-        else:
+        elif subcmd == 'unassign' and profileid:
+                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, resetswitch, force)
+        elif subcmd == 'list':
             resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 
         try:
@@ -673,7 +680,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         if policy:
             resp = lxca_rest().post_updatepolicy(self.con.get_url(), self.con.get_session(), policy, type, uuid)
         else:
-            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, jobid)
+            resp = lxca_rest().get_updatepolicy(self.con.get_url(), self.con.get_session(), info, jobid, uuid)
 
         try:
             py_obj = json.loads(resp.text)
@@ -696,7 +703,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         
         if dict_handler:
             key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
-            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None), None)
+            action = next((item for item in [dict_handler.get('subcmd')] if item is not None), None)
             mt = next((item for item in [dict_handler.get('m'), dict_handler.get('mt')] if item is not None), None)
             scope = next((item for item in [dict_handler.get('s'), dict_handler.get('scope')] if item is not None), None)
             fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None), None)
@@ -730,24 +737,23 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         if dict_handler:
             key = next((item for item in [dict_handler.get('k'), dict_handler.get('key')] if item is not None), None)
-            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None),
+            action = next((item for item in [dict_handler.get('subcmd')] if item is not None),
                           None)
             fixids = next((item for item in [dict_handler.get('f'), dict_handler.get('fixids')] if item is not None),
                           None)
             type = next((item for item in [dict_handler.get('t'), dict_handler.get('type')] if item is not None), None)
             jobid = next((item for item in [dict_handler.get('j'), dict_handler.get('jobid')] if item is not None), None)
             files = next((item for item in [dict_handler.get('files')] if item is not None),       None)
-        if key:
+        if key or type:
             resp = lxca_rest().get_managementserver(self.con.get_url(), self.con.get_session(), key, fixids, type)
         elif action:
             resp = lxca_rest().set_managementserver(self.con.get_url(), self.con.get_session(), action, files, jobid, fixids)
-        else:
-            resp = lxca_rest().get_managementserver(self.con.get_url(), self.con.get_session(), key, fixids, type)
 
         try:
             py_obj = json.loads(resp.text)
         except AttributeError as ValueError:
             return resp
+        py_obj['dummy']={'status':[]}
         return py_obj
 
     def do_updatecomp( self, dict_handler = None ):
@@ -790,31 +796,31 @@ class lxca_api(with_metaclass(Singleton, object)):
         includeChildren = False
         action = None
         status = None
+        cmd_updateList = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
 
         if dict_handler:
             job_uuid = next((item for item in [ dict_handler.get('jobUID')] if item is not None), None)
-            includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "false")
-            if includeChildren != "false":
-                includeChildren = 'true'
+            includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "true")
             action = next((item for item in [dict_handler.get('action')] if item is not None), None)
             updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
-            #state = next((item for item in [dict_handler.get('state')] if item is not None), None)
+            #if updateList:
+            #    updateList = updateList['taskList']
 
-        if job_uuid and action in ['cancel', 'delete']:
+
+        if job_uuid and action in ['cancel']:
             resp = lxca_rest().put_tasks(self.con.get_url(), self.con.get_session(), job_uuid, action)
+            py_obj = resp.status_code
+        elif action in ['delete']:
+            resp = lxca_rest().delete_tasks(self.con.get_url(), self.con.get_session(), job_uuid)
             py_obj = resp.status_code
         elif action in ['update']:
             resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)
             py_obj = resp.status_code
-        elif job_uuid:
-            resp = lxca_rest().get_tasks_list(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
-            py_obj = json.loads(resp.text)
-            py_obj = {'TaskList': py_obj[:]}
         else:
-            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session())
+            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
             py_obj = json.loads(resp.text)
             py_obj = {'TaskList': py_obj[:]}
         return py_obj
@@ -827,8 +833,8 @@ class lxca_api(with_metaclass(Singleton, object)):
             raise ConnectionError("Connection is not Initialized.")
         
         if dict_handler:
-            sol_id = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
-            filepath = next((item for item in [dict_handler.get  ('f') , dict_handler.get('file')] if item is not None),None)
+            sol_id = next((item for item in [dict_handler.get('i') , dict_handler.get('id')] if item is not None),None)
+            filepath = next((item for item in [dict_handler.get('f') , dict_handler.get('file')] if item is not None),None)
                         
         resp = lxca_rest().get_set_manifests(self.con.get_url(),self.con.get_session(),sol_id,filepath)
         
@@ -868,53 +874,72 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         '''
         get_method  = True
+        id = None
+        action = None
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        # parsing dict_handler to fetch args, kwargs
-        osimages_info = ()
-        if 'osimages_info' in dict_handler:
-            osimages_info = (dict_handler['osimages_info'],)
-            dict_handler.pop('osimages_info')
-        kwargs = dict_handler
 
-        putmethod_keylist = ['imageType','jobId', 'putid', 'deleteid']
-        for key in list(kwargs.keys()):
-            if key in putmethod_keylist:
-                get_method = False
-                break
-        # parsing args for putId,postId,deleteId: refer osImages/<id>
-        if 'postid' in osimages_info or 'putid' in osimages_info or 'deleteid' in osimages_info:
-            get_method = False
-        if 'remoteFileServers' in osimages_info and kwargs:
-            get_method = False
-            if 'id' in kwargs and list(kwargs.keys()).__len__() == 1:
-                get_method = True
-        if 'hostPlatforms' in osimages_info and kwargs:
-            get_method = False
-        if 'globalSettings' in osimages_info and kwargs:
-            get_method = False
-        if 'osdeployment' in osimages_info:
-            get_method = False
+        if dict_handler:
+            osimages_info = next((item for item in [dict_handler.get('subcmd')] if item is not None), None)
+            imageType = next((item for item in [dict_handler.get('t'), dict_handler.get('imagetype')] if item is not None), None)
+            id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None), None)
+            action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None), None)
 
-        if get_method:
-            # get methods calls refer above docstring
-            resp = lxca_rest().get_osimage(osimages_info, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
-        else:
-            resp = lxca_rest().set_osimage(osimages_info, url=self.con.get_url(), session=self.con.get_session(), **kwargs)
+            kwargs = next((item for item in [dict_handler.get('o'),
+                                             dict_handler.get('osimages_dict')] if item is not None), None)
+
+        if 'list' in osimages_info:
+            resp = lxca_rest().list_osimage(self.con.get_url(), self.con.get_session())
+        elif 'globalsettings' in osimages_info :
+            resp = lxca_rest().osimage_globalsettings(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'hostsettings' in osimages_info :
+            if action:
+                if action in ['update']:
+                    if not 'hosts' in kwargs:
+                        raise Exception("Invalid argument: hosts detail is missing")
+                    resp = lxca_rest().update_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs['hosts'])
+                elif action in ['create']:
+                    if not 'hosts' in kwargs:
+                        raise Exception("Invalid argument: hosts detail is missing")
+                    resp = lxca_rest().create_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs['hosts'])
+                elif action in ['delete']:
+                    resp = lxca_rest().delete_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs)
+            else:
+                resp = lxca_rest().list_osimage_hostsettings(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'hostplatforms' in osimages_info :
+            resp = lxca_rest().osimage_hostplatforms(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'import' in osimages_info:
+            if not kwargs:
+                kwargs = {}
+            kwargs['imageType'] = imageType
+            resp = lxca_rest().osimage_import(self.con.get_url(), self.con.get_session(), kwargs)
+        elif 'remotefileservers' in osimages_info:
+            if not kwargs:
+                kwargs = {}
+            resp = lxca_rest().osimage_remotefileservers(self.con.get_url(), self.con.get_session(), kwargs)
+
+        elif 'delete' in osimages_info:
+            if not kwargs:
+                kwargs = {}
+            kwargs['id'] = id
+            resp = lxca_rest().osimage_delete(self.con.get_url(), self.con.get_session(), kwargs)
+
         try:
             py_obj = json.loads(resp._content)
             return py_obj
-        except AttributeError as ValueError:
+        except ValueError as err:
+            logger.error("Exception: Non json response: %s" %(str(err)))
+            return resp
+        except AttributeError as err:
             return resp
         return py_obj
-
 
     def get_set_resourcegroups(self, dict_handler = None):
         '''
     
         '''
         
-        uuid = name = desc = type = solutionVPD = members = criteria = None
+        subcmd=uuid = name = desc = type = solutionVPD = members = criteria = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -928,9 +953,40 @@ class lxca_api(with_metaclass(Singleton, object)):
             solutionVPD = next((item for item in [dict_handler.get('s') , dict_handler.get('solutionVPD')] if item is not None),None)
             members = next((item for item in [dict_handler.get('m') , dict_handler.get('members')] if item is not None),None)
             criteria = next((item for item in [dict_handler.get('c') , dict_handler.get('criteria')] if item is not None),None)
-            
-        resp = lxca_rest().get_set_resourcegroups(self.con.get_url(),self.con.get_session(),uuid,name,desc,type,solutionVPD,members,criteria)
-        
+            subcmd = next(
+                (item for item in [dict_handler.get('subcmd')] if item is not None), None)
+
+        if 'list' in subcmd:
+            resp = lxca_rest().list_resourcegroups(self.con.get_url(), self.con.get_session(), uuid)
+        elif 'criteriaproperties' in subcmd:
+            resp = lxca_rest().criteriaproperties_resourcegroups(self.con.get_url(), self.con.get_session())
+            py_obj = json.loads(resp.text)
+            py_obj = {'propertiesList': py_obj}
+            return py_obj
+        elif 'delete' in subcmd:
+            resp = lxca_rest().delete_resourcegroups(self.con.get_url(), self.con.get_session(), uuid)
+            if resp.status_code == 200:
+                return "Deleted Successfully"
+        elif 'create' in subcmd:
+            if 'dynamic' in type:
+                resp = lxca_rest().dynamic_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name, desc,
+                                                  type, criteria)
+            elif 'solution' in type:
+                resp = lxca_rest().solution_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
+                                                           desc, type, solutionVPD, members, criteria)
+            else:
+                raise Exception("Invalid argument: Type supported are dynamic and solution")
+        elif 'update' in subcmd:
+            if 'dynamic' in type:
+                resp = lxca_rest().dynamic_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
+                                                          desc,
+                                                          type, criteria)
+            elif 'solution' in type:
+                resp = lxca_rest().solution_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
+                                                           desc, type, solutionVPD, members, criteria)
+            else:
+                raise Exception("Invalid argument: Type supported are dynamic and solution")
+
         try:
             py_obj = json.loads(resp.text)
         except AttributeError as ValueError:

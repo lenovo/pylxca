@@ -11,6 +11,7 @@ feature and accepts raw input from command line
 import re,sys,os,traceback
 import itertools
 import logging
+import shlex
 from platform import python_version
 
 from pylxca.pylxca_cmd import lxca_cmd
@@ -65,8 +66,8 @@ class InteractiveShell(object):
             if args[0] not in self.commands:
                 self.sprint('No help available for unknown command "%s"' % args[0])
                 return
-            
-            self.sprint(self.commands[args[0]].__doc__)
+
+            self.commands[args[0]].get_argparse_options().print_help()
 
         def do_command_summary(self):
             """
@@ -231,7 +232,8 @@ class InteractiveShell(object):
         args = []
 
         # Split the input to allow for quotes option values
-        re_args = re.findall('\-\-\S+\=\"[^\"]*\"|\S+', command_args)
+        #re_args = re.findall('\-\-\S+\=\"[^\"]*\"|\S+', command_args)
+        re_args = shlex.split(command_args)
         #re_args = re.findall('\-\-\S+|\-\S+|\S+[\s*\w+]*', command_args)
         # Parse args if present
         for i in range(0, len(re_args)):
@@ -239,7 +241,7 @@ class InteractiveShell(object):
         try:
             return command.handle_command(opts=opts, args=args)
         except Exception as err:
-            logger.error("Exception occurred while processing command.")
+            logger.error("Exception occurred while processing command %s " %str(err))
         return
     
     # TODO: We should remove this, All API level code should give call to handle_input_dict rather
@@ -255,19 +257,22 @@ class InteractiveShell(object):
         command = self.commands[command_name]
 
         opts = {}
-        args = {}
+        args_dict = {}
        
         for item in kwargs['kwargs']:
-            args['--' + item] = kwargs['kwargs'][item]
-        
+            args_dict['--' + item] = kwargs['kwargs'][item]
+
+        args_list = list(args)
+
+        args_list = args_list + list(itertools.chain(*list(args_dict.items())))
         try:
-            return command.handle_command(opts=opts, args=list(itertools.chain(*list(args.items()))))
+            return command.handle_command(opts=opts, args=args_list)
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err
             
     # TODO: We should rename this to handle_api_params
-    def handle_input_dict(self, command_name,con, param_dict):
+    def handle_input_dict(self, command_name,con, param_dict, use_argparse = True):
         # Show message when no command
         if not command_name:
             return
@@ -277,16 +282,35 @@ class InteractiveShell(object):
             return
 
         command = self.commands[command_name]
-        
+
+        if use_argparse:
+            try:
+                args_list = []
+                args_dict = {}
+                if 'subcmd' in param_dict:
+                    subcmd = param_dict['subcmd']
+                    param_dict.pop('subcmd')
+                    args_list.append(subcmd)
+
+                for item in param_dict:
+                    args_dict['--' + item] = param_dict[item]
+
+                args_list = args_list + list(itertools.chain(*list(args_dict.items())))
+                param_dict = command.parse_args(args_list)
+            except SystemExit as err:
+                self.sprint("Exception occurred while parsing command.")
+                raise Exception("Invalid argument")
+            except Exception as err:
+                self.sprint("Exception occurred while parsing api input.")
+                raise err
+
         try:
-            #return command.handle_command(param_dict,con)
             return command.handle_input(param_dict, con)
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err
-        
-        
-    
+
+
     """
     TODO:
     def auto_complete(self, text, state):
