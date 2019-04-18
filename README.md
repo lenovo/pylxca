@@ -1,17 +1,10 @@
-<p align="center"><a href="https://www3.lenovo.com/us/en/data-center/software/systems-management/xclarity/" target="_blank" rel="noopener noreferrer"><img width="200" src="https://www3.lenovo.com/medias/lenovo-systems-software-management-xclarity-intro.png?context=bWFzdGVyfHJvb3R8NjY0OXxpbWFnZS9wbmd8aDI2L2hlMS85NDQ4OTkwODAxOTUwLnBuZ3xjZTdiOWJhNDViMTVhMjJjNTFiMWRmNzlhMDFkYzRmN2NkNGJjMzk1NTUxN2ZhYjExYWU1MDJlYmUyNGJkYjIw" alt="Lenovo Xclarity Logo"></a></p>
-
-Python xClarity Client
-===
-
-[![Build Status](https://travis-ci.org/lenovo/xclarity_client.svg)](https://travis-ci.org/lenovo/pylxca)
-
-
 What is PyLXCA?
 ---------------
 PyLXCA is Python based interface for Lenovo xClarity Administration APIs.
 
 PyLXCA command-line interface (CLI) provides a Python-based library of 
-commands to automate provisioning and resource management.
+commands to automate provisioning and resource management from an OpenStack 
+environment, such as Ansible or Puppet.
 
 The Lenovo XClarity Administrator PYLXCA CLI provide an interface to 
 Lenovo XClarity Administrator REST APIs to automate functions such as:
@@ -23,6 +16,15 @@ Lenovo XClarity Administrator REST APIs to automate functions such as:
 *	Configuring servers through the use of Configuration Patterns
 *	Applying firmware updates to endpoints
 
+Whats New in 2.4.0
+------------------
+* 	Argument Parsing library replaced from optparse to argparse.
+*	Support for subcmd under various commands.
+*	New commands supported under shell
+		osimages
+		managementserver
+		resourcegroups
+* 	Better Error handling.
 
 Installation
 ------------
@@ -33,84 +35,73 @@ Python (including the request and logging modules) is required to use
 to the PYLXCA CLI. Ensure at the following requirements are met. For 
 more information about Python, see the [Link]www.python.org website. 
 
-*	Python v2.7.x / Python v3.6.x
+*	Python v2.7.x (Later versions have not been tested.)
 *	Python requests v2.7.0 or later
 *	Python logging v0.4.9.6 or later
 
 Complete the following steps to install the PYLXCA CLI.
 
-1.	Download the toolkit.
-2.	Unzip the package into a local directory.
-3.	To install the PyLXCA frm internet, run the following command:
-	
-	pip install pylxca
-	
-	To build and install from source, download the PyLXCA source code from Python LXCA Client (PyLXCA) Toolkit website, 
-	and run the following command from the source root directory:
-	
-	python setup.py install
+1.	Run the following command to install the module:
+    pip install pylxca
 
-4.	Start a Python shell session.
+2.	Start a Python shell session in Command mode.
 
-	joe@joe_vm:~# lxca_shell
+	$lxca_shell
+
 	--------------------------------------------------
-	Welcome to LXCA Command Shell
+	Welcome to PyLXCA Shell v2.4.0
 	Type "help" at any time for a list of commands.
-	Use "lxca_shell --api" to enable Interactive Python LXCA Shell 
+	Type "pyshell" at any time to get interactive python shell
 	--------------------------------------------------
 
 	PyLXCA >>
+
+3. 	Start a Python LXCA Shell in Interactive mode.
+
 	
-	OR
-	
-	joe@joe_vm:~#lxca_shell --api
-	Interactive Python Shell for Lenovo XClarity Administrator 
+	$lxca_shell --api
+	Interactive Python Shell for Lenovo XClarity Administrator v2.4.0
 	Type "dir()" or "help(lxca command object)" for more information.
-	>>> 
-	>>> con1 = connect("https://192.0.2.0","USERID","password","True")
+	>>>
 
-	Just like the Python shell, when you create the Python scripts, you can 
-	use built-in Python functions in addition to PyLXCA APIs
-
-	Note: At the beginning of your script, you must import PyLXCA and connect to the 
-	Lenovo XClarity Administrator instance, for example:
-	
-	#!/usr/bin/env python 
-	from pylxca. import *
-	con1 = connect("https://192.0.2.0","USERID","password","True")
-
-5.	Validate that the module was installed correctly by running the following command:
+4.	Validate that the module was installed correctly by running the following command:
 
 	In Python Shell Try to import pylxca module as follows
 
-	>>> from pylxca. import *
+	>>> import pylxca
 
 	If python able to import pylxca without any error then it is installed correctly.
+
 	
 API Reference
 -------------
 
 PyLXCA command reference is available at 
-http://sysmgt.lenovofiles.com/help/topic/com.lenovo.lxca.doc/pycli_overview.html?cp=1_23_1
+	http://ralfss30.labs.lenovo.com:8120/help/topic/com.lenovo.lxca.doc/pycli_overview.html
 
+PyLXCA API Help can be seen from Interactive Python Shell as follows.
+	
+	$lxca_shell --api
+	Interactive Python Shell for Lenovo XClarity Administrator v2.4.0
+	Type "dir()" or "help(lxca command object)" for more information.
+	>>>
+	>>> help(connect)
 
 Example
 ------------
 
-python lxca_shell
-connect -l https://<LXCA IPAddress> -u <LXCA User> --noverify
-connect -l https://<LXCA IPAddress> -u <LXCA User>
+	python lxca_shell
+	connect -l https://10.241.106.216 -u USERID --noverify
+	connect -l https://10.241.106.216 -u USERID
 
-Example to call lxca_cmd pytohn module from python script or Ansible module
+Example to call lxca_cmd python module from python script or Ansible module
 
-from pylxca.pylxca_cmd.lxca_pyshell import *
-pyshell()
-con1 = connect("https://<LXCA IPAddress>",<LXCA User>,<LXCA Password>,"True")
+	import pylxca
+	con1 = connect("https://10.241.106.216","USERID","Passw0rd","True")
 
-Several sample scripts are also available to help you to quickly begin using the PYLXCA 
-command-line interface (CLI) to manage endpoints. 
+Several sample scripts are also available to help you to quickly begin using the PYLXCA command-line interface (CLI) to manage endpoints. 
 The sample scripts are location in the following directory:
-lib/python2.7/site-packages/pylxca-1.0-py2.7.egg/pylxca\test
+lib/python2.7/site-packages/pylxca-<version>-py2.7.egg/pylxca\test
 
 License
 -------
