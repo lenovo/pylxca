@@ -495,7 +495,8 @@
                               "tasks -a update -u '[{\"jobUID\":\"9\",\"percentage\":50}]'"],
         "valid_combination": {"global":[[], ["children"], ["jobUID"], ["jobUID","children"],
                                         ["jobUID", "action"],
-                                        ["action", "updateList"]
+                                        ["action", "updateList"],
+                                        ["action", "template"]
                                         ]
           },
         "cmd_args": [
@@ -525,7 +526,7 @@
 					"args": "-a,--action",
 					"opt_dict": {
 						"help": "action to perform",
-						"choices": ["cancel", "update", "delete"]
+						"choices": ["cancel", "update", "delete","create"]
 					}
 				}
 			],
@@ -536,8 +537,16 @@
 						"type": "ast.literal_eval"
 					}
 				}
-			]
-		]
+			],
+			[{
+        "args": "-t,--template",
+        "opt_dict": {
+          "help": "Template for creating new task",
+          "type": "json.loads"
+        }
+      }
+    ]
+  ]
 	},
 	"unmanage": {
       "description": "Unmanage device on LXCA",

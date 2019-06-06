@@ -797,6 +797,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         action = None
         status = None
         cmd_updateList = None
+        template = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -806,6 +807,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "true")
             action = next((item for item in [dict_handler.get('action')] if item is not None), None)
             updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
+            template = next((item for item in [dict_handler.get('template')] if item is not None), None)
             #if updateList:
             #    updateList = updateList['taskList']
 
@@ -819,6 +821,9 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif action in ['update']:
             resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)
             py_obj = resp.status_code
+        elif action in ['create']:
+            resp = lxca_rest().post_tasks(self.con.get_url(), self.con.get_session(), template)
+            py_obj = resp
         else:
             resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
             py_obj = json.loads(resp.text)

@@ -1381,7 +1381,7 @@ def tasks(*args, **kwargs):
     con      Connection Object to Lenovo XClarity Administrator
     jobUID          uuid of job
     children        result will include children if True
-    action          cancel/update
+    action          cancel/update/create
     updateList      required for update action , string containing list of update
 
 @example
@@ -1399,9 +1399,9 @@ def tasks(*args, **kwargs):
     con = None
 
     long_short_key_map = {'jobUID': 'j', 'children': 'c',
-                          'action': 'a', 'updateList': 'u'}
-    keylist = ['con', 'jobUID', 'children', 'action', 'updateList']
-    optional_keylist = ['con', 'jobUID', 'children', 'action', 'updateList']
+                          'action': 'a', 'updateList': 'u', 'template': 't'}
+    keylist = ['con', 'jobUID', 'children', 'action', 'updateList','template']
+    optional_keylist = ['con', 'jobUID', 'children', 'action', 'updateList','template']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 
