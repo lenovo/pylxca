@@ -589,6 +589,10 @@
 		<description>description</description>
 		<id>id</id>
     </storedcredentials>
+	<storedcredentials name="create">
+		<id>id</id>
+    </storedcredentials>
+
 	<osimages name="default">
 		<result>result</result>
 		<softwareFiles name="softwareFiles" type="object">

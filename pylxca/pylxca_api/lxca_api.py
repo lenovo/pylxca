@@ -1092,7 +1092,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif user_name and password:
             resp = lxca_rest().post_storedcredentials(self.con.get_url(), self.con.get_session(), user_name, password, description)
             py_obj = json.loads(resp.text)
-            resp = {'storedcredentialsList': py_obj['response']}
+            resp = {'storedcredentialsList': [py_obj['response']]}
         else:
             resp = lxca_rest().get_storedcredentials(self.con.get_url(), self.con.get_session(), id)
             py_obj = json.loads(resp.text)
