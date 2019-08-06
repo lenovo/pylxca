@@ -425,6 +425,14 @@
 
   	"storedcredentials": {
 		"description": "Retrieve and update stored credentials on lxca.",
+        "additional_detail": ["Example List all storedcredentials",
+                              "storedcredentials",
+                              "Example Create storedcredentials",
+                              "storedcredentials -u admin -p Passw0rd -d \"Test User\" -v create",
+                              "Example modify storedcredentials",
+                              "storedcredentials -i 2056 -u admin -p Passw0rd -d \"Test User\" -v result",
+                              "Example delete storedcredentials",
+                              "storedcredentials --delete_id 2056 -v result"],
 		"cmd_args": [
 			[{
 					"args": "-i,--id",

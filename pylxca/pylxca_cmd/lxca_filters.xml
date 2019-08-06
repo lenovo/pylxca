@@ -592,7 +592,13 @@
 	<storedcredentials name="create">
 		<id>id</id>
     </storedcredentials>
-
+	<storedcredentials name="result">
+		<result>result</result>
+         <messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>
+        </messages >
+	</storedcredentials>
 	<osimages name="default">
 		<result>result</result>
 		<softwareFiles name="softwareFiles" type="object">
