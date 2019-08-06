@@ -580,7 +580,13 @@
               {
                 "args": "-f,--force",
                 "opt_dict": {
-                  "help": "Force manage"
+                  "help": "Force manage",
+					"choices": [
+						"True",
+						"true",
+						"False",
+						"false"
+					]
                 }
               }
             ]
@@ -674,7 +680,13 @@
                     [{
                             "args": "-f,--force",
                             "opt_dict": {
-                                "help": "Force manage"
+                                "help": "Force manage",
+								"choices": [
+									"True",
+									"true",
+									"False",
+									"false"
+							  ]
                             }
                         }
                     ]
@@ -1056,21 +1068,39 @@
               {
                 "args": "-p,--powerdown",
                 "opt_dict": {
-                  "help": "Identifies whether to power off the server"
+                  "help": "Identifies whether to power off the server",
+				  "choices": [
+                    "True",
+                    "true",
+					"False",
+					"false"
+                  ]
                 }
               }
             ],
             [{
                 "args": "--resetimm",
                 "opt_dict": {
-                    "help": "Identifies whether to reset the baseboard management controller."
+                  "help": "Identifies whether to reset the baseboard management controller.",
+				  "choices": [
+                    "True",
+                    "true",
+					"False",
+					"false"
+                  ]
                 }
               }
             ],
             [{
                 "args": "--resetswitch",
                 "opt_dict": {
-                    "help": "Identifies whether to reset the switch internal port settings to default values"
+                  "help": "Identifies whether to reset the switch internal port settings to default values",
+				  "choices": [
+                    "True",
+                    "true",
+					"False",
+					"false"
+                  ]
                 }
               }
             ],
@@ -1078,7 +1108,13 @@
               {
                 "args": "-f,--force",
                 "opt_dict": {
-                  "help": "Identifies whether to force profile deactivation"
+                  "help": "Identifies whether to force profile deactivation",
+  				  "choices": [
+                    "True",
+                    "true",
+					"False",
+					"false"
+                  ]
                 }
               }
             ]
