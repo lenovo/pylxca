@@ -821,6 +821,13 @@ def configprofiles(*args, **kwargs):
                           param_dict, *args, **kwargs)
 
     out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+
+    #remove dummy field added for view
+    if 'dummy' in out_obj:
+        out_obj.pop('dummy')
+    return out_obj
+
+
     return out_obj
 
 

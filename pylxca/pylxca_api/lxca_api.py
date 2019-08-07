@@ -551,9 +551,14 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif subcmd == 'activate' and endpoint and restart:
             resp = lxca_rest().post_configprofiles(self.con.get_url(), self.con.get_session(), profileid, endpoint, restart)
         elif subcmd == 'delete' and profileid:
-                resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
+            resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
         elif subcmd == 'unassign' and profileid:
-                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, resetswitch, force)
+            resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, resetswitch, force)
+            if len(resp.text):
+                py_obj = json.loads(resp.text)
+                py_obj['dummy'] = {'status': []}
+                return py_obj
+
         elif subcmd == 'list':
             resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 
