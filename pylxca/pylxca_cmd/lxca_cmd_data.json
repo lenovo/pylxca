@@ -43,13 +43,6 @@
 	"disconnect": {
 		"description": "Disconnect session from LXCA",
 		"cmd_args": [
-			[{
-					"args": "-c,--con",
-					"opt_dict": {
-						"help": "connection object"
-					}
-				}
-			]
 		]
 	},
 
