@@ -46,7 +46,6 @@ def set_interactive():
           "discover": discover,
           "manage": manage,
           "unmanage": unmanage,
-          "jobs": jobs,
           "users": users,
           "lxcalog": lxcalog,
           "ffdc": ffdc,
