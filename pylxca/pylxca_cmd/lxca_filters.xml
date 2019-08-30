@@ -534,6 +534,23 @@
 				<rackID>rackID</rackID>
 			</Profile_List >
     </configprofiles>
+	<configprofiles name="activate">
+			<Identifier>identifier</Identifier>
+			<Label>label</Label>
+			<Profile_List name="items" type="object">
+				<locationIds>locationIds</locationIds>
+				<endPointNames>endPointNames</endPointNames>
+				<uuidsFailed>uuidsFailed</uuidsFailed>
+				<jobRecordId>jobRecordId</jobRecordId>
+				<jobName>jobName</jobName>
+				<endPointIds>endPointIds</endPointIds>
+				<locationIdsFailed>locationIdsFailed</locationIdsFailed>
+				<message>message</message>
+			</Profile_List >
+    </configprofiles>
+		<configprofiles name="unassign">
+			<message>message</message>
+    </configprofiles>
 	<configprofiles name="id">
 			<ID>ID</ID>
 			<DisplayId>displayId</DisplayId>
@@ -589,6 +606,16 @@
 		<description>description</description>
 		<id>id</id>
     </storedcredentials>
+	<storedcredentials name="create">
+		<id>id</id>
+    </storedcredentials>
+	<storedcredentials name="result">
+		<result>result</result>
+         <messages name="messages" type="object">
+            <explanation>explanation</explanation>
+            <text>text</text>
+        </messages >
+	</storedcredentials>
 	<osimages name="default">
 		<result>result</result>
 		<softwareFiles name="softwareFiles" type="object">

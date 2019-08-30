@@ -142,7 +142,6 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.cmms(self))
         self.add_command(lxca_cmd.scalablesystem(self))
         self.add_command(lxca_cmd.ostream(self))
-        self.add_command(lxca_cmd.jobs(self))
         self.add_command(lxca_cmd.discover(self))
         self.add_command(lxca_cmd.manage(self))
         self.add_command(lxca_cmd.unmanage(self))

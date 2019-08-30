@@ -1172,6 +1172,24 @@ class lxca_rest(object):
             raise re
         return resp
 
+    def post_tasks(self, url, session, post_dict):
+        '''
+        Handle action post
+        '''
+
+
+        url = url + '/tasks'
+
+        payload = post_dict
+
+        try:
+            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp
+
     def put_tasks(self, url, session, job_uuid, action):
         '''
         Handle action cancel
@@ -1212,9 +1230,9 @@ class lxca_rest(object):
         '''
 
 
-        url = url + '/tasks'
+        url = url + '/tasks' + '/' + updated_dict[0]['jobUID']
 
-        payload = updated_dict
+        payload = updated_dict[0]
 
         try:
             resp = resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
