@@ -16,15 +16,9 @@ Lenovo XClarity Administrator REST APIs to automate functions such as:
 *	Configuring servers through the use of Configuration Patterns
 *	Applying firmware updates to endpoints
 
-Whats New in 2.4.0
+Whats New in 2.5.0
 ------------------
-* 	Argument Parsing library replaced from optparse to argparse.
-*	Support for subcmd under various commands.
-*	New commands supported under shell
-		osimages
-		managementserver
-		resourcegroups
-* 	Better Error handling.
+* 	Few bug fixes for views and jobs command 
 
 Installation
 ------------
@@ -49,7 +43,7 @@ Complete the following steps to install the PYLXCA CLI.
 	$lxca_shell
 
 	--------------------------------------------------
-	Welcome to PyLXCA Shell v2.4.0
+	Welcome to PyLXCA Shell v2.5.0
 	Type "help" at any time for a list of commands.
 	Type "pyshell" at any time to get interactive python shell
 	--------------------------------------------------
@@ -60,7 +54,7 @@ Complete the following steps to install the PYLXCA CLI.
 
 	
 	$lxca_shell --api
-	Interactive Python Shell for Lenovo XClarity Administrator v2.4.0
+	Interactive Python Shell for Lenovo XClarity Administrator v2.5.0
 	Type "dir()" or "help(lxca command object)" for more information.
 	>>>
 
@@ -77,12 +71,11 @@ API Reference
 -------------
 
 PyLXCA command reference is available at 
-	http://ralfss30.labs.lenovo.com:8120/help/topic/com.lenovo.lxca.doc/pycli_overview.html
-
+    https://sysmgt.lenovofiles.com/help/index.jsp?topic=%2Fcom.lenovo.lxca_restapis.doc%2Fpycli_overview.html&cp=1_23_1
 PyLXCA API Help can be seen from Interactive Python Shell as follows.
 	
 	$lxca_shell --api
-	Interactive Python Shell for Lenovo XClarity Administrator v2.4.0
+	Interactive Python Shell for Lenovo XClarity Administrator v2.5.0
 	Type "dir()" or "help(lxca command object)" for more information.
 	>>>
 	>>> help(connect)

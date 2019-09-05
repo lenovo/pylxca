@@ -46,7 +46,6 @@ def set_interactive():
           "discover": discover,
           "manage": manage,
           "unmanage": unmanage,
-          "jobs": jobs,
           "users": users,
           "lxcalog": lxcalog,
           "ffdc": ffdc,
@@ -152,7 +151,7 @@ def disconnect(*args, **kwargs):
                           mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
     return out_obj
 
 
@@ -821,6 +820,13 @@ def configprofiles(*args, **kwargs):
                           param_dict, *args, **kwargs)
 
     out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
+
+    #remove dummy field added for view
+    if 'dummy' in out_obj:
+        out_obj.pop('dummy')
+    return out_obj
+
+
     return out_obj
 
 
@@ -1381,7 +1387,7 @@ def tasks(*args, **kwargs):
     con      Connection Object to Lenovo XClarity Administrator
     jobUID          uuid of job
     children        result will include children if True
-    action          cancel/update
+    action          cancel/update/create
     updateList      required for update action , string containing list of update
 
 @example
@@ -1399,9 +1405,9 @@ def tasks(*args, **kwargs):
     con = None
 
     long_short_key_map = {'jobUID': 'j', 'children': 'c',
-                          'action': 'a', 'updateList': 'u'}
-    keylist = ['con', 'jobUID', 'children', 'action', 'updateList']
-    optional_keylist = ['con', 'jobUID', 'children', 'action', 'updateList']
+                          'action': 'a', 'updateList': 'u', 'template': 't'}
+    keylist = ['con', 'jobUID', 'children', 'action', 'updateList','template']
+    optional_keylist = ['con', 'jobUID', 'children', 'action', 'updateList','template']
     mutually_exclusive_keys = []
     mandatory_options_list = {}
 

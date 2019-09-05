@@ -551,9 +551,14 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif subcmd == 'activate' and endpoint and restart:
             resp = lxca_rest().post_configprofiles(self.con.get_url(), self.con.get_session(), profileid, endpoint, restart)
         elif subcmd == 'delete' and profileid:
-                resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
+            resp = lxca_rest().delete_configprofiles(self.con.get_url(), self.con.get_session(), profileid)
         elif subcmd == 'unassign' and profileid:
-                resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, resetswitch, force)
+            resp = lxca_rest().unassign_configprofiles(self.con.get_url(), self.con.get_session(), profileid, powerdown, resetimm, resetswitch, force)
+            if len(resp.text):
+                py_obj = json.loads(resp.text)
+                py_obj['dummy'] = {'status': []}
+                return py_obj
+
         elif subcmd == 'list':
             resp = lxca_rest().get_configprofiles(self.con.get_url(),self.con.get_session(),profileid)
 
@@ -797,6 +802,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         action = None
         status = None
         cmd_updateList = None
+        template = None
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -806,6 +812,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "true")
             action = next((item for item in [dict_handler.get('action')] if item is not None), None)
             updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
+            template = next((item for item in [dict_handler.get('template')] if item is not None), None)
             #if updateList:
             #    updateList = updateList['taskList']
 
@@ -819,6 +826,9 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif action in ['update']:
             resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)
             py_obj = resp.status_code
+        elif action in ['create']:
+            resp = lxca_rest().post_tasks(self.con.get_url(), self.con.get_session(), template)
+            py_obj = resp
         else:
             resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
             py_obj = json.loads(resp.text)
@@ -1087,7 +1097,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         elif user_name and password:
             resp = lxca_rest().post_storedcredentials(self.con.get_url(), self.con.get_session(), user_name, password, description)
             py_obj = json.loads(resp.text)
-            resp = {'storedcredentialsList': py_obj['response']}
+            resp = {'storedcredentialsList': [py_obj['response']]}
         else:
             resp = lxca_rest().get_storedcredentials(self.con.get_url(), self.con.get_session(), id)
             py_obj = json.loads(resp.text)
