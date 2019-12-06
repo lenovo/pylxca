@@ -229,6 +229,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             modify = next((item for item in [dict_handler.get('m'), dict_handler.get('modify')] if item is not None), None)
             status = next((item for item in [dict_handler.get('s') , dict_handler.get('status')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
+            metrics = next((True for item in [dict_handler.get('x', False), dict_handler.get('metrics', False)] if item is None or item is True), False)
             
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,status)
@@ -236,6 +237,9 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = {'nodesList':py_obj["nodes"]}
         if uuid and modify:
             resp = lxca_rest().set_nodes(self.con.get_url(), self.con.get_session(), uuid, modify)
+            py_obj = json.loads(resp.text)
+        if metrics:
+            resp = lxca_rest().get_metrics(self.con.get_url(), self.con.get_session(), uuid)
             py_obj = json.loads(resp.text)
         else:
             resp = lxca_rest().get_nodes(self.con.get_url(),self.con.get_session(),uuid,status)

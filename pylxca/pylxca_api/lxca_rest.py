@@ -59,7 +59,23 @@ class lxca_rest(object):
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp    
-    
+        
+    def get_metrics(self, url, session, uuid ):
+        url = url + '/nodes/metrics'
+
+        if uuid:
+            url = url + '/' + uuid
+
+        try:
+            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        
+        return resp
+
     def get_nodes(self,url, session, uuid, status):
         url = url + '/nodes'
 

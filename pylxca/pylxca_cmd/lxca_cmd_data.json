@@ -75,6 +75,17 @@
 						]
 					}
 				}
+			],
+			[
+        {
+					"args": "-x,--metrics",
+					"opt_dict": {
+            "help": "fetch metrics of node(s)",
+            "default": false,
+            "nargs": "?",
+            "type": "boolean"
+          }
+				}
 			]
 		],
 		"mutually_exclusive_args": [
