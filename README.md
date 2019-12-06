@@ -1,3 +1,5 @@
+Lenovo xClarity Python Client 
+=============================
 What is PyLXCA?
 ---------------
 PyLXCA is Python based interface for Lenovo xClarity Administration APIs.
@@ -16,9 +18,9 @@ Lenovo XClarity Administrator REST APIs to automate functions such as:
 *	Configuring servers through the use of Configuration Patterns
 *	Applying firmware updates to endpoints
 
-Whats New in 2.5.0
+Whats New in 2.6.0
 ------------------
-* 	Few bug fixes for views and jobs command 
+* 	Add metrics support for nodes 
 
 Installation
 ------------

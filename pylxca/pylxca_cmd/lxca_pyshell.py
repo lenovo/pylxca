@@ -335,7 +335,7 @@ def nodes(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con','uuid','chassis','status', 'modify']
+        keylist = ['con','uuid','chassis','status', 'modify', 'metrics']
 
 @param
     The parameters for this command are as follows 
@@ -345,6 +345,7 @@ def nodes(*args, **kwargs):
     chassis       chassis uuid
     status        nodes manage status (managed/unmanaged)
     modify        JSON object of modifyable node properties
+    metrics       flag to fetch metrics of all nodes or metrics of a node belonging to the provided uuid
 
 @example 
 
@@ -356,9 +357,9 @@ def nodes(*args, **kwargs):
     param_dict = {}
     con = None
 
-    long_short_key_map = {'uuid': 'u', 'chassis': 'c', 'status': 's', 'modify': 'm'}
-    keylist = ['con', 'uuid', 'chassis', 'status', 'modify']
-    optional_keylist = ['con', 'uuid', 'chassis', 'status', 'modify']
+    long_short_key_map = {'uuid': 'u', 'chassis': 'c', 'status': 's', 'modify': 'm', 'metrics': 'x'}
+    keylist = ['con', 'uuid', 'chassis', 'status', 'modify', 'metrics']
+    optional_keylist = ['con', 'uuid', 'chassis', 'status', 'modify', 'metrics']
     mutually_exclusive_keys = ['uuid', 'chassis']
     mandatory_options_list = {}
 

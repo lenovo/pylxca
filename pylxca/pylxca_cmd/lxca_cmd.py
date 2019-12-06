@@ -249,6 +249,7 @@ class nodes(InteractiveCommand):
         -s, --status    nodes manage status (managed/unmanaged)
         -c, --chassis    chassis uuid
         -v, --view    view filter name
+        -x, --metrics   flag to fetch metrics
 
     """
     
@@ -822,4 +823,3 @@ class storedcredentials(InteractiveCommand):
     """
 
 ###############################################################################
-
