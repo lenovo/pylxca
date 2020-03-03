@@ -1639,16 +1639,16 @@ def osimages(*args, **kwargs):
         change_linux_password = {
 	"activeDirectory": {
 		"allDomains": [],
-		"defaultDomain": "labs.lenovo.com"
+		"defaultDomain": "DEFAULT_DOMAIN"
 	},
 	"credentials": [{
-			"name": "root",
-			"password": "Test1234",
+			"name": "USERNAME",
+			"password": "PASSWORD",
 			"passwordChanged": True,
 			"type": "LINUX"
 		}, {
 			"type": "WINDOWS",
-			"name": "Administrator",
+			"name": "USERNAME",
 			"password": None,
 			"passwordChanged": False
 		}
