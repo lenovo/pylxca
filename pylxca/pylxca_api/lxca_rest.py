@@ -325,10 +325,15 @@ class lxca_rest(object):
                 for key in list(disc_resp_py_obj.keys()):
                     if isinstance(disc_resp_py_obj[key],list) and disc_resp_py_obj[key] != []: 
                         discovered_endpoint = True
+                        
                         #Fetch Management Port value from Response
                         param_dict["managementPorts"] = disc_resp_py_obj[key][0]["managementPorts"]
+                        
                         #Fetch Type value from Response
                         param_dict["type"] = disc_resp_py_obj[key][0]["type"]
+
+                        # Fetch machine type from Response
+                        param_dict["machineType"] = disc_resp_py_obj[key][0]["machineType"]
 
                         if param_dict["type"] == "Rack-Tower Server":
                         # Fetch ManagementProcessor value from Response
