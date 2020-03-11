@@ -235,9 +235,11 @@ class lxca_api(with_metaclass(Singleton, object)):
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,status)
             py_obj = json.loads(resp.text)
             py_obj = {'nodesList':py_obj["nodes"]}
+
         if uuid and modify:
             resp = lxca_rest().set_nodes(self.con.get_url(), self.con.get_session(), uuid, modify)
-            py_obj = json.loads(resp.text)
+            return resp
+
         if metrics:
             resp = lxca_rest().get_metrics(self.con.get_url(), self.con.get_session(), uuid)
             py_obj = json.loads(resp.text)

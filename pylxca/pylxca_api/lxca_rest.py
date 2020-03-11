@@ -95,6 +95,7 @@ class lxca_rest(object):
 
     def set_nodes(self, url, session, uuid, modify):
         url = url + '/nodes'
+        job = None
 
         if uuid:
             url = url + '/' + uuid + '?synchronous=false'
@@ -105,10 +106,15 @@ class lxca_rest(object):
 
             resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
+            if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
+                if "location" in resp.headers._store:
+                    job = resp.headers._store["location"][-1].split("/")[-1]
+
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-        return resp
+
+        return job
 
 
     def get_switches(self,url, session, uuid):
