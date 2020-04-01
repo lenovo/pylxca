@@ -1,6 +1,6 @@
 # Version of the pylxca package
 
-__version__ = '2.6.0'
+__version__ = '2.8.0'
 
 
 # There are submodules, but clients shouldn't need to know about them.

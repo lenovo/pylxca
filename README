@@ -18,9 +18,9 @@ Lenovo XClarity Administrator REST APIs to automate functions such as:
 *	Configuring servers through the use of Configuration Patterns
 *	Applying firmware updates to endpoints
 
-Whats New in 2.6.0
+Whats New in 2.8.0
 ------------------
-* 	Add metrics support for nodes 
+* 	Bug fixes 
 
 Installation
 ------------
