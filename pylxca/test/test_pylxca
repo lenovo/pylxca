@@ -15,9 +15,9 @@ except Exception as e:
     print "ERROR MSG ", str(e)
     sys.exit()
 
-ip      = 'https://10.240.29.217'
-user    = 'USERID'
-passwd  = 'Passw0rd'
+ip      = 'LXCA_URL'
+user    = 'LXCA_USER'
+passwd  = 'LXCA_PASSWORD'
 no_verify   = 'True'
 
 # create a connection object

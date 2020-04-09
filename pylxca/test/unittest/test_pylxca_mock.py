@@ -61,9 +61,9 @@ class TestPylxcaApi(unittest.TestCase):
         _passwd = arg.password
         _noverify = 'True' if arg.no_verify else 'False'
     else:
-        _ip = 'https://10.240.29.217'
-        _user = 'USERID'
-        _passwd = 'Passw0rd'
+        _ip = 'LXCA_URL'
+        _user = 'LXCA_URL'
+        _passwd = 'LXCA_PASSWORD'
         _noverify = 'True'
 
     @classmethod

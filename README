@@ -86,13 +86,13 @@ Example
 ------------
 
 	python lxca_shell
-	connect -l https://10.241.106.216 -u USERID --noverify
-	connect -l https://10.241.106.216 -u USERID
+	connect -l LXCA_URL -u LXCA_USER --noverify
+	connect -l LXCA_URL -u LXCA_USER
 
 Example to call lxca_cmd python module from python script or Ansible module
 
 	import pylxca
-	con1 = connect("https://10.241.106.216","USERID","Passw0rd","True")
+	con1 = connect("LXCA_URL","LXCA_USER","LXCA_PASSWORD","True")
 
 Several sample scripts are also available to help you to quickly begin using the PYLXCA command-line interface (CLI) to manage endpoints. 
 The sample scripts are location in the following directory:
