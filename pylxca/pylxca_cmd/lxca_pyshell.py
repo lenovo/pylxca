@@ -89,7 +89,7 @@ def connect(*args, **kwargs):
         noverify     flag to indicate to not verify server certificate
 
 @example 
-    con1 = connect( url = "LXCA_URL",user = "LXCA_USER", pw = "LXCA_PASSWORD", noverify = "True")
+    con1 = connect( url = "<ipaddress>",user = "<user>", pw = "<password>", noverify = "True")
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
@@ -577,19 +577,19 @@ def manage(*args, **kwargs):
 
 @example 
 
-        jobid = manage(con=con1, subcmd='device', ip="DEVICE_IP",user="DEVICE_USER",pw="DEVICE_PASSWORD",rpw="DEVICE_RECOVERY_PASSWORD")
-        jobid = manage(con=con1, subcmd='device', ip="DEVICE_IP",storedcredintail_id="STORED_CREDENTIAL_ID")
+        jobid = manage(con=con1, subcmd='device', ip="<deviceip>",user="<deviceuser>",pw="<devicepassword>",rpw="<devicerecoverypassword>")
+        jobid = manage(con=con1, subcmd='device', ip="<deviceip>",storedcredintail_id="<storedcredentialid>")
 
     or with named variable it can be represented as
 
-        jobid = manage(con= con1, subcmd='device', ip="DEVICE_IP",user="DEVICE_USER","DEVICE_PASSWORD","DEVICE_RECOVERY_PASSWORD",True)
-        jobid = manage(con1, subcmd='device', i="DEVICE_IP", u='DEVICE_USER', p='DEVICE_PASSWORD', r='DEVICE_RECOVERY_PASSWORD', f='True')
+        jobid = manage(con= con1, subcmd='device', ip="<deviceip>",user="<deviceuser>","<devicepassword>","<devicerecoverypassword>",True)
+        jobid = manage(con1, subcmd='device', i="<deviceip>", u='<deviceuser>', p='<devicepassword>', r='<devicerecoverypassword>', f='True')
 
         Using storedcredential id for Rackswitch
-        jobid = manage(con=con1, subcmd='device', i='DEVICE_IP', s='STORED_CREDENTIAL_ID', f='True')
+        jobid = manage(con=con1, subcmd='device', i='<deviceip>', s='<storedcredentialid>', f='True')
 
         Using storedcredential id for Rackswitch Server
-        jobid = manage(con=con1, subcmd='device',i="DEVICE_IP", r='DEVICE_PASSWORD', s='STORED_CREDENTIAL_ID', f='True')
+        jobid = manage(con=con1, subcmd='device',i="<deviceip>", r='<devicepassword>', s='<storedcredentialid>', f='True')
 
 
     For Getting Maangement job status
@@ -649,7 +649,7 @@ def unmanage(*args, **kwargs):
         job         Job ID of unmanage request
 
 @example 
-    endpoint = 'ENDPOINT_IP;UUID;Rack-Tower'
+    endpoint = 'ENDPOINT_IP;<uuid>;Rack-Tower'
     unmanage(con_lxca, subcmd=device, i=endpoint)
     '''
     global SHELL_OBJ
@@ -1643,7 +1643,7 @@ def osimages(*args, **kwargs):
 	},
 	"credentials": [{
 			"name": "USERNAME",
-			"password": "PASSWORD",
+			"password": "<password>",
 			"passwordChanged": True,
 			"type": "LINUX"
 		}, {
@@ -1687,13 +1687,13 @@ rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
     Create remote file server entry for ftp server
 
     rep = osimages(con_lxca, subcmd = 'remotefileservers',
-			   osimages_dict ='{"username":"guest", "password":"PASSWORD",
-			    "protocol":"FTP", "port": 21, "address":"IP_ADDRESS", "displayName": "new_ftp_207" }')
+			   osimages_dict ='{"username":"guest", "password":"<password>",
+			    "protocol":"FTP", "port": 21, "address":"<ipaddress>", "displayName": "new_ftp_207" }')
 
     Update remote file server
     rep = osimages(con_lxca, subcmd = 'remotefileservers',
                    osimages_dict ='{"putid": "1", "protocol":"FTP", "port": 21,
-                    "address":"IP_ADDRESS", "displayName": "new_ftp_207" }')
+                    "address":"<ipaddress>", "displayName": "new_ftp_207" }')
 
     Delete remote file server
     rep = osimages(con_lxca, subcmd = 'remotefileservers', osimages_dict ='{"deleteid": "1"}')
@@ -1716,12 +1716,12 @@ rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
     rep = osimages(con_lxca, 'hostsettings')
 
     create hostsettings entry
-    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID', u'networkSettings': {u'dns2': u'', u'dns1': u'DNS1_IP', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'GATEWAY_IP', u'subnetMask': u'SUBNET_IP', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'IP_ADDRESS'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID2', u'networkSettings': {u'dns2': u'', u'dns1': u'DNS1_IP', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'GATEWAY_IP', u'subnetMask': u'SUBNET_IP', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'IP_ADDRESS'}}]}
+    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID2', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}]}
     host_settings_json = json.dumps(host_settings_dict)
     rep = osimages(con_lxca, 'hostsettings', action='create', osimages_dict = host_settings_json)
 
     update hostSettings entry
-    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID', u'networkSettings': {u'dns2': u'', u'dns1': u'DNS1_IP', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'GATEWAY_IP', u'subnetMask': u'SUBNET_IP', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'IP_ADDRESS'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID2', u'networkSettings': {u'dns2': u'', u'dns1': u'DNS1_IP', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'GATEWAY_IP', u'subnetMask': u'SUBNET_IP', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'IP_ADDRESS'}}]}
+    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID2', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}]}
     host_settings_json = json.dumps(host_settings_dict)
     rep = osimages(con_lxca, 'hostsettings', action='update', osimages_dict = host_settings_json)
 

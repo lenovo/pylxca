@@ -432,9 +432,9 @@
         "additional_detail": ["Example List all storedcredentials",
                               "storedcredentials",
                               "Example Create storedcredentials",
-                              "storedcredentials -u admin -p PASSWORD -d \"Test User\" -v create",
+                              "storedcredentials -u <user> -p <password> -d \"Test User\" -v create",
                               "Example modify storedcredentials",
-                              "storedcredentials -i 2056 -u admin -p PASSWORD -d \"Test User\" -v result",
+                              "storedcredentials -i 2056 -u <user> -p <password> -d \"Test User\" -v result",
                               "Example delete storedcredentials",
                               "storedcredentials --delete_id 2056 -v result"],
 		"cmd_args": [
@@ -563,13 +563,13 @@
 	"unmanage": {
       "description": "Unmanage device on LXCA",
       "additional_detail": ["The following example unmanages a device with a specific IP address.",
-                            "unmanage device –e IP_ADDRESS;UUID;Rack-Tower Server"],
+                            "unmanage device –e <ipaddress>;<uuid>;Rack-Tower Server"],
       "add_help": true,
       "subcmd": [
         {
           "name": "device",
           "additional_detail": ["The following example unmanages a device with a specific IP address.",
-                            "unmanage device –e IP_ADDRESS;UUID;Rack-Tower Server"],
+                            "unmanage device –e <ipaddress>;<uuid>;Rack-Tower Server"],
           "help": "Unmanage managed device",
           "subcmd_args": [
             [
@@ -635,9 +635,9 @@
     "manage": {
         "description": "manage device on LXCA",
         "additional_detail": ["The following example manages a device using a user account.",
-                              "manage device -i IP_ADDRESS -u DEVICE_USER -p xxxxxxxx -r xxxxxxxx",
+                              "manage device -i <ipaddress> -u <deviceuser> -p xxxxxxxx -r xxxxxxxx",
                               "The following example manages a device using a stored-credential account.",
-                              "manage device -i IP_ADDRESS -s UUID -r xxxxxxxx],"],
+                              "manage device -i <ipaddress> -s <uuid> -r xxxxxxxx],"],
         "add_help": true,
         "valid_combination": {"device":[["ip", "user","pw"],
                                         ["ip", "user","pw", "rpw"],
@@ -652,9 +652,9 @@
         "subcmd": [{
                 "name": "device",
                 "additional_detail": ["The following example manages a device using a user account.",
-                              "manage device -i IP_ADDRESS -u DEVICE_USER -p xxxxxxxx -r xxxxxxxx",
+                              "manage device -i <ipaddress> -u <deviceuser> -p xxxxxxxx -r xxxxxxxx",
                               "The following example manages a device using a stored-credential account.",
-                              "manage device -i IP_ADDRESS -s UUID -r xxxxxxxx],"],
+                              "manage device -i <ipaddress> -s <uuid> -r xxxxxxxx],"],
 
                 "help": "Manage discovered device",
                 "subcmd_args": [
@@ -1527,11 +1527,11 @@
         {
           "name": "apply",
           "additional_detail": ["The following example applies a firmware update on a storage device and immediate activates the update",
-                                "updatecomp apply -a apply -m immediate -t 8BFBADCC33CB11E499F740F2E9903640,lnvgy_fw_storage_1.1.1,Controller A",
+                                "updatecomp apply -a apply -m immediate -t <uuid>,lnvgy_fw_storage_1.1.1,Controller A",
                                 "The following example powers off a server and a storage system.",
-                                "updatecomp apply -a power -m immediate –s 9AEDACCC56SD23F346A852D2D2354865,powerOff –t 8BFBADCC33CB11E499F740F2E9903640,powerOff",
+                                "updatecomp apply -a power -m immediate –s <uuid1>,powerOff –t <uuid2>,powerOff",
 		  						"The following example applies firmware update on server using dev_list json format",
-			  					"updatecomp apply -a apply -m immediate --dev_list '{\"DeviceList\": [{\"ServerList\": [{\"UUID\": \"38B1DC62084411E88C7A0A94EF4EC2EF\", \"Components\": [{\"Fixid\": \"lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch\", \"Component\":\"LXPM Diagnostic Software\"}]}]},{\"CMMList\": []},{\"SwitchList\": []},{\"StorageList\": []}]}'"
+			  					"updatecomp apply -a apply -m immediate --dev_list '{\"DeviceList\": [{\"ServerList\": [{\"UUID\": \"<uuid>\", \"Components\": [{\"Fixid\": \"lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch\", \"Component\":\"LXPM Diagnostic Software\"}]}]},{\"CMMList\": []},{\"SwitchList\": []},{\"StorageList\": []}]}'"
 		  ],
           "help": "Apply firmware update to devices",
           "subcmd_args": [
@@ -1863,7 +1863,7 @@
           "additional_detail": ["The following example returns information  about globalsettings.",
                                 "osimages globalsettings -v globalsettings",
                                 "The following example set Linux default password",
-                                "osimages globalsettings --osimages_dict '{\"ipAssignment\": \"dhcpv4\", \"credentials\": [{\"passwordChanged\": true, \"password\": \"PASSWORD\", \"type\": \"LINUX\", \"name\": \"root\"}, {\"passwordChanged\": false, \"password\": null, \"type\": \"WINDOWS\", \"name\": \"USERNAME\"}], \"licenseKeys\": {\"win2019r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2016r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r2\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}}, \"isVLANMode\": false, \"activeDirectory\": {\"defaultDomain\": \"DEFAULT_DOMAIN\", \"allDomains\": []}}' -v result"
+                                "osimages globalsettings --osimages_dict '{\"ipAssignment\": \"dhcpv4\", \"credentials\": [{\"passwordChanged\": true, \"password\": \"<password>\", \"type\": \"LINUX\", \"name\": \"root\"}, {\"passwordChanged\": false, \"password\": null, \"type\": \"WINDOWS\", \"name\": \"USERNAME\"}], \"licenseKeys\": {\"win2019r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2016r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r2\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}}, \"isVLANMode\": false, \"activeDirectory\": {\"defaultDomain\": \"DEFAULT_DOMAIN\", \"allDomains\": []}}' -v result"
           ],
           "help": "Retrieve or modify global operating-system deployment settings. Global settings serve as defaults settings when operating systems are deployed.",
           "subcmd_args": [
@@ -1892,9 +1892,9 @@
             "The following example list all host settings",
             "osimages hostsettings -v hostsettings",
             "The following example create host settings",
-            "osimages hostsetttings --action create --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"UUID\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"DNS1_IP\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"GATEWAY_IP\", u\"subnetMask\": u\"SUBNET_IP\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"HOST_IP\"}}]}' -v result",
+            "osimages hostsetttings --action create --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"<uuid>\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"<dns1ip>\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"<gatewayip>\", u\"subnetMask\": u\"<subnetmask>\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"<hostip>\"}}]}' -v result",
             "The following example update host settings",
-            "osimages hostsetttings --action update --update True --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"UUID\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"DNS1_IP\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"GATEWAY_IP\", u\"subnetMask\": u\"SUBNET_IP\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"HOST_IP\"}}]}' -v result",
+            "osimages hostsetttings --action update --update True --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"<uuid>\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"<dns1ip>\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"<gatewayip>\", u\"subnetMask\": u\"<subnetmask>\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"<hostip>\"}}]}' -v result",
             "delete host Setting with uuid ",
             "osimages hostsettings --action delete -o '{\"uuid\": \"A1445C6FDBAA11E6A87F86E06E3AFFFF\"}' -v result"
           ],
@@ -1933,7 +1933,7 @@
           "additional_detail": ["The following example list downloaded osimages",
                                 "osimages hostplatforms",
                                 "This example deploy os to device specified by uuid",
-                                "osimages hostplatforms --osimages_dict '{\"networkSettings\":{\"dns1\": \"DNS1_IP\",\"dns2\":\"DNS2_IP\",\"gateway\":\"GATEWAY_IP\",\"ipAddress\":\"HOST_IP\",\"mtu\":1500,\"prefixLength\":64,\"selectedMac\":\"AUTO\",\"subnetMask\":\"SUBNET_IP\",\"vlanId\":521},\"selectedImage\":\"rhels7.3|rhels7.3-x86_64-install-Minimal\",\"storageSettings\":{\"targetDevice\":\"localdisk\"},\"uuid\":\"UUID\"}'"
+                                "osimages hostplatforms --osimages_dict '{\"networkSettings\":{\"dns1\": \"<dns1ip>\",\"dns2\":\"<dns2ip>\",\"gateway\":\"<gatewayip>\",\"ipAddress\":\"<hostip>\",\"mtu\":1500,\"prefixLength\":64,\"selectedMac\":\"AUTO\",\"subnetMask\":\"<subnetmask>\",\"vlanId\":521},\"selectedImage\":\"rhels7.3|rhels7.3-x86_64-install-Minimal\",\"storageSettings\":{\"targetDevice\":\"localdisk\"},\"uuid\":\"<uuid>\"}'"
           ],
           "help": " Retrieve information about the host platforms and deploy operating-system images to the host platforms as a job",
           "subcmd_args": [
@@ -2022,9 +2022,9 @@
             "The following example specifig remote file servers",
             "osimages remotefileservers -v remotefileservers -o '{\"id\": \"1\"}' -v remotefileservers_id",
             "Create remote file server entry for FTP server",
-            "osimages remotefileservers -o '{\"username\": \"guest\", \"password\": \"password\",  \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"IP_ADDRESS\",\"protocol\":\"FTP\"}' -v remotefileservers",
+            "osimages remotefileservers -o '{\"username\": \"guest\", \"password\": \"password\",  \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"<ipaddress>\",\"protocol\":\"FTP\"}' -v remotefileservers",
             "Update remote file server entry",
-            "osimages remotefileservers -o '{\"putid\": \"1\", \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"IP_ADDRESS\",\"protocol\":\"FTP\"}' -v result",
+            "osimages remotefileservers -o '{\"putid\": \"1\", \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"<ipaddress>\",\"protocol\":\"FTP\"}' -v result",
             "delete remote file server entry",
             "osimages remotefileservers -o '{\"deleteid\": \"1\"}' -v result"
 
