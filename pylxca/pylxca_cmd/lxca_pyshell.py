@@ -1635,7 +1635,7 @@ def osimages(*args, **kwargs):
         List all globalsettings
         osimages(con, subcmd = 'globalsettings')
 
-        Set Linux default passw0rd using globalsettings
+        Set Linux default password using globalsettings
         change_linux_password = {
 	"activeDirectory": {
 		"allDomains": [],
@@ -1687,7 +1687,7 @@ rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
     Create remote file server entry for ftp server
 
     rep = osimages(con_lxca, subcmd = 'remotefileservers',
-			   osimages_dict ='{"username":"guest", "password":"Passw0rd",
+			   osimages_dict ='{"username":"guest", "password":"PASSWORD",
 			    "protocol":"FTP", "port": 21, "address":"IP_ADDRESS", "displayName": "new_ftp_207" }')
 
     Update remote file server

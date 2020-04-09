@@ -432,9 +432,9 @@
         "additional_detail": ["Example List all storedcredentials",
                               "storedcredentials",
                               "Example Create storedcredentials",
-                              "storedcredentials -u admin -p Passw0rd -d \"Test User\" -v create",
+                              "storedcredentials -u admin -p PASSWORD -d \"Test User\" -v create",
                               "Example modify storedcredentials",
-                              "storedcredentials -i 2056 -u admin -p Passw0rd -d \"Test User\" -v result",
+                              "storedcredentials -i 2056 -u admin -p PASSWORD -d \"Test User\" -v result",
                               "Example delete storedcredentials",
                               "storedcredentials --delete_id 2056 -v result"],
 		"cmd_args": [
@@ -635,7 +635,7 @@
     "manage": {
         "description": "manage device on LXCA",
         "additional_detail": ["The following example manages a device using a user account.",
-                              "manage device -i IP_ADDRESS -u USERID -p xxxxxxxx -r xxxxxxxx",
+                              "manage device -i IP_ADDRESS -u DEVICE_USER -p xxxxxxxx -r xxxxxxxx",
                               "The following example manages a device using a stored-credential account.",
                               "manage device -i IP_ADDRESS -s UUID -r xxxxxxxx],"],
         "add_help": true,
@@ -652,7 +652,7 @@
         "subcmd": [{
                 "name": "device",
                 "additional_detail": ["The following example manages a device using a user account.",
-                              "manage device -i IP_ADDRESS -u USERID -p xxxxxxxx -r xxxxxxxx",
+                              "manage device -i IP_ADDRESS -u DEVICE_USER -p xxxxxxxx -r xxxxxxxx",
                               "The following example manages a device using a stored-credential account.",
                               "manage device -i IP_ADDRESS -s UUID -r xxxxxxxx],"],
 
@@ -677,14 +677,14 @@
                     [{
                             "args": "-p,--pw",
                             "opt_dict": {
-                                "help": "device passw0rd"
+                                "help": "device password"
                             }
                         }
                     ],
                     [{
                             "args": "-r,--rpw",
                             "opt_dict": {
-                                "help": "device restore passw0rd"
+                                "help": "device restore password"
                             }
                         }
                     ],

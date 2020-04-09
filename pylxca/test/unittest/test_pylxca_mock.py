@@ -35,10 +35,10 @@ def get_args():
                         help='Store LXCA IP value')
     parser.add_argument('-n', action='store_false', default=True, dest='no_verify',
                         help='Set a no_verify to false')
-    parser.add_argument('-u', action='store', dest='user', type=str, default='USERID',
-                        help='Specify username. default:"USERID"')
-    parser.add_argument('-p', action='store', dest='password', type=str, default="CME44ibm",
-                        help='Specify password. default: "CME44ibm" ')
+    parser.add_argument('-u', action='store', dest='user', type=str, default='USER',
+                        help='Specify username. default:"USER"')
+    parser.add_argument('-p', action='store', dest='password', type=str, default="PASSWORD",
+                        help='Specify password. default: "PASSWORD" ')
 
     return(parser.parse_args())
 
