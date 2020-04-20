@@ -31,10 +31,10 @@ def get_args():
                         help='Set a no_verify to false')
     parser.add_argument('-c', action='append', dest='chassis', required=False, default=[],
                         help='Specify chassis as chassis1,chassis2..',)
-    parser.add_argument('-u', action='store', dest='user', type=str, default='USERID',
-                        help='Specify username. default:"USERID"')
-    parser.add_argument('-p', action='store', dest='password', type=str, default="CME44ibm",
-                        help='Specify password. default: "CME44ibm" ')
+    parser.add_argument('-u', action='store', dest='user', type=str, default='USER',
+                        help='Specify username. default:"USER"')
+    parser.add_argument('-p', action='store', dest='password', type=str, default="PASSWORD",
+                        help='Specify password. default: "PASSWORD" ')
     parser.add_argument('--version', action='version', version='%(prog)s v0.1')
 
     return(parser.parse_args())

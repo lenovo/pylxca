@@ -35,10 +35,10 @@ def get_args():
                         help='Store LXCA IP value')
     parser.add_argument('-n', action='store_false', default=True, dest='no_verify',
                         help='Set a no_verify to false')
-    parser.add_argument('-u', action='store', dest='user', type=str, default='USERID',
-                        help='Specify username. default:"USERID"')
-    parser.add_argument('-p', action='store', dest='password', type=str, default="CME44ibm",
-                        help='Specify password. default: "CME44ibm" ')
+    parser.add_argument('-u', action='store', dest='user', type=str, default='USER',
+                        help='Specify username. default:"USER"')
+    parser.add_argument('-p', action='store', dest='password', type=str, default="PASSWORD",
+                        help='Specify password. default: "PASSWORD" ')
 
     return(parser.parse_args())
 
@@ -61,9 +61,9 @@ class TestPylxcaApi(unittest.TestCase):
         _passwd = arg.password
         _noverify = 'True' if arg.no_verify else 'False'
     else:
-        _ip = 'https://10.240.29.217'
-        _user = 'USERID'
-        _passwd = 'Passw0rd'
+        _ip = 'LXCA_IP'
+        _user = 'LXCA_USER'
+        _passwd = 'LXCA_PASSWORD'
         _noverify = 'True'
 
     @classmethod
