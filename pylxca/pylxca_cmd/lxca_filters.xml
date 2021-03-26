@@ -779,6 +779,22 @@
         </input >
     </resourcegroups>
 
-
+    <license name="default">
+		<result>result</result>
+        <response name="response" type="object">
+			<active_entitlements>active_entitlements</active_entitlements>
+			<expiring_soon>expiring_soon</expiring_soon>
+			<compliant>compliant</compliant>
+			<remaining_days>remaining_days</remaining_days>
+			<enable_functions>enable_functions</enable_functions>
+			<accepted_eula>accepted_eula</accepted_eula>
+			<managed_devices>managed_devices</managed_devices>
+			<notifications name="notifications" type="object">
+				<contact>contact</contact>
+				<description>description</description>
+				<type>type</type>
+			</notifications >
+        </response >
+    </license>
 
 </filters>

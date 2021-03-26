@@ -142,6 +142,7 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.cmms(self))
         self.add_command(lxca_cmd.scalablesystem(self))
         self.add_command(lxca_cmd.ostream(self))
+        #self.add_command(lxca_cmd.jobs(self))
         self.add_command(lxca_cmd.discover(self))
         self.add_command(lxca_cmd.manage(self))
         self.add_command(lxca_cmd.unmanage(self))
@@ -162,6 +163,7 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.rules(self))
         self.add_command(lxca_cmd.compositeResults(self))
         self.add_command(lxca_cmd.storedcredentials(self))
+        self.add_command(lxca_cmd.license(self))
 
     def set_ostream_to_null(self):
         self.ostream = open(os.devnull, 'w')

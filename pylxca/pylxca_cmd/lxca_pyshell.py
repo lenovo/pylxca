@@ -46,6 +46,7 @@ def set_interactive():
           "discover": discover,
           "manage": manage,
           "unmanage": unmanage,
+          #"jobs": jobs,
           "users": users,
           "lxcalog": lxcalog,
           "ffdc": ffdc,
@@ -61,6 +62,7 @@ def set_interactive():
           "resourcegroups": resourcegroups,
           "storedcredentials": storedcredentials,
           "managementserver": managementserver,
+          "license": license,
           "help": help}
     ns.update()
     global __version__
@@ -89,7 +91,7 @@ def connect(*args, **kwargs):
         noverify     flag to indicate to not verify server certificate
 
 @example 
-    con1 = connect( url = "<ipaddress>",user = "<user>", pw = "<password>", noverify = "True")
+    con1 = connect( url = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
@@ -577,24 +579,24 @@ def manage(*args, **kwargs):
 
 @example 
 
-        jobid = manage(con=con1, subcmd='device', ip="<deviceip>",user="<deviceuser>",pw="<devicepassword>",rpw="<devicerecoverypassword>")
-        jobid = manage(con=con1, subcmd='device', ip="<deviceip>",storedcredintail_id="<storedcredentialid>")
+        jobid = manage(con=con1, subcmd='device', ip="10.243.6.68",user="USERID",pw="PASSW0RD",rpw="PASSW0RD")
+        jobid = manage(con=con1, subcmd='device', ip="10.243.6.68",storedcredintail_id="12")
 
     or with named variable it can be represented as
 
-        jobid = manage(con= con1, subcmd='device', ip="<deviceip>",user="<deviceuser>","<devicepassword>","<devicerecoverypassword>",True)
-        jobid = manage(con1, subcmd='device', i="<deviceip>", u='<deviceuser>', p='<devicepassword>', r='<devicerecoverypassword>', f='True')
+        jobid = manage(con= con1, subcmd='device', ip="10.243.6.68",user="USERID","PASSW0RD","PASSW0RD",True)
+        jobid = manage(con1, subcmd='device', i="10.243.4.16", u='USERID', p='Purley44LEN', r='Purley55LEN', f='True')
 
         Using storedcredential id for Rackswitch
-        jobid = manage(con=con1, subcmd='device', i='<deviceip>', s='<storedcredentialid>', f='True')
+        jobid = manage(con=con1, subcmd='device', i='10.240.157.111', s='402', f='True')
 
         Using storedcredential id for Rackswitch Server
-        jobid = manage(con=con1, subcmd='device',i="<deviceip>", r='<devicepassword>', s='<storedcredentialid>', f='True')
+        jobid = manage(con=con1, subcmd='device',i="10.243.4.16", r='Purley55LEN', s='404', f='True')
 
 
     For Getting Maangement job status
 
-        jobid = manage(con=con1, subcmd='job_status', job="JOB_ID")
+        jobid = manage(con=con1, subcmd='job_status', job="12")
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
@@ -630,12 +632,12 @@ def unmanage(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con','subcmd','ip','force','job']
+        keylist = ['con','subcmd','ep','force','job']
 
 @param
     The parameters for this command are as follows 
         subcmd      device \ job_status
-        ip          one or more endpoints to be unmanaged.
+        ep          one or more endpoints to be unmanaged.
                     This is comma separated list of multiple endpoints, each endpoint should
                     contain endpoint information separated by semicolon.
                     endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
@@ -645,22 +647,23 @@ def unmanage(*args, **kwargs):
                           Storage
                           Rackswitch
                           Rack-Tower
+                          Edge
         force       Indicates whether to force the unmanagement of an endpoint (True/False)
         job         Job ID of unmanage request
 
 @example 
-    endpoint = 'ENDPOINT_IP;<uuid>;Rack-Tower'
-    unmanage(con_lxca, subcmd=device, i=endpoint)
+    endpoint = '10.240.195.39;D31C76F0302503B50010D21DE03A0523;Rack-Tower'
+    unmanage(con_lxca, subcmd='device', ep=endpoint)
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
     param_dict = {}
     con = None
 
-    long_short_key_map = {'ip': 'i', 'job': 'j', 'force': 'f'}
-    keylist = ['con', 'subcmd', 'ip', 'force', 'job']
-    optional_keylist = ['con', 'ip', 'force', 'job']
-    mutually_exclusive_keys = ['ip', 'job']
+    long_short_key_map = {'ep': 'e', 'job': 'j', 'force': 'f'}
+    keylist = ['con', 'subcmd', 'ep', 'force', 'job']
+    optional_keylist = ['con', 'ep', 'force', 'job']
+    mutually_exclusive_keys = ['ep', 'job']
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
@@ -1030,7 +1033,7 @@ def updatecomp(*args, **kwargs):
     server  servers information
     storage storages information
     dev_list  - update all updateable components
-            For action = apply/cancelApply, Device information should contain following data separated by comma
+            For action = apply / applyBundle / cancelApply, Device information should contain following data separated by comma
                 UUID - UUID of the device
                 Fixid - Firmware-update ID of the target package to be applied to the component.
                          If not provided assigned policy would be used.
@@ -1048,6 +1051,10 @@ def updatecomp(*args, **kwargs):
 Applying firmware update to server
 endpoint = "38B1DC62084411E88C7A0A94EF4EC2EF,lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch,LXPM Diagnostic Software"
 rep = updatecomp(con, 'apply', action='apply', mode='immediate', server=endpoint)
+
+Applying firmware update to ThinkSystem SR635 and SR655
+endpoint = "53619A91874311E9A3E3E086720E6C33"
+rep = updatecomp(con, 'apply', action='applyBudle', server=endpoint)
 
 Applying firmware update using dev_list json format
 
@@ -1635,20 +1642,20 @@ def osimages(*args, **kwargs):
         List all globalsettings
         osimages(con, subcmd = 'globalsettings')
 
-        Set Linux default password using globalsettings
+        Set Linux default passw0rd using globalsettings
         change_linux_password = {
 	"activeDirectory": {
 		"allDomains": [],
-		"defaultDomain": "DEFAULT_DOMAIN"
+		"defaultDomain": "labs.lenovo.com"
 	},
 	"credentials": [{
-			"name": "USERNAME",
-			"password": "<password>",
+			"name": "root",
+			"password": "Test1234",
 			"passwordChanged": True,
 			"type": "LINUX"
 		}, {
 			"type": "WINDOWS",
-			"name": "USERNAME",
+			"name": "Administrator",
 			"password": None,
 			"passwordChanged": False
 		}
@@ -1687,13 +1694,13 @@ rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
     Create remote file server entry for ftp server
 
     rep = osimages(con_lxca, subcmd = 'remotefileservers',
-			   osimages_dict ='{"username":"guest", "password":"<password>",
-			    "protocol":"FTP", "port": 21, "address":"<ipaddress>", "displayName": "new_ftp_207" }')
+			   osimages_dict ='{"username":"guest", "password":"Passw0rd",
+			    "protocol":"FTP", "port": 21, "address":"10.243.2.207", "displayName": "new_ftp_207" }')
 
     Update remote file server
     rep = osimages(con_lxca, subcmd = 'remotefileservers',
                    osimages_dict ='{"putid": "1", "protocol":"FTP", "port": 21,
-                    "address":"<ipaddress>", "displayName": "new_ftp_207" }')
+                    "address":"10.243.2.207", "displayName": "new_ftp_207" }')
 
     Delete remote file server
     rep = osimages(con_lxca, subcmd = 'remotefileservers', osimages_dict ='{"deleteid": "1"}')
@@ -1702,26 +1709,26 @@ rep = osimages(con_lxca, subcmd = 'globalsettings', osimages_dict = json_string)
     Import local files of imagetype (UNATTEND, CUSTOM_CONFIG, SCRIPT, OS)
     rep = osimages(con_lxca, subcmd='import', imagetype='UNATTEND')
     print rep
-    file_dict = { "jobId":rep["jobId"], "imageName":"SLES", "os":"sles", "description":"SLES_config_file", "file": "/path/to/sles_unattended.xml" }
+    file_dict = { "jobId":rep["jobId"], "imageName":"SLES", "os":"sles", "description":"SLES_config_file", "file": "/home/naval/sles_unattended.xml" }
     rep = osimages(con_lxca, subcmd='import', imagetype='UNATTEND', osimages_dict = json.dumps(file_dict))
 
     import BUNDLE and BUNDLESIG done with single jobid and imagename should be same as basename of files
     rep = osimages(con_lxca, subcmd='import', imagetype='BUNDLE')
-    file_dict = {"jobId":rep["jobId"], "imageName":"bundle_win2016_20180926153236.zip", "file": "/path/to/osimage_test/bundle_win2016_20180926153236.zip"}
+    file_dict = {"jobId":rep["jobId"], "imageName":"bundle_win2016_20180926153236.zip", "file": "/home/naval/osimage_test/bundle_win2016_20180926153236.zip"}
     rep1 = osimages(con_lxca, subcmd='import', imagetype='BUNDLE', osimages_dict = json.dumps(file_dict))
-    file_dict = { "jobId":rep["jobId"], "imageName":"bundle_win2016_20180926153236.zip.asc", "file": "/path/to/osimage_test/bundle_win2016_20180926153236.zip.asc"}
+    file_dict = { "jobId":rep["jobId"], "imageName":"bundle_win2016_20180926153236.zip.asc", "file": "/home/naval/osimage_test/bundle_win2016_20180926153236.zip.asc"}
     rep2 = osimages(con_lxca, subcmd='import', imagetype='BUNDLESIG', osimages_dict = json.dumps(file_dict))
 
     get all hostSettings
     rep = osimages(con_lxca, 'hostsettings')
 
     create hostsettings entry
-    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID2', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}]}
+    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A1445C6FDBAA11E6A87F86E06E3AFFFF', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.9.79'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A122FB03FF4011E68D9BA32E3A66DDDD', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.9.87'}}]}
     host_settings_json = json.dumps(host_settings_dict)
     rep = osimages(con_lxca, 'hostsettings', action='create', osimages_dict = host_settings_json)
 
     update hostSettings entry
-    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'UUID2', u'networkSettings': {u'dns2': u'', u'dns1': u'<dns1ip>', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'<gatewayip>', u'subnetMask': u'<subnetmask>', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'<ipaddress>'}}]}
+    host_settings_dict = {u'hosts': [{u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A1445C6FDBAA11E6A87F86E06E3AFFFF', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'nodeundefined', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.25.25'}}, {u'storageSettings': {u'targetDevice': u'localdisk'}, u'uuid': u'A122FB03FF4011E68D9BA32E3A66DDDD', u'networkSettings': {u'dns2': u'', u'dns1': u'10.240.0.10', u'hostname': u'proton1', u'vlanId': 0, u'selectedMAC': u'AUTO', u'gateway': u'10.243.0.1', u'subnetMask': u'255.255.240.0', u'mtu': 1500, u'prefixLength': 64, u'ipAddress': u'10.243.26.26'}}]}
     host_settings_json = json.dumps(host_settings_dict)
     rep = osimages(con_lxca, 'hostsettings', action='update', osimages_dict = host_settings_json)
 
@@ -1814,8 +1821,8 @@ def managementserver(*args, **kwargs):
      files     files to be imported with fullpath and comma separated
 @example
     TO import files
-    rep = managementserver(con_lxca, subcmd='import', files='/path/to/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt')
-    rep = managementserver(con_lxca, subcmd='import', j=rep['jobid'], files='/path/to/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt')
+    rep = managementserver(con_lxca, subcmd='import', files='/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt')
+    rep = managementserver(con_lxca, subcmd='import', j=rep['jobid'], files='/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt')
 
 
     '''
@@ -1983,3 +1990,40 @@ def storedcredentials(*args, **kwargs):
 
     out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
+
+def license(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to retrieve information about warnings regarding non-compliance of installed Lenovo XClarity Administrator license
+    run this function as
+    license(con)
+
+@param
+    The parameter for this command is as follows
+
+        con      Connection Object to Lenovo XClarity Administrator
+
+@example 
+    license(con)
+    '''
+    global SHELL_OBJ
+
+    command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    long_short_key_map = {}
+    keylist = ['con']
+    optional_keylist = ['con']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
+    return out_obj
+

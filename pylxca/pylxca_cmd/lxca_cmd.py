@@ -446,8 +446,10 @@ class discover(InteractiveCommand):
     def handle_output(self, out_obj):
         if out_obj == None:
             self.sprint("Failed to start Discovery job for selected endpoint " )
-        else:
+        elif type(out_obj) == str:
             self.sprint("Discovery job started, jobId = " + out_obj)
+        else:
+            self.sprint(out_obj)
         return
     
 class manage(InteractiveCommand):
@@ -481,26 +483,34 @@ class manage(InteractiveCommand):
             self.sprint("Manage job started, jobId = " + out_obj)
         return
     
+    def show_output(self, out_obj, view_filter='default'):
+        if out_obj == None:
+            self.sprint("Failed to start manage job for selected endpoint " )
+        else:
+            self.sprint("Manage job started, = " + json.dumps(out_obj))
+        return
+    
 class unmanage(InteractiveCommand):
     """
     Unmanage the endpoint
 
     USAGE:
         unmanage -h | --help
-        unmanage -i <endpoint information> [--force]
+        unmanage -e <endpoint information> [--force]
         unmanage -j <job ID> [-v <view filter name>]
     
     OPTIONS:
-        -e, --ep    one or more endpoints to be unmanaged.
-                This is comma separated list of multiple endpoints, each endpoint should
-                contain endpoint information separated by semicolon.
-                endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
-                Type of endpoint to be unmanaged ,This can be one of the following values:
-                    Chassis
-                    ThinkServer
-                    Storage
-                    Rackswitch
-                    Rack-Tower
+        -e, --ep        one or more endpoints to be unmanaged.
+                        This is comma separated list of multiple endpoints, each endpoint should
+                        contain endpoint information separated by semicolon.
+                        endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
+                        Type of endpoint to be unmanaged ,This can be one of the following values:
+                            Chassis
+                            ThinkServer
+                            Storage
+                            Rackswitch
+                            Rack-Tower
+                            Edge
         -f, --force     Indicates whether to force the unmanagement of an endpoint (True/False)
         -j, --job       Job ID of unmanage request
         -v, --view      View filter name
@@ -511,6 +521,13 @@ class unmanage(InteractiveCommand):
             self.sprint("Failed to start unmanage job for selected endpoint " )
         else:
             self.sprint("Unmanage job started, jobId = " + out_obj)
+        return
+    
+    def show_output(self, out_obj, view_filter='default'):
+        if out_obj == None:
+            self.sprint("Failed to start unmanage job for selected endpoint " )
+        else:
+            self.sprint("Unmanage job started, = " + json.dumps(out_obj))
         return
 
 ###############################################################################
@@ -541,6 +558,14 @@ class ffdc(InteractiveCommand):
         else:
             self.sprint("FFDC job started, jobId = " + out_obj)
         return
+
+    def show_output(self, out_obj, view_filter='default'):
+        if out_obj == None:
+            self.sprint("Failed to start ffdc job for selected endpoint " )
+        else:
+            self.sprint("FFDC job started, jobId = " + out_obj)
+        return
+
 ###############################################################################
 
 class users(InteractiveCommand):
@@ -641,6 +666,7 @@ class updatecomp(InteractiveCommand):
 
         -a, --action    The action to take. This can be one of the following values.
                             apply - Applies the associated firmware to the submitted components.
+                            applyBundle - Applies firmware updates to all components of specified ThinkSystem SR635 and SR655 devices according to the assigned firmware-compliance policy using a bundled image that contain all applicable firmware packages.
                             power - Perform power action on selected endpoint.
                             cancelApply - Cancels the firmware update request to the selected components.
         -c, --cmm       cmms information
@@ -648,7 +674,7 @@ class updatecomp(InteractiveCommand):
         -s, --server    servers information
         -t, --storage   storages information
     
-            For action = apply/cancelApply, Device information should contain following data separated by comma
+            For action = apply / applyBundle / cancelApply, Device information should contain following data separated by comma
                 UUID - UUID of the device
                 Fixid - Firmware-update ID of the target package to be applied to the component. If not provided assigned policy would be used.
                 Component - Component name
@@ -708,6 +734,21 @@ class configpatterns(InteractiveCommand):
         -v, --view    View filter name
 
     """
+
+    def handle_output(self, out_obj):
+        if 'compliance' in out_obj:
+            self.sprint(out_obj['message'])
+        else:
+            self.sprint(out_obj)
+        return
+    
+    def show_output(self, out_obj, view_filter='default'):
+        if 'compliance' in out_obj:
+            self.sprint(out_obj['message'])
+        else:
+            self.sprint(out_obj)
+        return
+
 ###############################################################################
 
 class configprofiles(InteractiveCommand):
@@ -735,6 +776,21 @@ class configprofiles(InteractiveCommand):
         -v, --view    View filter name
 
     """
+
+    def handle_output(self, out_obj):
+        if 'compliance' in out_obj:
+            self.sprint(out_obj['message'])
+        else:
+            self.sprint(out_obj)
+        return
+
+    def show_output(self, out_obj, view_filter='default'):
+        if 'compliance' in out_obj:
+            self.sprint(out_obj['message'])
+        else:
+            self.sprint(out_obj)
+        return
+
 ###############################################################################
 
 class manifests(InteractiveCommand):
@@ -773,6 +829,30 @@ class osimages(InteractiveCommand):
     """
     OSImages/Deployment on LXCA
     """
+    
+    def handle_output(self, out_obj):
+        if (
+            'result' in out_obj and 
+            out_obj['result'] == 'failed' and 
+            out_obj['messages'][0]['id'] == 'FQXHMFC0295M'
+        ):
+            self.sprint(out_obj['messages'][0]['text'])
+            self.sprint(out_obj['messages'][0]['recovery']['text'])
+        else:
+            self.sprint(out_obj)
+        return
+    
+    def show_output(self, out_obj, view_filter='default'):
+        if (
+            'result' in out_obj and 
+            out_obj['result'] == 'failed' and 
+            out_obj['messages'][0]['id'] == 'FQXHMFC0295M'
+        ):
+            self.sprint(out_obj['messages'][0]['text'])
+            self.sprint(out_obj['messages'][0]['recovery']['text'])
+        else:
+            self.sprint(out_obj)
+        return
 
 
 ###############################################################################
@@ -821,5 +901,27 @@ class storedcredentials(InteractiveCommand):
         -v, --view    view filter name
 
     """
+
+###############################################################################
+
+class license(InteractiveCommand):
+    """
+    Retrieve information about warnings regarding non-compliance of installed licenses.
+    """
+    def handle_output(self, out_obj):
+        self.sprint(out_obj)
+        return
+    
+    def show_output(self, out_obj, view_filter='default'):
+        out_obj['response'][1]['notifications'] = out_obj['response'][1]['notifications'].pop()
+        out_obj['response'] = [self.merge_two_dicts(out_obj['response'][0], out_obj['response'][1])]
+        super().show_output(out_obj, view_filter)
+        return
+
+    def merge_two_dicts(self, x, y):
+        z = x.copy()
+        z.update(y)
+        return z
+
 
 ###############################################################################

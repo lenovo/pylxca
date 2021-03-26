@@ -432,9 +432,9 @@
         "additional_detail": ["Example List all storedcredentials",
                               "storedcredentials",
                               "Example Create storedcredentials",
-                              "storedcredentials -u <user> -p <password> -d \"Test User\" -v create",
+                              "storedcredentials -u admin -p Passw0rd -d \"Test User\" -v create",
                               "Example modify storedcredentials",
-                              "storedcredentials -i 2056 -u <user> -p <password> -d \"Test User\" -v result",
+                              "storedcredentials -i 2056 -u admin -p Passw0rd -d \"Test User\" -v result",
                               "Example delete storedcredentials",
                               "storedcredentials --delete_id 2056 -v result"],
 		"cmd_args": [
@@ -563,13 +563,13 @@
 	"unmanage": {
       "description": "Unmanage device on LXCA",
       "additional_detail": ["The following example unmanages a device with a specific IP address.",
-                            "unmanage device –e <ipaddress>;<uuid>;Rack-Tower Server"],
+                            "unmanage device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower"],
       "add_help": true,
       "subcmd": [
         {
           "name": "device",
           "additional_detail": ["The following example unmanages a device with a specific IP address.",
-                            "unmanage device –e <ipaddress>;<uuid>;Rack-Tower Server"],
+                            "unmanage device –e 192.0.2.44;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA;Rack-Tower"],
           "help": "Unmanage managed device",
           "subcmd_args": [
             [
@@ -582,7 +582,7 @@
             ],
             [
               {
-                "args": "-i,--ip",
+                "args": "-e,--ep",
                 "opt_dict": {
                   "help": "Specifies a set of properties for one or more devices to be unmanaged"
                 }
@@ -635,9 +635,9 @@
     "manage": {
         "description": "manage device on LXCA",
         "additional_detail": ["The following example manages a device using a user account.",
-                              "manage device -i <ipaddress> -u <deviceuser> -p xxxxxxxx -r xxxxxxxx",
+                              "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
                               "The following example manages a device using a stored-credential account.",
-                              "manage device -i <ipaddress> -s <uuid> -r xxxxxxxx],"],
+                              "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
         "add_help": true,
         "valid_combination": {"device":[["ip", "user","pw"],
                                         ["ip", "user","pw", "rpw"],
@@ -652,9 +652,9 @@
         "subcmd": [{
                 "name": "device",
                 "additional_detail": ["The following example manages a device using a user account.",
-                              "manage device -i <ipaddress> -u <deviceuser> -p xxxxxxxx -r xxxxxxxx",
+                              "manage device -i 192.0.2.22 -u USERID -p xxxxxxxx -r xxxxxxxx",
                               "The following example manages a device using a stored-credential account.",
-                              "manage device -i <ipaddress> -s <uuid> -r xxxxxxxx],"],
+                              "manage device -i 192.0.2.23 -s AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -r xxxxxxxx],"],
 
                 "help": "Manage discovered device",
                 "subcmd_args": [
@@ -677,14 +677,14 @@
                     [{
                             "args": "-p,--pw",
                             "opt_dict": {
-                                "help": "device password"
+                                "help": "device passw0rd"
                             }
                         }
                     ],
                     [{
                             "args": "-r,--rpw",
                             "opt_dict": {
-                                "help": "device restore password"
+                                "help": "device restore passw0rd"
                             }
                         }
                     ],
@@ -767,1515 +767,1523 @@
             ]
 		]
 	},
-  	"configpatterns": {
-      "description": "Retrieve information and deploy all server and category patterns that have been defined in the Lenovo XClarity Administrator",
-      "additional_detail": ["Config patterns "],
-      "add_help": true,
-      "valid_combination": {
-            "list": [[], ["id"], ["id", "includeSettings"]],
-            "apply": [["id", "endpoint", "restart", "type"], ["name", "endpoint", "restart", "type"]],
-            "import": [["pattern_update_dict"]],
-            "status": [["endpoint"]]
-        },
+  "configpatterns": {
+    "description": "Retrieve information and deploy all server and category patterns that have been defined in the Lenovo XClarity Administrator",
+    "additional_detail": ["Config patterns "],
+    "add_help": true,
+    "valid_combination": {
+          "list": [[], ["id"], ["id", "includeSettings"]],
+          "apply": [["id", "endpoint", "restart", "type"], ["name", "endpoint", "restart", "type"]],
+          "import": [["pattern_update_dict"]],
+          "status": [["endpoint"]]
+      },
 
-      "subcmd": [
-        {
-          "name": "list",
-          "additional_detail": ["The following example returns information about all server patterns.",
-                                "configpatterns list",
-                                "The following example returns information about a specific server pattern.",
-                                "configpatterns list -i 48"],
-          "help": "list server config patterns and details",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+    "subcmd": [
+      {
+        "name": "list",
+        "additional_detail": ["The following example returns information about all server patterns.",
+                              "configpatterns list",
+                              "The following example returns information about a specific server pattern.",
+                              "configpatterns list -i 48"],
+        "help": "list server config patterns and details",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-i,--id",
-                "opt_dict": {
-                  "help": "Specifies the ID of the server pattern. If an ID is not specified, all server patterns are returned"
-                }
-              }
-            ],
-            [
-              {
-                "args": "--includeSettings",
-                "opt_dict": {
-                  "help": "Include details of category patterns that are reference by the server pattern"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "apply",
-          "additional_detail": ["The following example apply pattern to endpoint",
-                                "configpatterns apply --id 65 --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart pending --type node",
-                                "configpatterns apply --name From_abcdef --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart pending --type node"],
-
-          "help": "Apply config pattern to device",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-e,--endpoint",
-                "opt_dict": {
-                  "help": "Specifies the UUIDs of one or more target servers. If a target is an empty bay, specify the location ID; otherwise, specify the server UUID",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-r,--restart",
-                "opt_dict": {
-                  "help": "Identifies when to activate the configurations",
-                  "required": true,
-                  "choices": [
-                      "defer",
-                      "immediate",
-                      "pending"
-                  ]
-                }
-              }
-            ],
-            [
-              {
-                "args": "-t,--type",
-                "opt_dict": {
-                  "help": "Type of the server",
-                  "required": true,
-                  "choices": [
-                      "node",
-                      "rack",
-                      "tower",
-                      "flex"
-                  ]
-                }
-              }
-            ]
+            }
           ],
-          "mutually_exclusive_args": [
-              [{
-                      "args": "-i,--id",
-                      "opt_dict": {
-                          "help": "Config Pattern Id"
-                      }
-                  }
-              ],
-              [{
-                      "args": "-n,--name",
-                      "opt_dict": {
-                          "help": "Config Pattern Name"
-                      }
-                  }
-              ]
-          ]
-        },
-        {
-          "name": "import",
-          "additional_detail": ["The following example import system category pattern",
-                                "configpatterns import -p '{\"template_type\":\"SystemInfo\",\"template\":{\"contact\":\"contact\",\"description\":\"Pattern created by test API\",\"location\":\"location\",\"name\":\"Learned-System_Info-99\",\"systemName\":{\"autogen\":\"Disable\",\"hyphenChecked\":false},\"type\":\"SystemInfo\",\"uri\":\"/config/template/61\",\"userDefined\":true}}'"],
-          "help": "import server and category config patterns to Lxca",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+          [
+            {
+              "args": "-i,--id",
+              "opt_dict": {
+                "help": "Specifies the ID of the server pattern. If an ID is not specified, all server patterns are returned"
               }
-            ],
-            [
-              {
-                "args": "-p,--pattern_update_dict",
-                "opt_dict": {
-                  "help": "Pattern dict",
-                  "required": true,
-                  "type": "json.loads"
-                }
+            }
+          ],
+          [
+            {
+              "args": "--includeSettings",
+              "opt_dict": {
+                "help": "Include details of category patterns that are reference by the server pattern"
               }
-            ]
+            }
           ]
-        },
-        {
-          "name": "status",
-          "additional_detail": ["The following example get config status",
-                                "configpatterns status -e B918EDCA1B5F11E2803EBECB82710ADE "],
+        ]
+      },
+      {
+        "name": "apply",
+        "additional_detail": ["The following example apply pattern to endpoint",
+                              "configpatterns apply --id 65 --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart pending --type node",
+                              "configpatterns apply --name From_abcdef --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart pending --type node"],
 
-          "help": "check config status of endpoint",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        "help": "Apply config pattern to device",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-e,--endpoint",
-                "opt_dict": {
-                  "help": "uuid of server",
-                  "required": true
-                }
+            }
+          ],
+          [
+            {
+              "args": "-e,--endpoint",
+              "opt_dict": {
+                "help": "Specifies the UUIDs of one or more target servers. If a target is an empty bay, specify the location ID; otherwise, specify the server UUID",
+                "required": true
               }
-            ]
+            }
+          ],
+          [
+            {
+              "args": "-r,--restart",
+              "opt_dict": {
+                "help": "Identifies when to activate the configurations",
+                "required": true,
+                "choices": [
+                    "defer",
+                    "immediate",
+                    "pending"
+                ]
+              }
+            }
+          ],
+          [
+            {
+              "args": "-t,--type",
+              "opt_dict": {
+                "help": "Type of the server",
+                "required": true,
+                "choices": [
+                    "node",
+                    "rack",
+                    "tower",
+                    "flex"
+                ]
+              }
+            }
           ]
-        }
-      ]
-    },
-   	"configprofiles": {
-      "description": "The configprofiles command retrieves information about one or more server profiles.",
-      "additional_detail": ["For Sub Command help", "configprofiles list -h"],
-      "add_help": true,
-      "subcmd": [
-        {
-          "name": "list",
-          "additional_detail": ["The following example returns information about all server profiles.",
-                                "configprofiles list",
-                                "The following example returns information about a specific server profiles.",
-                                "configprofiles list -i 48"],
-          "help": "list server profiles and details",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
+        ],
+        "mutually_exclusive_args": [
+            [{
+                    "args": "-i,--id",
+                    "opt_dict": {
+                        "help": "Config Pattern Id"
+                    }
                 }
-              }
             ],
-            [
-              {
-                "args": "-i,--id",
-                "opt_dict": {
-                  "help": "Specifies the ID of the server profiles. If an ID is not specified, all server profiles are returned",
-                  "type": "int"
+            [{
+                    "args": "-n,--name",
+                    "opt_dict": {
+                        "help": "Config Pattern Name"
+                    }
                 }
-              }
             ]
-          ]
-        },
-        {
-          "name": "rename",
-          "additional_detail": ["The following example rename server profiles.",
-                                "configprofiles rename -i 48 -n modified_profile"],
-          "help": "rename server profile name",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      },
+      {
+        "name": "import",
+        "additional_detail": ["The following example import system category pattern",
+                              "configpatterns import -p '{\"template_type\":\"SystemInfo\",\"template\":{\"contact\":\"contact\",\"description\":\"Pattern created by test API\",\"location\":\"location\",\"name\":\"Learned-System_Info-99\",\"systemName\":{\"autogen\":\"Disable\",\"hyphenChecked\":false},\"type\":\"SystemInfo\",\"uri\":\"/config/template/61\",\"userDefined\":true}}'"],
+        "help": "import server and category config patterns to Lxca",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-i,--id",
-                "opt_dict": {
-                  "help": "Specifies the ID of the server profiles.",
+            }
+          ],
+          [
+            {
+              "args": "-p,--pattern_update_dict",
+              "opt_dict": {
+                "help": "Pattern dict",
+                "required": true,
+                "type": "json.loads"
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "status",
+        "additional_detail": ["The following example get config status",
+                              "configpatterns status -e B918EDCA1B5F11E2803EBECB82710ADE "],
+
+        "help": "check config status of endpoint",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-e,--endpoint",
+              "opt_dict": {
+                "help": "uuid of server",
+                "required": true
+              }
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "configprofiles": {
+    "description": "The configprofiles command retrieves information about one or more server profiles.",
+    "additional_detail": ["For Sub Command help", "configprofiles list -h"],
+    "add_help": true,
+    "subcmd": [
+      {
+        "name": "list",
+        "additional_detail": ["The following example returns information about all server profiles.",
+                              "configprofiles list",
+                              "The following example returns information about a specific server profiles.",
+                              "configprofiles list -i 48"],
+        "help": "list server profiles and details",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-i,--id",
+              "opt_dict": {
+                "help": "Specifies the ID of the server profiles. If an ID is not specified, all server profiles are returned",
+                "type": "int"
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "rename",
+        "additional_detail": ["The following example rename server profiles.",
+                              "configprofiles rename -i 48 -n modified_profile"],
+        "help": "rename server profile name",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-i,--id",
+              "opt_dict": {
+                "help": "Specifies the ID of the server profiles.",
+                "type": "int",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-n,--name",
+              "opt_dict": {
+                "help": "Specifies the new name of the server profiles.",
+                "required": true
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "activate",
+        "additional_detail": ["The following example activate server profile on endpoint",
+                              "configprofiles apply --id 65 --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart defer"],
+        "help": "Activate server profile on endpoint",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [{
+              "args": "-i,--id",
+              "opt_dict": {
+                  "help": "Config profile Id",
                   "type": "int",
                   "required": true
-                }
               }
-            ],
-            [
-              {
-                "args": "-n,--name",
-                "opt_dict": {
-                  "help": "Specifies the new name of the server profiles.",
+            }
+          ],
+          [
+            {
+              "args": "-e,--endpoint",
+              "opt_dict": {
+                "help": "Specifies the UUIDs of one or more target servers. If a target is an empty bay, specify the location ID; otherwise, specify the server UUID",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-r,--restart",
+              "opt_dict": {
+                "help": "Identifies when to activate the profile",
+                "required": true,
+                "choices": [
+                    "defer",
+                    "immediate"
+                ]
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "unassign",
+        "additional_detail": ["The following example unassign config profile",
+                              "configprofiles --id 65"],
+        "help": "unassign config profile",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [{
+              "args": "-i,--id",
+              "opt_dict": {
+                  "help": "Config profile Id",
+                  "type": "int",
                   "required": true
-                }
               }
-            ]
+            }
+          ],
+          [
+            {
+              "args": "-p,--powerdown",
+              "opt_dict": {
+                "help": "Identifies whether to power off the server",
+        "choices": [
+                  "True",
+                  "true",
+        "False",
+        "false"
+                ]
+              }
+            }
+          ],
+          [{
+              "args": "--resetimm",
+              "opt_dict": {
+                "help": "Identifies whether to reset the baseboard management controller.",
+        "choices": [
+                  "True",
+                  "true",
+        "False",
+        "false"
+                ]
+              }
+            }
+          ],
+          [{
+              "args": "--resetswitch",
+              "opt_dict": {
+                "help": "Identifies whether to reset the switch internal port settings to default values",
+        "choices": [
+                  "True",
+                  "true",
+        "False",
+        "false"
+                ]
+              }
+            }
+          ],
+          [
+            {
+              "args": "-f,--force",
+              "opt_dict": {
+                "help": "Identifies whether to force profile deactivation",
+          "choices": [
+                  "True",
+                  "true",
+        "False",
+        "false"
+                ]
+              }
+            }
           ]
-        },
-        {
-          "name": "activate",
-          "additional_detail": ["The following example activate server profile on endpoint",
-                                "configprofiles apply --id 65 --endpoint B918EDCA1B5F11E2803EBECB82710ADE --restart defer"],
-          "help": "Activate server profile on endpoint",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      },
+      {
+        "name": "delete",
+        "additional_detail": ["The following example delete config profile",
+                              "configprofiles delete -id 65"],
+
+        "help": "delete config profile",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [{
-                "args": "-i,--id",
-                "opt_dict": {
-                    "help": "Config profile Id",
-                    "type": "int",
-                    "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-e,--endpoint",
-                "opt_dict": {
-                  "help": "Specifies the UUIDs of one or more target servers. If a target is an empty bay, specify the location ID; otherwise, specify the server UUID",
+            }
+          ],
+          [{
+              "args": "-i,--id",
+              "opt_dict": {
+                  "help": "Config profile Id",
                   "required": true
-                }
               }
-            ],
-            [
-              {
-                "args": "-r,--restart",
-                "opt_dict": {
-                  "help": "Identifies when to activate the profile",
-                  "required": true,
-                  "choices": [
-                      "defer",
-                      "immediate"
-                  ]
-                }
-              }
-            ]
+            }
           ]
-        },
-        {
-          "name": "unassign",
-          "additional_detail": ["The following example unassign config profile",
-                                "configprofiles --id 65"],
-          "help": "unassign config profile",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [{
-                "args": "-i,--id",
-                "opt_dict": {
-                    "help": "Config profile Id",
-                    "type": "int",
-                    "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-p,--powerdown",
-                "opt_dict": {
-                  "help": "Identifies whether to power off the server",
-				  "choices": [
-                    "True",
-                    "true",
-					"False",
-					"false"
-                  ]
-                }
-              }
-            ],
-            [{
-                "args": "--resetimm",
-                "opt_dict": {
-                  "help": "Identifies whether to reset the baseboard management controller.",
-				  "choices": [
-                    "True",
-                    "true",
-					"False",
-					"false"
-                  ]
-                }
-              }
-            ],
-            [{
-                "args": "--resetswitch",
-                "opt_dict": {
-                  "help": "Identifies whether to reset the switch internal port settings to default values",
-				  "choices": [
-                    "True",
-                    "true",
-					"False",
-					"false"
-                  ]
-                }
-              }
-            ],
-            [
-              {
-                "args": "-f,--force",
-                "opt_dict": {
-                  "help": "Identifies whether to force profile deactivation",
-  				  "choices": [
-                    "True",
-                    "true",
-					"False",
-					"false"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "delete",
-          "additional_detail": ["The following example delete config profile",
-                                "configprofiles delete -id 65"],
+        ]
+      }
+    ]
+  },
 
-          "help": "delete config profile",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+  "updaterepo": {
+    "description": "The updaterepo command retrieves information about firmware updates in the firmware-updates repository",
+    "additional_detail": ["For Sub Command help", "updaterepo query -h"],
+    "add_help": true,
+    "subcmd": [
+      {
+        "name": "query",
+        "additional_detail": ["The following example returns information about all firmware updates by machine type.",
+                              "updaterepo query -k updatesByMt"],
+        "help": "Query firmware update repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [{
-                "args": "-i,--id",
-                "opt_dict": {
-                    "help": "Config profile Id",
-                    "required": true
-                }
+            }
+          ],
+          [
+            {
+              "args": "-k,--key",
+              "opt_dict": {
+                "help": "Returns specific information about the firmware update",
+                "required": true,
+                "choices": [
+                  "supportedMts",
+                  "size",
+                  "lastRefreshed",
+                  "importDir",
+                  "publicKeys",
+                  "updates",
+                  "updatesByMt",
+                  "updatesByMtByComp"
+                ]
               }
-            ]
+            }
+          ],
+          [
+            {
+              "args": "-m,--mt",
+              "opt_dict": {
+                "help": "Specifies a list of machine types, separated by a comma"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-s,--scope",
+              "opt_dict": {
+                "help": "Specifies the scope of the operation, Can be specified for (updates/updatesByMt)",
+                "choices": [
+                  "all",
+                  "latest"
+                ]
+              }
+            }
           ]
-        }
-      ]
-    },
-
-    "updaterepo": {
-      "description": "The updaterepo command retrieves information about firmware updates in the firmware-updates repository",
-      "additional_detail": ["For Sub Command help", "updaterepo query -h"],
-      "add_help": true,
-      "subcmd": [
-        {
-          "name": "query",
-          "additional_detail": ["The following example returns information about all firmware updates by machine type.",
-                                "updaterepo query -k updatesByMt"],
-          "help": "Query firmware update repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      },
+      {
+        "name": "read",
+        "additional_detail": ["The following example read firmware updates from repository.",
+                              "updaterepo read"],
+        "help": "Reloads the repository files by clearing the information in cache and retrieving the list of firmware-update file from the repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-k,--key",
-                "opt_dict": {
-                  "help": "Returns specific information about the firmware update",
-                  "required": true,
-                  "choices": [
-                    "supportedMts",
-                    "size",
-                    "lastRefreshed",
-                    "importDir",
-                    "publicKeys",
-                    "updates",
-                    "updatesByMt",
-                    "updatesByMtByComp"
-                  ]
-                }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "acquire",
+        "additional_detail": ["The following example download firmware updates",
+                              "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+        "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-m,--mt",
-                "opt_dict": {
-                  "help": "Specifies a list of machine types, separated by a comma"
-                }
+            }
+          ],
+          [{
+              "args": "-m,--mt",
+              "opt_dict": {
+                  "help": "List of machine types for which firmware updates are to be refreshed or downloaded",
+                  "required": true
               }
-            ],
-            [
-              {
-                "args": "-s,--scope",
-                "opt_dict": {
-                  "help": "Specifies the scope of the operation, Can be specified for (updates/updatesByMt)",
-                  "choices": [
+            }
+          ],
+          [
+            {
+              "args": "-f,--fixids",
+              "opt_dict": {
+                "help": "List of firmware-update to be downloaded",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-s,--scope",
+              "opt_dict": {
+                "help": "Specifies the scope of the operation",
+                "default": "payloads",
+                "choices": [
+                    "payloads"
+                ]
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "refresh",
+        "additional_detail": ["The following example refresh firmware updates repository",
+                              "updaterepo refresh --mt 7903 --scope all "],
+        "help": "Retrieves information about the latest available firmware updates from the Lenovo XClarity Support website, and stores the information to the updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [{
+              "args": "-m,--mt",
+              "opt_dict": {
+                  "help": "List of machine types for which firmware updates are to be refreshed",
+                  "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-s,--scope",
+              "opt_dict": {
+                "help": "Specifies the scope of the operation",
+                "choices": [
                     "all",
                     "latest"
-                  ]
-                }
+                ]
               }
-            ]
+            }
           ]
-        },
-        {
-          "name": "read",
-          "additional_detail": ["The following example read firmware updates from repository.",
-                                "updaterepo read"],
-          "help": "Reloads the repository files by clearing the information in cache and retrieving the list of firmware-update file from the repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      },
+      {
+        "name": "delete",
+        "additional_detail": ["The following example delete firmware updates",
+                              "updaterepo delete -id 65"],
+        "help": "Deletes the specified firmware updates  from the updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ]
-          ]
-        },
-        {
-          "name": "acquire",
-          "additional_detail": ["The following example download firmware updates",
-                                "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
-          "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+            }
+          ],
+          [
+            {
+              "args": "-f,--fixids",
+              "opt_dict": {
+                "help": "List of firmware-update IDs to be delete",
+                "required": true
               }
-            ],
-            [{
-                "args": "-m,--mt",
-                "opt_dict": {
-                    "help": "List of machine types for which firmware updates are to be refreshed or downloaded",
-                    "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-f,--fixids",
-                "opt_dict": {
-                  "help": "List of firmware-update to be downloaded",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-s,--scope",
-                "opt_dict": {
-                  "help": "Specifies the scope of the operation",
-                  "default": "payloads",
-                  "choices": [
-                      "payloads"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "refresh",
-          "additional_detail": ["The following example refresh firmware updates repository",
-                                "updaterepo refresh --mt 7903 --scope all "],
-          "help": "Retrieves information about the latest available firmware updates from the Lenovo XClarity Support website, and stores the information to the updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [{
-                "args": "-m,--mt",
-                "opt_dict": {
-                    "help": "List of machine types for which firmware updates are to be refreshed",
-                    "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-s,--scope",
-                "opt_dict": {
-                  "help": "Specifies the scope of the operation",
-                  "choices": [
-                      "all",
-                      "latest"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "delete",
-          "additional_detail": ["The following example delete firmware updates",
-                                "updaterepo delete -id 65"],
-          "help": "Deletes the specified firmware updates  from the updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-f,--fixids",
-                "opt_dict": {
-                  "help": "List of firmware-update IDs to be delete",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-t,--type",
-                "opt_dict": {
-                  "help": "Specifies the scope of the operation",
-                  "default": "payloads",
-                  "choices": [
-                      "all",
-                      "payloads"
-                  ]
-                }
-              }
-            ]
-          ]
-        }
-      ]
-    },
-    "updatepolicy": {
-      "description": "The updatepolicy command retrieves detailed information about firmware-compliance policies and assigns a compliance policy to a specific device",
-      "additional_detail": ["for subcommand detail type", "updatepolicy list -h "],
-      "add_help": true,
-      "subcmd": [
-        {
-          "name": "list",
-          "additional_detail": ["The following example returns information about all updatepolicy.",
-                                "updaterepo list"],
-          "help": "list all updatepolicies",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "query",
-          "additional_detail": ["The following example retrieve information about firmware that is applicable to each managed device",
-                                "updatepolicy query --info FIRMWARE"],
-          "help": "Get update policy info based on info",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-i,--info",
-                "opt_dict": {
-                  "help": "Get infromation about applicable firmware, persisted result and compliance policies",
-                  "choices": [
-                    "FIRMWARE",
-                    "RESULT",
-                    "NAMELIST"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "assign",
-          "additional_detail": ["The following example download firmware updates",
-                                "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
-          "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [{
-                "args": "-p,--policy",
-                "opt_dict": {
-                    "help": "update policy name",
-                    "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-u,--uuid",
-                "opt_dict": {
-                  "help": "Device uuid ",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-t,--type",
-                "opt_dict": {
-                  "help": "device type",
-                  "choices": [
-                    "CMM",
-                    "IOSwitch",
-                    "RACKSWITCH",
-                    "STORAGE",
-                    "SERVER"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "status",
-          "additional_detail": ["The following example refresh Check compliant with the assigned compliance policy",
-                                "updatepolicy status -j 12"],
-          "help": "Retrieves information about compliant status",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [{
-                "args": "-j,--job",
-                "opt_dict": {
-                    "help": "Job Id or task Id returned by assign policy",
-                    "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-u,--uuid",
-                "opt_dict": {
-                  "help": "Device uuid "
-                }
-              }
-            ]
-          ]
-        }
-      ]
-    },
-    "updatecomp": {
-      "description": "The updatecomp command updates firmware on a specific device, and retrieves the status and progress of firmware updates and firmware repository",
-      "additional_detail": ["for subcommand detail type", "updatecomp info -h "],
-      "add_help": true,
-      "subcmd": [
-        {
-          "name": "info",
-          "additional_detail": ["The following example returns information about all updateable components.",
-                                "updatecomp info -q components",
-                                "The following example returns the status and progress of firmware updates and firmware-updates repository.",
-                                "updatecomp info -q status"],
-          "help": "list all updateable components , update firmware status",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-q,--query",
-                "opt_dict": {
-                  "help": "Information about updateable components or Firmware update result status",
-                  "choices": [
-                    "components",
-                    "status"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "apply",
-          "additional_detail": ["The following example applies a firmware update on a storage device and immediate activates the update",
-                                "updatecomp apply -a apply -m immediate -t <uuid>,lnvgy_fw_storage_1.1.1,Controller A",
-                                "The following example powers off a server and a storage system.",
-                                "updatecomp apply -a power -m immediate –s <uuid1>,powerOff –t <uuid2>,powerOff",
-		  						"The following example applies firmware update on server using dev_list json format",
-			  					"updatecomp apply -a apply -m immediate --dev_list '{\"DeviceList\": [{\"ServerList\": [{\"UUID\": \"<uuid>\", \"Components\": [{\"Fixid\": \"lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch\", \"Component\":\"LXPM Diagnostic Software\"}]}]},{\"CMMList\": []},{\"SwitchList\": []},{\"StorageList\": []}]}'"
-		  ],
-          "help": "Apply firmware update to devices",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-a,--action",
-                "opt_dict": {
-                  "help": "action to be performed on firmware update",
-                  "choices": [
-                    "apply",
-                    "cancelapply",
-                    "power"
-                  ]
-                }
-              }
-            ],
-            [
-              {
-                "args": "-m,--mode",
-                "opt_dict": {
-                  "help": "Indicates when to activate the update",
-                  "choices": [
-                    "immediate",
-                    "delayed",
-                    "prioritized"
-                  ]
-                }
-              }
-            ],
-            [
-              {
-                "args": "-c,--cmm",
-                "opt_dict": {
-                  "help": "cmms details for update firmware"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-s,--server",
-                "opt_dict": {
-                  "help": "cmms details for update firmware"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-t,--storage",
-                "opt_dict": {
-                  "help": "storage details for update firmware"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-w,--switch",
-                "opt_dict": {
-                  "help": "switch details for update firmware"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-l,--dev_list",
-                "opt_dict": {
-                  "help": "details of all devices for update firmware, json input",
-                  "type": "json.loads"
-
-                }
-              }
-            ]
-
-          ]
-        }
-      ]
-    },
-    "managementserver": {
-      "description": "The managementserver command retrieve information about all updates in the management-server updates repository",
-      "additional_detail": ["managementserver subcmd detail ",
-        "managementserver query -h "],
-      "add_help": true,
-      "subcmd": [
-        {
-          "name": "query",
-          "additional_detail": ["The following example returns information Returns the repository size (in bytes).",
-                                "managementserver query -k size"],
-          "help": "Retrieve information about all updates in the management-server updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-k,--key",
-                "opt_dict": {
-                  "help": "Returns specific information about the firmware update",
-                  "required": true,
-                  "choices": [
+            }
+          ],
+          [
+            {
+              "args": "-t,--type",
+              "opt_dict": {
+                "help": "Specifies the scope of the operation",
+                "default": "payloads",
+                "choices": [
                     "all",
-                    "currentVersion",
-                    "size",
-                    "importDir",
-                    "history",
-                    "updates",
-                    "updatedDate"]
-                }
+                    "payloads"
+                ]
               }
-            ]
+            }
           ]
-        },
-        {
-          "name": "query_fixids",
-          "additional_detail": ["The following example returns information  all info about fixid.",
-                                "managementserver query_fixids -f ibm_fw_imm2_1aoo78j-6.20_anyos_noarch -k all"],
-          "help": "Retrieve information or the readme or change history file for a specific update in the management-server updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      }
+    ]
+  },
+  "updatepolicy": {
+    "description": "The updatepolicy command retrieves detailed information about firmware-compliance policies and assigns a compliance policy to a specific device",
+    "additional_detail": ["for subcommand detail type", "updatepolicy list -h "],
+    "add_help": true,
+    "subcmd": [
+      {
+        "name": "list",
+        "additional_detail": ["The following example returns information about all updatepolicy.",
+                              "updaterepo list"],
+        "help": "list all updatepolicies",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-f,--fixids",
-                "opt_dict": {
-                  "help": "fixids ",
+            }
+          ]
+        ]
+      },
+      {
+        "name": "query",
+        "additional_detail": ["The following example retrieve information about firmware that is applicable to each managed device",
+                              "updatepolicy query --info FIRMWARE"],
+        "help": "Get update policy info based on info",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-i,--info",
+              "opt_dict": {
+                "help": "Get infromation about applicable firmware, persisted result and compliance policies",
+                "choices": [
+                  "FIRMWARE",
+                  "RESULT",
+                  "NAMELIST"
+                ]
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "assign",
+        "additional_detail": ["The following example download firmware updates",
+                              "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+        "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [{
+              "args": "-p,--policy",
+              "opt_dict": {
+                  "help": "update policy name",
                   "required": true
-                }
               }
-            ],
-            [
-              {
-                "args": "-k,--key",
-                "opt_dict": {
-                  "help": "Returns specific information about the management server update, mutually exclusive with type",
-                  "choices": [
-                    "all",
-                    "actions",
-                    "keys",
-                    "filetypes",
-                    "update"
-                  ]
-                }
+            }
+          ],
+          [
+            {
+              "args": "-u,--uuid",
+              "opt_dict": {
+                "help": "Device uuid ",
+                "required": true
               }
-            ],
-            [
-              {
-                "args": "-t,--type",
-                "opt_dict": {
-                  "help": "Specifies a list of file types, mutually exclusive with key, if key is specified this is ignored ",
-                  "choices": [
-                    "changeHistory",
-                    "readme"
-                  ]
-                }
+            }
+          ],
+          [
+            {
+              "args": "-t,--type",
+              "opt_dict": {
+                "help": "device type",
+                "choices": [
+                  "CMM",
+                  "IOSwitch",
+                  "RACKSWITCH",
+                  "STORAGE",
+                  "SERVER"
+                ]
               }
-            ]
+            }
           ]
-        },
-        {
-          "name": "apply",
-          "additional_detail": ["The following example Installs the specified management-server updates",
-                                "managementserver apply --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch -v result"],
-          "help": "Installs the specified management-server updates",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      },
+      {
+        "name": "status",
+        "additional_detail": ["The following example refresh Check compliant with the assigned compliance policy",
+                              "updatepolicy status -j 12"],
+        "help": "Retrieves information about compliant status",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-f,--fixids",
-                "opt_dict": {
-                  "help": "Firmware-update ID to be installed",
+            }
+          ],
+          [{
+              "args": "-j,--job",
+              "opt_dict": {
+                  "help": "Job Id or task Id returned by assign policy",
                   "required": true
-                }
               }
-            ]
+            }
+          ],
+          [
+            {
+              "args": "-u,--uuid",
+              "opt_dict": {
+                "help": "Device uuid "
+              }
+            }
           ]
-        },
-        {
-          "name": "acquire",
-          "additional_detail": ["The following example download updates",
-                                "managementserver acquire --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
-          "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      }
+    ]
+  },
+  "updatecomp": {
+    "description": "The updatecomp command updates firmware on a specific device, and retrieves the status and progress of firmware updates and firmware repository",
+    "additional_detail": ["for subcommand detail type", "updatecomp info -h "],
+    "add_help": true,
+    "subcmd": [
+      {
+        "name": "info",
+        "additional_detail": ["The following example returns information about all updateable components.",
+                              "updatecomp info -q components",
+                              "The following example returns the status and progress of firmware updates and firmware-updates repository.",
+                              "updatecomp info -q status"],
+        "help": "list all updateable components , update firmware status",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ],
-            [
-              {
-                "args": "-f,--fixids",
-                "opt_dict": {
-                  "help": "List of firmware-update IDs to be downloaded",
-                  "required": true
-                }
+            }
+          ],
+          [
+            {
+              "args": "-q,--query",
+              "opt_dict": {
+                "help": "Information about updateable components or Firmware update result status",
+                "choices": [
+                  "components",
+                  "status"
+                ]
               }
-            ]
+            }
           ]
-        },
-        {
-          "name": "refresh",
-          "additional_detail": ["The following example refresh management server repository",
-                                "managementserver refresh"],
-          "help": "Retrieves information about the latest available updates from the Lenovo XClarity Support website, and stores the information to the management server updates repository",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+        ]
+      },
+      {
+        "name": "apply",
+        "additional_detail": ["The following example applies a firmware update on a storage device and immediate activates the update",
+                              "updatecomp apply -a apply -m immediate -t 8BFBADCC33CB11E499F740F2E9903640,lnvgy_fw_storage_1.1.1,Controller A",
+                              "updatecomp apply -a applyBundle -s 53619A91874311E9A3E3E086720E6C33",
+                              "The following example powers off a server and a storage system.",
+                              "updatecomp apply -a power -m immediate –s 9AEDACCC56SD23F346A852D2D2354865,powerOff –t 8BFBADCC33CB11E499F740F2E9903640,powerOff",
+                "The following example applies firmware update on server using dev_list json format",
+                "updatecomp apply -a apply -m immediate --dev_list '{\"DeviceList\": [{\"ServerList\": [{\"UUID\": \"38B1DC62084411E88C7A0A94EF4EC2EF\", \"Components\": [{\"Fixid\": \"lnvgy_fw_lxpm_pdl116o-1.40_anyos_noarch\", \"Component\":\"LXPM Diagnostic Software\"}]}]},{\"CMMList\": []},{\"SwitchList\": []},{\"StorageList\": []}]}'",
+                "The following example applies firmware update on ThinkSystem SR635 and SR655 using dev_list json format",
+                "updatecomp apply -a applyBundle --dev_list '{\"DeviceList\":[{\"ServerList\":[{\"UUID\":\"53619A91874311E9A3E3E086720E6C33\"}]}]}'"
+    ],
+        "help": "Apply firmware update to devices",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ]
-          ]
-        },
-        {
-          "name": "delete",
-          "additional_detail": ["The following example delete fixdis from update repository",
-                                "managementserver delete --fixids lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch"],
-          "help": "Deletes the specified fixids",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+            }
+          ],
+          [
+            {
+              "args": "-a,--action",
+              "opt_dict": {
+                "help": "action to be performed on firmware update",
+                "choices": [
+                  "apply",
+                  "applyBundle",
+                  "cancelapply",
+                  "power"
+                ]
               }
-            ],
-            [
-              {
-                "args": "-f,--fixids",
-                "opt_dict": {
-                  "help": "fixids to be deleted",
-                  "required": true
-                }
+            }
+          ],
+          [
+            {
+              "args": "-m,--mode",
+              "opt_dict": {
+                "help": "Indicates when to activate the update",
+                "choices": [
+                  "immediate",
+                  "delayed",
+                  "prioritized"
+                ]
               }
-            ]
-          ]
-        },
-        {
-          "name": "import",
-          "additional_detail": ["Create job for import local files to managementserver ",
-                                "managementserver import --files /path/to/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt",
-                                "Create import local files to managementserver ",
-                                "managementserver import -j 12 --files /path/to/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt"],
-          "help": "Import files to management server ",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+            }
+          ],
+          [
+            {
+              "args": "-c,--cmm",
+              "opt_dict": {
+                "help": "cmms details for update firmware"
               }
-            ],
-            [
-              {
-                "args": "--files",
-                "opt_dict": {
-                  "help": "files to import, comma separated files",
-                  "required": true
-                }
+            }
+          ],
+          [
+            {
+              "args": "-s,--server",
+              "opt_dict": {
+                "help": "cmms details for update firmware"
               }
-            ],
-            [
-              {
-                "args": "-j,--jobid",
-                "opt_dict": {
-                  "help": "import jobid"
-                }
+            }
+          ],
+          [
+            {
+              "args": "-t,--storage",
+              "opt_dict": {
+                "help": "storage details for update firmware"
               }
-            ]
+            }
+          ],
+          [
+            {
+              "args": "-w,--switch",
+              "opt_dict": {
+                "help": "switch details for update firmware"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-l,--dev_list",
+              "opt_dict": {
+                "help": "details of all devices for update firmware, json input",
+                "type": "json.loads"
 
+              }
+            }
           ]
-        }
-      ]
-    },
-    "osimages": {
-      "description": "The osiamges command retrieve information about all osimage and deploy functionality",
-      "additional_detail": ["osimages subcmd detail ",
-        "osimages list -h "],
-      "add_help": true,
-      "subcmd": [
-        {
-          "name": "list",
-          "additional_detail": ["The following example returns list of osimages.",
-                                "osiamges list"],
-          "help": "Retrieve information about all osimages",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "globalsettings",
-          "additional_detail": ["The following example returns information  about globalsettings.",
-                                "osimages globalsettings -v globalsettings",
-                                "The following example set Linux default password",
-                                "osimages globalsettings --osimages_dict '{\"ipAssignment\": \"dhcpv4\", \"credentials\": [{\"passwordChanged\": true, \"password\": \"<password>\", \"type\": \"LINUX\", \"name\": \"root\"}, {\"passwordChanged\": false, \"password\": null, \"type\": \"WINDOWS\", \"name\": \"USERNAME\"}], \"licenseKeys\": {\"win2019r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2016r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r2\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}}, \"isVLANMode\": false, \"activeDirectory\": {\"defaultDomain\": \"DEFAULT_DOMAIN\", \"allDomains\": []}}' -v result"
-          ],
-          "help": "Retrieve or modify global operating-system deployment settings. Global settings serve as defaults settings when operating systems are deployed.",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-o,--osimages_dict",
-                "opt_dict": {
-                  "help": "osimages globalsetting details, json string",
-                  "type": "json.loads"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "hostsettings",
-          "additional_detail": [
-            "The following example list all host settings",
-            "osimages hostsettings -v hostsettings",
-            "The following example create host settings",
-            "osimages hostsetttings --action create --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"<uuid>\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"<dns1ip>\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"<gatewayip>\", u\"subnetMask\": u\"<subnetmask>\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"<hostip>\"}}]}' -v result",
-            "The following example update host settings",
-            "osimages hostsetttings --action update --update True --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"<uuid>\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"<dns1ip>\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"<gatewayip>\", u\"subnetMask\": u\"<subnetmask>\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"<hostip>\"}}]}' -v result",
-            "delete host Setting with uuid ",
-            "osimages hostsettings --action delete -o '{\"uuid\": \"A1445C6FDBAA11E6A87F86E06E3AFFFF\"}' -v result"
-          ],
-          "help": "Retrieve information about the network and storage settings for all servers, and create or modify the network and storage settings for one or more servers",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-a,--action",
-                "opt_dict": {
-                  "help": "following host setting action",
-                  "choices": ["create", "update", "delete"]
-                }
-              }
-            ],
-            [
-              {
-                "args": "-o,--osimages_dict",
-                "opt_dict": {
-                  "help": "Remote file server options, json string",
-                  "type": "json.loads"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "hostplatforms",
-          "additional_detail": ["The following example list downloaded osimages",
-                                "osimages hostplatforms",
-                                "This example deploy os to device specified by uuid",
-                                "osimages hostplatforms --osimages_dict '{\"networkSettings\":{\"dns1\": \"<dns1ip>\",\"dns2\":\"<dns2ip>\",\"gateway\":\"<gatewayip>\",\"ipAddress\":\"<hostip>\",\"mtu\":1500,\"prefixLength\":64,\"selectedMac\":\"AUTO\",\"subnetMask\":\"<subnetmask>\",\"vlanId\":521},\"selectedImage\":\"rhels7.3|rhels7.3-x86_64-install-Minimal\",\"storageSettings\":{\"targetDevice\":\"localdisk\"},\"uuid\":\"<uuid>\"}'"
-          ],
-          "help": " Retrieve information about the host platforms and deploy operating-system images to the host platforms as a job",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-o,--osimages_dict",
-                "opt_dict": {
-                  "help": "osimages deploy details, json string",
-                  "type": "json.loads"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "import",
-          "additional_detail": ["The following example create import job for image type OS",
-                                "osimages import -t OS -v import_job",
-                                "The following example import OS image from remote server",
-                                "osimages import -t OS -o '{\"jobId\":26,\"os\":\"rhels\",\"imageName\":\"fixed\",\"path\":\"iso/rhel73.iso\",\"serverId\":\"1\"}' -v result",
-                                "For local import of file run below two command one by one",
-                                "The following example create import job for image type SCRIPT",
-                                "osimages import -t SCRIPT -v import_job",
-                                "The following example import OS image from local",
-                                "osimages import -t SCRIPT -o '{\"jobId\":26,\"os\":\"rhels\", \"description\":\"rhel test script\",\"imageName\":\"Test\",\"file\":\"/path/to/test.py\"}' -v result",
-                                "For local import of file run below two command one by one",
-                                "The following example create import job for image type OS",
-                                "osimages import -t OS -v import_job",
-                                "The following example import OS image from Local",
-                                "osimages import -t OS -o '{\"osrelease\":\"7.6\",\"os\":\"rhels\", \"description\":\"rhel 76 iso\", \"imageName\":\"RHEL76\",\"file\":\"/path/to/osimage_test/RHEL-7.6-20181010.0-Server-x86_64-dvd1.iso\", \"jobId\":87}' -v result",
-                                "For local import of BUNDLE and BUNDLESIG file run below three command one by one",
-                                "The following example create import job for image type BUNDLE use it for upload of BUNDLE and BUNDLESIG",
-                                "osimages import -t BUNDLE -v import_job",
-                                "The following example import BUNDLE image from Local",
-                                "osimages import -t BUNDLE -o '{\"imageName\":\"bundle_win2016_20180926153236.zip\",\"file\":\"home/naval/osimage_test/bundle_win2016_20180926153236.zip\", \"jobId\":87}' -v result",
-                                "The following example import BUNDLESIG image from Local",
-                                "osimages import -t BUNDLESIG -o '{\"imageName\":\"bundle_win2016_20180926153236.zip.asc\",\"file\":\"home/naval/osimage_test/bundle_win2016_20180926153236.zip.asc\", \"jobId\":87}' -v result"
-          ],
-          "help": "Import OS images and scripts from remote server to LXCA",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-t,--imagetype",
-                "opt_dict": {
-                  "help": "Image type to import",
-                  "required": true,
-                  "choices": [
-                    "BUNDLE", "BUNDLESIG", "BOOT", "DUD", "OS", "OSPROFILE", "SCRIPT", "CUSTOM_CONFIG", "UNATTEND"
-                  ]
-                }
-              }
-            ],
 
-            [
-              {
-                "args": "-o,--osimages_dict",
-                "opt_dict": {
-                  "help": "osimages import details, json string",
-                  "type": "json.loads"
-                }
+        ]
+      }
+    ]
+  },
+  "managementserver": {
+    "description": "The managementserver command retrieve information about all updates in the management-server updates repository",
+    "additional_detail": ["managementserver subcmd detail ",
+      "managementserver query -h "],
+    "add_help": true,
+    "subcmd": [
+      {
+        "name": "query",
+        "additional_detail": ["The following example returns information Returns the repository size (in bytes).",
+                              "managementserver query -k size"],
+        "help": "Retrieve information about all updates in the management-server updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
               }
-            ]
+            }
+          ],
+          [
+            {
+              "args": "-k,--key",
+              "opt_dict": {
+                "help": "Returns specific information about the firmware update",
+                "required": true,
+                "choices": [
+                  "all",
+                  "currentVersion",
+                  "size",
+                  "importDir",
+                  "history",
+                  "updates",
+                  "updatedDate"]
+              }
+            }
           ]
-        },
-        {
-          "name": "remotefileservers",
-          "additional_detail": [
-            "The following example list all remote file servers",
-            "osimages remotefileservers -v remotefileserver",
-            "The following example specifig remote file servers",
-            "osimages remotefileservers -v remotefileservers -o '{\"id\": \"1\"}' -v remotefileservers_id",
-            "Create remote file server entry for FTP server",
-            "osimages remotefileservers -o '{\"username\": \"guest\", \"password\": \"password\",  \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"<ipaddress>\",\"protocol\":\"FTP\"}' -v remotefileservers",
-            "Update remote file server entry",
-            "osimages remotefileservers -o '{\"putid\": \"1\", \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"<ipaddress>\",\"protocol\":\"FTP\"}' -v result",
-            "delete remote file server entry",
-            "osimages remotefileservers -o '{\"deleteid\": \"1\"}' -v result"
+        ]
+      },
+      {
+        "name": "query_fixids",
+        "additional_detail": ["The following example returns information  all info about fixid.",
+                              "managementserver query_fixids -f ibm_fw_imm2_1aoo78j-6.20_anyos_noarch -k all"],
+        "help": "Retrieve information or the readme or change history file for a specific update in the management-server updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-f,--fixids",
+              "opt_dict": {
+                "help": "fixids ",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-k,--key",
+              "opt_dict": {
+                "help": "Returns specific information about the management server update, mutually exclusive with type",
+                "choices": [
+                  "all",
+                  "actions",
+                  "keys",
+                  "filetypes",
+                  "update"
+                ]
+              }
+            }
+          ],
+          [
+            {
+              "args": "-t,--type",
+              "opt_dict": {
+                "help": "Specifies a list of file types, mutually exclusive with key, if key is specified this is ignored ",
+                "choices": [
+                  "changeHistory",
+                  "readme"
+                ]
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "apply",
+        "additional_detail": ["The following example Installs the specified management-server updates",
+                              "managementserver apply --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch -v result"],
+        "help": "Installs the specified management-server updates",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-f,--fixids",
+              "opt_dict": {
+                "help": "Firmware-update ID to be installed",
+                "required": true
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "acquire",
+        "additional_detail": ["The following example download updates",
+                              "managementserver acquire --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+        "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-f,--fixids",
+              "opt_dict": {
+                "help": "List of firmware-update IDs to be downloaded",
+                "required": true
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "refresh",
+        "additional_detail": ["The following example refresh management server repository",
+                              "managementserver refresh"],
+        "help": "Retrieves information about the latest available updates from the Lenovo XClarity Support website, and stores the information to the management server updates repository",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "delete",
+        "additional_detail": ["The following example delete fixdis from update repository",
+                              "managementserver delete --fixids lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch"],
+        "help": "Deletes the specified fixids",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-f,--fixids",
+              "opt_dict": {
+                "help": "fixids to be deleted",
+                "required": true
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "import",
+        "additional_detail": ["Create job for import local files to managementserver ",
+                              "managementserver import --files /home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt",
+                              "Create import local files to managementserver ",
+                              "managementserver import -j 12 --files /home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt"],
+        "help": "Import files to management server ",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "--files",
+              "opt_dict": {
+                "help": "files to import, comma separated files",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-j,--jobid",
+              "opt_dict": {
+                "help": "import jobid"
+              }
+            }
+          ]
 
+        ]
+      }
+    ]
+  },
+  "osimages": {
+    "description": "The osiamges command retrieve information about all osimage and deploy functionality",
+    "additional_detail": ["osimages subcmd detail ",
+      "osimages list -h "],
+    "add_help": true,
+    "subcmd": [
+      {
+        "name": "list",
+        "additional_detail": ["The following example returns list of osimages.",
+                              "osiamges list"],
+        "help": "Retrieve information about all osimages",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "globalsettings",
+        "additional_detail": ["The following example returns information  about globalsettings.",
+                              "osimages globalsettings -v globalsettings",
+                              "The following example set Linux default password",
+                              "osimages globalsettings --osimages_dict '{\"ipAssignment\": \"dhcpv4\", \"credentials\": [{\"passwordChanged\": true, \"password\": \"Test1234\", \"type\": \"LINUX\", \"name\": \"root\"}, {\"passwordChanged\": false, \"password\": null, \"type\": \"WINDOWS\", \"name\": \"Administrator\"}], \"licenseKeys\": {\"win2019r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2016r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r2\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}, \"win2012r1\": {\"dataCenterLicenseKey\": \"\", \"standardLicenseKey\": \"\"}}, \"isVLANMode\": false, \"activeDirectory\": {\"defaultDomain\": \"labs.lenovo.com\", \"allDomains\": []}}' -v result"
+        ],
+        "help": "Retrieve or modify global operating-system deployment settings. Global settings serve as defaults settings when operating systems are deployed.",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
           ],
-          "help": "Retrieve information about all remote file-server profiles or to create or modify a remote file-server profile",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+          [
+            {
+              "args": "-o,--osimages_dict",
+              "opt_dict": {
+                "help": "osimages globalsetting details, json string",
+                "type": "json.loads"
               }
-            ],
-            [
-              {
-                "args": "-o,--osimages_dict",
-                "opt_dict": {
-                  "help": "Remote file server options, json string",
-                  "type": "json.loads"
-                }
-              }
-            ]
+            }
           ]
-        },
-        {
-          "name": "delete",
-          "additional_detail": [
-            "The following example delete osimages with id's",
-            "osimages delete -i 20190131054310_trail.py"
+        ]
+      },
+      {
+        "name": "hostsettings",
+        "additional_detail": [
+          "The following example list all host settings",
+          "osimages hostsettings -v hostsettings",
+          "The following example create host settings",
+          "osimages hostsetttings --action create --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"A1445C6FDBAA11E6A87F86E06E3ACCCC\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"10.240.0.10\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"10.243.0.1\", u\"subnetMask\": u\"255.255.240.0\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"10.243.27.27\"}}]}' -v result",
+          "The following example update host settings",
+          "osimages hostsetttings --action update --update True --osimages_dict '{u\"hosts\": [{u\"storageSettings\": {u\"targetDevice\": u\"localdisk\"}, u\"uuid\": u\"A1445C6FDBAA11E6A87F86E06E3ACCCC\", u\"networkSettings\": {u\"dns2\": u\"\", u\"dns1\": u\"10.240.0.10\", u\"hostname\": u\"nodeundefined\", u\"vlanId\": 0, u\"selectedMAC\": u\"AUTO\", u\"gateway\": u\"10.243.0.1\", u\"subnetMask\": u\"255.255.240.0\", u\"mtu\": 1500, u\"prefixLength\": 64, u\"ipAddress\": u\"10.243.27.27\"}}]}' -v result",
+          "delete host Setting with uuid ",
+          "osimages hostsettings --action delete -o '{\"uuid\": \"A1445C6FDBAA11E6A87F86E06E3AFFFF\"}' -v result"
+        ],
+        "help": "Retrieve information about the network and storage settings for all servers, and create or modify the network and storage settings for one or more servers",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
           ],
-          "help": "Delete osimages from LXCA",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+          [
+            {
+              "args": "-a,--action",
+              "opt_dict": {
+                "help": "following host setting action",
+                "choices": ["create", "update", "delete"]
               }
-            ],
-            [
-              {
-                "args": "-i,--id",
-                "opt_dict": {
-                  "help": "osimages id's to delete comma separated",
-                  "required": true
-                }
-              }
-            ]
-          ]
-        }
-      ]
-    },
-    "resourcegroups": {
-      "description": "The osiamges command retrieve information about all resource groups and create update and delete dynamic resource group ",
-      "additional_detail": ["resourcegroups subcmd detail ",
-        "resourcegroups list -h "],
-      "add_help": true,
-      "subcmd": [
-        {
-          "name": "list",
-          "additional_detail": ["The following example returns list of resourcegroups.",
-                                "resourcegroups list"],
-          "help": "Retrieve information about all resource groups",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-u,--uuid",
-                "opt_dict": {
-                  "help": "resource group uuid"
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "delete",
-          "additional_detail": [
-            "The following example delete resource group with uuid",
-            "resourcegroups delete -u FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+            }
           ],
-          "help": "Delete resource group from LXCA",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+          [
+            {
+              "args": "-o,--osimages_dict",
+              "opt_dict": {
+                "help": "Remote file server options, json string",
+                "type": "json.loads"
               }
-            ],
-            [
-              {
-                "args": "-u,--uuid",
-                "opt_dict": {
-                  "help": "resource group uuid's to delete",
-                  "required": true
-                }
-              }
-            ]
+            }
           ]
-        },
-        {
-          "name": "criteriaproperties",
-          "additional_detail": [
-            "The following example retrieve inventory properties",
-            "resourcegroups criteriaproperties -v criteriaproperties"
+        ]
+      },
+      {
+        "name": "hostplatforms",
+        "additional_detail": ["The following example list downloaded osimages",
+                              "osimages hostplatforms",
+                              "This example deploy os to device specified by uuid",
+                              "osimages hostplatforms --osimages_dict '{\"networkSettings\":{\"dns1\": \"10.240.0.10\",\"dns2\":\"10.240.0.11\",\"gateway\":\"10.240.28.1\",\"ipAddress\":\"10.240.29.226\",\"mtu\":1500,\"prefixLength\":64,\"selectedMac\":\"AUTO\",\"subnetMask\":\"255.255.252.0\",\"vlanId\":521},\"selectedImage\":\"rhels7.3|rhels7.3-x86_64-install-Minimal\",\"storageSettings\":{\"targetDevice\":\"localdisk\"},\"uuid\":\"B918EDCA1B5F11E2803EBECB82710ADE\"}'"
+        ],
+        "help": " Retrieve information about the host platforms and deploy operating-system images to the host platforms as a job",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
           ],
-          "help": "Retrieve inventory properties that you can use to specify criteria for dynamic resource groups",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+          [
+            {
+              "args": "-o,--osimages_dict",
+              "opt_dict": {
+                "help": "osimages deploy details, json string",
+                "type": "json.loads"
               }
-            ]
+            }
           ]
-        },
-        {
-          "name": "create",
-          "additional_detail": [
-            "The following example create resource group",
-            "resourcegroups create -n R1_GROUP -d GROUP_DESCRIPTION -t dynamic -c '{\"parent\": \"root\", \"value\": null, \"criteria\": [{\"operator\": \"contains\", \"property\": \"hostname\", \"parent\": \"lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2\", \"id\": \"1001\", \"value\": \"test\"}], \"operator\": \"AND\", \"property\": null, \"id\": \"root\"}'"
+        ]
+      },
+      {
+        "name": "import",
+        "additional_detail": ["The following example create import job for image type OS",
+                              "osimages import -t OS -v import_job",
+                              "The following example import OS image from remote server",
+                              "osimages import -t OS -o '{\"jobId\":26,\"os\":\"rhels\",\"imageName\":\"fixed\",\"path\":\"iso/rhel73.iso\",\"serverId\":\"1\"}' -v result",
+                              "For local import of file run below two command one by one",
+                              "The following example create import job for image type SCRIPT",
+                              "osimages import -t SCRIPT -v import_job",
+                              "The following example import OS image from local",
+                              "osimages import -t SCRIPT -o '{\"jobId\":26,\"os\":\"rhels\", \"description\":\"rhel test script\",\"imageName\":\"Test\",\"file\":\"/home/naval/test.py\"}' -v result",
+                              "For local import of file run below two command one by one",
+                              "The following example create import job for image type OS",
+                              "osimages import -t OS -v import_job",
+                              "The following example import OS image from Local",
+                              "osimages import -t OS -o '{\"osrelease\":\"7.6\",\"os\":\"rhels\", \"description\":\"rhel 76 iso\", \"imageName\":\"RHEL76\",\"file\":\"/home/naval/osimage_test/RHEL-7.6-20181010.0-Server-x86_64-dvd1.iso\", \"jobId\":87}' -v result",
+                              "For local import of BUNDLE and BUNDLESIG file run below three command one by one",
+                              "The following example create import job for image type BUNDLE use it for upload of BUNDLE and BUNDLESIG",
+                              "osimages import -t BUNDLE -v import_job",
+                              "The following example import BUNDLE image from Local",
+                              "osimages import -t BUNDLE -o '{\"imageName\":\"bundle_win2016_20180926153236.zip\",\"file\":\"home/naval/osimage_test/bundle_win2016_20180926153236.zip\", \"jobId\":87}' -v result",
+                              "The following example import BUNDLESIG image from Local",
+                              "osimages import -t BUNDLESIG -o '{\"imageName\":\"bundle_win2016_20180926153236.zip.asc\",\"file\":\"home/naval/osimage_test/bundle_win2016_20180926153236.zip.asc\", \"jobId\":87}' -v result"
+        ],
+        "help": "Import OS images and scripts from remote server to LXCA",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
           ],
-          "help": "Create dynamic resource group on LXCA",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+          [
+            {
+              "args": "-t,--imagetype",
+              "opt_dict": {
+                "help": "Image type to import",
+                "required": true,
+                "choices": [
+                  "BUNDLE", "BUNDLESIG", "BOOT", "DUD", "OS", "OSPROFILE", "SCRIPT", "CUSTOM_CONFIG", "UNATTEND"
+                ]
               }
-            ],
-            [
-              {
-                "args": "-n,--name",
-                "opt_dict": {
-                  "help": "resource group name",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-d,--description",
-                "opt_dict": {
-                  "help": "resource group description",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-c,--criteria",
-                "opt_dict": {
-                  "help": "resource group criteria",
-                  "required": true,
-                  "type": "json.loads"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-t,--type",
-                "opt_dict": {
-                  "help": "resource group type, required for create",
-                  "choices": ["dynamic"],
-                  "required": true
-                }
-              }
-            ]
-          ]
-        },
-        {
-          "name": "update",
-          "additional_detail": [
-            "The following example update resource group",
-            "resourcegroups update -u 5C5AB42D94C6A719BEF2A375 -n R1_GROUP -d GROUP_DESCRIPTION -t dynamic -c '{\"parent\": \"root\", \"value\": null, \"criteria\": [{\"operator\": \"contains\", \"property\": \"hostname\", \"parent\": \"lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2\", \"id\": \"1001\", \"value\": \"test\"}], \"operator\": \"AND\", \"property\": null, \"id\": \"root\"}'"
+            }
           ],
-          "help": "Update dynamic resource group on LXCA",
-          "subcmd_args": [
-            [
-              {
-                "args": "-v,--view",
-                "opt_dict": {
-                  "help": "view for interactive shell"
-                }
+
+          [
+            {
+              "args": "-o,--osimages_dict",
+              "opt_dict": {
+                "help": "osimages import details, json string",
+                "type": "json.loads"
               }
-            ],
-            [
-              {
-                "args": "-u,--uuid",
-                "opt_dict": {
-                  "help": "resource group uuid's required for update"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-n,--name",
-                "opt_dict": {
-                  "help": "resource group name",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-d,--description",
-                "opt_dict": {
-                  "help": "resource group description",
-                  "required": true
-                }
-              }
-            ],
-            [
-              {
-                "args": "-c,--criteria",
-                "opt_dict": {
-                  "help": "resource group criteria",
-                  "required": true,
-                  "type": "json.loads"
-                }
-              }
-            ],
-            [
-              {
-                "args": "-t,--type",
-                "opt_dict": {
-                  "help": "resource group type, required for create",
-                  "choices": ["dynamic"],
-                  "required": true
-                }
-              }
-            ]
+            }
           ]
-        }
-      ]
+        ]
+      },
+      {
+        "name": "remotefileservers",
+        "additional_detail": [
+          "The following example list all remote file servers",
+          "osimages remotefileservers -v remotefileserver",
+          "The following example specifig remote file servers",
+          "osimages remotefileservers -v remotefileservers -o '{\"id\": \"1\"}' -v remotefileservers_id",
+          "Create remote file server entry for FTP server",
+          "osimages remotefileservers -o '{\"username\": \"guest\", \"password\": \"password\",  \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"10.211.2.243\",\"protocol\":\"FTP\"}' -v remotefileservers",
+          "Update remote file server entry",
+          "osimages remotefileservers -o '{\"putid\": \"1\", \"displayName\": \"new_ftp_207\", \"port\": 21, \"address\":\"10.211.2.243\",\"protocol\":\"FTP\"}' -v result",
+          "delete remote file server entry",
+          "osimages remotefileservers -o '{\"deleteid\": \"1\"}' -v result"
+
+        ],
+        "help": "Retrieve information about all remote file-server profiles or to create or modify a remote file-server profile",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-o,--osimages_dict",
+              "opt_dict": {
+                "help": "Remote file server options, json string",
+                "type": "json.loads"
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "delete",
+        "additional_detail": [
+          "The following example delete osimages with id's",
+          "osimages delete -i 20190131054310_trail.py"
+        ],
+        "help": "Delete osimages from LXCA",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-i,--id",
+              "opt_dict": {
+                "help": "osimages id's to delete comma separated",
+                "required": true
+              }
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "resourcegroups": {
+    "description": "The osiamges command retrieve information about all resource groups and create update and delete dynamic resource group ",
+    "additional_detail": ["resourcegroups subcmd detail ",
+      "resourcegroups list -h "],
+    "add_help": true,
+    "subcmd": [
+      {
+        "name": "list",
+        "additional_detail": ["The following example returns list of resourcegroups.",
+                              "resourcegroups list"],
+        "help": "Retrieve information about all resource groups",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-u,--uuid",
+              "opt_dict": {
+                "help": "resource group uuid"
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "delete",
+        "additional_detail": [
+          "The following example delete resource group with uuid",
+          "resourcegroups delete -u FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+        ],
+        "help": "Delete resource group from LXCA",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-u,--uuid",
+              "opt_dict": {
+                "help": "resource group uuid's to delete",
+                "required": true
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "criteriaproperties",
+        "additional_detail": [
+          "The following example retrieve inventory properties",
+          "resourcegroups criteriaproperties -v criteriaproperties"
+        ],
+        "help": "Retrieve inventory properties that you can use to specify criteria for dynamic resource groups",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "create",
+        "additional_detail": [
+          "The following example create resource group",
+          "resourcegroups create -n R1_GROUP -d GROUP_DESCRIPTION -t dynamic -c '{\"parent\": \"root\", \"value\": null, \"criteria\": [{\"operator\": \"contains\", \"property\": \"hostname\", \"parent\": \"lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2\", \"id\": \"1001\", \"value\": \"test\"}], \"operator\": \"AND\", \"property\": null, \"id\": \"root\"}'"
+        ],
+        "help": "Create dynamic resource group on LXCA",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-n,--name",
+              "opt_dict": {
+                "help": "resource group name",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-d,--description",
+              "opt_dict": {
+                "help": "resource group description",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-c,--criteria",
+              "opt_dict": {
+                "help": "resource group criteria",
+                "required": true,
+                "type": "json.loads"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-t,--type",
+              "opt_dict": {
+                "help": "resource group type, required for create",
+                "choices": ["dynamic"],
+                "required": true
+              }
+            }
+          ]
+        ]
+      },
+      {
+        "name": "update",
+        "additional_detail": [
+          "The following example update resource group",
+          "resourcegroups update -u 5C5AB42D94C6A719BEF2A375 -n R1_GROUP -d GROUP_DESCRIPTION -t dynamic -c '{\"parent\": \"root\", \"value\": null, \"criteria\": [{\"operator\": \"contains\", \"property\": \"hostname\", \"parent\": \"lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2\", \"id\": \"1001\", \"value\": \"test\"}], \"operator\": \"AND\", \"property\": null, \"id\": \"root\"}'"
+        ],
+        "help": "Update dynamic resource group on LXCA",
+        "subcmd_args": [
+          [
+            {
+              "args": "-v,--view",
+              "opt_dict": {
+                "help": "view for interactive shell"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-u,--uuid",
+              "opt_dict": {
+                "help": "resource group uuid's required for update"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-n,--name",
+              "opt_dict": {
+                "help": "resource group name",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-d,--description",
+              "opt_dict": {
+                "help": "resource group description",
+                "required": true
+              }
+            }
+          ],
+          [
+            {
+              "args": "-c,--criteria",
+              "opt_dict": {
+                "help": "resource group criteria",
+                "required": true,
+                "type": "json.loads"
+              }
+            }
+          ],
+          [
+            {
+              "args": "-t,--type",
+              "opt_dict": {
+                "help": "resource group type, required for create",
+                "choices": ["dynamic"],
+                "required": true
+              }
+            }
+          ]
+        ]
+      }
+    ]  
+  },
+  "license": {
+    "description": "Get license details",
+    "cmd_args": [
+    ]
   }
-
 
 }

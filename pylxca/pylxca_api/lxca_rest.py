@@ -12,7 +12,7 @@ import logging.config
 from requests_toolbelt import (MultipartEncoder,
                                MultipartEncoderMonitor)
 from requests.exceptions import HTTPError
-import ast, json, re
+import json, re
 import socket
 import time
 
@@ -296,7 +296,7 @@ class lxca_rest(object):
         except HTTPError as re:
             logger.error("Exception occured: %s",re)
             raise re
-        return resp
+        return resp.json()
 
     def do_manage(self,url, session, ip_addr,user,pw,rpw,force,jobid, storedcredential_id):
         try:
@@ -324,7 +324,7 @@ class lxca_rest(object):
                     while disc_progress < 100:
                         time.sleep(2) # delays for 5 seconds to allow discovery to complete
                         disc_job_resp = self.do_discovery(url.rsplit('/',1)[0], session, None,disc_job_id)
-                        disc_resp_py_obj = json.loads(disc_job_resp.text)
+                        disc_resp_py_obj = disc_job_resp
                         disc_progress = disc_resp_py_obj['progress']
                 
                 discovered_endpoint = False
@@ -341,10 +341,10 @@ class lxca_rest(object):
                         # Fetch machine type from Response
                         param_dict["machineType"] = disc_resp_py_obj[key][0]["machineType"]
 
-                        if param_dict["type"] == "Rack-Tower Server":
+                        if param_dict["type"] == "Rack-Tower Server" or param_dict["type"] == "Edge Server":
                         # Fetch ManagementProcessor value from Response
                             param_dict["managementProcessor"] = disc_resp_py_obj[key][0]["managementProcessor"]
-                            param_dict['server-type'] = "Rack-Tower Server"
+                            param_dict['server-type'] = param_dict['type']
 
                         #Fetch UUID value from  Response
                         param_dict["uuid"] = disc_resp_py_obj[key][0]["uuid"]
@@ -374,7 +374,7 @@ class lxca_rest(object):
                     security_Descriptor['managedAuthEnabled'] = False
                     security_Descriptor['managedAuthSupported'] = False
                     cred = self.get_storedcredentials(orig_url, session, storedcredential_id)
-                    cred_resp = json.loads(cred.text)
+                    cred_resp = cred.json()
                     storedCredentials = {}
                     storedCredentials['id'] = storedcredential_id
                     storedCredentials['userName'] = cred_resp['response']['userName']
@@ -390,17 +390,23 @@ class lxca_rest(object):
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
 
+                manage_resp = {}
+                manage_resp['manageRequestJob'] = None
+
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if "location" in resp.headers._store:
                         job = resp.headers._store["location"][-1].split("/")[-1]
-                        return job
-                    else:
-                        return None
+                        manage_resp['manageRequestJob'] = job
+
+                manage_resp['manageRequestResponse'] = resp.json()
+
+                return manage_resp
                     
             elif jobid:
                 url = url + '/manageRequest/jobs/' + str(jobid)
                 resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
+                return resp.json()
             else:
                 logger.error("Invalid execution of manage REST API")
                 raise Exception("Invalid execution of manage REST API")
@@ -427,12 +433,13 @@ class lxca_rest(object):
                     uuid = ep_data[1]
                     type = ep_data[2]
                     #Fetch type value from input
-                    type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower"]
+                    type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower","Edge"]
                     if type not in type_list:
                         raise Exception("Invalid Type Specified")
                     if type == "ThinkServer": type = "Lenovo ThinkServer"
                     elif type == "Storage": type = "Lenovo Storage"
                     elif type == "Rack-Tower": type = "Rack-Tower Server"
+                    elif type == "Edge": type = "Edge Server"
                     each_ep_dict = {"ipAddresses":ip_addr.split("#"),"type":type,"uuid":uuid}
                     endpoints_list.append(each_ep_dict)
                 param_dict["endpoints"] = endpoints_list
@@ -449,16 +456,24 @@ class lxca_rest(object):
                 payload = param_dict
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
+
+                unmanage_resp = {}
+                unmanage_resp['unmanageRequestJob'] = None
+
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
                     if "location" in resp.headers._store:
                         job = resp.headers._store["location"][-1].split("/")[-1]
-                        return job
-                    else:
-                        return None
+                        unmanage_resp['unmanageRequestJob'] = job
+
+                unmanage_resp['unmanageRequestResponse'] = resp.json()
+
+                return unmanage_resp
+
             elif jobid:
                 url = url + '/unmanageRequest/jobs/' + str(jobid)
                 resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
+                return resp.json()
             else:
                 logger.error("Invalid execution of unmanage REST API")
                 raise Exception("Invalid execution of unmanage REST API")
@@ -558,12 +573,12 @@ class lxca_rest(object):
                 resp = session.get(url,verify=False, timeout=REST_TIMEOUT)
                 resp.raise_for_status()
                 if resp.status_code == requests.codes['ok'] or resp.status_code == requests.codes['created'] or resp.status_code == requests.codes['accepted']:
-                    job_info = ast.literal_eval(resp.content)
+                    job_info = resp.json()
                     if "jobURL" in job_info:
                         job = job_info["jobURL"].split("/")[-1]
                         return job
                     else:
-                        return resp
+                        return resp.json()
             else:
                 logger.error("Invalid execution of ffdc REST API mandatory parameter uuid is missing")
                 raise Exception("Invalid execution of ffdc REST API mandatory parameter uuid is missing")
@@ -863,14 +878,15 @@ class lxca_rest(object):
                 return resp
 
             # For apply and cancelApply Action
-            if action == "apply" or action == "cancelApply" :
+            if action == "apply" or action == "applyBundle" or action == "cancelApply" :
                 
                 url= url + "?action=" + action
                 
                 if not mode  == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url= url + "&activationMode=" + mode
                 else:
-                    raise Exception("Invalid argument mode")
+                    if action != "applyBundle":
+                        raise Exception("Invalid argument mode")
 
                 if server:
                     if len(server.split(","))==3:
@@ -879,6 +895,9 @@ class lxca_rest(object):
                     elif len(server.split(","))==2:
                         server_data = server.split(",")
                         serverlist = [{"UUID": server_data[0],"Components": [{"Component": server_data[1]}]}]
+                    elif len(server.split(","))==1:
+                        uuid = server
+                        serverlist = [{"UUID": uuid}]
 
                 if switch:
                     if len(switch.split(","))==3:
@@ -944,13 +963,14 @@ class lxca_rest(object):
     def do_updatecomp_all(self, url, session, action, mode, dev_list):
         try:
             url = url + '/updatableComponents'
-            if action == "apply" or action == "cancelApply":
+            if action == "apply" or action == "applyBundle" or action == "cancelApply":
                 url = url + "?action=" + action
 
                 if not mode == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url = url + "&activationMode=" + mode
                 else:
-                    raise Exception("Invalid argument mode")
+                    if action != "applyBundle":
+                        raise Exception("Invalid argument mode")
             else:
                 raise Exception("Invalid argument action")
 
@@ -1210,7 +1230,7 @@ class lxca_rest(object):
         payload = post_dict
 
         try:
-            resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
+            resp = resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
@@ -1588,230 +1608,6 @@ class lxca_rest(object):
                 elif kwargs['imageType'] in ['BUNDLE', 'BUNDLESIG']:
                     if set(['jobId', 'imageName', 'imageType']).difference(set(kwargs.keys())):
                         raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType']")
-
-                if kwargs['imageType'] in ['BOOT', 'DUD'] and 'osrelease' not in kwargs :
-                    raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType','os','osrelease]")
-                if 'serverId' in kwargs:
-                    payload_keylist = ['serverId', 'path']
-                    for k,v in  list(kwargs.items()):
-                        if k in payload_keylist:
-                            payload[k] = v
-                        else:
-                            url = url + "%s=%s&" %(k,v)
-                    url = url.rstrip('&')
-                    resp = session.post(url, data=json.dumps(payload), verify=False, timeout=100 * REST_TIMEOUT) # 100 minutes
-                    return resp
-                else:    # local case
-                    if not kwargs['file']:
-                        raise Exception("Invalid Arguments, file is required for local import")
-                    url = url + "jobId="+str(kwargs['jobId'])+"&"
-                    kwargs.pop('jobId')
-                    #urllib.urlencode(kwargs['description'])
-                    for k in  ['imageName', 'imageType', 'os', 'description']:
-                        if k in kwargs:
-                            url = url + "%s=%s&" %(k,kwargs[k])
-
-                    if 'osrelease' in kwargs:
-                        url = url + "%s=%s&" % ('osrelease', kwargs['osrelease'])
-                    url = url.rstrip('&')
-                    url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
-                    m = MultipartEncoder(
-                        fields={ 'name':'uploadedfile', 'uploadedfile': (os.path.basename(kwargs['file']), open(kwargs['file'], 'rb'), 'application/octet-stream')}
-                    )
-
-                    monitor = MultipartEncoderMonitor(m, callback)
-
-                    logger.debug("before sending second call")
-                    resp = session.post(url, data = monitor, headers={'Content-Type': monitor.content_type}, verify=False, timeout=100 * REST_TIMEOUT)
-                    logger.debug("after  second call response")
-                    return resp
-
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-        return resp
-
-    def osimage_remotefileservers(self, url, session, kwargs):
-        resp = None
-        try:
-            payload = {}
-            url = url + '/osImages/remoteFileServers'
-            # put/delete call for remoteFileServers DONE
-
-            if 'putid' in kwargs or 'deleteid' in kwargs:
-                if 'putid' in kwargs:  # put call for remoteFileServers/<id>
-                    url = url + '/' + kwargs['putid']
-                    kwargs.pop('putid')
-                    if set(['address', 'displayName', 'port', 'protocol']).difference(set(kwargs.keys())):
-                        raise Exception("Invalid Arguments, Try:['address','displayName','port', 'protocol']")
-                    for k, v in list(kwargs.items()):
-                        payload[k] = v
-
-                    resp = self.put_method(url, session, payload)
-                    return resp
-
-                if 'deleteid' in kwargs:  # delete call for remoteFileServers/<id>
-                    if list(kwargs.keys()).__len__() != 1:
-                        raise Exception("Invalid Arguments, Try:deleteid=<id> only")
-                    url = url + '/' + kwargs['deleteid']
-                    payload = {}
-                    resp = self.delete_method(url, session, payload)
-                    return resp
-            elif 'address' in kwargs and 'putid' not in kwargs and 'deleteid' not in kwargs:
-                # postcall for remoteFileServers DONE
-                if set(['address', 'displayName', 'port', 'protocol']).difference(set(kwargs.keys())):
-                    raise Exception("Invalid Arguments, Try:['address','displayName','port', 'protocol']")
-                for k, v in list(kwargs.items()):
-                    payload[k] = v
-                resp = self.post_method(url, session, payload)
-                return resp
-            else:
-                if 'id' in kwargs:
-                    url = url + '/' + kwargs['id']
-
-                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)  ## It raises HTTPError here
-                resp.raise_for_status()
-                return resp
-
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-
-
-    def create_osimage_hostsettings(self, url, session, hosts):
-        resp        = None
-        url         = url + '/osdeployment/hostSettings'
-        try:
-
-            # post call for hostSettings DONE
-            if hosts:
-                for kwargs in hosts:
-                    if set(['uuid', 'storageSettings', 'networkSettings']).difference(
-                            set(kwargs.keys())):
-                        raise Exception(
-                            "Invalid Arguments, Try:[{'storageSettings'=<dict>, 'networkSettings'=<dict>,'uuid'}]")
-                    if not isinstance(kwargs['storageSettings'], dict) or \
-                            not isinstance(kwargs['networkSettings'], dict):
-                        raise Exception(
-                            "Invalid Arguments, Try:['storageSettings'=<dict>, 'networkSettings'=<dict>]")
-                payload = hosts
-                resp = self.post_method(url, session, payload)
-                return resp
-            else:
-                raise Exception(
-                    "Invalid Arguments, Try:[{'storageSettings'=<dict>, 'networkSettings'=<dict>,'uuid'}]")
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-        return resp
-
-    def update_osimage_hostsettings(self, url, session, hosts):
-        resp        = None
-        url         = url + '/osdeployment/hostSettings'
-        try:
-
-            # put call for hostSettings DONE
-            if hosts:
-                for kwargs in hosts:
-                    if set(['uuid', 'storageSettings', 'networkSettings']).difference(
-                            set(kwargs.keys())):
-                        raise Exception(
-                            "Invalid Arguments, Try:[{'storageSettings'=<dict>, 'networkSettings'=<dict>,'uuid'}]")
-                    if not isinstance(kwargs['storageSettings'], dict) or \
-                            not isinstance(kwargs['networkSettings'], dict):
-                        raise Exception(
-                            "Invalid Arguments, Try:['storageSettings'=<dict>, 'networkSettings'=<dict>]")
-                payload = hosts
-                resp = self.put_method(url, session, payload)
-                return resp
-            else:
-                raise Exception(
-                    "Invalid Arguments, Try:[{'storageSettings'=<dict>, 'networkSettings'=<dict>,'uuid'}]")
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-        return resp
-
-    def list_osimage_hostsettings(self, url, session, kwargs):
-        resp        = None
-        url         = url + '/osdeployment/hostSettings'
-
-        if kwargs and 'uuid' in kwargs:
-            url = url + '/' + kwargs['uuid']
-        try:
-            resp = session.get(url, verify=False, timeout=REST_TIMEOUT)    ## It raises HTTPError here
-            resp.raise_for_status()
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-        return resp
-
-    def delete_osimage_hostsettings(self, url, session, kwargs):
-        resp        = None
-        url         = url + '/osdeployment/hostSettings'
-
-        if kwargs and 'uuid' in kwargs:
-            url = url + '/' + kwargs['uuid']
-        else:
-            raise Exception(
-                "Invalid Arguments, Try:uuid is required")
-        try:
-            resp = session.delete(url, verify=False, timeout=REST_TIMEOUT)    ## It raises HTTPError here
-            resp.raise_for_status()
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-        return resp
-
-    def osimage_hostplatforms(self, url, session, kwargs):
-        resp        = None
-        url         = url + '/hostPlatforms'
-        try:
-            if kwargs:
-                if set(['networkSettings', 'selectedImage', 'storageSettings', 'uuid', ]).difference(
-                        set(kwargs.keys())):
-                    raise Exception(
-                        "Invalid Arguments, Try:['networkSettings'=<dict>, 'selectedImage', 'storageSettings'=<dict>,'uuid',]")
-                if not isinstance(kwargs['networkSettings'], dict) or not isinstance(kwargs['storageSettings'], dict):
-                    raise Exception("Invalid Arguments, Try: networkSettings=<dict>, and storageSettings=<dict>")
-                payload = {}
-                for k, v in list(kwargs.items()):
-                    payload[k] = v
-                resp = self.put_method(url, session, [payload])
-                return resp
-            else:
-                resp = session.get(url, verify=False, timeout=REST_TIMEOUT)    ## It raises HTTPError here
-                resp.raise_for_status()
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
-        return resp
-
-    def osimage_import(self, url, session, kwargs):
-        resp        = None
-        try:
-            # postcall of osimage DONE
-            payload = {}
-            if 'imageType' in kwargs and 'jobId' not in kwargs:
-                url = url + '/osImages'
-                if kwargs['imageType'] not in ['BUNDLE', 'BUNDLESIG', 'BOOT', 'DUD', 'OS', 'OSPROFILE', 'SCRIPT', 'CUSTOM_CONFIG', 'UNATTEND']:
-                    raise Exception("Invalid Arguments, Try: [BUNDLE,BUNDLESIG,BOOT,DUD,OS,OSPROFILE,SCRIPT, 'CUSTOM_CONFIG', 'UNATTEND']")
-                if 'fileSize' in kwargs:
-                    payload['fileSize'] = kwargs['fileSize']
-                url = url + '/?imageType=' + kwargs['imageType']
-                payload['Action'] = 'Init'
-                resp = self.post_method(url, session, payload)
-                return resp
-            # postcall for jobID DONE
-            if 'jobId' in kwargs:
-                url = url + '/files/osImages'
-                url = url + '?'
-                if kwargs['imageType'] in ['BOOT', 'DUD', 'OS', 'OSPROFILE', 'SCRIPT', 'CUSTOM_CONFIG', 'UNATTEND']:
-                    if set(['jobId','imageName','imageType','os']).difference(set(kwargs.keys())):
-                        raise Exception ("Invalid Arguments, Try:['jobId','imageName','imageType','os']")
-                elif kwargs['imageType'] in ['BUNDLE', 'BUNDLESIG']:
-                    if set(['jobId', 'imageName', 'imageType']).difference(set(kwargs.keys())):
-                        raise Exception("Invalid Arguments, Try:['jobId','imageName','imageType']")
                     ext = os.path.splitext(os.path.basename(kwargs['imageName']))[-1]
                     if not (ext in ['.zip','.asc']):
                         raise Exception("Invalid Arguments, Try:imageName extension with ['.asc','.zip'")
@@ -1840,7 +1636,7 @@ class lxca_rest(object):
                     if 'osrelease' in kwargs:
                         url = url + "%s=%s&" % ('osrelease', kwargs['osrelease'])
                     url = url.rstrip('&')
-                    url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+                    url = urllib.parse.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
                     m = MultipartEncoder(
                         fields={ 'name':'uploadedfile', 'uploadedfile': (os.path.basename(kwargs['file']), open(kwargs['file'], 'rb'), 'application/octet-stream')}
                     )
@@ -2122,3 +1918,14 @@ class lxca_rest(object):
             logger.error("REST API Exception: Exception = %s", re)
             raise re
         return resp
+
+    def get_license(self, url, session):
+        url = url + '/notificationsLicense'
+
+        try:
+            resp = session.get(url,verify=False,timeout=REST_TIMEOUT)
+            resp.raise_for_status()
+        except HTTPError as re:
+            logger.error("REST API Exception: Exception = %s", re)
+            raise re
+        return resp    
