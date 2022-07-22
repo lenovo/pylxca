@@ -6,18 +6,20 @@
 @organization: Lenovo
 @summary: Setup Script for PYLXCA
 '''
-import os, sys, re
+import os
+import sys
+import re
 from codecs import open
 
 try:
-    from setuptools import setup, find_packages
+    from setuptools import setup
 except ImportError:
     print ("setuptools is needed to run this file")
     print ("Try -- 'sudo pip install setuptools'")
     print ("Exiting ..")
     sys.exit(1)
-
 def read(fname):
+    """Open and read a file """
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 with open('pylxca/__init__.py', 'r') as fd:

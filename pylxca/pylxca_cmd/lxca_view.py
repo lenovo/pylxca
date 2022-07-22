@@ -8,62 +8,74 @@
 data and displays on ostream.
 '''
 
-import json, re, os, sys, logging
-from pprint import pprint
+import os
+import sys
+import logging
+#from pprint import pprint
 import xml.etree.cElementTree as ElementTree
 
-import pylxca.pylxca_cmd
+#import pylxca.pylxca_cmd
 
-filter_file = "lxca_filters.xml"
-output_file = "lxca_console.out"
-pylxca_filter = os.path.join(os.getenv('PYLXCA_CMD_PATH'), filter_file)
-pylxca_outfile = os.path.join(os.getenv('PYLXCA_CMD_PATH'), output_file)
+FILTER_FILE = "lxca_filters.xml"
+OUTPUT_FILE = "lxca_console.out"
+pylxca_filter = os.path.join(os.getenv('PYLXCA_CMD_PATH'), FILTER_FILE)
+pylxca_outfile = os.path.join(os.getenv('PYLXCA_CMD_PATH'), OUTPUT_FILE)
 
-indent = 0
+INDENT = 0
 logger = logging.getLogger(__name__)
-
+# pylint: disable=R0205
 class Tee(object):
+    """ Class Tee"""
     def __init__(self, *files):
         self.files = files
     def write(self, obj):
-        for f in self.files:
-            f.write(obj)
-            f.flush() # If you want the output to be visible immediately
+        """ Class Tee write()"""
+        for file in self.files:
+            file.write(obj)
+            file.flush() # If you want the output to be visible immediately
     def flush(self) :
-        for f in self.files:
-            f.flush()
-
+        """ Class Tee flush()"""
+        for file in self.files:
+            file.flush()
+# pylint: disable=C0103
+# pylint: disable=R0205
 class lxca_ostream(object):
+    """ Class lxca_ostream"""
     def __init__(self):
         self.stdout = sys.__stdout__
         self.print_lvl = 1
 
     def get_lvl(self):
+        """ Class lxca_ostream get_lvl()"""
         return self.print_lvl
 
     def set_lvl(self,lvl):
+        """ Class lxca_ostream set_lvl()"""
         self.print_lvl = lvl
 
         try:
             if lvl == 0:
-                self.stdout = open(os.devnull, 'w')
+                self.stdout = open(os.devnull, 'w', encoding="utf8")
             elif lvl == 1:
                 self.stdout = sys.__stdout__
             elif lvl == 2:
-                self.stdout = open(pylxca_outfile, 'w')
+                self.stdout = open(pylxca_outfile, 'w', encoding="utf8")
             elif lvl == 3:
-                outfile = open(pylxca_outfile, 'w')
-                self.stdout = Tee(sys.__stdout__, outfile)
-        except Exception as e:
+                with open(pylxca_outfile, 'w', encoding="utf8") as outfile:
+                    self.stdout = Tee(sys.__stdout__, outfile)
+        except Exception:
             return False
         return True
 
     def write(self, string):
+        """ Class lxca_ostream write()"""
         sys.stdout = self.stdout
         print(string)
         sys.stdout = sys.__stdout__
-
+# pylint: disable=C0103
+# pylint: disable=R0205
 class lxca_view(object):
+    """ Class lxca_view"""
 
     def __init__(self,ostream = sys.__stdout__):
         self.ostream = ostream
@@ -80,35 +92,36 @@ class lxca_view(object):
 
 
     def get_val(self,py_obj, tag ):
+        """ Class lxca_view get_val()"""
         a = []
         try:
             if isinstance(py_obj, (dict)):
-                return(py_obj[tag])
+                return py_obj[tag]
             if isinstance(py_obj, (list)):
-
-                for i in range(0, len(py_obj)):
+                for i in enumerate(len(py_obj)):
                     a.append(py_obj[i][tag])
-        except:
+        except Exception:
             return None
         return a
 
     def get_view_filter(self, cmd_name, filter_tag):
+        """ Class lxca_view  get_view_filter() """
         vf_tree = ElementTree.parse(pylxca_filter)
         vf_root = vf_tree.getroot()
 
-        for vf in vf_root.findall(cmd_name):
-            if vf.attrib['name']==filter_tag:
-                return vf
+        for viewfilter in vf_root.findall(cmd_name):
+            if viewfilter.attrib['name']==filter_tag:
+                return viewfilter
 
     def print_recur(self,py_obj,view_filter):
         """Recursively prints the python object content as per view filter"""
-        global indent
+        global INDENT
         if str(view_filter.attrib.get('type')) != "object" :
-            self.ostream.write(' '*indent + '%s: %s' % (view_filter.tag.title(), self.get_val(py_obj,view_filter.attrib.get('name', view_filter.text))))
+            self.ostream.write(' '*INDENT + '%s: %s' % (view_filter.tag.title(), self.get_val(py_obj,view_filter.attrib.get('name', view_filter.text))))
         #else:
         #    self.ostream.write('%s: ' % (view_filter.tag.title()))
 
-        indent += 4
+        INDENT += 4
         # View Filter has children so
         py_obj_item = self.get_val(py_obj, view_filter.attrib.get('name', view_filter.text))
         #if py_obj_item is list then iterate through the list and call print recur for each
@@ -119,22 +132,24 @@ class lxca_view(object):
         else:
             for elem in view_filter.getchildren():
                 self.print_recur(py_obj_item,elem)
-        indent -= 4
+        INDENT -= 4
 
-    def print_cmd_resp_object(self,cmd_resp_item, vf):
-        for vf_elem in vf.getchildren():
+    def print_cmd_resp_object(self,cmd_resp_item, viewfilter):
+        """ Class lxca_view  print_cmd_resp_object() """
+        for vf_elem in viewfilter.getchildren():
             self.print_recur(cmd_resp_item,vf_elem)
 
 
     def show_output(self,cmd_reponse, cmd_name,filter_tag):
-        vf = self.get_view_filter(cmd_name,filter_tag)
+        """ Class lxca_view  show_output() """
+        viewfilter = self.get_view_filter(cmd_name,filter_tag)
         self.ostream.write("Printing "+ cmd_name + " Output:"+ "\n")
 
         if len(list(cmd_reponse.keys())) == 0:
             self.ostream.write("No "+ filter_tag + " returned."+ "\n")
         elif len(list(cmd_reponse.keys())) > 1:
-            self.print_cmd_resp_object(cmd_reponse, vf)
+            self.print_cmd_resp_object(cmd_reponse, viewfilter)
         else:
             for cmd_resp_item in cmd_reponse[list(cmd_reponse.keys())[0]]:
-                self.print_cmd_resp_object(cmd_resp_item, vf)
+                self.print_cmd_resp_object(cmd_resp_item, viewfilter)
                 self.ostream.write('\n-----------------------------------------------------')
