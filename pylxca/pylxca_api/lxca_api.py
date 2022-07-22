@@ -4,14 +4,12 @@
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
 @organization: Lenovo
-@summary: This module implement facade interface for pylxca API interface. It provides a 
-single entry point for APIs.   
+@summary: This module implement facade interface for pylxca API interface.
+It provides a single entry point for APIs.
 '''
-
 
 import logging.config
 import json
-
 from pylxca.pylxca_api.lxca_connection import lxca_connection
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from  pylxca.pylxca_api.lxca_rest import lxca_rest
@@ -20,7 +18,7 @@ from  pylxca.pylxca_api.lxca_rest import HTTPError
 logger = logging.getLogger(__name__)
 
 class Singleton(type):
-    
+    """Singleton class"""
     def __call__(cls, *args, **kwargs):#@NoSelf
         try:
             return cls.__instance
@@ -29,25 +27,29 @@ class Singleton(type):
             return cls.__instance
 
 def with_metaclass(meta, *bases):
-    class metaclass(meta):
+    """with metaclass"""
+    class MetaClass(meta):
+        """metaclass"""
         __call__ = type.__call__
         __init__ = type.__init__
-        def __new__(cls, name, this_bases, d):
+        def __new__(cls, name, this_bases, argd):
             if this_bases is None:
-                return type.__new__(cls, name, (), d)
-            return meta(name, bases, d)
-    return metaclass('temporary_class', None, {})
-
+                return type.__new__(cls, name, (), argd)
+            return meta(name, bases, argd)
+    return MetaClass('temporary_class', None, {})
+# pylint: disable=R0904
+# pylint: disable=C0116
+# pylint: disable=C0301
+# pylint: disable=C0103
 class lxca_api(with_metaclass(Singleton, object)):
+
     '''
     Facade class which exposes interface for accessing various LXCA APIs
     '''
-    
     def __init__(self):
         '''
         Constructor
         '''
-        
         self.con = None
         self.func_dict = {'connect':self.connect,
                           'disconnect':self.disconnect,
@@ -83,13 +85,10 @@ class lxca_api(with_metaclass(Singleton, object)):
                           'storedcredentials': self.get_set_storedcredentials,
                           'license': self.get_license
                         }
-    
     def api( self, object_name, dict_handler = None, con = None ):
-        
- 
         try:
             # If Any connection is establibshed
-            if con == None and self.con and isinstance(self.con,lxca_connection):
+            if con is None and self.con and isinstance(self.con,lxca_connection):
                 con = self.con
 
             if object_name  == "disconnect":
@@ -100,29 +99,27 @@ class lxca_api(with_metaclass(Singleton, object)):
                     self.con = con
                 else:
                     raise ConnectionError("Invalid Connection Object")
-
-
             return self.func_dict[object_name](dict_handler)
-        except ConnectionError as re:
-            logger.error("Connection Exception: Exception = %s", re)
-            if self.con: 
+        except ConnectionError as raised_connection_error:
+            logger.error("Connection Exception: Exception = %s", raised_connection_error)
+            if self.con:
                 self.con.disconnect()
                 self.con = None
-            raise re
-        except HTTPError as re:
-            logger.error("Exception %s Occurred while calling REST API for object %s" %(re, object_name))
-            raise re
-        except ValueError as re:
-            logger.error("Exception ValueError %s Occurred while calling REST API for object %s" %(re, object_name))
-            raise re
-        except AttributeError as re:
-            logger.error("Exception AttributeError %s Occurred while calling REST API for object %s" %(re, object_name))
-            raise re
-        except Exception as re:
-            logger.error("Exception: %s  %s Occurred while calling REST API for object %s" %(type(re), str(re), object_name))
-            raise re
+            raise raised_connection_error
+        except HTTPError as raised_connection_error:
+            logger.error("Exception {%s} Occurred while calling REST API for object {%s}",raised_connection_error , object_name)
+            raise raised_connection_error
+        except ValueError as raised_connection_error:
+            logger.error("Exception ValueError {%s} Occurred while calling REST API for object {%s}", raised_connection_error, object_name)
+            raise raised_connection_error
+        except AttributeError as raised_connection_error:
+            logger.error("Exception AttributeError {%s} Occurred while calling REST API for object {%s}", raised_connection_error, object_name)
+            raise raised_connection_error
+        except Exception as raised_connection_error:
+            logger.error("Exception: {%s}  {%s} Occurred while calling REST API for object {%s}",type(raised_connection_error), str(raised_connection_error), object_name)
+            raise raised_connection_error
         return None
-    
+
     def connect( self, dict_handler = None ):
         url = user = passwd = None
         verify = True
@@ -130,22 +127,23 @@ class lxca_api(with_metaclass(Singleton, object)):
             url = next(item for item in [dict_handler.get('l') , dict_handler.get('url')] if item is not None)
             user = next(item for item in [dict_handler.get('u') , dict_handler.get('user')] if item is not None)
             passwd = next(item for item in [dict_handler.get('p') , dict_handler.get('pw')] if item is not None)
-            if "noverify" in dict_handler: verify = False
-                 
+            if "noverify" in dict_handler:
+                verify = False
+           
         self.con = lxca_connection(url,user,passwd,verify)
-        
+  
         #clear the temp stored passwd
         passwd = None
-        
-        if self.con.connect() == True:
+  
+        if self.con.connect() is True:
             self.con.test_connection()
             logger.debug("Connection to LXCA Success")
-            return self.con    
+            return self.con
         else:
             logger.error("Connection to LXCA Failed")
             self.con = None
             return self.con
-    
+
     def disconnect( self, dict_handler=None):
         """
             this method perform disconnect operation
@@ -174,7 +172,8 @@ class lxca_api(with_metaclass(Singleton, object)):
                 reset_conn_to_orig = True
         try:
             resp = self.con.disconnect()
-        except Exception as e:
+        except Exception as connectexception:
+            logger.error("Exception {%s} Occurred while disconnecting",connectexception)
             if reset_conn_to_orig:
                 self.con = dict_handler['orig_con']
             raise
@@ -188,18 +187,18 @@ class lxca_api(with_metaclass(Singleton, object)):
         lvl = None
         if dict_handler:
             lvl = next((item for item in [dict_handler.get('l') , dict_handler.get('lvl')] if item is not None),None)
-        if lvl == None:
+        if lvl is None:
             lvl = lxca_rest().get_log_level()
         else:
             return self.set_log_level(lvl)
         return lvl
-    
+
     def set_log_level(self, log_value):
         try:
             lxca_rest().set_log_level(log_value)
-            logger.debug("Current Log Level is now set to " + str(logger.getEffectiveLevel()))
-        except Exception as e:
-            logger.error("Fail to set Log Level")
+            logger.debug("Current Log Level is now set to {%s} ",str(logger.getEffectiveLevel()))
+        except Exception as loglevelexception:
+            logger.error("Fail to set Log Level{%s}",loglevelexception)
             return False
         return True
 
@@ -208,30 +207,30 @@ class lxca_api(with_metaclass(Singleton, object)):
         status = None
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             status = next((item for item in [dict_handler.get('s') , dict_handler.get('status')] if item is not None),None)
-        
+  
         resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),uuid,status)
         py_obj = json.loads(resp.text)
         return py_obj
-    
+
     def get_nodes( self, dict_handler = None ):
         uuid = None
         status = None
         chassis_uuid = None
-        
+    
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+  
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             modify = next((item for item in [dict_handler.get('m'), dict_handler.get('modify')] if item is not None), None)
             status = next((item for item in [dict_handler.get('s') , dict_handler.get('status')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
             metrics = next((True for item in [dict_handler.get('x', False), dict_handler.get('metrics', False)] if item is None or item is True), False)
-            
+      
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,status)
             py_obj = json.loads(resp.text)
@@ -248,7 +247,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             resp = lxca_rest().get_nodes(self.con.get_url(),self.con.get_session(),uuid,status)
             py_obj = json.loads(resp.text)
         return py_obj
-        
+  
     def get_switches( self, dict_handler = None ):
         uuid = None
         chassis_uuid = None
@@ -258,7 +257,7 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+  
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
@@ -266,13 +265,14 @@ class lxca_api(with_metaclass(Singleton, object)):
             action = next((item for item in [dict_handler.get('action')] if item is not None),
                              None)
             #if "ports" in dict_handler: list_port = True
-            if port_name: list_port = True
+            if port_name:
+                list_port = True
 
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
             py_obj = {'switchesList':py_obj["switches"]}
-        elif list_port and (action==None):
+        elif list_port and (action is None):
             resp = lxca_rest().get_switches_port(self.con.get_url(), self.con.get_session(), uuid, list_port)
             py_obj = json.loads(resp.text)
         elif port_name and action:
@@ -282,18 +282,18 @@ class lxca_api(with_metaclass(Singleton, object)):
             resp = lxca_rest().get_switches(self.con.get_url(),self.con.get_session(),uuid)
             py_obj = json.loads(resp.text)
         return py_obj
-    
+
     def get_fans( self, dict_handler = None ):
         uuid = None
         chassis_uuid = None
-        
+   
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+  
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
-            
+      
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
@@ -306,14 +306,14 @@ class lxca_api(with_metaclass(Singleton, object)):
     def get_powersupply( self, dict_handler = None ):
         uuid = None
         chassis_uuid = None
-        
+  
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+  
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
-            
+     
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
@@ -322,18 +322,18 @@ class lxca_api(with_metaclass(Singleton, object)):
             resp = lxca_rest().get_powersupply(self.con.get_url(),self.con.get_session(),uuid)
             py_obj = json.loads(resp.text)
         return py_obj
-    
+
     def get_fanmux( self, dict_handler = None ):
         uuid = None
         chassis_uuid = None
-        
+  
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+  
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
-            
+       
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
@@ -346,14 +346,14 @@ class lxca_api(with_metaclass(Singleton, object)):
     def get_cmm( self, dict_handler = None ):
         uuid = None
         chassis_uuid = None
-        
+    
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+   
         if dict_handler:
             uuid = next((item for item in [dict_handler.get('u') , dict_handler.get('uuid')] if item is not None),None)
             chassis_uuid = next((item for item in [dict_handler.get('c') , dict_handler.get('chassis')] if item is not None),None)
-            
+       
         if chassis_uuid:
             resp = lxca_rest().get_chassis(self.con.get_url(),self.con.get_session(),chassis_uuid,None)
             py_obj = json.loads(resp.text)
@@ -369,7 +369,7 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+   
         if dict_handler:
             complexid = next((item for item in [dict_handler.get('i') , dict_handler.get('id')] if item is not None),None)
             complextype = next((item for item in [dict_handler.get('t') , dict_handler.get('type')] if item is not None),None)
@@ -381,21 +381,21 @@ class lxca_api(with_metaclass(Singleton, object)):
     def do_discovery( self, dict_handler = None ):
         ip_addr = None
         jobid = None
-        
+   
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+   
         if dict_handler:
             ip_addr = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
-        
+  
         resp = lxca_rest().do_discovery(self.con.get_url(),self.con.get_session(),ip_addr,jobid)
-        
+   
         try:
             py_obj = resp
             return py_obj
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
 
     def do_manage( self, dict_handler = None ):
         ip_addr = None
@@ -405,10 +405,10 @@ class lxca_api(with_metaclass(Singleton, object)):
         jobid = None
         force = None
         storedcredential_id = None
-        
+  
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+  
         if dict_handler:
             ip_addr = next((item for item in [dict_handler.get  ('i') , dict_handler.get('ip')] if item is not None),None)
             user = next((item for item in [dict_handler.get  ('u') , dict_handler.get('user')] if item is not None),None)
@@ -421,35 +421,35 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         resp = lxca_rest().do_manage(self.con.get_url(),self.con.get_session(),ip_addr,user,
                                      pw,rpw,force,jobid, storedcredential_id)
-        
+  
         try:
             py_obj = resp
             return py_obj
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
 
 
     def do_unmanage( self, dict_handler = None ):
         endpoints = None
         force = None
         jobid = None
-        
+   
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
-        
+  
         if dict_handler:
             endpoints = next((item for item in [dict_handler.get  ('e') , dict_handler.get('ep')] if item is not None),None)
             force = next((item for item in [dict_handler.get  ('f') , dict_handler.get('force')] if item is not None),False)
             jobid = next((item for item in [dict_handler.get  ('j') , dict_handler.get('job')] if item is not None),None)
-            
+      
         resp = lxca_rest().do_unmanage(self.con.get_url(),self.con.get_session(),endpoints,force,jobid)
-        
+   
         try:
             py_obj = resp
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
-        
+  
     def get_configtargets( self, dict_handler = None ):
         targetid = None
 
@@ -465,13 +465,13 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = json.loads(resp.text)
             return py_obj
 
-        except AttributeError as ValueError:
-            raise ValueError
-    
+        except AttributeError as valueerror:
+            raise valueerror
+
     def do_configpatterns( self, dict_handler = None ):
         patternid = None
         patternname = None
-        includeSettings = None
+        includesettings = None
         endpoint = None
         restart = None
         etype = None
@@ -487,7 +487,7 @@ class lxca_api(with_metaclass(Singleton, object)):
                 patternid = next((item for item in [dict_handler.get  ('i') , dict_handler.get('id')] if item is not None),None)
                 patternname = next((item for item in [dict_handler.get('n'), dict_handler.get('name')] if item is not None),
                                 None)
-                includeSettings = next((item for item in [dict_handler.get('includeSettings')] if item is not None),None)
+                includesettings = next((item for item in [dict_handler.get('includeSettings')] if item is not None),None)
                 endpoint = next((item for item in [dict_handler.get  ('e') , dict_handler.get('endpoint')] if item is not None),None)
                 restart = next((item for item in [dict_handler.get  ('r') , dict_handler.get('restart')] if item is not None),None)
                 etype = next((item for item in [dict_handler.get  ('t') , dict_handler.get('type')] if item is not None),None)
@@ -503,11 +503,11 @@ class lxca_api(with_metaclass(Singleton, object)):
                         patternid = item['id']
                         break
                 if not patternid:
-                    raise Exception("Pattern Name %s not found" %patternname)
+                    raise Exception(f"Pattern Name {patternname} not found")
             if subcmd == 'status':
                 resp = lxca_rest().get_configstatus(self.con.get_url(), self.con.get_session(), endpoint)
             else:
-                resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid, includeSettings, endpoint, restart, etype, pattern_update_dict)
+                resp = lxca_rest().do_configpatterns(self.con.get_url(),self.con.get_session(),patternid, includesettings, endpoint, restart, etype, pattern_update_dict)
 
             # if endpoint:
             #     return resp
@@ -515,17 +515,16 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = json.loads(resp.text)
             return py_obj
 
-        except HTTPError as e:
-            logger.error(e)
-            if e.response.status_code == 403:
-                return e.response.json()
+        except HTTPError as errorhttp:
+            logger.error(errorhttp)
+            if errorhttp.response.status_code == 403:
+                return errorhttp.response.json()
             else:
-                logger.error("Exception %s Occurred while calling REST API" %(e))
-                raise e
+                logger.error("Exception {%s} Occurred while calling REST API",errorhttp)
+                raise errorhttp
+        except AttributeError as valueerror:
+            raise valueerror
 
-        except AttributeError as ValueError:
-            raise ValueError
-    
     def get_configprofiles( self, dict_handler = None ):
         profileid = None
         profilename = None
@@ -586,18 +585,18 @@ class lxca_api(with_metaclass(Singleton, object)):
             elif resp.status_code == 204:   # Its success for rename of profile with empty text
                 return { 'ID':profileid, 'name':profilename}
 
-        except HTTPError as e:
-            logger.error(e)
-            if e.response.status_code == 403:
-                return e.response.json()
+        except HTTPError as errorhttp:
+            logger.error(errorhttp)
+            if errorhttp.response.status_code == 403:
+                return errorhttp.response.json()
             else:
-                logger.error("Exception %s Occurred while calling REST API" %(e))
-                raise e
+                logger.error("Exception %s Occurred while calling REST API",errorhttp)
+                raise errorhttp
 
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
     
-    def get_jobs( self, dict_handler = None ):        
+    def get_jobs( self, dict_handler = None ):
         jobid = None
         uuid = None
         state = None
@@ -627,8 +626,8 @@ class lxca_api(with_metaclass(Singleton, object)):
                 py_obj = json.loads(resp.text)
                 py_obj = {'jobsList':py_obj}
             return py_obj
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
 
 
 
@@ -644,19 +643,18 @@ class lxca_api(with_metaclass(Singleton, object)):
         resp = lxca_rest().get_users(self.con.get_url(),self.con.get_session(),userid)
         
         try:
-            
+                   
             if userid:
                 py_obj = json.loads(resp.text)['response']
             else:
                 py_obj = json.loads(resp.text)
                 py_obj = {'usersList':py_obj['response']}
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
     
-    def get_lxcalog( self, dict_handler = None ):        
+    def get_lxcalog( self, dict_handler = None ):
         filter = None
-        
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
         
@@ -669,8 +667,8 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = json.loads(resp.text)
             py_obj = {'eventList':py_obj}
             return py_obj
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         
     def get_ffdc( self, dict_handler = None ): 
         uuid = None
@@ -685,8 +683,8 @@ class lxca_api(with_metaclass(Singleton, object)):
         
         try:
             py_obj = resp
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
     
     
@@ -717,8 +715,8 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = json.loads(resp.text)
             if info == "RESULTS":
                 py_obj = py_obj["all"]
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
 
     def get_updaterepo( self, dict_handler = None ):
@@ -749,8 +747,8 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
 
 
@@ -782,8 +780,8 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         py_obj['dummy']={'status':[]}
         return py_obj
 
@@ -813,21 +811,21 @@ class lxca_api(with_metaclass(Singleton, object)):
         resp = lxca_rest().do_updatecomp(self.con.get_url(),self.con.get_session(), query, mode,action,server,switch,storage,cmm, dev_list)
         
         try:
-            if mode == None and action == None and server == None and  switch == None and storage == None and cmm == None and dev_list == None :
+            if mode is None and action is None and server is None and  switch is None and storage is None and cmm is None and dev_list is None :
                 py_obj = json.loads(resp.text)
             else:
                 py_obj = resp.json()
             return py_obj
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
 
     def get_set_tasks(self, dict_handler=None):
         job_uuid = None
-        includeChildren = False
+        includechildren = False
         action = None
-        status = None
-        cmd_updateList = None
+        #status = None
+        #cmdupdatelist = None
         template = None
 
         if not self.con:
@@ -835,12 +833,12 @@ class lxca_api(with_metaclass(Singleton, object)):
 
         if dict_handler:
             job_uuid = next((item for item in [ dict_handler.get('jobUID')] if item is not None), None)
-            includeChildren = next((item for item in [ dict_handler.get('children')] if item is not None), "true")
+            includechildren = next((item for item in [ dict_handler.get('children')] if item is not None), "true")
             action = next((item for item in [dict_handler.get('action')] if item is not None), None)
-            updateList = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
+            updatelist = next((item for item in [dict_handler.get('updateList')] if item is not None), None)
             template = next((item for item in [dict_handler.get('template')] if item is not None), None)
-            #if updateList:
-            #    updateList = updateList['taskList']
+            #if updatelist:
+            #    updatelist = updatelist['taskList']
 
 
         if job_uuid and action in ['cancel']:
@@ -850,13 +848,13 @@ class lxca_api(with_metaclass(Singleton, object)):
             resp = lxca_rest().delete_tasks(self.con.get_url(), self.con.get_session(), job_uuid)
             py_obj = resp.status_code
         elif action in ['update']:
-            resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updateList)
+            resp = lxca_rest().put_tasks_update(self.con.get_url(), self.con.get_session(), updatelist)
             py_obj = resp.status_code
         elif action in ['create']:
             resp = lxca_rest().post_tasks(self.con.get_url(), self.con.get_session(), template)
             py_obj = resp
         else:
-            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session(), job_uuid, includeChildren)
+            resp = lxca_rest().get_tasks(self.con.get_url(), self.con.get_session(), job_uuid, includechildren)
             py_obj = json.loads(resp.text)
             py_obj = {'TaskList': py_obj[:]}
         return py_obj
@@ -871,14 +869,12 @@ class lxca_api(with_metaclass(Singleton, object)):
         if dict_handler:
             sol_id = next((item for item in [dict_handler.get('i') , dict_handler.get('id')] if item is not None),None)
             filepath = next((item for item in [dict_handler.get('f') , dict_handler.get('file')] if item is not None),None)
-                        
         resp = lxca_rest().get_set_manifests(self.con.get_url(),self.con.get_session(),sol_id,filepath)
-        
         try:
             py_obj = resp.json()
             return py_obj
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
 
 
@@ -918,7 +914,7 @@ class lxca_api(with_metaclass(Singleton, object)):
         try:
             if dict_handler:
                 osimages_info = next((item for item in [dict_handler.get('subcmd')] if item is not None), None)
-                imageType = next((item for item in [dict_handler.get('t'), dict_handler.get('imagetype')] if item is not None), None)
+                imagetype = next((item for item in [dict_handler.get('t'), dict_handler.get('imagetype')] if item is not None), None)
                 id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None), None)
                 action = next((item for item in [dict_handler.get('a'), dict_handler.get('action')] if item is not None), None)
 
@@ -948,7 +944,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             elif 'import' in osimages_info:
                 if not kwargs:
                     kwargs = {}
-                kwargs['imageType'] = imageType
+                kwargs['imageType'] = imagetype
                 resp = lxca_rest().osimage_import(self.con.get_url(), self.con.get_session(), kwargs)
             elif 'remotefileservers' in osimages_info:
                 if not kwargs:
@@ -964,27 +960,27 @@ class lxca_api(with_metaclass(Singleton, object)):
             py_obj = resp.json()
             return py_obj
 
-        except HTTPError as e:
-            logger.error(e)
-            if e.response.status_code == 403:
-                return e.response.json()
+        except HTTPError as errorhttp:
+            logger.error(errorhttp)
+            if errorhttp.response.status_code == 403:
+                return errorhttp.response.json()
             else:
-                logger.error("Exception %s Occurred while calling REST API" %(e))
-                raise e
+                logger.error("Exception {%s} Occurred while calling REST API",errorhttp)
+                raise errorhttp
 
         except ValueError as err:
-            logger.error("Exception: Non json response: %s" %(str(err)))
+            logger.error("Exception: Non json response: {%s}",err)
             raise err
         except AttributeError as err:
             raise err
         return py_obj
 
     def get_set_resourcegroups(self, dict_handler = None):
-        '''
+        '''get_set_resourcegroups
     
         '''
         
-        subcmd=uuid = name = desc = type = solutionVPD = members = criteria = None
+        subcmd=uuid = name = desc = type = solutionvpd = members = criteria = None
         
         if not self.con:
             raise ConnectionError("Connection is not Initialized.")
@@ -995,7 +991,7 @@ class lxca_api(with_metaclass(Singleton, object)):
             name = next((item for item in [dict_handler.get('n') , dict_handler.get('name')] if item is not None),None)
             desc = next((item for item in [dict_handler.get('d') , dict_handler.get('description')] if item is not None),None)
             type = next((item for item in [dict_handler.get('t') , dict_handler.get('type')] if item is not None),None)
-            solutionVPD = next((item for item in [dict_handler.get('s') , dict_handler.get('solutionVPD')] if item is not None),None)
+            solutionvpd = next((item for item in [dict_handler.get('s') , dict_handler.get('solutionVPD')] if item is not None),None)
             members = next((item for item in [dict_handler.get('m') , dict_handler.get('members')] if item is not None),None)
             criteria = next((item for item in [dict_handler.get('c') , dict_handler.get('criteria')] if item is not None),None)
             subcmd = next(
@@ -1018,7 +1014,7 @@ class lxca_api(with_metaclass(Singleton, object)):
                                                   type, criteria)
             elif 'solution' in type:
                 resp = lxca_rest().solution_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
-                                                           desc, type, solutionVPD, members, criteria)
+                                                           desc, type, solutionvpd, members, criteria)
             else:
                 raise Exception("Invalid argument: Type supported are dynamic and solution")
         elif 'update' in subcmd:
@@ -1028,14 +1024,14 @@ class lxca_api(with_metaclass(Singleton, object)):
                                                           type, criteria)
             elif 'solution' in type:
                 resp = lxca_rest().solution_resourcegroups(self.con.get_url(), self.con.get_session(), uuid, name,
-                                                           desc, type, solutionVPD, members, criteria)
+                                                           desc, type, solutionvpd, members, criteria)
             else:
                 raise Exception("Invalid argument: Type supported are dynamic and solution")
 
         try:
             py_obj = json.loads(resp.text)
-        except AttributeError as ValueError:
-            raise ValueError
+        except AttributeError as valueerror:
+            raise valueerror
         return py_obj
 
     def get_set_rules(self, dict_handler=None):
@@ -1060,9 +1056,9 @@ class lxca_api(with_metaclass(Singleton, object)):
 
     def get_set_compositeResults(self, dict_handler=None):
         id = None
-        query_solutionGroups = None
-        solutionGroups = None
-        targetResources = None
+        query_solutiongroups = None
+        solutiongroups = None
+        targetresources = None
         all_rules = None
 
         if not self.con:
@@ -1071,25 +1067,25 @@ class lxca_api(with_metaclass(Singleton, object)):
         if dict_handler:
             id = next((item for item in [dict_handler.get('i'), dict_handler.get('id')] if item is not None),
                         None)
-            query_solutionGroups = next((item for item in
+            query_solutiongroups = next((item for item in
                 [dict_handler.get('q'), dict_handler.get('query_solutionGroups')] if item is not None),
                       None)
-            solutionGroups = next((item for item in [dict_handler.get('s'),
+            solutiongroups = next((item for item in [dict_handler.get('s'),
                 dict_handler.get('solutionGroups')] if item is not None),
                              None)
-            targetResources = next(
+            targetresources = next(
                 (item for item in [dict_handler.get('t'), dict_handler.get('targetResources')] if item is not None),
                 None)
             all_rules = next(
                 (item for item in [dict_handler.get('a'), dict_handler.get('all_rules')] if item is not None),
                 None)
 
-        if all_rules or solutionGroups or targetResources:
+        if all_rules or solutiongroups or targetresources:
             resp = lxca_rest().set_compositeResults(self.con.get_url(),
-                    self.con.get_session(), solutionGroups, targetResources, all_rules)
+                    self.con.get_session(), solutiongroups, targetresources, all_rules)
         else:
             resp = lxca_rest().get_compositeResults(self.con.get_url(),
-                    self.con.get_session(), id, query_solutionGroups)
+                    self.con.get_session(), id, query_solutiongroups)
         py_obj = json.loads(resp.text)
         return py_obj
 

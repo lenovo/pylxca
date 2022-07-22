@@ -3,12 +3,12 @@
 @author: Girish Kumar <gkumar1@lenovo.com>, Prashant Bhosale <pbhosale@lenovo.com>
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
-@organization: Lenovo 
-@summary: This module provides interactive shell class which provides base for interactive shell 
-feature and accepts raw input from command line 
+@organization: Lenovo
+@summary: This module provides interactive shell class which provides base for interactive shell
+feature and accepts raw input from command line
 '''
-
-import re,sys,os,traceback
+import sys
+import os
 import itertools
 import logging
 import shlex
@@ -17,18 +17,21 @@ from platform import python_version
 from pylxca.pylxca_cmd import lxca_cmd
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
 from pylxca.pylxca_cmd.lxca_view import lxca_ostream
-from pylxca.pylxca_cmd import lxca_icommands
+#from pylxca.pylxca_cmd import lxca_icommands
 #from rlcompleter import readline
 
 logger = logging.getLogger(__name__)
 
+# pylint: disable=C0103
+# pylint: disable=C0301
+# pylint: disable=C0303
 class InteractiveShell(object):
-
+    """ Class Interactive shell """
     class help(InteractiveCommand):
         """
         Prints a list of available commands and their descriptions, or the help
         text of a specific command. Requires a list of the available commands in
-        order to display text for them. 
+        order to display text for them.
         
         @ivar commands: A dictionary of available commands, bound to L{InteractiveShell.commands}
         @type commands: C{dict}
@@ -58,7 +61,6 @@ class InteractiveShell(object):
             @return: Returns nothing, sends messages to stdout
             @rtype: None
             """
-            
             if len(args) == 0:
                 self.do_command_summary( )
                 return
@@ -93,16 +95,16 @@ class InteractiveShell(object):
                 if name == 'help':
                     continue
                 try:
-                    self.sprint('  %s   %s' % (name.ljust(cmdwidth),
+                    self.sprint('  %s %s' % (name.ljust(cmdwidth),
                                      command.get_short_desc( )))
-                except:
+                except Exception:
                     #For some commands there is no short desc so it will be skipped
                     continue
 
         def get_short_desc(self):
             return ''
-    
         def get_help_message(self):
+            """ get help message"""
             return ''
 
     class exit(InteractiveCommand):
@@ -115,12 +117,12 @@ class InteractiveShell(object):
 
         def get_short_desc(self):
             return 'Exit the program.'
-    
         def get_help_message(self):
+            """ get help message"""
             return 'Type exit and the program will exit.  There are no options to this command'
 
 
-    def __init__(self, 
+    def __init__(self,
         banner="Welcome to Interactive Shell",
         prompt=" >>> "):
         self.banner = banner
@@ -129,7 +131,6 @@ class InteractiveShell(object):
         self.ostream = lxca_ostream()
         self.add_command(self.help(self.commands,self))
         self.add_command(self.exit())
-        
         self.add_command(lxca_cmd.connect(self))
         self.add_command(lxca_cmd.disconnect(self))
         self.add_command(lxca_cmd.log(self))
@@ -166,22 +167,23 @@ class InteractiveShell(object):
         self.add_command(lxca_cmd.license(self))
 
     def set_ostream_to_null(self):
-        self.ostream = open(os.devnull, 'w')
-        
+        """ set_ostream_to_null"""
+        self.ostream = open(os.devnull, 'w', encoding="utf8")
     def sprint(self,str):
+        """ sprint"""
         if self.ostream:
             self.ostream.write(str)
-    
     def print_Hello(self):
+        """ print_Hello"""
         self.sprint("Hello")
-        
     def add_command(self, command):
+        """ add_command"""
         if command.get_name( ) in self.commands:
-            raise Exception('command %s already registered' % command.get_name( ))
+            raise Exception('command {%s} already registered', command.get_name( ))
 
         self.commands[command.get_name()] = command
-
     def run(self):
+        """ run"""
         self.sprint('')
         self.sprint('-'*50)
         self.sprint(self.banner)
@@ -189,7 +191,6 @@ class InteractiveShell(object):
         self.sprint('Use "lxca_shell --api" to enable Interactive Python LXCA Shell ')
         self.sprint('-'*50)
         self.sprint('')
-            
         while True:
             try:
 #                readline.set_completer_delims(' \t\n;')
@@ -204,10 +205,9 @@ class InteractiveShell(object):
 
             self.handle_input(command_line)
             continue
-            
     # TODO: Need to rename this function to handle_cli_params
     def handle_input(self, command_line):
-
+        """ handle_input"""
         command_line = command_line.strip()
 
         # Get command
@@ -225,7 +225,7 @@ class InteractiveShell(object):
 
         if not command_name in self.commands:
             self.sprint('Unknown command: "%s". Type "help" for a list of commands.' % command_name)
-            return 
+            return
 
         command = self.commands[command_name]
 
@@ -237,16 +237,16 @@ class InteractiveShell(object):
         re_args = shlex.split(command_args)
         #re_args = re.findall('\-\-\S+|\-\S+|\S+[\s*\w+]*', command_args)
         # Parse args if present
-        for i in range(0, len(re_args)):
+        for i in enumerate(len(re_args)):
             args.append( re_args[i] )
         try:
             return command.handle_command(opts=opts, args=args)
         except Exception as err:
-            logger.error("Exception occurred while processing command %s " %str(err))
+            logger.error("Exception occurred while processing command {%s} ",str(err))
         return
-    
     # TODO: We should remove this, All API level code should give call to handle_input_dict rather
     def handle_input_args(self, command_name,*args, **kwargs):
+        """ handle_input_args"""
         # Show message when no command
         if not command_name:
             return
@@ -259,7 +259,6 @@ class InteractiveShell(object):
 
         opts = {}
         args_dict = {}
-       
         for item in kwargs['kwargs']:
             args_dict['--' + item] = kwargs['kwargs'][item]
 
@@ -271,9 +270,9 @@ class InteractiveShell(object):
         except Exception as err:
             self.sprint("Exception occurred while processing command.")
             raise err
-            
-    # TODO: We should rename this to handle_api_params
+    # We should rename this to handle_api_params
     def handle_input_dict(self, command_name,con, param_dict, use_argparse = True):
+        """ handle_input_dict"""
         # Show message when no command
         if not command_name:
             return
@@ -298,9 +297,9 @@ class InteractiveShell(object):
 
                 args_list = args_list + list(itertools.chain(*list(args_dict.items())))
                 param_dict = command.parse_args(args_list)
-            except SystemExit as err:
+            except SystemExit:
                 self.sprint("Exception occurred while parsing command.")
-                raise Exception("Invalid argument")
+                raise SystemExit("Invalid argument")
             except Exception as err:
                 self.sprint("Exception occurred while parsing api input.")
                 raise err
@@ -312,28 +311,27 @@ class InteractiveShell(object):
             raise err
 
 
-    """
-    TODO:
-    def auto_complete(self, text, state):
-        command_list = self.commands.keys()
-        re_space = re.compile('.*\s+$', re.M)
-        "Generic readline completion entry point."
-        buffer = readline.get_line_buffer()
-        line = readline.get_line_buffer().split()
-        # show all commands
-        if not line:
-            return [c + ' ' for c in command_list][state]
-        # account for last argument ending in a space
-        if re_space.match(buffer):
-            line.append('')
-        # resolve command to the implementation function
-        cmd = line[0].strip()
-        if cmd in command_list:
-            impl = getattr(self, 'complete_%s' % cmd)
-            args = line[1:]
-            if args:
-                return (impl(args) + [None])[state]
-            return [cmd + ' '][state]
-        results = [c + ' ' for c in command_list if c.startswith(cmd)] + [None]
-        return results[state]
-    """
+    # """
+    # TODO: def auto_complete(self, text, state):
+    #     command_list = self.commands.keys()
+    #     re_space = re.compile('.*\s+$', re.M)
+    #     "Generic readline completion entry point."
+    #     buffer = readline.get_line_buffer()
+    #     line = readline.get_line_buffer().split()
+    #     # show all commands
+    #     if not line:
+    #         return [c + ' ' for c in command_list][state]
+    #     # account for last argument ending in a space
+    #     if re_space.match(buffer):
+    #         line.append('')
+    #     # resolve command to the implementation function
+    #     cmd = line[0].strip()
+    #     if cmd in command_list:
+    #         impl = getattr(self, 'complete_%s' % cmd)
+    #         args = line[1:]
+    #         if args:
+    #             return (impl(args) + [None])[state]
+    #         return [cmd + ' '][state]
+    #     results = [c + ' ' for c in command_list if c.startswith(cmd)] + [None]
+    #     return results[state]
+    # """

@@ -7,20 +7,20 @@
 @summary: This module is for creating a connection session object for given xHMC.
 
 '''
-
-import requests
-import logging, json
-import os, platform
+import logging
+import os
+import json
+import platform
 import base64
 import pkg_resources
-from _socket import timeout
-from requests.sessions import session
+import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
 
 logger = logging.getLogger(__name__)
 
 class lxcaAdapter(HTTPAdapter):
+    """lxcaAdapter class"""
 
     def init_poolmanager(self, connections, maxsize, block=False):
 
@@ -41,7 +41,7 @@ class ConnectionError(Error):
 
 class lxca_connection(object):
     '''
-    C
+    Class lxca connection
     '''
     def __init__(self, url, user = None,  passwd = None, verify_callback = True, retries = 3):
         self.url = url
@@ -59,7 +59,7 @@ class lxca_connection(object):
             self.verify_callback = verify_callback
 
     def __repr__(self):
-        return "%s(%s, %s, debug=%s)" %(self.__class__.__name__, repr(self.url), self.user, repr(self.debug))
+        return f'{self.__class__.__name__} {repr(self.url)}, {self.user}, {repr(self.debug)}'
 
     def connect(self):
         '''
@@ -69,36 +69,31 @@ class lxca_connection(object):
             logger.debug("Establishing Connection")
             self.session = requests.session()
             self.session.verify = self.verify_callback
-
             pylxca_version = pkg_resources.require("pylxca")[0].version
             # Update the headers with your custom ones
             # You don't have to worry about case-sensitivity with
             # the dictionary keys, because default_headers uses a custom
             # CaseInsensitiveDict implementation within requests' source code.
             self.session.headers.update({'content-type': 'application/json; charset=utf-8','User-Agent': 'LXCA via Python Client / ' + pylxca_version})
-
-
             payload = dict(UserId= self.user, password=base64.b16decode(self.passwd).decode())
             pURL = self.url + '/sessions'
             self.session.mount(self.url, lxcaAdapter(max_retries=self.retires))
-            r = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback, timeout = 3)
-            r.raise_for_status()
-        except ConnectionError as e:
-            logger.debug("Connection Exception as ConnectionError: Exception = %s", e)
+            responseobj = self.session.post(pURL,data = json.dumps(payload),headers=dict(Referer=pURL),verify=self.verify_callback, timeout = 3)
+            responseobj.raise_for_status()
+        except ConnectionError as errorconnection:
+            logger.debug("Connection Exception as ConnectionError: Exception = {%s}",errorconnection)
             return False
-        except requests.exceptions.HTTPError as e:
-            logger.debug("Connection Exception as HttpError: Exception = %s", e.response.text)
+        except requests.exceptions.HTTPError as errorhttp:
+            logger.debug("Connection Exception as HttpError: Exception = {%s}", errorhttp.response.text)
             return False
-        except Exception as e:
-            logger.debug("Connection Exception: Exception = %s", e)
+        except Exception as exception:
+            logger.debug("Connection Exception: Exception = {%s}", exception)
             return False
 
-        '''
-        Even though the csrf-token cookie will be automatically sent with the request,
-        the server will be still expecting a valid X-Csrf-Token header,
-        So we need to set it explicitly here
-        '''
-        if r.status_code == requests.codes['ok']:
+        #Even though the csrf-token cookie will be automatically sent with the request,
+        #the server will be still expecting a valid X-Csrf-Token header,
+        #So we need to set it explicitly here
+        if responseobj.status_code == requests.codes['ok']:
             self.session.headers.update({'X-Csrf-Token': self.session.cookies.get('csrf')})
 
         return  True
@@ -112,14 +107,20 @@ class lxca_connection(object):
             resp = self.session.get(test_url,verify=self.session.verify, timeout=3)
             #If valid JSON object is parsed then the connection is successfull
             py_obj = resp.json()
-        except Exception as e:
-            raise ConnectionError("Invalid connection")
-        return
+            logger.debug("response json{%s}", py_obj)
+        except Exception as defaultexception:
+            raise ConnectionError("Invalid connection") from defaultexception
 
     def get_url(self):
+        """
+        Returns self url
+        """
         return self.url
 
     def get_session(self):
+        """
+        Returns session
+        """
         return self.session
 
     def disconnect(self):
@@ -133,9 +134,9 @@ class lxca_connection(object):
             py_obj = resp.json()
             logger.debug("Deleted session on lxca = %s", py_obj)
             result = True
-        except Exception as e:
-            logger.debug("Unable to delete session on lxca = %s", e)
-            raise ConnectionError("Invalid connection: Connection is not Initialized")
+        except Exception as defaultexception:
+            logger.debug("Unable to delete session on lxca = {%s}", defaultexception)
+            raise ConnectionError("Invalid connection: Connection is not Initialized") from defaultexception
 
         self.url = None
         self.user = None
@@ -143,9 +144,9 @@ class lxca_connection(object):
         self.debug = False
         try:
             self.session.close()
-        except Exception as e:
-            logger.debug("Connection with invalid session = %s", e)
-            raise Exception("Invalid connection: Connection is not Initialized")
+        except Exception as defaultexception:
+            logger.debug("Connection with invalid session = {%s}", defaultexception)
+            raise Exception("Invalid connection: Connection is not Initialized") from defaultexception
         self.session = None
         return result
 

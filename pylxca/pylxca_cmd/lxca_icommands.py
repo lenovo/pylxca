@@ -3,42 +3,47 @@
 @author: Girish Kumar <gkumar1@lenovo.com>, Prashant Bhosale <pbhosale@lenovo.com>
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
-@organization: Lenovo 
-@summary: This module provides interactive command class which provides base 
-implementation for all command classes 
+@organization: Lenovo
+@summary: This module provides interactive command class which provides base
+implementation for all command classes
 '''
 
-import sys,getopt,os,json,logging, traceback
+import sys
+import os
+import json
+import traceback
 import argparse
-from pylxca.pylxca_api import lxca_api
+import textwrap
+import ast
+from pylxca.pylxca_api import LxcaApi
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from pylxca.pylxca_cmd import lxca_view
-import textwrap
-import ast
-cmd_data_json_file   = "lxca_cmd_data.json"
-pylxca_cmd_data   = os.path.join(os.getenv('PYLXCA_CMD_PATH'), cmd_data_json_file)
 
+CMD_DATA_JSON_FILE   = "lxca_cmd_data.json"
+pylxca_cmd_data   = os.path.join(os.getenv('PYLXCA_CMD_PATH'), CMD_DATA_JSON_FILE)
+# pylint: disable=C0301
 class InteractiveCommand(object):
+    """ Class Interactive command"""
     def __init__(self, shell=None ):
         self.shell = shell
-        fp = open(pylxca_cmd_data, 'r')
-        self.command_data = json.load(fp)
+        filepointer = open(pylxca_cmd_data, 'r', encoding="utf8")
+        self.command_data = json.load(filepointer)
 
     def get_options(self):
+        """ get_options"""
         return {}
 
     def get_name(self):
+        """ get_name"""
         return self.__class__.__name__
-    
     def get_help_option(self):
+        """ get_help_options"""
         return self.command_data[self.__class__.__name__].get('add_help', True)
-    
     def _process_epilog(self, str_list):
         epilog = "\r\n ".join(str_list)
         epilog = textwrap.dedent(epilog)
         return epilog
-
     def _validate_combination(self, input_dict, valid_dict):
         '''
         This function validate input combinations
@@ -53,7 +58,7 @@ class InteractiveCommand(object):
                 valid_list = valid_dict[input_dict['subcmd']]
             else:
                 valid_list = valid_dict['global']
-        except Exception as e:
+        except Exception:
             raise Exception("Error in getting valid_list")
 
         # remove None and empty string and len zero lists
@@ -61,7 +66,7 @@ class InteractiveCommand(object):
         copy_input_dict = {}
         for k in input_dict.keys():
             if k not in ['func', 'view','subcmd']:
-                if not (input_dict[k] == None or (isinstance(input_dict[k], list) and len(input_dict[k]) == 0)):
+                if not (input_dict[k] is None or (isinstance(input_dict[k], list) and len(input_dict[k]) == 0)):
                     copy_input_dict[k] = input_dict[k]
 
         input_key_set = set(copy_input_dict.keys())
@@ -81,21 +86,25 @@ class InteractiveCommand(object):
         return False, suggested_combination
 
     def get_additional_detail(self):
+        """ get_help_options"""
         epilog = self.command_data[self.__class__.__name__].get('additional_detail', [])
         return self._process_epilog(epilog)
 
     def get_short_desc(self):
+        """ get_short_desc"""
         return self.command_data[self.__class__.__name__]['description']
 
     def post_parsing_validation(self, opts):
+        """ post_parsing_validation"""
         valid_combination = self.command_data[self.__class__.__name__].get('valid_combination', None)
 
         if valid_combination:
             valid, combination = self._validate_combination(opts, valid_combination)
             if not valid:
-                raise Exception("Invalid Missing Arguments %s" % str(combination))
+                raise Exception (f"Invalid Missing Arguments {str(combination)}")
 
     def cmd1(self, args):
+        """ cmd1"""
         print('cmd1', args)
 
     def _preprocess_argparse_dict(self, cmd_dict):
@@ -104,9 +113,10 @@ class InteractiveCommand(object):
             if 'type' in cmd_dict:
                 if cmd_dict['type'] in replace_with.keys():
                     cmd_dict['type'] = replace_with[cmd_dict['type']]
-        except Exception as err:
-            raise("Error while preprocessing  argparse dict for type replacement")
+        except Exception:
+            raise Exception("Error while preprocessing  argparse dict for type replacement")
     def get_argparse_options(self):
+        """ get_argparse_options"""
         parser = argparse.ArgumentParser(prog=self.get_name(), description=self.get_short_desc(),
                                          formatter_class=argparse.RawDescriptionHelpFormatter,
                                          epilog=self.get_additional_detail(),
@@ -170,77 +180,77 @@ class InteractiveCommand(object):
         return parser
 
     def invalid_input_err(self):
+        """ invalid_input_err"""
         self.sprint("Invalid Input ")
         self.sprint("for help type command -h")
         return
-    
     def sprint(self,str):
-        if self.shell: self.shell.sprint(str)
-
+        """ sprint"""
+        if self.shell:
+            self.shell.sprint(str)
     def parse_args(self, args):
+        """ parse_args"""
         try:
             parser = self.get_argparse_options()
             namespace = parser.parse_args(args)
             opt_dict = vars(namespace)
             self.post_parsing_validation(opt_dict)
-        except argparse.ArgumentError as e:
-            raise(e)
-        except SystemExit as e:
-            raise(e)
-        except AttributeError as e:
+        except argparse.ArgumentError as argparseerror:
+            raise argparseerror
+        except SystemExit as systemexiterror:
+            raise systemexiterror
+        except AttributeError:
             #TODO  move this some where
             extype, ex, tb = sys.exc_info()
             formatted = traceback.format_exception_only(extype, ex)[-1]
-            message = "Check getopt short and long options  %s" % (formatted)
+            message = f"Check getopt short and long options  {formatted}"
             raise RuntimeError(message, tb)
         return opt_dict
 
     def handle_no_input(self,con_obj):
+        """ parse_args"""
         #no_opt action can differ command to command so override this function if required
         obj = None
         try:
-            api = lxca_api()
+            api = LxcaApi()
             obj = api.api(self.get_name(), None,con_obj)
         except ConnectionError:
             self.sprint("Connection is not Initialized, Try connect")
         except RuntimeError:
             self.sprint("Session Error to LXCA, Try connect")
-        except Exception as err:
-            self.sprint("Exception occurred: %s" %(err)) 
+        except Exception:
+            self.sprint("Exception occurred")
         return obj
-    
     def handle_input(self, dict_handler,con_obj = None):
+        """ handle_input"""
         obj = None
-        api = lxca_api()
+        api = LxcaApi()
         obj = api.api(self.get_name(),dict_handler,con_obj)
         return obj
-    
     def show_output(self, py_obj,view_filter = "default"):
-
+        """ show_output"""
         ostream = sys.__stdout__
         if self.shell:
             ostream = self.shell.ostream
         view = lxca_view.lxca_view(ostream)
         view.show_output(py_obj,self.get_name(),view_filter)
         return
-    
     def handle_output(self, py_obj):
+        """ handle_output"""
         return
-    
     def handle_command(self,  opts, args):
-        
+        """ handle_command"""
         con_obj = None
 
         try:
             opts = self.parse_args(args)
-        except SystemExit as e:
+        except SystemExit:
             # ignore this as we need to continue on shell
             return
 
         out_obj = None
-        opt_dict = None
+        #opt_dict = None
         view_filter = "default"
-        
         try:
             if not opts:
                 out_obj = self.handle_no_input(con_obj)
@@ -250,7 +260,6 @@ class InteractiveCommand(object):
                 out_obj = self.handle_input(opts,con_obj)
                 if opts:
                     view_filter = next((item for item in [opts.get('v') , opts.get('view')] if item is not None),'default')
-        
             if out_obj:
                 if isinstance(out_obj, dict):
                     self.show_output(out_obj,view_filter)
@@ -258,13 +267,6 @@ class InteractiveCommand(object):
                     self.handle_output(out_obj)
         except ConnectionError:
             self.sprint("Connection is not Initialized, Try connect")
-        except HTTPError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
-        except ConnectionError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
         except RuntimeError:
             self.sprint("Session Error to LXCA, Try connect")
-        except Exception as err:
-            self.sprint("Exception occurred: %s" %(err)) 
-            
         return out_obj

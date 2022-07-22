@@ -3,23 +3,26 @@
 @author: Prashant Bhosale <pbhosale@lenovo.com>
 @license: Lenovo License
 @copyright: Copyright 2016, Lenovo
-@organization: Lenovo 
-@summary: This module provides command class implementation for PyLXCA 
+@organization: Lenovo
+@summary: This module provides command class implementation for PyLXCA
 '''
-
-import sys, getopt
-import logging, traceback
 from getpass import getpass
+#import sys
+#import getopt
+import logging
+#import traceback
 import json
-import argparse
-
+#import argparse
 import pylxca.pylxca_api
+
 from pylxca.pylxca_api.lxca_rest import HTTPError
 from pylxca.pylxca_api.lxca_connection import ConnectionError
 from pylxca.pylxca_cmd.lxca_icommands import InteractiveCommand
 
 logger = logging.getLogger(__name__)
-
+# pylint: disable=C0103
+# pylint: disable=C0303
+# pylint: disable=C0301
 class connect(InteractiveCommand):
     """
     Connects to the LXCA Interface
@@ -27,7 +30,6 @@ class connect(InteractiveCommand):
     USAGE:
         connect -h | --help
         connect -l <URL> -u <USER> [--noverify]
-    
     OPTIONS:
         -h        This option displays command usage information
         -l, --url    URL of LXCA
@@ -52,82 +54,72 @@ class connect(InteractiveCommand):
         for opt, arg in opts:
             if '-h' in opt:
                 self.sprint (self.__doc__)
-                return                
+                return
 
         if not opts:
             self.handle_no_input()
             return
-        
         opt_dict = self.parse_args(opts, argv)
         '''
 
         try:
             opt_dict = self.parse_args(args)
-            if opt_dict.get('pw', None) == None:
+            if opt_dict.get('pw', None) is None:
                 opt_dict ['pw'] = getpass("Enter Password: ")
-        except SystemExit as e:
+        except SystemExit:
             # ignore this as we need to continue on shell
             return
 
         out_obj = None
-        
         try:
             out_obj = self.handle_input(opt_dict)
             self.handle_output(out_obj)
-        except HTTPError as re:
-            self.sprint("Exception %s occurred while executing command."%(re))
-        except ConnectionError as re:
-            self.sprint("Exception %s occurred while executing command."%(re))
+        except HTTPError as httperror:
+            self.sprint("Exception %s occurred while executing command."%(httperror))
+        except ConnectionError as connectionerror:
+            self.sprint("Exception %s occurred while executing command."%(connectionerror))
         except RuntimeError:
             self.sprint("Session Error to LXCA, Try connect")
         except Exception as err:
             self.sprint("Exception occurred: %s" %(err)) 
-    
         return out_obj
-    
     def handle_no_input(self,con_obj = None):
         #no_opt action can differ command to command so override this function if required
         self.invalid_input_err()
         return
-    
     def handle_output(self, out_obj):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to connect given LXCA " )
         else:
             self.sprint("Connection to LXCA successful")
         return
-    
 ###############################################################################
-    
 class disconnect(InteractiveCommand):
     """
-    Diconnects from LXCA Interface 
-
+    Diconnects from LXCA Interface
     USAGE:
         disconnect -h | --help
         disconnect
     """
     def handle_no_input(self, con_obj = None):
         api = pylxca.pylxca_api.lxca_api()
-        if api.disconnect() == True:
+        if api.disconnect() is True:
             self.sprint("Connection with LXCA closed successfully " )
         else:
             self.sprint("Failed to close connection with LXCA " )
-        return 
+        
 
 ###############################################################################
 
 class log(InteractiveCommand):
     """
     Retrieve and configure logging of LXCA Python tool
-    
     USAGE:
         log -h | --help
         log [-l <level>]
 
     OPTIONS:
         -l, --lvl    Logging level
-      
     """
     def handle_no_input(self,con_obj = None):
         api = pylxca.pylxca_api.lxca_api()
@@ -142,12 +134,12 @@ Possible Log Levels, Please use following values to set desired log level.
 \tCRITICAL:    A serious error, indicating that the program itself may be unable to continue running.
 """
         self.sprint(message)
-        return    
+            
     
     ## custom def for inline activites
     def handle_output(self, out_obj):
         api = pylxca.pylxca_api.lxca_api()
-        if out_obj == True:
+        if out_obj is True:
             self.sprint("Current Log Level is set to " + api.get_log_level())
         else:
             self.sprint("Fail to set Log Level")
@@ -167,7 +159,7 @@ Possible Log Levels, Please use following values to set desired log level.
 
 class ostream(InteractiveCommand):
     """
-    Configure output stream or verbose level of command shell 
+    Configure output stream or verbose level of command shell
     
     USAGE:
         ostream -h | --help
@@ -189,7 +181,7 @@ Possible ostream levels, Please use following values to set desired stdout level
 \t3:Console and File.
 """
         self.sprint(message)
-        return 
+        return
        
     def handle_input(self, dict_handler, con_obj = None):
         lvl = None
@@ -200,7 +192,7 @@ Possible ostream levels, Please use following values to set desired stdout level
         
     ## custom def for inline activites
     def handle_output(self, out_obj):
-        if out_obj == True:
+        if out_obj is True:
             self.sprint("Current ostream level is set to %s" %(self.shell.ostream.get_lvl()))
         else:
             self.sprint("Fail to set ostream Level")
@@ -282,7 +274,7 @@ class switches(InteractiveCommand):
         try:
             i = args.index('--ports')
             if i < (no_args - 1):
-                next_args = args[i + 1];
+                next_args = args[i + 1]
                 if next_args.startswith("-"):
                     change = True
                 else:
@@ -420,11 +412,11 @@ class jobs(InteractiveCommand):
 
     """
     def handle_output(self, out_obj):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Jobs command Failed." )
-        elif out_obj == False:
+        elif out_obj is False:
             self.sprint("Jobs command Failed." )
-        elif out_obj == True:
+        elif out_obj is True:
             self.sprint("Jobs command succeeded" )
         return
     
@@ -444,14 +436,14 @@ class discover(InteractiveCommand):
 
     """
     def handle_output(self, out_obj):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to start Discovery job for selected endpoint " )
         elif type(out_obj) == str:
             self.sprint("Discovery job started, jobId = " + out_obj)
         else:
             self.sprint(out_obj)
         return
-    
+
 class manage(InteractiveCommand):
     """
     Manage the endpoint.
@@ -477,19 +469,19 @@ class manage(InteractiveCommand):
         -v, --view      view filter name
     """
     def handle_output(self, out_obj):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to start manage job for selected endpoint " )
         else:
             self.sprint("Manage job started, jobId = " + out_obj)
         return
-    
+
     def show_output(self, out_obj, view_filter='default'):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to start manage job for selected endpoint " )
         else:
             self.sprint("Manage job started, = " + json.dumps(out_obj))
         return
-    
+
 class unmanage(InteractiveCommand):
     """
     Unmanage the endpoint
@@ -517,14 +509,14 @@ class unmanage(InteractiveCommand):
 
     """
     def handle_output(self, out_obj):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to start unmanage job for selected endpoint " )
         else:
             self.sprint("Unmanage job started, jobId = " + out_obj)
         return
-    
+
     def show_output(self, out_obj, view_filter='default'):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to start unmanage job for selected endpoint " )
         else:
             self.sprint("Unmanage job started, = " + json.dumps(out_obj))
@@ -553,14 +545,14 @@ class ffdc(InteractiveCommand):
         -u, --uuid    <UUID of the target endpoint>
     """
     def handle_output(self, out_obj):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to start ffdc job for selected endpoint " )
         else:
             self.sprint("FFDC job started, jobId = " + out_obj)
         return
 
     def show_output(self, out_obj, view_filter='default'):
-        if out_obj == None:
+        if out_obj is None:
             self.sprint("Failed to start ffdc job for selected endpoint " )
         else:
             self.sprint("FFDC job started, jobId = " + out_obj)
@@ -691,7 +683,7 @@ class updatecomp(InteractiveCommand):
 
     """
 
-    
+
 ###############################################################################
 class configtargets(InteractiveCommand):
     """
@@ -829,7 +821,7 @@ class osimages(InteractiveCommand):
     """
     OSImages/Deployment on LXCA
     """
-    
+
     def handle_output(self, out_obj):
         if (
             'result' in out_obj and 
@@ -841,7 +833,7 @@ class osimages(InteractiveCommand):
         else:
             self.sprint(out_obj)
         return
-    
+
     def show_output(self, out_obj, view_filter='default'):
         if (
             'result' in out_obj and 
@@ -911,7 +903,7 @@ class license(InteractiveCommand):
     def handle_output(self, out_obj):
         self.sprint(out_obj)
         return
-    
+ 
     def show_output(self, out_obj, view_filter='default'):
         out_obj['response'][1]['notifications'] = out_obj['response'][1]['notifications'].pop()
         out_obj['response'] = [self.merge_two_dicts(out_obj['response'][0], out_obj['response'][1])]
@@ -919,6 +911,7 @@ class license(InteractiveCommand):
         return
 
     def merge_two_dicts(self, x, y):
+        """ merge_two_dicts"""
         z = x.copy()
         z.update(y)
         return z

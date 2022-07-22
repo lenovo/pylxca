@@ -7,16 +7,20 @@
 @summary: This module is for creating a connection session object for given xHMC
 '''
 
-import logging, os, json, pprint, requests
+import logging
 import logging.config
+import os
+import json
+#import pprint
+#import socket
+import time
+import urllib
+import requests
+
 from requests_toolbelt import (MultipartEncoder,
                                MultipartEncoderMonitor)
 from requests.exceptions import HTTPError
-import json, re
-import socket
-import time
 
-import urllib
 
 
 try:
@@ -24,24 +28,35 @@ try:
 except:
     pass
 
-logger_conf_file = "lxca_logger.conf"
-pylxca_logger = os.path.join(os.getenv('PYLXCA_API_PATH'), logger_conf_file)
+LOGGER_CONF_FILE = "lxca_logger.conf"
+pylxca_logger = os.path.join(os.getenv('PYLXCA_API_PATH'), LOGGER_CONF_FILE)
 
 logger = logging.getLogger(__name__)
 REST_TIMEOUT = 60
 
 
 def callback(encoder):
+    '''
+    callback
+    '''
     # uncomment it to debug, spit lot of data in log file for big upload
     #logger.debug("Callback called with data length %d" % (encoder.bytes_read))
     pass
 
-
+# pylint: disable=C0103
+# pylint: disable=C0303
+# pylint: disable=C0301
+# pylint: disable=C0116
+# pylint: disable=R0904
+# pylint: disable=R0205
 class lxca_rest(object):
     '''
     classdocs
     '''
     def get_chassis(self,url, session, uuid, status ):
+        '''
+    get_chassis
+    '''
         url = url + '/chassis'
 
         if uuid:
@@ -55,9 +70,9 @@ class lxca_rest(object):
         try:
             resp = session.get(url,verify=False,timeout=REST_TIMEOUT)
             resp.raise_for_status()
-        except HTTPError as re:
-            logger.error("REST API Exception: Exception = %s", re)
-            raise re
+        except HTTPError as errorhttp:
+            logger.error("REST API Exception: Exception = {%s}", errorhttp)
+            raise errorhttp
         return resp    
         
     def get_metrics(self, url, session, uuid ):
@@ -101,7 +116,7 @@ class lxca_rest(object):
             url = url + '/' + uuid + '?synchronous=false'
 
         try:
-            payload = dict()
+            payload = {}
             payload = modify
 
             resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
@@ -113,9 +128,7 @@ class lxca_rest(object):
         except HTTPError as re:
             logger.error("REST API Exception: Exception = %s", re)
             raise re
-
         return job
-
 
     def get_switches(self,url, session, uuid):
         url = url + '/switches'
@@ -308,7 +321,7 @@ class lxca_rest(object):
                 url = url + '/manageRequest'
 
                 payload = list()
-                param_dict = dict()
+                param_dict = {}
 
                 param_dict["ipAddresses"]=ip_addr.split(",")
                 param_dict["username"] = user
@@ -419,14 +432,14 @@ class lxca_rest(object):
     def do_unmanage(self,url, session, endpoints,force,jobid):
 
         endpoints_list = list()
-        param_dict = dict()
+        param_dict = {}
 
         try:
             if endpoints:
                 url = url + '/unmanageRequest'
                 for each_ep in endpoints.split(","):
                     ip_addr = None
-                    each_ep_dict = dict()
+                    each_ep_dict = {}
 
                     ep_data = each_ep.split(";")
                     ip_addr = ep_data[0]
@@ -602,7 +615,7 @@ class lxca_rest(object):
                 return resp
             elif jobid:
                 url = url + "/compareResult"
-                payload = dict()
+                payload = {}
                 payload["jobid"] = jobid
                 payload["uuid"] = uuid
                 resp = session.get(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
@@ -625,9 +638,9 @@ class lxca_rest(object):
             if not policy or not type or not uuid:
                 raise Exception("Invalid argument key")
 
-            payload = dict()
+            payload = {}
 
-            policy_dict = dict()
+            policy_dict = {}
             policy_dict["policyName"] = policy
 
             # do auto discovery
@@ -710,7 +723,7 @@ class lxca_rest(object):
                 else:
                     raise Exception("Invalid argument scope:" + scope)
 
-            payload = dict()
+            payload = {}
             if action == "delete":
                 if fixids:
                     fixids_list = fixids.split(",")
@@ -773,7 +786,7 @@ class lxca_rest(object):
     def set_managementserver(self, url, session, action, files, jobid, fixids):
         url = url + '/managementServer/updates'
         try:
-            if not action  == None \
+            if not action  is None \
                     and action == "apply":
                 # implement PUT
                 url = url + "?action=apply"
@@ -786,14 +799,14 @@ class lxca_rest(object):
                 resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 return resp
             # Creations of Import job POST
-            if not action == None and action == "import":
+            if not action is None and action == "import":
                 file_list = files.strip().split(",")
                 file_type_dict = {'.txt': 'text/plain',
                                   '.xml': 'text/xml',
                                   '.chg': 'application/octet-stream',
                                   '.tgz': 'application/x-compressed'}
 
-                if jobid == None:
+                if jobid is None:
                     url = url + "?action=import"
                     #payload = {"files":[{"index":0,"name":"lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml","size":7329,"type":"text/xml"}]}
                     payload_files = [{
@@ -819,7 +832,7 @@ class lxca_rest(object):
                     resp = session.post(url, data = monitor, headers={'Content-Type': monitor.content_type}, verify=False, timeout=100 * REST_TIMEOUT)
                     return resp
 
-            if not action == None \
+            if not action is None \
                     and action == "acquire":
                 url = url + "?action=acquire"
                 payload = {}
@@ -831,7 +844,7 @@ class lxca_rest(object):
                 resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 return resp
 
-            if not action == None \
+            if not action is None \
                     and action == "refresh":
                 url = url + "?action=refresh"
                 payload = {}
@@ -839,7 +852,7 @@ class lxca_rest(object):
                 resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
                 return resp
 
-            if not action == None \
+            if not action is None \
                     and action == "delete":
                 # implement delete
                 if fixids:
@@ -870,7 +883,7 @@ class lxca_rest(object):
         try:
 
             # For Query Action
-            if mode == None and action == None and server == None and switch == None and storage == None and cmm == None:
+            if mode is None and action is None and server is None and switch is None and storage is None and cmm is None:
                 if query and query.lower() == 'components':
                     url = url + "?action=getComponents"
                 resp = session.get(url, verify=False, timeout=REST_TIMEOUT)
@@ -882,7 +895,7 @@ class lxca_rest(object):
                 
                 url= url + "?action=" + action
                 
-                if not mode  == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
+                if not mode  is None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url= url + "&activationMode=" + mode
                 else:
                     if action != "applyBundle":
@@ -942,13 +955,17 @@ class lxca_rest(object):
                     cmm_data = cmm.split(",")
                     cmmlist = [{"UUID": cmm_data[0],"PowerState": cmm_data[1]}]
                 
-            param_dict = dict()
-            if serverlist:param_dict["ServerList"] = serverlist
-            if storagelist:param_dict["StorageList"] = storagelist
-            if cmmlist:param_dict["CMMList"] = cmmlist
-            if switchlist:param_dict["SwitchList"] = switchlist
+            param_dict = {}
+            if serverlist:
+                param_dict["ServerList"] = serverlist
+            if storagelist:
+                param_dict["StorageList"] = storagelist
+            if cmmlist:
+                param_dict["CMMList"] = cmmlist
+            if switchlist:
+                param_dict["SwitchList"] = switchlist
 
-            payload = dict()
+            payload = {}
             payload["DeviceList"] = [param_dict]
             logger.debug("Update Firmware payload: " + str(payload))
             resp = session.put(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
@@ -966,7 +983,7 @@ class lxca_rest(object):
             if action == "apply" or action == "applyBundle" or action == "cancelApply":
                 url = url + "?action=" + action
 
-                if not mode == None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
+                if not mode is None and mode == "immediate" or mode == "delayed" or mode == "prioritized":
                     url = url + "&activationMode=" + mode
                 else:
                     if action != "applyBundle":
@@ -974,7 +991,7 @@ class lxca_rest(object):
             else:
                 raise Exception("Invalid argument action")
 
-            #payload = dict()
+            #payload = {}
             #payload["DeviceList"] = dev_list
             payload_data = json.dumps(dev_list)
             logger.debug("Update Firmware payload: " + str(payload_data))
@@ -1010,7 +1027,7 @@ class lxca_rest(object):
             raise Exception("Invalid argument ")
 
         try:
-            payload = dict()
+            payload = {}
             payload['profileName'] = profilename
             resp = session.put(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             resp.raise_for_status()
@@ -1028,7 +1045,7 @@ class lxca_rest(object):
             raise Exception("Invalid argument ")
 
         try:
-            payload = dict()
+            payload = {}
             if restart and endpoint:
                 payload['restart'] = restart
                 payload['uuid'] = endpoint
@@ -1064,7 +1081,7 @@ class lxca_rest(object):
         else:
             raise Exception("Invalid argument, profile id is required for unassign ")
 
-        payload = dict()
+        payload = {}
         if powerdown:
             if powerdown.lower() == "true":
                 payload['powerDownITE'] = True
@@ -1104,7 +1121,7 @@ class lxca_rest(object):
         uuids_list = uuids.split(",")
         for uuid in uuids_list:
             if len(uuid) < 16:
-                raise Exception("Invalid Arguments, uuid : %s" %uuid)
+                raise Exception(f'Invalid Arguments, uuid : {uuid}')
 
 
 
@@ -1133,7 +1150,7 @@ class lxca_rest(object):
         if endpoint:
             self._validate_uuids(endpoint)
 
-        if id != None:
+        if id is not None:
             if len(id) == 0:
                 raise Exception("Invalid Argument, id ")
             elif not id.isdigit():
@@ -1145,7 +1162,7 @@ class lxca_rest(object):
 
         try:
             if endpoint and restart and etype:
-                param_dict = dict()
+                param_dict = {}
                 
                 if etype.lower() == 'node' or etype.lower() == 'rack' or etype.lower() == 'tower':
                     param_dict['uuid'] = [endpoint] 
@@ -1157,7 +1174,7 @@ class lxca_rest(object):
                 payload = param_dict
                 resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             elif pattern_update_dict:
-                payload = dict()
+                payload = {}
                 payload = pattern_update_dict
                 resp = session.post(url, data=json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
             else:
@@ -1291,7 +1308,7 @@ class lxca_rest(object):
 
     def get_set_manifests(self,url, session, sol_id, filepath):
         resp = None
-        param_dict = dict()
+        param_dict = {}
         url = url + '/manifests'
         
         try:
@@ -1304,7 +1321,7 @@ class lxca_rest(object):
             if  filepath:                
                 param_dict['filepath'] = filepath
                 
-                payload = dict()
+                payload = {}
                 payload = param_dict
                 resp = session.post(url,data = json.dumps(payload),verify=False, timeout=REST_TIMEOUT)
             else:
@@ -1361,7 +1378,7 @@ class lxca_rest(object):
 
         try:
 
-            param_dict = dict()
+            param_dict = {}
             param_dict['name'] = name
             param_dict['description'] = desc
             param_dict['type'] = type
@@ -1394,7 +1411,7 @@ class lxca_rest(object):
                 if members:
                     payload = []
                     for dev in members:
-                        param_dict = dict()
+                        param_dict = {}
                         param_dict['op'] = 'add'
                         param_dict["path"] = "/members/-"
                         param_dict["value"] = dev
@@ -1404,7 +1421,7 @@ class lxca_rest(object):
                     resp.raise_for_status()
                     return resp
             elif name:
-                param_dict = dict()
+                param_dict = {}
                 param_dict['name'] = name
                 param_dict['description'] = desc
                 param_dict['type'] = type
@@ -1420,7 +1437,7 @@ class lxca_rest(object):
                 param_dict['members'] = members
                 param_dict['criteria'] = None
             
-                payload = dict()
+                payload = {}
                 payload = param_dict
                 
                 resp = session.post(url, data = json.dumps(payload), verify=False, timeout=REST_TIMEOUT)
@@ -1805,7 +1822,7 @@ class lxca_rest(object):
                 resp.raise_for_status()
                 return resp
 
-            payload = dict()
+            payload = {}
             if solutionGroups:
                 payload['solutionGroups'] = solutionGroups
             elif targetResources:
@@ -1853,7 +1870,7 @@ class lxca_rest(object):
         url = url + '/storedCredentials'
 
         try:
-            payload = dict()
+            payload = {}
             payload['userName'] = user_name
             payload['password'] = password
             payload['description'] = description
@@ -1887,7 +1904,7 @@ class lxca_rest(object):
             raise Exception("Invalid Arguments, userName and password are mandatory for put operation only")
 
         try:
-            payload = dict()
+            payload = {}
             payload['userName'] = user_name
             payload['password'] = password
             payload['description'] = description

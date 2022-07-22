@@ -90,7 +90,7 @@ def connect(*args, **kwargs):
         pw           Password to Authenticate Lenovo XClarity Administrator
         noverify     flag to indicate to not verify server certificate
 
-@example 
+@example
     con1 = connect( url = "https://10.243.12.142",user = "USERID", pw = "Password", noverify = "True")
     '''
     global SHELL_OBJ
@@ -99,7 +99,7 @@ def connect(*args, **kwargs):
     if len(args) == 0 and len(kwargs) == 0:
         return
 
-    for i in range(len(args)):
+    for i in enumerate(len(args)):
         kwargs[keylist[i]] = args[i]
 
     con = SHELL_OBJ.handle_input_args(command_name, args=args, kwargs=kwargs)
@@ -134,7 +134,7 @@ def disconnect(*args, **kwargs):
 
         con      Connection Object to Lenovo XClarity Administrator
 
-@example 
+@example
     disconnect()
     '''
     global SHELL_OBJ
@@ -162,7 +162,7 @@ def cmms(*args, **kwargs):
 
 @summary:
     Use this function to get CMMs information
-    run this function as  
+    run this function as
 
     data_dictionary = cmms( key1 = 'val1', key2 = 'val2', ...)
 
@@ -171,13 +171,13 @@ def cmms(*args, **kwargs):
         keylist = ['con', 'uuid', 'chassis']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con       Connection Object to Lenovo XClarity Administrator
     uuid      cmm uuid
-    chassis   chassis uuid  
+    chassis   chassis uuid
 
-@example 
+@example
     cmm_list = cmms( con = con1, uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57')
     '''
     global SHELL_OBJ
@@ -204,7 +204,7 @@ def chassis(*args, **kwargs):
 
 @summary:
     Use this function to get Chassis information
-    run this function as  
+    run this function as
 
     data_dictionary = chassis( key1 = 'val1', key2 = 'val2', ...)
 
@@ -213,14 +213,14 @@ def chassis(*args, **kwargs):
         keylist = ['con', 'uuid', 'status']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con        Connection Object to Lenovo XClarity Administrator
     uuid       chassis uuid
     status     chassis manage status (managed/unmanaged)
 
 
-@example 
+@example
     chassis_list = chassis( con = con1, uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57')
     '''
     global SHELL_OBJ
@@ -247,7 +247,7 @@ def fans(*args, **kwargs):
 
 @summary:
     Use this function to get fans information
-    run this function as  
+    run this function as
 
     data_dictionary = fans( key1 = 'val1', key2 = 'val2', ...)
 
@@ -256,13 +256,13 @@ def fans(*args, **kwargs):
         keylist = ['con', 'uuid', 'chassis']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of fan
     chassis       chassis uuid
 
-@example 
+@example
     fans_list = fans( con = con1, uuid = 'fc3058cadf8b11d48c9b9b1b1b1b1b57')
     '''
     global SHELL_OBJ
@@ -289,7 +289,7 @@ def fanmuxes(*args, **kwargs):
 
 @summary:
     Use this function to get fanmuxes information
-    run this function as  
+    run this function as
 
     data_dictionary = fanmuxes( key1 = 'val1', key2 = 'val2', ...)
 
@@ -298,13 +298,13 @@ def fanmuxes(*args, **kwargs):
         keylist = ['con','uuid','chassis']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of fanmux
     chassis       chassis uuid
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -331,7 +331,7 @@ def nodes(*args, **kwargs):
 
 @summary:
     Use this function to get nodes information
-    run this function as  
+    run this function as
 
     data_dictionary = nodes( key1 = 'val1', key2 = 'val2', ...)
 
@@ -340,7 +340,7 @@ def nodes(*args, **kwargs):
         keylist = ['con','uuid','chassis','status', 'modify', 'metrics']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con           Connection Object to Lenovo XClarity Administrator
     uuid          uuid of node
@@ -349,10 +349,9 @@ def nodes(*args, **kwargs):
     modify        JSON object of modifyable node properties
     metrics       flag to fetch metrics of all nodes or metrics of a node belonging to the provided uuid
 
-@example 
+@example
 
     nodes(uuid="FAA6E3D494E511E6A0739B91ED670CE8",modify='{"location":{"location": "new location", "rack": "rack 5","lowestRackUnit": 3}}')
-    
     '''
     global SHELL_OBJ
     command_name = sys._getframe().f_code.co_name
@@ -378,7 +377,7 @@ def switches(*args, **kwargs):
 
 @summary:
     Use this function to get switches information
-    run this function as  
+    run this function as
 
     data_dictionary = switches( key1 = 'val1', key2 = 'val2', ...)
 
@@ -387,7 +386,7 @@ def switches(*args, **kwargs):
         keylist = ['con','uuid','chassis','ports','action']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con      Connection Object to Lenovo XClarity Administrator
     uuid          uuid of switch
@@ -395,7 +394,7 @@ def switches(*args, **kwargs):
     ports         empty ports string list all ports for uuid, comma separated ports
     action        enable/disable ports
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -424,7 +423,7 @@ def powersupplies(*args, **kwargs):
 
 @summary:
     Use this function to get powersupplies information
-    run this function as  
+    run this function as
 
     data_dictionary = powersupplies( key1 = 'val1', key2 = 'val2', ...)
 
@@ -433,13 +432,13 @@ def powersupplies(*args, **kwargs):
         keylist = ['con','uuid','chassis']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con      Connection Object to Lenovo XClarity Administrator
     uuid          uuid of power supply
     chassis       chassis uuid
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -465,7 +464,7 @@ def scalablesystem(*args, **kwargs):
 
 @summary:
     Use this function to get scalablesystem information
-    run this function as  
+    run this function as
 
     data_dictionary = scalablesystem( key1 = 'val1', key2 = 'val2', ...)
 
@@ -474,13 +473,13 @@ def scalablesystem(*args, **kwargs):
         keylist = ['con','id','type']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con      Connection Object to Lenovo XClarity Administrator
     id        scalable complex id
     type      type (flex/rackserver)
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -508,7 +507,7 @@ def discover(*args, **kwargs):
 
 @summary:
     Use this function to discover endpoint from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = discover( key1 = 'val1', key2 = 'val2', ...)
 
@@ -517,7 +516,7 @@ def discover(*args, **kwargs):
         keylist = ['con','ip','job']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
     con    Connection Object to Lenovo XClarity Administrator
     ip     One or more IP addresses for each endpoint to be discovered.
@@ -554,7 +553,7 @@ def manage(*args, **kwargs):
 
 @summary:
     Use this function to manage endpoint from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = manage( key1 = 'val1', key2 = 'val2', ...)
 
@@ -563,7 +562,7 @@ def manage(*args, **kwargs):
         keylist = ['con','subcmd','ip','user','pw','rpw','job','force', 'storedcredential_id']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
         con      Connection Object to Lenovo XClarity Administrator
         subcmd
@@ -575,9 +574,9 @@ def manage(*args, **kwargs):
         job       Job ID of existing manage request
         storedcredential_id    Store Crendential Id to be used for device manage operation
                         if this is provided user is not required
-        Note : mp, type and epuuid parameters are dedpriciated and only kept for backword compatibility. 
+        Note : mp, type and epuuid parameters are dedpriciated and only kept for backword compatibility.
 
-@example 
+@example
 
         jobid = manage(con=con1, subcmd='device', ip="10.243.6.68",user="USERID",pw="PASSW0RD",rpw="PASSW0RD")
         jobid = manage(con=con1, subcmd='device', ip="10.243.6.68",storedcredintail_id="12")
@@ -626,7 +625,7 @@ def unmanage(*args, **kwargs):
 
 @summary:
     Use this function to unmanage endpoint from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = unmanage( key1 = 'val1', key2 = 'val2', ...)
 
@@ -635,8 +634,8 @@ def unmanage(*args, **kwargs):
         keylist = ['con','subcmd','ep','force','job']
 
 @param
-    The parameters for this command are as follows 
-        subcmd      device \ job_status
+    The parameters for this command are as follows
+        subcmd      device  job_status
         ep          one or more endpoints to be unmanaged.
                     This is comma separated list of multiple endpoints, each endpoint should
                     contain endpoint information separated by semicolon.
@@ -651,7 +650,7 @@ def unmanage(*args, **kwargs):
         force       Indicates whether to force the unmanagement of an endpoint (True/False)
         job         Job ID of unmanage request
 
-@example 
+@example
     endpoint = '10.240.195.39;D31C76F0302503B50010D21DE03A0523;Rack-Tower'
     unmanage(con_lxca, subcmd='device', ep=endpoint)
     '''
@@ -681,7 +680,7 @@ def configpatterns(*args, **kwargs):
     Use this function to Retrieve information and deploy all server and category patterns
             that have been defined in the Lenovo XClarity Administrator
 
-    run this function as  
+    run this function as
 
     data_dictionary = configpatterns( key1 = 'val1', key2 = 'val2', ...)
 
@@ -690,7 +689,7 @@ def configpatterns(*args, **kwargs):
         keylist = ['con','subcmd','id', 'includeSettings', 'endpoint','restart','type', pattern_update_dict, name, status]
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
         subcmd     list, apply, import , status
         id          The unique ID that was assigned when the server pattern was created
         name        name of pattern , this is used for apply
@@ -713,7 +712,7 @@ def configpatterns(*args, **kwargs):
         status      check config status for given uuid in endpoint
                     True
 
-@example 
+@example
 
     list  all configpatterns
         rep = configpatterns(con, subcmd = 'list')
@@ -778,7 +777,7 @@ def configprofiles(*args, **kwargs):
     Use this function to Retrieve information server configuration profiles
             that have been defined in the Lenovo XClarity Administrator
 
-    run this function as  
+    run this function as
 
     data_dictionary = configprofiles( key1 = 'val1', key2 = 'val2', ...)
 
@@ -787,7 +786,7 @@ def configprofiles(*args, **kwargs):
         keylist = ['con', 'subcmd', 'id', 'name', 'endpoint', 'restart', 'powerdown', 'resetimm', 'resetswitch', 'force']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
         subcmd      list, rename, activate, unassign, delete
         id          The unique ID that was assigned when the server profile was created
         name        profile name
@@ -831,15 +830,12 @@ def configprofiles(*args, **kwargs):
     return out_obj
 
 
-    return out_obj
-
-
 def configtargets(*args, **kwargs):
     '''
 
 @summary:
     Use this function to get config pattern targets from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = configtargets( key1 = 'val1', key2 = 'val2', ...)
 
@@ -848,10 +844,10 @@ def configtargets(*args, **kwargs):
         keylist = ['con','id']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
         id    config target id
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -877,7 +873,7 @@ def updatepolicy(*args, **kwargs):
 
 @summary:
     Use this function to read Firmwar update Policy from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = updatepolicy( key1 = 'val1', key2 = 'val2', ...)
 
@@ -886,7 +882,7 @@ def updatepolicy(*args, **kwargs):
         keylist = ['con', 'subcmd', 'info','job','uuid',policy','Type']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
     subcmd  list,query, assign , status
     info    Specifies the type of information to return. This can be one of the following values:
                 FIRMWARE- Returns information about firmware that is applicable to each managed endpoint
@@ -933,7 +929,7 @@ def updaterepo(*args, **kwargs):
 
 @summary:
     Use this function to get repository info from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = updaterepo( key1 = 'val1', key2 = 'val2', ...)
 
@@ -942,7 +938,7 @@ def updaterepo(*args, **kwargs):
         keylist = ['con', 'subcmd', 'key', 'mt', 'scope', 'fixids', 'type']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
 
     subcmd    The action to take. This can be one of the following values.
@@ -969,7 +965,7 @@ def updaterepo(*args, **kwargs):
      scope     scope of operation
      fixids    comma separated fixids
      type      filetype for PUT opertaion
-@example 
+@example
      rep = updaterepo(con, "query", k="size")
      rep = updaterepo(con, subcmd = "read")
      rep = updaterepo(con_lxca, subcmd = "read")
@@ -1110,7 +1106,7 @@ def users(*args, **kwargs):
 
 @summary:
     Use this function to get users data from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = users( key1 = 'val1', key2 = 'val2', ...)
 
@@ -1119,11 +1115,11 @@ def users(*args, **kwargs):
         keylist = ['con','id']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
         id    unique ID of the user to be retrieved
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -1149,10 +1145,10 @@ def ffdc(*args, **kwargs):
     '''
 
 @summary:
-    Use this function to Collect and export specific endpoint data 
+    Use this function to Collect and export specific endpoint data
         from Lenovo XClarity Administrator
 
-    run this function as  
+    run this function as
 
     data_dictionary = ffdc( key1 = 'val1', key2 = 'val2', ...)
 
@@ -1161,7 +1157,7 @@ def ffdc(*args, **kwargs):
         keylist = ['con','uuid']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
         uuid    UUID of the target endpoint this is manadatory parameter
 
@@ -1241,7 +1237,7 @@ def lxcalog(*args, **kwargs):
 
 @summary:
     Use this function to get Lenovo XClarity Administrator LOG information
-    run this function as  
+    run this function as
 
     data_dictionary = lxcalog( key1 = 'val1', key2 = 'val2', ...)
 
@@ -1250,11 +1246,11 @@ def lxcalog(*args, **kwargs):
         keylist = ['con','filter']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
         filter  filter for the event
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -1282,7 +1278,7 @@ def jobs(*args, **kwargs):
 
 @summary:
     Use this function to get jobs information from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = jobs( key1 = 'val1', key2 = 'val2', ...)
 
@@ -1291,7 +1287,7 @@ def jobs(*args, **kwargs):
         keylist = ['con','id','uuid','state','cancel','delete']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
         id=         job id
         uuid=       uuid of endpoint for which jobs should be retrieved
@@ -1308,7 +1304,7 @@ def jobs(*args, **kwargs):
         cancel=     cancel job of specified id
         delete=     delete job of specified id
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -1337,7 +1333,7 @@ def manifests(*args, **kwargs):
 
 @summary:
     Use this function to send solution manifest to and retreive manifests from Lenovo XClarity Administrator
-    run this function as  
+    run this function as
 
     data_dictionary = manifests( conn_handle, input_args_dictionary{key,value} )
 
@@ -1346,12 +1342,12 @@ def manifests(*args, **kwargs):
         keylist = [id','file']
 
 @param
-    The parameters for this command are as follows 
+    The parameters for this command are as follows
 
         id=         solution id
         file=       path to manifest file
 
-@example 
+@example
 
     '''
     global SHELL_OBJ
@@ -1443,7 +1439,7 @@ def resourcegroups(*args, **kwargs):
 @param
     The parameters for this command are as follows
 
-        uuid=         UUID of already created Group 
+        uuid=         UUID of already created Group
         name=         Name of Resource Group
         desc=         Description of Resource Group
         type=         Type of Resource Group. <{"static", "dynamic", "solution"}>,
@@ -1524,7 +1520,7 @@ def resourcegroups(*args, **kwargs):
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist, mutually_exclusive_keys,
                           param_dict, *args, **kwargs)
 
-    LOGGER.debug("resourcegroups %s" %str(param_dict))
+    LOGGER.debug("resourcegroups {{%s}}",str(param_dict))
     if 'type' in param_dict:
         if 'solution' in param_dict['type']:
             out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
@@ -1554,7 +1550,7 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
     con = None
     for key in keylist:
         short_key = long_short_key_map.get(key)
-        if (key in list(kwargs.keys())):
+        if key in list(kwargs.keys()):
             param_dict[key] = kwargs[key]
         elif key in param_dict:
             continue
@@ -1563,11 +1559,10 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
 
         elif len(arglist) >= 1:
             value = arglist.pop()
-            if value != None:
+            if value is not None:
                 param_dict[key] = value
         elif key not in optional_keylist:
-            LOGGER.error(" Invalid Input args %s is not in optional list %s" % (
-                key, str(mandatory_options_list)))
+            LOGGER.error(" Invalid Input args {%s} is not in optional list {%s}",key, str(mandatory_options_list))
             raise ValueError("Invalid Input Arguments")
 
         if key == 'con':
@@ -1582,21 +1577,21 @@ def _validate_param(keylist, long_short_key_map, mandatory_options_list, optiona
         # Checking mandatory option_list presence
         if me_key in list(mandatory_options_list.keys()):
             if not set(mandatory_options_list[me_key]).issubset(set(param_dict.keys())):
-                LOGGER.error(" Invalid command invocation %s of mandatory list %s is not in arguments parovided" % (
-                    me_key, str(mandatory_options_list)))
+                LOGGER.error(" Invalid command invocation {%s} of mandatory list {%s} is not in arguments parovided",
+                    me_key, str(mandatory_options_list))
                 raise AttributeError("Invalid command invocation")
 
         # Checking mutually exclusive key presense
         if me_key in mutually_exclusive_keys:
             if me_key_found:
-                LOGGER.error(" Invalid command invocation %s of mutual exclusive list %s " % (
-                    me_key, str(mutually_exclusive_keys)))
+                LOGGER.error(" Invalid command invocation {%s} of mutual exclusive list {%s} ",
+                    me_key, str(mutually_exclusive_keys))
                 raise AttributeError("Invalid command invocation")
             me_key_found = True
 
     if not set(keylist + list(long_short_key_map.values())).issuperset(set(kwargs.keys())):
-        LOGGER.error(" Invalid Input args: %s unsupported argument passed"
-                     % list(set(kwargs.keys()).difference(set(keylist + long_short_key_map.values()))))
+        LOGGER.error(" Invalid Input args: {%s} unsupported argument passed",
+                     list(set(kwargs.keys()).difference(set(keylist + long_short_key_map.values()))))
         raise ValueError("Invalid Input Arguments")
 
     return con
@@ -2005,7 +2000,7 @@ def license(*args, **kwargs):
 
         con      Connection Object to Lenovo XClarity Administrator
 
-@example 
+@example
     license(con)
     '''
     global SHELL_OBJ
@@ -2026,4 +2021,3 @@ def license(*args, **kwargs):
 
     out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
     return out_obj
-
