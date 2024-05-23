@@ -114,15 +114,15 @@ class lxca_view(object):
         #if py_obj_item is list then iterate through the list and call print recur for each
         if isinstance(py_obj_item, (list)):
             for item in py_obj_item:
-                for elem in view_filter.getchildren():
+                for elem in view_filter.iter():
                     self.print_recur(item,elem)
         else:
-            for elem in view_filter.getchildren():
+            for elem in view_filter.iter():
                 self.print_recur(py_obj_item,elem)
         indent -= 4
 
     def print_cmd_resp_object(self,cmd_resp_item, vf):
-        for vf_elem in vf.getchildren():
+        for vf_elem in vf.iter():
             self.print_recur(cmd_resp_item,vf_elem)
 
 
