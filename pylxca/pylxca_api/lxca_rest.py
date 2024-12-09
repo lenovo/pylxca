@@ -425,13 +425,16 @@ class lxca_rest(object):
             if endpoints:
                 url = url + '/unmanageRequest'
                 for each_ep in endpoints.split(","):
-                    ip_addr = None
-                    each_ep_dict = dict()
 
+                    ip_addr = None
+
+                    each_ep_dict = dict()
                     ep_data = each_ep.split(";")
+
                     ip_addr = ep_data[0]
                     uuid = ep_data[1]
                     type = ep_data[2]
+
                     #Fetch type value from input
                     type_list = ["Chassis","Rackswitch","ThinkServer","Storage","Rack-Tower","Edge"]
                     if type not in type_list:
@@ -440,7 +443,31 @@ class lxca_rest(object):
                     elif type == "Storage": type = "Lenovo Storage"
                     elif type == "Rack-Tower": type = "Rack-Tower Server"
                     elif type == "Edge": type = "Edge Server"
-                    each_ep_dict = {"ipAddresses":ip_addr.split("#"),"type":type,"uuid":uuid}
+
+                    # do auto discovery
+                    disc_job_id = self.do_discovery(url.rsplit('/',1)[0], session, ip_addr,None)
+                    disc_progress = 0
+
+                    if disc_job_id:
+                        while disc_progress < 100:
+                            time.sleep(2) # delays for 5 seconds to allow discovery to complete
+                            disc_job_resp = self.do_discovery(url.rsplit('/',1)[0], session, None,disc_job_id)
+                            disc_resp_py_obj = disc_job_resp
+                            disc_progress = disc_resp_py_obj['progress']
+
+                    discovered_endpoint = False
+                    for key in list(disc_resp_py_obj.keys()):
+                        if isinstance(disc_resp_py_obj[key],list) and disc_resp_py_obj[key] != []: 
+                            # Fetch machine type from Response
+                            machine_type = disc_resp_py_obj[key][0]["machineType"]
+
+
+                    each_ep_dict = {
+                        "ipAddresses":ip_addr.split("#"),
+                        "type":type,
+                        "uuid":uuid,
+                        "machineType": machine_type
+                    }
                     endpoints_list.append(each_ep_dict)
                 param_dict["endpoints"] = endpoints_list
 

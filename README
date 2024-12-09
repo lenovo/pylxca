@@ -18,14 +18,7 @@ top-of-rack switches (endpoints)
 *	Configuring servers through the use of Configuration Patterns
 *	Applying firmware updates to endpoints
 
-Whats New in 3.2.0
-------------------
-* 	License Compliance
-*   Manage/Unmanage Support for Edge Servers
-*   Support for firmware update for AMD-1S
-*   Bug Fixes and Minor improvements
-
-Whats New in 2.4.0
+Whats New 
 ------------------
 * 	Argument Parsing library replaced from optparse to argparse.
 *	Support for subcmd under various commands.
@@ -44,7 +37,7 @@ Python (including the request and logging modules) is required to use
 to the PYLXCA CLI. Ensure at the following requirements are met. For 
 more information about Python, see the [Link]www.python.org website. 
 
-*	Python v2.7.x (Later versions have not been tested.)
+*	Python v3.10.x (Later versions have not been tested.)
 *	Python requests v2.7.0 or later
 *	Python logging v0.4.9.6 or later
 
@@ -92,7 +85,7 @@ PyLXCA command reference is available at
 PyLXCA API Help can be seen from Interactive Python Shell as follows.
 	
 	$lxca_shell --api
-	Interactive Python Shell for Lenovo XClarity Administrator v2.4.0
+	Interactive Python Shell for Lenovo XClarity Administrator v4.2.0
 	Type "dir()" or "help(lxca command object)" for more information.
 	>>>
 	>>> help(connect)

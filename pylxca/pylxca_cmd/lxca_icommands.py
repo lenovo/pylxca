@@ -259,12 +259,12 @@ class InteractiveCommand(object):
         except ConnectionError:
             self.sprint("Connection is not Initialized, Try connect")
         except HTTPError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
+            self.sprint("Error \"%s\" occurred while executing command."%(re.response.reason))
         except ConnectionError as re:
-            self.sprint("Exception %s occurred while executing command."%(re.response.content))
+            self.sprint("Error %s occurred while executing command."%(re))
         except RuntimeError:
             self.sprint("Session Error to LXCA, Try connect")
         except Exception as err:
-            self.sprint("Exception occurred: %s" %(err)) 
+            self.sprint("Error occurred: %s" %(err)) 
             
         return out_obj

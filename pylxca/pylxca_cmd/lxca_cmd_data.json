@@ -1409,8 +1409,8 @@
       },
       {
         "name": "assign",
-        "additional_detail": ["The following example download firmware updates",
-                              "updaterepo acquire --mt 7907 --fixids ibm_fw_imm2_1aoo78j-6.20_anyos_noarch"],
+        "additional_detail": ["The following example assigns a compliance policy to a server.",
+                              "updatepolicy assign  –p policy_1 –t SERVER –u AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"],
         "help": "Downloads the specified firmware updates from Lenovo XClarity Support website, and stores the updates to the updates repository",
         "subcmd_args": [
           [
