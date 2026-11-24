@@ -52,6 +52,7 @@ class lxca_connection(object):
         self.session = None
         #self.verify_callback = verify_callback
         #os.environ['REQUESTS_CA_BUNDLE'] = os.path.join('/etc/ssl/certs/','ca-certificates.crt')
+
         if verify_callback:
             self.verify_callback = os.environ['REQUESTS_CA_BUNDLE']
         else:
@@ -110,7 +111,7 @@ class lxca_connection(object):
             test_url = self.url + '/aicc'
             resp = self.session.get(test_url,verify=self.session.verify, timeout=3)
             #If valid JSON object is parsed then the connection is successfull
-            py_obj = json.loads(resp.text)
+            py_obj = resp.json()
         except Exception as e:
             raise ConnectionError("Invalid connection")
         return
@@ -129,7 +130,7 @@ class lxca_connection(object):
         try:
             delete_url = self.url + '/sessions'
             resp = self.session.delete(delete_url, verify=False, timeout=3)
-            py_obj = json.loads(resp.text)
+            py_obj = resp.json()
             logger.debug("Deleted session on lxca = %s", py_obj)
             result = True
         except Exception as e:

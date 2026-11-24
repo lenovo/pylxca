@@ -1,6 +1,6 @@
 include pylxca/pylxca_api/lxca_logger.conf
 include pylxca/pylxca_cmd/lxca_filters.xml
 include pylxca/pylxca_cmd/lxca_cmd_data.json
-include README.md
+include README
 include LICENSE
 include pylxca/test/pylxca_unittest

@@ -46,6 +46,7 @@ def set_interactive():
           "discover": discover,
           "manage": manage,
           "unmanage": unmanage,
+          #"jobs": jobs,
           "users": users,
           "lxcalog": lxcalog,
           "ffdc": ffdc,
@@ -61,6 +62,7 @@ def set_interactive():
           "resourcegroups": resourcegroups,
           "storedcredentials": storedcredentials,
           "managementserver": managementserver,
+          "license": license,
           "help": help}
     ns.update()
     global __version__
@@ -630,12 +632,12 @@ def unmanage(*args, **kwargs):
 
     Where KeyList is as follows
 
-        keylist = ['con','subcmd','ip','force','job']
+        keylist = ['con','subcmd','ep','force','job']
 
 @param
     The parameters for this command are as follows 
         subcmd      device \ job_status
-        ip          one or more endpoints to be unmanaged.
+        ep          one or more endpoints to be unmanaged.
                     This is comma separated list of multiple endpoints, each endpoint should
                     contain endpoint information separated by semicolon.
                     endpoint's IP Address(multiple addresses should be separated by #), UUID of the endpoint and
@@ -645,6 +647,7 @@ def unmanage(*args, **kwargs):
                           Storage
                           Rackswitch
                           Rack-Tower
+                          Edge
         force       Indicates whether to force the unmanagement of an endpoint (True/False)
         job         Job ID of unmanage request
 
@@ -657,10 +660,10 @@ def unmanage(*args, **kwargs):
     param_dict = {}
     con = None
 
-    long_short_key_map = {'ip': 'i', 'job': 'j', 'force': 'f'}
-    keylist = ['con', 'subcmd', 'ip', 'force', 'job']
-    optional_keylist = ['con', 'ip', 'force', 'job']
-    mutually_exclusive_keys = ['ip', 'job']
+    long_short_key_map = {'ep': 'e', 'job': 'j', 'force': 'f'}
+    keylist = ['con', 'subcmd', 'ep', 'force', 'job']
+    optional_keylist = ['con', 'ep', 'force', 'job']
+    mutually_exclusive_keys = ['ep', 'job']
     mandatory_options_list = {}
 
     con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
@@ -1030,7 +1033,7 @@ def updatecomp(*args, **kwargs):
     server  servers information
     storage storages information
     dev_list  - update all updateable components
-            For action = apply/cancelApply, Device information should contain following data separated by comma
+            For action = apply / applyBundle / cancelApply, Device information should contain following data separated by comma
                 UUID - UUID of the device
                 Fixid - Firmware-update ID of the target package to be applied to the component.
                          If not provided assigned policy would be used.
@@ -1048,6 +1051,10 @@ def updatecomp(*args, **kwargs):
 Applying firmware update to server
 endpoint = "<endpoint-uuid>,<update-package-name>,<update-description>"
 rep = updatecomp(con, 'apply', action='apply', mode='immediate', server=endpoint)
+
+Applying firmware update to ThinkSystem SR635 and SR655
+endpoint = "53619A91874311E9A3E3E086720E6C33"
+rep = updatecomp(con, 'apply', action='applyBudle', server=endpoint)
 
 Applying firmware update using dev_list json format
 
@@ -1983,3 +1990,40 @@ def storedcredentials(*args, **kwargs):
 
     out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict)
     return out_obj
+
+
+def license(*args, **kwargs):
+    '''
+
+@summary:
+    Use this function to retrieve information about warnings regarding non-compliance of installed Lenovo XClarity Administrator license
+    run this function as
+    license(con)
+
+@param
+    The parameter for this command is as follows
+
+        con      Connection Object to Lenovo XClarity Administrator
+
+@example 
+    license(con)
+    '''
+    global SHELL_OBJ
+
+    command_name = sys._getframe().f_code.co_name
+    param_dict = {}
+    con = None
+
+    long_short_key_map = {}
+    keylist = ['con']
+    optional_keylist = ['con']
+    mutually_exclusive_keys = []
+    mandatory_options_list = {}
+
+    con = _validate_param(keylist, long_short_key_map, mandatory_options_list, optional_keylist,
+                          mutually_exclusive_keys,
+                          param_dict, *args, **kwargs)
+
+    out_obj = SHELL_OBJ.handle_input_dict(command_name, con, param_dict, False)
+    return out_obj
+
