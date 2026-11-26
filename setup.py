@@ -64,7 +64,10 @@ else:
         packages=['pylxca', 'pylxca.pylxca_api', 'pylxca.pylxca_cmd'],
         long_description=read('README'),
         long_description_content_type = 'text/x-rst',
-        install_requires=['requests>=2.7.0', 'requests-toolbelt>=0.8.0', 'unittest2'],
+        install_requires=['requests>=2.7.0', 'requests-toolbelt>=0.8.0'],
+        extras_require={
+            'test': ['unittest2'],
+        },
         include_package_data=True,
         scripts=['lxca_shell'],
         #    data_files          = [('pylxca_api', ['pylxca/pylxca_api/lxca_logger.conf'])],
